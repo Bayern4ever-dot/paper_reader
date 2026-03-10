@@ -1,0 +1,511 @@
+Title: How Effective Are Publicly Accessible Deepfake Detection Tools? A Comparative Evaluation of Open-Source and Free-to-Use Platforms
+
+URL Source: https://arxiv.org/pdf/2603.04456v1
+
+Published Time: Fri, 06 Mar 2026 01:02:27 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# How Effective Are Publicly Accessible Deepfake Detection Tools? A Comparative Evaluation of Open-Source and Free-to-Use Platforms 
+
+Michael Rettinger 1∗, Ben Beaumont 1∗, Nhien-An Le-Khac †, and Hong-Hanh Nguyen-Le ∗∗School of Computer Science, University College Dublin, Dublin, Ireland 
+
+{michael.rettinger, ben.beaumont, hong-hanh.nguyen-le }@ucdconnect.ie 
+
+> †
+
+School of Computer Science, University College Dublin, Dublin, Ireland an.lekhac@ucd.ie 
+
+Abstract —The proliferation of deepfake imagery poses esca-lating challenges for practitioners tasked with verifying dig-ital media authenticity. While detection algorithm research is abundant, empirical evaluations of publicly accessible tools that practitioners actually use remain scarce. This paper presents the first cross-paradigm evaluation of six tools, spanning two complementary detection approaches: forensic analysis tools (InVID & WeVerify, FotoForensics, Forensically) and AI-based classifiers (DecopyAI, FaceOn-Live, Bitmind). Both tool categories were evaluated by professional investigators with law enforcement experience using blinded protocols across datasets comprising authentic, tampered, and AI-generated images sourced from DF40, CelebDF, and CASIA-v2. We report three principal findings: forensic tools exhibit high recall but poor specificity, while AI classifiers demonstrate the inverse pattern; human evaluators substantially outperform all automated tools; and human-AI disagreement is asymmetric, with human judgment pre-vailing in the vast majority of discordant cases. We discuss implications for practitioner workflows and identify critical gaps in current detection capabilities. 
+
+Index Terms —deepfake detection, digital forensic, digital media authenticity, empirical evaluation 
+
+## 1. Introduction 
+
+The proliferation of synthetic media generated through artificial intelligence (AI) has emerged as one of the most consequential challenges confronting digital soci-eties. Deepfakes (DFs) encompass AI-generated or AI-manipulated images, video, and audio that can be nearly indistinguishable from authentic content [1]. Once con-fined to academic laboratories and well-resourced in-stitutions, DF generation has become accessible to the general public through user-friendly platforms such as Google Gemini 1, HeyGen 2, and FaceSwap 3, effectively democratising the production of highly realistic fabricated media. Caldwell et al. [2] ranked deepfake-enabled crime as one of the most serious AI threats for the next fifteen years, citing both its difficulty to detect and the breadth of its potential for misuse. 
+
+> 1These authors contributed equally to this work.
+> 1. https://gemini.google.com 2. https://www.heygen.com 3. https://faceswap.dev
+
+The societal consequences are already tangible and se-vere. In the personal sphere, fabricated explicit images of public figures such as Taylor Swift have spread rapidly across social media, sparking legislative debate [3]. n the domain of financial fraud, a Hong Kong-based finance officer was deceived into transferring US $25 million after participating in a DF video conference impersonating his CFO and colleagues [4], while Deloitte estimates that losses from fraudulent misuse of generative AI will reach US $40 billion in the United States alone by 2027 [5]. In the political domain, DFs have been deployed to under-mine democratic processes, including a fabricated video of President Zelensky urging Ukrainian surrender [6] and AI-generated robocalls mimicking then-President Biden to mislead voters [7]. These cases illustrate that a single piece of fabricated content can upend lives, drain bank accounts, and undermine entire democracies. In response, academia and industry have released several detection algorithms and tools. The academic community has produced a rich body of detection methods from forensic-based methods [8], [9], which explore phys-ical and biological inconsistencies; classification-based method [10], [11], which distinguish real or fake samples through training with a large-scale dataset; pixel-level segmentation methods [12], [13], which find manipulated regions via segmentation; and fingerprint-based methods [14], [15], which identify artifacts left by the generation process (e.g., checkerboard patterns). In parallel, a grow-ing number of publicly accessible detection tools have emerged, ranging from forensic analysis platforms such as FotoForensics 4, Forensically 5, and InVID & WeVerify 6,to automated AI classifiers like DecopyAI 7, FaceOnLive 8,and Bitmind 9. Despite these advances, a persistent gap remains between the sophistication of detection research and the practical tools that end users, particularly law en-forcement investigators, rely upon in real-world scenarios. 
+
+> 4. FotoForensics https://fotoforensics.com/ 5. Forensically https://29a.ch/photo-forensics/#forensic-magnifier 6. InVID & WeVerify https://weverify.eu/verification-plugin/ 7. DecopyAI https://decopy.ai/ 8. FaceOnLive https://faceonlive.com/deepfake-detector/ 9. FaceOnLive https://thedetector.ai/
+> arXiv:2603.04456v1 [cs.CR] 2 Mar 2026
+
+1.1. Motivation 
+
+There are four research gaps that motivate this work. First, existing literature [16]–[20] only evaluates detection algorithms in controlled laboratory settings, while the publicly accessible tools that practitioners actually use rarely receive systematic comparison. Second, no unified evaluation framework exists for comparing across tool paradigms: forensic analysis platforms that require expert interpretation of analytical outputs (e.g., ELA maps) ver-sus automated AI classifiers that return binary predictions and confidence scores. Third, current evaluations focus on algorithmic metrics (accuracy, precision, recall) while neglecting user-centric factors, including interpretability, transparency of results, explanatory feedback, and us-ability, which are equally critical for investigative and legal contexts. Fourth, there is insufficient research into human–AI discordance: when and why human judgment contradicts automated detection, and which image charac-teristics drive such disagreements. This paper addresses these gaps through a unified evalu-ation of six public available DF detection tools, including three forensic analysis platforms and three automated AI classifiers, across two independent experiments with a combined 250 images, conducted by two professional investigators experienced in image and video analysis for law enforcement. 
+
+1.2. Related Literature Review 
+
+Existing surveys focuses on reviewing and categorize DF detection algorithms. Mubarar et al. [17] surveyed deep learning (DL)-based detection methods for image, video, audio and text, covering spatio-temporal analysis, GAN fingerprinting, and audio-visual consistency checks. Liu et al. [18] showed a significant development from single-to multi-modal detection methods. Nguyen et al. [16] provided a comprehensive survey of proactive DF defense strategies, specifically focusing on disruption and water-marking techniques across visual and audio modalities. It systematically analyzes these approaches through various evaluation metrics and identifies current threat models and attack vectors. Other survey papers evaluate detection algorithms on the generalization and robustness perspec-tives, showing that existing methods cannot generalize to unseen generators and not to be robust to adversarial attacks [19], [20]. However, all focus on the efficacy of individual algorithms rather than the integrated tools practitioners employ. As shown in Table 1, every existing survey restricts its scope to algorithmic taxonomies, benchmark metrics, or defense strategies, leaving the real-world performance, usability, and interpretability of publicly accessible detection plat-forms entirely unexamined. This body of work therefore provides a rich theoretical foundation but stops short of the empirical, tool-level, and human-centred evaluation that practitioners/investigators require. The specific re-search gaps arising from this limitation are detailed in Section 1.1. 
+
+1.3. Contributions 
+
+This paper makes the following contributions: 1) First unified, cross-paradigm benchmark of public DF detection tools. We evaluate six tools spanning two paradigms: three forensic analy-sis platforms (InVID & WeVerify, FotoForensics, Forensically) and three automated AI classifiers (DecopyAI, FaceOnLive, Bitmind), across a com-bined dataset of 250 images encompassing mul-tiple generation techniques. 2) Multi-dimensional qualitative assessment. Be-yond accuracy, precision, recall, and F1-score, we assess interpretability, feedback transparency, anhd usability, all of which are critical for adop-tion in investigative and legal contexts. 3) Systematic human-AI discordance analysis. 
+
+We quantify agreement between expert judgment and automated outputs using Cohen’s Kappa and map disagreement cases to specific image char-acteristics and generative techniques, revealing complementary strengths and blind spots that in-form hybrid human-tool workflows. 4) Actionable recommendations for tool develop-ment and law enforcement. We identify consis-tent failure modes, providing targeted guidance for developers and practitioners. 
+
+## 2. Background 
+
+Understanding the distinction between tampered and DF images is essential for interpreting detection tool perfor-mance, as each category presents fundamentally different challenges to both human analysts and automated systems. Examples of these tampered and DF images are provided in Figures 1-2. 
+
+2.1. Tampered Images 
+
+> Figure 1. Example of a tampered image created via copy-move manip-ulation.
+
+Image tampering refers to the deliberate modification of authentic photographs through localised manipulations. Common techniques include copy-move (duplicating a region within the same image), splicing (compositing el-ements from different images), and inpainting (removing or replacing objects). These operations leave detectable forensic traces, such as inconsistent noise patterns, du-plicated compression artifacts, mismatched lighting, and TABLE 1. P OSITIONING OF THIS WORK AGAINST EXISTING SURVEY LITERATURE . ✓ = ADDRESSED ; × = NOT ADDRESSED ; ◦ = PARTIALLY ADDRESSED .                                                                      
+
+> Dimension Mubarak Liu Nguyen Wang Nguyen This et al. [17] et al. [18] et al. [16] et al. [20] et al. [19] work
+> Detection algorithm taxonomy ✓✓✓✓✓◦
+> Algorithmic benchmark (accuracy, AUC, etc.) ✓✓✓✓✓✓
+> Empirical evaluation of public tools ×××××✓
+> Cross-paradigm comparison (forensic platforms vs. AI classifiers) ×××××✓
+> User-centric evaluation (interpretability, usability, transparency) ×××××✓
+> Human–AI discordance analysis ×××××✓
+> Practitioner-led assessment (law enforcement perspective) ×××××✓
+> Confidence score & feedback quality analysis ×××××✓
+> Number of tools evaluated 000006
+
+boundary discontinuities between manipulated and orig-inal regions, because the tampered area originates from a different source or processing pipeline than the sur-rounding content. Traditional forensic methods, including Error Level Analysis (ELA), noise analysis, and JPEG quantisation table inspection, were specifically designed to exploit these traces and have demonstrated reasonable effectiveness against conventional tampering [21], [22]. 
+
+2.2. Deepfake Images 
+
+> Figure 2. Example of a deepfake image generated using a diffusion model.
+
+DF images are synthetically generated or transformed using generative models (GMs), including Generative Ad-versarial Networks (GANs), Diffusion Models (DMs), and hybrid architectures. Unlike tampered images, DFs do not splice foreign content into an authentic photograph; instead, they synthesise entirely new pixel data or seam-lessly transform existing features (e.g., face swapping, attribute editing, full scene generation). This fundamental difference makes DFs considerably more challenging to detect for several reasons. First, modern GMs produce statistically coherent outputs that preserve consistent noise distributions, lighting, and com-pression characteristics across the entire image, eliminat-ing the localised inconsistencies that traditional forensic tools rely upon [23]. Second, the rapid proliferation of generation architectures, from StyleGAN and StarGAN to DDPM and HeyGen or MidJourney, means that detection tools must generalise across an ever-expanding diversity of synthetic signatures [16]. Third, DFs increasingly re-sist frequency-domain and pixel-level analysis as GMs incorporate adversarial training objectives that explicitly minimise detectable artifacts [24]. Consequently, while a tampered image typically contains a forensic artifacts between authentic and manipulated regions, a well-crafted DF presents a uniformly synthetic surface that offers no obvious point of entry for traditional detection methods. 
+
+## 3. Problem Statement 
+
+Despite substantial progress in DF detection research, the literature remains focused on evaluating individual algo-rithms under controlled conditions, with little attention to the publicly accessible tools that practitioners actually em-ploy. This leaves investigators and everyday users without evidence-based guidance on which freely available tools can reliably support DF detection in practice. To address this gap, we formulate three research questions. 
+
+RQ1: How effective are Forensically, FotoForensics, In-VID & WeVerify, DecopyAI, FaceOnLive, and Bitmind at detecting DF and tampered images? We hypothe-sise that all tools will exceed chance-level accuracy but vary substantially across generation techniques. Forensic analysis tools are expected to achieve stronger discrimi-nation when operated by experienced analysts, at the cost of higher analysis time, while automated classifiers will deliver faster but less consistent results. 
+
+RQ2: When and why do human evaluators and auto-mated tools disagree, and what image characteristics drive such discordances? We hypothesise that disagree-ment will peak in two scenarios: (i) high-quality DFs with subtle artifacts recognisable to human experts but missed by algorithms, and (ii) images with benign visual anomalies (compression, colour grading, motion blur) that trigger false positives in automated tools. Facial features and scene-level inconsistencies are expected to be the primary characteristics driving discordance. 
+
+RQ3: What are the practical challenges, limitations, and usability considerations affecting the real-world utility of these tools? We hypothesise a fundamental trade-off between analytical depth and usability: tools with greater customisation will demand more expertise and time, while simpler tools will score higher on usability but offer less diagnostic granularity. No tool is expected to reliably identify specific tampering techniques or provide the confidence-ranked, interpretable output required for evidentiary decision-making in legal contexts. 
+
+## 4. Methodology 
+
+This section describes the experimental design used to evaluate six publicly accessible DF detection tools across two paradigms. We detail the tool selection taxonomy (Section 4.1), dataset construction (Section 4.2), and eval-uation protocols including blinded human baseline assess-ment and performance metrics (Section 4.3). 4.1. Tool Selection and Overview 
+
+4.1.1. Detection Tool Taxonomy. Existing open-source DF detection tools available to end users can be broadly categorised into two fundamentally distinct paradigms based on their operational philosophy, the type of expertise they demand, and the nature of their outputs. The first paradigm, forensic analysis platforms , em-ploys signal-level techniques, such as Error Level Analysis (ELA), noise decomposition, JPEG quantisation inspec-tion, and frequency-domain transforms, to expose statisti-cal inconsistencies introduced by manipulation or genera-tion. These tools do not provide an exact decision; instead, they produce visual overlays, heatmaps, and analytical layers that a trained investigator/examiner must interpret, cross-reference, and synthesise into a judgment. Their strength lies in transparency: the analytical process is fully visible, enabling the investigator/examiner to reason about why an image may be manipulated and to present that reasoning in investigative or legal settings. However, this transparency comes at the cost of requiring domain expertise and substantially more analysis time per image. The second paradigm, automated AI classifiers , relies on DL architectures trained on large-scale datasets of real and synthetic images. These tools accept an image as input and return a binary prediction (real or fake) accompanied by a confidence score, requiring no specialised forensic knowledge from the user. Their strength is accessibility and speed: any user can obtain a result within seconds. The trade-off is opacity because these tools operate as black boxes whose underlying architectures and training data are typically undisclosed, providing no interpretable evidence to support their prediction. This two-paradigm distinction is not merely taxonomic; it reflects a fundamental trade-off in how detection tools balance analytical depth against accessibility , and trans-parency against automation . Neither paradigm alone is sufficient for real-world investigative needs. Forensic analysis tools offer the interpretability and evidentiary traceability that legal contexts demand but are impractical for high-volume screening. Automated classifiers enable rapid triage but cannot explain their decisions, limiting their utility as standalone evidentiary instruments. There-fore, this study should span both paradigms to (i) bench-mark their respective detection performance, (ii) expose their complementary strengths and blind spots, and (iii) inform the design of hybrid human–tool workflows that combine automated screening with expert forensic valida-tion, which is the operational model most likely to serve investigators in practice. 
+
+4.1.2. Selected Tools. Three criteria guided tool selection across both paradigms: (1) public accessibility without cost barriers; (2) applicability to static image analysis; and (3) sufficient diversity in detection methodology. Specifically, for forensic analysis platforms, we select 3 popular tools: FotoForensics, Forensically, and InVID & WeVerify; while DecopyAI, FaceOnLive, and Bitmind are selected for automated AI classifiers. Table 2 summarizes characteristics of these tools and detailed information about these tools are provided in Appendix. Furthermore, all evaluations were conducted by two investigators with professional experience in image and video analysis for law enforcement purposes, ensuring that tool outputs were interpreted with operational realism rather than purely academic abstraction. 
+
+4.2. Datasets 
+
+The first dataset, used to evaluate the forensic analysis tools, comprises 100 images (63 fake, 37 real) sourced from three established benchmarks: DF40 [25], CelebDF [26], and CASIA-v2 [27]. The fake images include both fully AI-generated imagery and tampered images, span-ning seven forgery types: copy objects, replace objects, remove objects, face editing, entirely generated, imperson-ation, and artist’s style mimicry. The real images are both unedited and edited photographs to evaluate the robustness of these tools. The second dataset, used to evaluate the automated AI classifiers, comprises 150 images divided into facial im-ages (70 DF, 40 real) and complete scenes depicting crim-inal activity (20 DF, 20 real), reflecting two prevalent DF misuse scenarios. Real images were sourced from CelebA [28], FFHQ [29], VFHQ [30], and UCF [31]. Fake im-ages were generated using DMs (MidJourney-v6, DDPM, RDDM, CollabDiff), GAN-based methods (StyleGAN3, StarGAN2, other GAN), face-swapping (SimSwap), and commercial avatar generation (HeyGen). 
+
+4.3. Evaluation Protocols 
+
+Both experiments were conducted by two professional investigators with extensive experience in image and video analysis for law enforcement purposes. To ensure ecolog-ical validity, the evaluation protocols were designed to simulate realistic investigative workflows while maintain-ing methodological rigor through blinded assessment and standardized procedures. 
+
+4.3.1. Forensic Analysis Platforms Evaluation. Each of the 100 images was submitted individually to Forensically, FotoForensics, and InVID & WeVerify. Where a tool of-fered multiple detection algorithms (e.g., ELA, noise anal-ysis, clone detection, double quantization, WAVELET), all available capabilities were employed and their outputs considered jointly, consistent with each platform’s recom-mended usage guidelines. For Forensically, whose meth-ods offer adjustable sensitivity parameters (e.g., minimal similarity, cluster size, block size), optimal settings were identified per image type through preliminary calibration and applied consistently to balance detection granularity with reproducibility. No user-tunable parameters exist for FotoForensics or InVID & WeVerify. Since none of the forensic tools provides a binary real/fake prediction, the investigator synthesised outputs across all available algorithms within each tool to arrive at a final predicted label. To mitigate interpretation bias, the full dataset was submitted to each tool before any results were compared against ground truth. Four classification metrics were computed per tool: accuracy, precision, recall, and F1-score, calculated both overall and disaggregated by image category. TABLE 2. S UMMARY OF KEY CHARACTERISTICS FOR FORENSIC AND AI CLASSIFIER TOOLS .
+
+Tool Paradigm Detection Approach Output Format User Tuning 
+
+FotoForensics Forensic Analysis ELA, hidden pixels, metadata Visual overlays requiring interpretation None Forensically Forensic Analysis ELA, clone detection, noise analysis, luminance grading, PCA, JPEG analysis, C2PA Visual overlays with adjustable parameters Extensive (per-method sensitivity sliders) InVID & WeVerify Forensic Analysis ELA, WAVELET, DCT, Double Quantization, CAGI, BLOCK, CMFD, Mantranet, FUSION Visual overlays across multiple algorithm tabs None DecopyAI AI Classifier Deep learning (undisclosed) Binary prediction + confidence score (%) None FaceOnLive AI Classifier Deep learning (undisclosed) Binary prediction + confidence score (%) None Bitmind AI Classifier Deep learning (undisclosed) Binary prediction + confidence in prediction (%) None 
+
+> TABLE 3. S UMMARIZATION OF BOTH DATASETS .
+
+Characteristic Dataset 1 (Forensic Tools) Dataset 2 (AI Classifiers) 
+
+Total images 100 150 Fake / Real 63 / 37 90 / 60 Content cate-gories Mixed (predominantly facial) Facial (110) and Scene (40) Real image sources DF40, CelebDF, CASIA-v2 CelebA, FFHQ, VFHQ, UCF Generative methods Various (via benchmark datasets) StyleGAN3, StarGAN2, Other GAN, HeyGen, SimSwap, Diffusion Models Blinding pro-cedure Neutral folder, no metadata cues Randomized file naming 
+
+4.3.2. Automated AI Classifiers Evaluation. Each of the 150 images was submitted sequentially to DecopyAI, FaceOnLive, and Bitmind, with one image processed at a time. Each tool returned a binary prediction (real or fake) and a confidence score. Since DecopyAI and FaceOnLive report the estimated probability of manipulation (higher = more likely fake), whereas Bitmind reports confidence in its binary prediction (a high score may indicate strong certainty that an image is real), Bitmind’s scores for im-ages assessed as real were inverted so that all confidence values uniformly represent estimated deepfake probability across tools. 
+
+4.3.3. Human Baseline Evaluation. A blinded human evaluation was performed prior to tool assessment to establish a human baseline and enable subsequent human-AI discordance analysis. The investigator, who was blind to the ground truth and had no prior experience with any of the three automated tools, examined each image manually, using only pinch-and-zoom functionality without any fil-tering, color adjustment, or other digital enhancement. For each image, the evaluator recorded a binary classification (real or fake), a confidence rating on a 1–5 Likert scale (where higher values indicate greater confidence that the image is a deepfake), and the specific image characteristics (e.g., inconsistencies in eyes, skin, transitions, objects) that informed the decision. 
+
+4.3.4. Metrics. Four classification metrics were computed per tool: accuracy, precision, recall, and F1-score, cal-culated both overall and disaggregated by content cate-gory (facial vs. scene) and by generative technique. In addition to standard classification metrics, we report the Real Detection Rate (Real Det.), defined as the propor-tion of genuine images correctly identified as real, i.e., TN/(TN+FP). This metric captures a tool’s specificity and is particularly relevant for investigative contexts where falsely accusing authentic evidence of being fabricated carries serious consequences. 
+
+## 5. Results 
+
+This section presents the empirical findings organised around the three research questions. We report overall detection performance across all six tools and the hu-man baseline (Section 5.1), disaggregate detection rates by generative technique (Section 5.2), analyse human-AI agreement and disagreement patterns (Section 5.3), and examine representative misclassification cases for both paradigms (Section 5.4). 
+
+5.1. Overall Detection Accuracy 
+
+Table 4 presents the unified performance comparison across all six tools and the human baseline. To enable direct cross-paradigm comparison, we compute accuracy, precision, recall, F1-score, real detection rate for the forensic analysis tools using their match/mismatch counts against ground truth. From Table 4, we can observe that:  
+
+> •
+
+The human evaluator substantially outperforms all six tools, achieving 94% accuracy, which is higher TABLE 4. O VERALL DETECTION PERFORMANCE OF ALL SIX TOOLS AND THE HUMAN EVALUATOR . F ORENSIC TOOLS WERE EVALUATED ON DATASET 1 (100 IMAGES ); AI CLASSIFIERS AND THE HUMAN EVALUATOR ON DATASET 2 (150 IMAGES ).                                                 
+
+> Tool Paradigm Acc. Prec. Rec. F1 Real Det.
+> Forensically Forensic 0.78 0.83 0.83 0.83 0.70 FotoForensics Forensic 0.74 0.77 0.84 0.80 0.57 InVID & WeV. Forensic 0.69 0.71 0.87 0.78 0.38 FaceOnLive AI Classif. 0.79 0.93 0.70 0.80 0.92 Bitmind AI Classif. 0.68 0.90 0.52 0.66 0.92 DecopyAI AI Classif. 0.66 0.91 0.48 0.63 0.93 Human –0.94 0.96 0.94 0.95 0.93
+
+than the best-performing tool, FaceOnLive, by 15%. This result confirms that experienced inves-tigators remain the most reliable single resource for DF detection.  
+
+> •
+
+The forensic analysis tools exhibit high recall but poor real detection rates. For example, In-VID & WeVerify detect 83% fake images but it correctly identifies only 37.8% of real images, performing worse than chance. This pattern arises because the layered analytical outputs produced by these platforms, including ELA maps, noise visualisations, and compression artifact indicators, routinely flag benign characteristics such as JPEG recompression or resizing artifacts as evidence of manipulation. Forensically partially mitigates this issue through more granular sensitivity controls and clearer interpretive guidance, achieving the highest real detection rate within this paradigm at 70.3%.  
+
+> •
+
+The AI classifiers display the opposite trade-off. All three tools achieve real detection rates above 91%, but their recall for fake images is markedly lower. For example, DecopyAI can detect only 48% of fake images. These results reveal a fundamental complementarity be-tween the two paradigms: forensic tools are sensitive to editting techniques applied to real images although they unlikely miss a DF, whereas AI classifiers fail to detect DFs. Neither paradigm alone delivers the combination of high recall and high specificity that investigative practice demands. 
+
+5.2. Detection by Generation Technique 
+
+In this experment, we aim to evaluate the detection ca-pabilities of these tools against specific types of genera-tion techniques. The evaluation dimensions differ across paradigms by design. Forensic analysis tools were origi-nally constructed to detect traditional image tampering by analysing forensic artifacts such as compression inconsis-tencies and splicing boundaries. Therefore, we evaluate whether these same techniques generalise to fully AI-generated DFs. AI classifiers, by contrast, are black-box systems whose training data and learned representations are unknown. Since their effectiveness is likely tied to the generative architectures seen during training, we evalu-ate their generalization across distinct generator families (GAN-based, diffusion-based, and hybrid methods such as HeyGen) to assess whether they generalise to unseen gen-eration pipelines. Table 5 disaggregates detection rates by                                                       
+
+> TABLE 5. D ETECTION RATE BY GENERATIVE TECHNIQUE FOR AI
+> CLASSIFIERS (D ATASET 2) AND BY FORGERY TYPE FOR FORENSIC TOOLS (D ATASET 1).
+> AI Classifiers (Dataset 2)
+> Technique nDecopyAI FaceOnLive Bitmind
+> StyleGAN3 10 100.0% 90.0% 40.0% StarGAN2 10 10.0% 50.0% 40.0% Other GAN 10 30.0% 30.0% 80.0% HeyGen 10 0.0% 0.0% 0.0% SimSwap 10 70.0% 90.0% 70.0% DM (facial) 20 45.0% 85.0% 70.0% DM (scene) 20 65.0% 100.0% 50.0%
+> Forensic Tools (Dataset 1)
+> Forgery Type nForensic. FotoFor. InVID
+> AI-generated 53 81.1% 81.1% 81.1% Tampered 19 84.2% 78.9% 84.2% Technique ID 63 22.2% 20.6% 17.5%
+
+generation technique for the AI classifiers (Dataset 2) and summarises forgery-type detection rates for the forensic tools (Dataset 1). 
+
+Can forensic tools generalise from tampering detec-tion to DF detection? All three forensic tools detect AI-generated images at 81.1%, only marginally below their tampered image detection rates (78.9–84.2%). These results indicate that fully synthesised DFs still produce artifacts visible through ELA and noise analysis despite lacking the splicing boundaries these tools were designed to detect. However, no tool correctly identifies the specific generation or tampering technique, meaning these plat-forms can flag suspicious images but cannot determine how the manipulation was performed. 
+
+Can AI classifiers generalise across unseen genera-tor families? The results reveal pronounced generator-dependent variation. Most strikingly, all three classifiers fail entirely on HeyGen, exposing a critical blind spot for commercial hybrid generation tools. GAN-based de-tection is highly uneven across tools: DecopyAI excels at StyleGAN3 (100%) but fails on StarGAN2 (10%), while Bitmind achieves only 40% for both StyleGAN2 and StyleGAN3. These results suggest each classifier has learned architecture-specific artifacts and generalises poorly to unfamiliar variants. Diffusion model outputs are detected with moderate success overall, with FaceOnLive achieving 100% on scenes, though DecopyAI and Bitmind lag on facial diffusion images (45% and 70%). These results confirm that no single AI classifier provides re-liable coverage across the full spectrum of contemporary generation methods. 
+
+5.3. Human vs. Tool Performance 
+
+A direct comparison between human judgment and auto-mated tool output is meaningful only for the AI classi-fier paradigm, as forensic analysis tools form a coupled human-tool system where the investigator interprets inter-mediate analytical outputs to reach a final decision. AI classifiers, by contrast, deliver autonomous binary predic-tions, enabling independent discordance analysis. The evaluator classified all 150 images in a blinded session prior to any tool evaluation, using only visual inspection with zoom capability. As shown in Table 6, TABLE 6. H UMAN –AI AGREEMENT AND DISAGREEMENT STATISTICS FOR THE THREE AI CLASSIFIERS EVALUATED AGAINST A BLINDED HUMAN BASELINE ON 150 IMAGES .                                   
+
+> DecopyAI FaceOnLive Bitmind On Agreement
+> Overall 64% 77% 66% Considered DF 43% 53% 45% Considered Real 57% 47% 55% Correct predictions 97% 97% 97% False predictions 3% 3% 3%
+> On Disagreement
+> Overall 36% 23% 34% Human: DF / Tool: Real 89% 80% 86% Human: Real / Tool: DF 11% 20% 14% Human correct 89% 83% 88% Tool correct 11% 17% 12%
+> Cohen’s Kappa 0.33 0.54 0.36
+
+when when human and tool predictions coincide, the joint decision is correct 97% of the time across all three classifiers. This consistency holds regardless of whether the agreed label is DF or real, indicating that concordance between an experienced investigator and an AI classifier can serve as a strong confidence signal in operational workflows. However, the disagreement pattern is markedly asymmetric: the dominant discordance type is the human correctly labeling a deepfake that the tool misses (80– 89% of disagreements). This indicates that current AI classifiers remain prone to false negatives on images that an experienced investigator can identify through semantic and perceptual cues such as anatomical inconsistencies, lighting irregularities, and object-level implausibility. In this experiment, we also use Cohen’s κ to measure agreement between human and tools, with values below 0.20 indicating slight agreement, 0.21–0.40 fair agree-ment, 0.41–0.60 moderate agreement, and above 0.60 substantial agreement. Under this scale, FaceOnLive ( κ =0.54 ) reaches moderate agreement, yet still falls short of the substantial threshold, underscoring that even the best-performing classifier in our evaluation cannot reliably substitute for experienced human assessment. 
+
+5.4. Miscalssification Analysis 
+
+5.4.1. Forensic Analysis Tools. We illustrate representa-tive failure modes by examining one misclassified image per tool. 
+
+InVID & WeVerify (false positive). Figure 3 presents the analysis of image, a genuine, unmanipulated photograph. ELA and multiple compression detectors (Double Quanti-sation, WAVELET, BLOCK, GHOST) converge on over-lapping regions, triggering a false manipulation prediction. The root cause is a high-saturation foreground element against a contrasting background, a benign property that activates fixed-threshold detectors with no user-adjustable sensitivity to suppress them. 
+
+Forensically (false positive). Figure 4 shows Forensi-cally’s clone detection output example, which is a real editted image. The tool interprets naturally recurring ar-chitectural textures as copy-move evidence, producing matches far exceeding the actual manipulation extent. De-spite configurable sensitivity sliders, the structural repet-itiveness of the scene defeats calibration, demonstrating 
+
+> Figure 3. InVID & WeVerify analysis of a real image. ELA and multiple compression detectors converge on false suspicion driven by natural colour contrast.
+
+that parametric control alone cannot resolve semantic ambiguity in visually repetitive imagery. 
+
+> Figure 4. Forensically clone detection on a real image. Recurring archi-tectural textures produce excessive false clone matches.
+
+FotoForensics (false negative). Figure 5 displays Foto-Forensics’ ELA output for an image example, which is a fully AI-generated face. The ELA map is effectively fea-tureless, showing no energy differentials between regions. Because FotoForensics relies predominantly on ELA with no supplementary algorithms or tunable parameters, it has no fallback when the generative model produces uniform compression behaviour and consistent noise distributions across the entire synthesised image. 
+
+5.4.2. AI Classifiers. Unlike forensic tools, whose mis-classifications stem from the vulnerability of forensic-Figure 5. FotoForensics ELA analysis of a fake AI-generated image. The featureless ELA map reveals no detectable manipulation traces. 
+
+based algorithms to editting techniques, AI classifiers errors are driven by the opacity of their learned representa-tions. To understand what classifiers miss, we analyse the visual cues that the human evaluator used to reach correct decisions in cases where at least one tool disagreed. Figure 6 summarises these cues across the full dataset (blue) and the disagreement cases (orange), where the human correctly identified a DF that one or more classifiers missed. To illustrate how these characteristics manifest and why they evade automated detection, we examine representative failure patterns. 
+
+Eyes and mouth Eyes and mouth are the most common cues driving human-tool disagreement (Figure 7). Eye anomalies include mismatched iris colour, asymmetric specular reflections, and unnatural edge transitions around the iris or eyelid. Mouth artifacts present as perspective distortions inconsistent with head pose, colour deviations, and teeth rendered with uniform lighting or missing inter-dental gaps. These require understanding of bilateral fa-cial symmetry and anatomical plausibility that pixel-level classifiers do not encode. 
+
+Skin and transitions include localised colour shifts and anatomically implausible wrinkle textures, alongside boundary artifacts between adjacent elements (hairline-to-forehead, skin-to-clothing) that appear over-smoothed or artificially sharp (Figure 8). These cues are perceptually salient to a trained analyst scanning for coherence across regions but are challenging to current classifiers which are trained primarily on global image statistics and tend to overlook. 
+
+Objects Object rendering errors occur with equal fre-quency to mouth anomalies and are particularly prevalent in scene-depicting images. As shown in Figure 9, gener-ated objects frequently lack fine structural detail: weapons missing mechanical subcomponents, accessories appear-ing to levitate without attachment points, and normally straight edges rendered with slight curvature. 
+
+## 6. Discussion and Future Works 
+
+This section synthesises the empirical findings into broader implications for DF detection practice. We discuss tool effectiveness and limitations (Section 6.1), provide actionable recommendations for law enforcement practi-tioners (Section 6.2), and identify priorities for future tool development (Section 6.3). 
+
+6.1. Discussion 
+
+6.1.1. Effectiveness of Current Tools. The results in Ta-bles 4-6 confirm that no single tool delivers reliable detec-tion across all generative methods and image categories. The cross-paradigm comparison reveals structurally dif-ferent failure profiles: forensic tools achieve high recall but poor specificity, routinely flagging authentic images as manipulated, while AI classifiers show the inverse pattern with strong real detection but substantially lower recall for fake images. 
+
+6.1.2. Challenges and Limitations. There are three main limitations of current public DF detection tools. First, forensic platforms analyse low-level statistical prop-erties (noise distributions, ELA residuals, quantization tables) that are perturbed by any post-processing, whether malicious or routine. With editted images, these tools struggle to analyze correctly. In contrast, AI classifiers rely on learned synthetic-artifact representations that may be absent from unseen generator families. The complete failure of all three classifiers on HeyGen (Table 5) illus-trates this: commercial hybrid pipelines can fall entirely outside learned decision boundaries. Second, although AI classifiers can detect both tampered and full AI-generated images, they fail to identify specific generation or tampering techniques. Confidence scores can be misleading, remaining high even for false negatives, meaning practitioners cannot distinguish well-founded classifications from confident errors without independent verification. This challenges their limit practical utility. Third, all tools process single static images without batch processing, multi-modal support, or machine-readable out-put, creating significant barriers for professional work-flows involving large evidence volumes. 
+
+6.2. Suggestion for Law Enforcement and Prac-titioners 
+
+Adopt multi-tool, multi-paradigm workflows. Practi-tioners should combine forensic platforms (high sensitiv-ity) with AI classifiers (high specificity), beginning with automated screening for rapid triage followed by forensic analysis of flagged images. 
+
+Treat outputs as intelligence, not predictions. Consis-tent with established principles of corroboration, detection outputs should be one input among several. The high false-negative rates of classifiers and false-positive rates of forensic tools preclude reliance on any single tool. 
+
+Document tool limitations in reporting. Practitioners should state which tools were used, their known limi-tations, and how human judgment was integrated. Since tool performance changes as models are updated, results should be treated as time-stamped assessments. 
+
+6.3. Suggestion for Future Tool Development 
+
+Implement explanatory feedback. Tools should provide visual annotations (heatmaps, noise maps, artifact high-lighting), textual descriptions of anomalies, and model-Figure 6. Distribution of image characteristics cited by the human evaluator when classifying images as DFs. Blue bars represent the full dataset; orange bars represent disagreement cases where the human was correct and at least one AI classifier was incorrect. 
+
+> Figure 7. Eye (top) and mouth (bottom) anomalies in DFs missed by AI classifiers.
+> Figure 8. Skin anomalies (top) and boundary transition artifacts (bottom) in DFs missed by AI classifiers.
+
+level feedback showing sub-model assessments. This sup-ports user trust and strengthens evidentiary utility. 
+
+Standardise confidence scores and output formats. 
+
+Current confidence metrics lack cross-tool comparability. A standardised metric with consistent semantics would enable meaningful comparison. Machine-readable formats (JSON, XML) would support integration with forensic 
+
+> Figure 9. Object rendering errors in DFs missed by AI classifiers
+
+pipelines. 
+
+Enable collaborative workflows and reporting. Tools should support activity logging, media annotation, metadata-based filtering, and exportable reports containing predictions, confidence levels, explanatory feedback, and analyst notes. 
+
+Expand training data diversity. The generator-dependent variation observed in AI classifier performance indicates insufficient coverage of contemporary methods. Training datasets should incorporate commercial hybrid platforms (e.g., HeyGen), emerging architectures, and adversarial examples, with regular retraining cycles. 
+
+## 7. Conclusion 
+
+This paper presented the first unified, cross-paradigm eval-uation of six publicly accessible deepfake detection tools, conducted by two professional investigators with law enforcement experience across a combined 250 images. The results reveal fundamental complementarity between paradigms: forensic analysis tools offer high sensitivity at the cost of frequent false positives, while AI classifiers provide strong specificity but miss a substantial proportion of deepfakes, with critical blind spots for certain generator families. Human evaluators significantly outperform all tools, and when human and tool predictions agree, ac-curacy is near-perfect. These findings advocate for hybrid workflows that combine multi-tool screening with expert judgment, rather than reliance on any single tool. We fur-ther identify transparency, explainability, and standardised output as key development priorities. Future work should expand to larger datasets, additional tools including com-mercial platforms, video and audio modalities, multiple human evaluators, and longitudinal monitoring of tool evolution as generative techniques continue to advance. 
+
+## References 
+
+[1] M. Westerlund, “The emergence of deepfake technology: A re-view,” Technology Innovation Management Review , vol. 9, no. 11, pp. 39–52, 2019. [2] M. Caldwell, J. T. A. Andrews, T. Tanay, and L. D. Griffin, “AI-enabled future crime,” Crime Science , vol. 9, no. 1, p. 14, 2020. [3] K. Tenbarge, “Explicit, AI-generated taylor swift images spread rapidly on social media,” https://www.nbcnews.com/tech/tech-new s/explicit-ai-generated-taylor-swift-images-continue-proliferate-x -insta-rcna136193, 2024, accessed: 28 June 2025. [4] CNN, “Finance worker pays out $25 million after video call with deepfake CFO,” https://edition.cnn.com/2024/02/04/asia/deepfa ke-cfo-scam-hong-kong-intl-hnk/index.html, 2024, accessed: 28 June 2025. [5] S. Lalchand, V. Srinivas, B. Maggiore, and J. Henderson, “Gener-ative AI and the fight against fraud,” https://www.deloitte.com/us/ en/insights/industry/financial-services/deepfake-banking-fraud-ris k-on-the-rise.html, 2024, accessed: 14 June 2025. [6] J. Pearson and N. Zinets, “Deepfake footage purports to show ukrainian president capitulating,” https://www.reuters.com/worl d/europe/deepfake-footage-purports-show-ukrainian-president-cap itulating-2022-03-16, 2022, accessed: 12 February 2026. [7] S. Pezenik and B. Shepherd, “Fake biden robocall urges new hampshire voters to skip their primary,” https://abcnews.com/ Politics/fake-biden-robocall-urges-new-hampshire-voters-skip/st ory?id=106580926, 2024, accessed: 12 February 2026. [8] T. Qiao, Y. Chen, X. Zhou, R. Shi, H. Shao, K. Shen, and X. Luo, “Csc-net: Cross-color spatial co-occurrence matrix network for de-tecting synthesized fake images,” IEEE Transactions on Cognitive and Developmental Systems , vol. 16, no. 1, pp. 369–379, 2023. [9] J. Wang, Z. Wu, W. Ouyang, X. Han, J. Chen, Y.-G. Jiang, and S.-N. Li, “M2tr: Multi-modal multi-scale transformers for deepfake detection,” in Proceedings of the 2022 international conference on multimedia retrieval , 2022, pp. 615–623. [10] J. Wang, Y. Sun, and J. Tang, “Lisiam: Localization invariance siamese network for deepfake detection,” IEEE Transactions on Information Forensics and Security , vol. 17, pp. 2425–2436, 2022. [11] D.-C. Tantaru, E. Oneata, and D. Oneata, “Weakly-supervised deepfake localization in diffusion-generated images,” in 2024 IEEE/CVF Winter Conference on Applications of Computer Vision (WACV) . IEEE Computer Society, 2024, pp. 6246–6256. [12] D. Liu, Z. Dang, C. Peng, Y. Zheng, S. Li, N. Wang, and X. Gao, “Fedforgery: generalized face forgery detection with residual fed-erated learning,” IEEE Transactions on Information Forensics and Security , vol. 18, pp. 4272–4284, 2023. [13] Z. Shi, H. Chen, L. Chen, and D. Zhang, “Discrepancy-guided re-construction learning for image forgery detection,” in Proceedings of the Thirty-Second International Joint Conference on Artificial Intelligence , 2023, pp. 1387–1395. [14] Z. Wang, J. Bao, W. Zhou, W. Wang, H. Hu, H. Chen, and H. Li, “Dire for diffusion-generated image detection,” in Proceedings of the IEEE/CVF International Conference on Computer Vision , 2023, pp. 22 445–22 455. [15] Z. Liu, X. Qi, and P. H. Torr, “Global texture enhancement for fake face detection in the wild,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2020, pp. 8060–8069. [16] H.-H. Nguyen-Le, V.-T. Tran, T. Nguyen, and N.-A. Le-Khac, “A survey on proactive deepfake defense: Disruption and watermark-ing,” ACM Computing Surveys , vol. 58, no. 5, pp. 1–37, 2025. [17] R. Mubarak, T. Alsboui, O. Alshaikh, I. Inuwa-Dutse, S. Khan, and S. Parkinson, “A survey on the detection and impacts of deepfakes in visual, audio, and textual formats,” Ieee Access , vol. 11, pp. 144 497–144 529, 2023. [18] P. Liu, Q. Tao, and J. Tianyi Zhou, “Evolving from single-modal to multi-modal facial deepfake detection: A survey,” arXiv e-prints ,pp. arXiv–2406, 2024. [19] H.-H. Nguyen-Le, V.-T. Tran, D.-T. Nguyen, and N.-A. Le-Khac, “Deepfake detection across image, video, and audio: A compre-hensive survey with empirical evaluation of generalization and robustness,” 2025. [20] T. Wang, X. Liao, K. P. Chow, X. Lin, and Y. Wang, “Deepfake de-tection: A comprehensive survey from the reliability perspective,” 
+
+ACM Computing Surveys , vol. 57, no. 3, pp. 1–35, 2024. [21] K. A. da Costa, J. P. Papa, L. A. Passos, D. Colombo, J. Del Ser, K. Muhammad, and V. H. C. de Albuquerque, “A critical literature survey and prospects on tampering and anomaly detection in image data,” Applied Soft Computing , vol. 97, p. 106727, 2020. [22] H. Chennamma and B. Madhushree, “A comprehensive survey on image authentication for tamper detection with localization,” 
+
+Multimedia Tools and Applications , vol. 82, no. 2, pp. 1873–1904, 2023. [23] H. Cao, C. Tan, Z. Gao, Y. Xu, G. Chen, P.-A. Heng, and S. Z. Li, “A survey on generative diffusion models,” IEEE transactions on knowledge and data engineering , vol. 36, no. 7, pp. 2814–2830, 2024. [24] X. Zhang, S. Karaman, and S.-F. Chang, “Detecting and simulating artifacts in gan fake images,” in 2019 IEEE international workshop on information forensics and security (WIFS) . IEEE, 2019, pp. 1–6. [25] Z. Yan, T. Yao, S. Chen, Y. Zhao, X. Fu, J. Zhu, D. Luo, C. Wang, S. Ding, Y. Wu et al. , “Df40: Toward next-generation deepfake detection,” Advances in Neural Information Processing Systems ,vol. 37, pp. 29 387–29 434, 2024. [26] Y. Li, X. Yang, P. Sun, H. Qi, and S. Lyu, “Celeb-df: A large-scale challenging dataset for deepfake forensics,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,2020, pp. 3207–3216. [27] J. Dong, W. Wang, and T. Tan, “Casia image tampering detection evaluation database,” in 2013 IEEE China summit and international conference on signal and information processing . IEEE, 2013, pp. 422–426. [28] H. Zhu, W. Wu, W. Zhu, L. Jiang, S. Tang, L. Zhang, Z. Liu, and C. C. Loy, “Celebv-hq: A large-scale video facial attributes dataset,” in European conference on computer vision . Springer, 2022, pp. 650–667. [29] T. Karras, S. Laine, and T. Aila, “A style-based generator archi-tecture for generative adversarial networks,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition ,2019, pp. 4401–4410. [30] L. Xie, X. Wang, H. Zhang, C. Dong, and Y. Shan, “Vfhq: A high-quality dataset and benchmark for video face super-resolution,” in 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 2022, pp. 657–666. [31] W. Sultani, C. Chen, and M. Shah, “Real-world anomaly detection in surveillance videos,” in Proceedings of the IEEE conference on computer vision and pattern recognition , 2018, pp. 6479–6488. [32] J. R. Lewis, “The system usability scale: past, present, and future,” 
+
+International Journal of Human–Computer Interaction , vol. 34, no. 7, pp. 577–590, 2018. 
+
+## Appendix A. Detailed Tool Description 
+
+Forensic Analysis Platforms. FotoForensics 10 is a web-based platform maintained by Hacker Factor, inspired by research presented at the BlackHat conference in 2007. It relies predom-inantly on ELA to detect manipulated or generated imagery, supplemented by metadata inspection, hidden pixel analysis, ICC profile review, and JPEG quality percentage examination. It offers no user-adjustable parameters for any of its detection capabilities, making it the most straightforward but also the most limited of the three forensic platforms. Supported input formats include JPEG, PNG, WebP, HEIC, and AVIF. Notably, FotoForensics does not guarantee upload privacy on its public-facing interface, though a dedicated login option and TOR-based submission are available. Forensically 11 is a browser-based suite of image detection capa-bilities that provides substantially broader analytical depth. Its toolset includes ELA, clone detection with configurable match-ing parameters, noise analysis via reverse denoising, level sweep, luminance grading, principal component analysis, metadata and geotag extraction, thumbnail analysis, JPEG quantization table inspection, C2PA content authenticity verification, and string extraction. A distinguishing feature of Forensically is the gran-ularity of user control: each detection method offers adjustable sensitivity parameters via sliding scales for variables such as minimal similarity, minimal detail, cluster size, and block size. This configurability enables fine-tuned analysis tailored to spe-cific image characteristics, though it demands a deeper under-standing of the underlying detection mechanics and significantly more time per analysis. Forensically also offers stronger privacy protections, stating that uploaded images remain on the user’s local machine and are never transmitted to external servers. InVID & WeVerify 12 operates as a browser plugin rather than a standalone website, offering the most extensive collection of de-tection algorithms among the forensic tools. Its forensic module includes ELA, noise analysis via Splicebuster and WAVELET decomposition, compression artifact detection through Double Quantization and Discrete Cosine Transform (DCT) coefficient analysis, grid-based methods (CAGI and BLOCK), copy-move forgery detection (CMFD), and experimental deep learning al-gorithms (Mantranet and FUSION). The platform additionally provides reverse image search integration through Google Lens, Baidu, Yandex, and Google Factcheck, as well as magnification and OCR capabilities. Unlike Forensically, InVID & WeVerify does not permit user adjustment of detection sensitivity, instead relying on the aggregation of outputs across multiple algorithms to establish suspicion. Its own documentation acknowledges that individual detectors may flag suspicious activity in both authentic and manipulated images, and that confidence in a determination should be drawn from convergence across multiple capabilities. 
+
+Automated AI Classifiers. DecopyAI 13 , FaceOnLiveFaceOn-Live 14 , and Bitmind 15 are web-based DF detection services that require only a computer, an internet connection, and a standard browser. No installation, programming, specialized hardware, or provision of personal data is required for any of the three tools, making them accessible to users with minimal technical exper-tise. All three operate as black-box classifiers whose underlying architectures and training data are not publicly disclosed, and none offers user-adjustable detection parameters. This opacity contrasts sharply with the forensic analysis tools, where the an-
+
+10. FotoForensics https://fotoforensics.com/ 11. Forensically https://29a.ch/photo-forensics/#forensic-magnifier 12. InVID & WeVerify https://weverify.eu/verification-plugin/ 13. DecopyAI https://decopy.ai/ 14. FaceOnLive https://faceonlive.com/deepfake-detector/ 15. FaceOnLive https://thedetector.ai/ InVID & WeVerify  FotoForensics  Forensically Figure 10. User interfaces of the three forensic analysis platforms. From left to right: InVID & WeVerify displaying ELA and multi-algorithm forensic overlays via its browser plugin; FotoForensics showing its ELA output with the original image; and Forensically presenting its clone detection view with adjustable sensitivity parameters. These tools produce analytical visualisations that require expert interpretation rather than automated predictions. DecopyAI Bitmind  FaceOnLive 
+
+> Figure 11. User interfaces of the three automated AI classifiers. From left to right: Bitmind (1: media selection; 2: image preview; 3: alternative media selection via URL; 4: ”Analyze Image” button; 5: prediction and confidence score; 6: similarity score; 7: distribution of individual confidence scores across all used models); DecopyAI (1: prediction; 2: confidence score; 3: upload button; 4: image preview; 5: PDF report; 6: language settings); and FaceOnLive (1: “Learn more” button; 2: image preview; 3: source selection; 4: “Detect” button; 5: overall prediction and confidence score; 6: DF prediction and confidence score; 7: face manipulation prediction and confidence score; 8: links to other tools; 9: language settings).
+
+alytical process is transparent even when interpretation remains subjective. DecopyAI and FaceOnLive express their output as the estimated probability of manipulation: a higher score indicates greater likelihood that an image is a DF. Bitmind employs a different scoring convention, reporting the confidence level in its binary prediction rather than the probability of manipulation directly. Consequently, an image classified as real may receive a high confidence score from Bitmind, indicating strong certainty in the real assessment rather than a high probability of being fake. For cross-tool comparability, Bitmind’s scores for images assessed as real must be inverted so that all confidence values uniformly represent estimated DF probability. 
+
+## Appendix B. Full Dataset Details 
+
+This appendix provides comprehensive details on the two datasets used to evaluate the forensic analysis platforms and automated AI classifiers, respectively. Both datasets were con-structed to prioritise generative diversity over volume, ensuring that tool performance could be assessed across a broad spectrum of manipulation and generation techniques rather than being dominated by a single synthetic pipeline. Table 3 in the main paper provides a high-level summary; the following subsections expand each dataset in full. 
+
+B.1. Dataset 1: Evaluate Forensic Analysis Tools 
+
+Dataset 1 comprises 100 images (63 fake, 37 real) assembled from three established benchmarks: DF40 [25], CelebDF [26], and CASIA-v2 [27]. The use of multiple sources ensures that the forensic tools encounter a variety of generation algorithms representative of content found in real-world investigative sce-narios. 
+
+B.1.1. Composition by Authenticity and Forgery Type. 
+
+The 63 fake images span two broad categories and seven forgery types:  
+
+> •
+
+AI-generated images (53 images): Entirely synthesised by generative models. These include full-scene genera-tion and face synthesis.  
+
+> •
+
+Tampered images (10 images): Authentic photographs subjected to localised manipulation, including copy-move, splice, and inpainting operations. The seven forgery types represented in the fake subset are: copy objects (duplicating a region within or across images), replace objects (substituting elements with foreign content), remove objects (inpainting to erase elements), face editing (attribute manipulation such as expression or age modification), entirely generated (full synthetic creation with no real source), imper-sonation (identity transfer via face swap or reenactment), and 
+
+artist’s style mimicry (generation in the visual style of a specific artist or aesthetic). Table 7 details the distribution. The 37 real images include both fully unedited photographs and images that have undergone non-malicious editing (e.g., cropping, brightness adjustment, resizing). The inclusion of edited real images is to evaluate the robustness of forensic tools because, in practice, virtually all digital photographs undergo some form of post-processing during capture, storage, or trans-mission [21]. If the dataset contained only pristine originals, the evaluation would overestimate real-image detection rates by presenting forensic tools with an unrealistically clean baseline. TABLE 7. D ATASET 1 COMPOSITION BY FORGERY TYPE .              
+
+> Category Forgery Type Count
+> AI-Generated Entirely generated 20 Impersonation 10 Face editing 10 Artist’s style mimicry 3Other AI-generated 10 Tampered Copy objects 6Replace objects 5Remove objects 8Real Unedited (raw) 18 Edited (non-malicious) 19
+> Total 100
+
+B.2. Dataset 2: Evaluate Automated AI Classi-fiers 
+
+Dataset 2 comprises 150 static images divided into two content categories that reflect prevalent DF misuse scenarios:  
+
+> •
+
+Facial images (110 images): 70 DFs and 40 real im-ages, representing identity-centric threats such as face swapping, attribute manipulation, and synthetic portrait generation.  
+
+> •
+
+Scene images (40 images): 20 DFs and 20 real images depicting complete scenes (including criminal activity scenarios), representing the use of generative AI for disinformation and fabricated evidence. This two-category structure enables disaggregated performance analysis, revealing whether detection tools exhibit category-specific strengths or weaknesses. 
+
+B.2.1. Real Image Sources. The 60 real images (40 facial, 20 scene) were sourced from four publicly available datasets:  
+
+> •
+
+CelebA [28]: Large-scale face attributes dataset provid-ing diverse celebrity facial images across a range of poses, lighting conditions, and backgrounds.  
+
+> •
+
+FFHQ [29]: Flickr-Faces-HQ, a high-quality face dataset originally created for training StyleGAN, offer-ing 1024 × 1024 resolution images with considerable variation in age, ethnicity, and accessories.  
+
+> •
+
+VFHQ [30]: Video Face Super-Resolution dataset pro-viding high-quality facial frames extracted from video, introducing natural motion-related characteristics (e.g., slight blur, varying focus) absent from curated still-image datasets.  
+
+> •
+
+UCF [31]: UCF Crime dataset providing real-world surveillance footage frames for the scene category, en-suring authentic visual characteristics typical of security and evidentiary contexts. 
+
+B.2.2. DF Generation Methods. The 90 DF images (70 facial, 20 scene) were generated using a diverse set of publicly available models and techniques, selected for both their popu-larity and ease of use. Table 8 details the distribution across generative methods and content categories. The generative methods were chosen to span the three dominant paradigms of contemporary image synthesis:  
+
+> •
+
+GAN-based methods (30 images) include StyleGAN-v3 (unconditional face generation with alias-free synthe-sis), StarGAN-v2 (multi-domain image-to-image trans-lation), and other GAN architectures, collectively repre-senting the most established family of generative mod-els.                                                   
+
+> TABLE 8. D ATASET 2COMPOSITION BY GENERATIVE METHOD AND CONTENT CATEGORY .
+> Generative Method Facial Scene Total
+> GAN-based methods
+> StyleGAN-v3 10 –10 StarGAN-v2 10 –10 Other GAN 10 –10
+> Diffusion models
+> MidJourney-v6, DDPM, RDDM, CollabDiff 20 20 40
+> Face-swapping
+> SimSwap 10 –10
+> Commercial hybrid
+> HeyGen 10 –10
+> Real images
+> CelebA, FFHQ, VFHQ 40 –40 UCF –20 20
+> Total 110 40 150
+> TABLE 9. D ISTRIBUTION OF IMAGE RESOLUTIONS IN DATASET 2,
+> GROUPED BY LONGEST DIMENSION .
+> Resolution Group Deepfake Real
+> >0 pixels (smallest) 54 12
+> >500 pixels 13 21
+> >1000 pixels 19 21
+> >1500 pixels 46
+> Total 90 60
+> •
+
+Diffusion models (40 images) include MidJourney-v6, Denoising Diffusion Probabilistic Models (DDPM), Residual Denoising Diffusion Models (RDDM), and CollabDiff, representing the rapidly maturing diffusion-based paradigm that has come to dominate high-fidelity image generation.  
+
+> •
+
+SimSwap (10 images) represents dedicated face-swapping techniques that operate on existing source photographs, a distinct manipulation modality from full-image synthesis.  
+
+> •
+
+HeyGen (10 images) represents commercial hybrid platforms that combine multiple generative techniques (e.g., face reenactment, lip sync, avatar creation) into consumer-facing products, creating outputs whose syn-thetic signatures may differ substantially from those of pure research models. 
+
+B.2.3. Image Resolution Distribution. The dataset exhibits considerable variation in image resolution. Table 10 groups images by their longest dimension, split by authenticity. The resolution distribution is not uniform across classes: DF images skew toward lower resolutions (60% below 500 pix-els on their longest dimension), while real images distribute more evenly across resolution groups. This imbalance reflects authentic conditions, as many generative models default to fixed output resolutions (e.g., 256 × 256 or 512 × 512 ), whereas real photographs are captured at native sensor resolution and may be subsequently downscaled. However, this distribution also has implications for detection performance. As discussed in Appendix C, all three AI classifiers exhibit degraded accuracy on images below 500 × 500 pixels, suggesting that low-resolution inputs reduce the statistical features available for classification. 
+
+B.3. Cross-Dataset Design Rationale 
+
+The use of two separate datasets, rather than a single unified corpus, is a deliberate design choice motivated by the fundamen-tally different evaluation requirements of the two tool paradigms. Forensic analysis tools require images that test their ability to detect both traditional tampering (which leaves localised foren-sic traces) and AI-generated content (which produces globally TABLE 10. D EEPFAKE DETECTION RATE BY IMAGE RESOLUTION FOR AI CLASSIFIERS AND THE HUMAN EVALUATOR . M ETRIC : ACC.                     
+
+> Resolution Human DecopyAI FaceOnLive Bitmind
+> ≤500 px ( n=54 )94% 44% 52% 52% 501–1000 px ( n=13 )92% 31% 100% 62% 1001–1500 px ( n=19 )95% 68% 95% 53%
+> >1500 px ( n=4 )100% 50% 100% 25%
+
+consistent synthetic signatures). Dataset 1 therefore includes tampered images alongside AI-generated content, with forgery-type annotations that enable fine-grained analysis of whether tampering-detection techniques generalise to generative content. AI classifiers, by contrast, return binary predictions without access to intermediate forensic signals, and their performance is expected to vary primarily as a function of the generative archi-tecture used. Dataset 2 therefore prioritises generative diversity, spanning three GAN families, four diffusion model variants, a face-swapping method, and a commercial hybrid platform, while also introducing a content-category dimension (facial vs. scene) that is absent from Dataset 1. Despite their structural differences, both datasets share key de-sign principles: deliberate inclusion of challenging edge cases (edited real images in Dataset 1; low-resolution images and com-mercial hybrid outputs in Dataset 2), and sourcing from multiple established benchmarks to avoid single-dataset artefacts. 
+
+## Appendix C. Additional Experiments 
+
+C.1. Performance by Image Resolution 
+
+To examine how input resolution affects classifier performance, we disaggregate detection rates for the 90 DFs in Dataset 2 by longest dimension. Table 10 reports results across four resolution bins. All three classifiers perform worst on images below 500 px, where detection rates fall to 44–52%, despite this bin contain-ing the majority of DFs (60%). This is practically significant because many generative models produce fixed-resolution out-puts (e.g., 256 ×256), and evidence images frequently arrive at reduced resolution due to platform compression or social media redistribution. Resolution sensitivity also varies across tools: FaceOnLive achieves near-perfect detection above 500 px, while DecopyAI drops to just 31% in the 501–1000 px range. The human evaluator, by contrast, remains stable at 92–100% across all bins, confirming that the semantic cues driving human detection are more resilient to spatial downsampling than the pixel-level statistical features that classifiers rely upon.                    
+
+> TABLE 11. P ROCESSING TIME STATISTICS FOR AI CLASSIFIERS ACROSS 150 IMAGES .
+> Metric DecopyAI FaceOnLive Bitmind
+> Total time (s) 1020.38 408.83 781.20 Min / Max (s) 0.92 / 8.43 1.61 / 5.71 3.03 / 13.96 Mean per image (s) 6.80 2.73 5.21 Throughput (KB/s) 54.40 135.79 71.06
+
+C.2. Cross-Tool Speed Performance 
+
+Processing speed is a practical consideration for investigative workflows involving large evidence volumes. Table 11 sum-marises the timing characteristics of the three AI classifiers across the full 150-image dataset (55.52 MB total). FaceOnLive is the fastest tool by a substantial margin, processing images at 2.5 × the speed of DecopyAI and 1.9 × that of Bitmind. It also exhibits the narrowest timing variance (1.61–5.71 s), indicating more predictable behaviour across different image sizes and content types. DecopyAI is the slowest overall, while Bitmind shows the widest per-image variance (3.03–13.96 s). For reference, the blinded human evaluation was completed in a continuous 1:47:33 session, yielding an average analysis time of 43.02 seconds per image. While not directly comparable to tool processing time (as human analysis includes visual inspection, reasoning, and note-taking rather than upload and computation), this figure contextualises the speed advantage of automated classifiers: even the slowest tool is approximately 6 × faster per image than expert manual assessment. This speed differential becomes operationally significant when triaging large evidence sets, supporting the hybrid workflow recommended in Section 6 where automated classifiers perform initial screening before targeted expert review. 
+
+C.3. Human-AI Discordance across Generation Techniques 
+
+The aggregate discordance statistics in Table 6 of the main paper conceal substantial variation across content categories and generative techniques. This section disaggregates these patterns to identify where human–tool divergence concentrates. 
+
+C.3.1. Category-Level Discordance. Table 12 separates agreement and disagreement statistics for facial images (110) and scene images (40).                                
+
+> TABLE 12. H UMAN –AI AGREEMENT AND DISAGREEMENT BY CATEGORY .
+> Decopy FaceOn Bitmind
+> Agreement rate Facial 57% 71% 64% Scene 83% 93% 73% Correct when agreeing Facial 95% 96% 96% Scene 100% 100% 100% Human correct in disagreement Facial 87% 81% 85% Scene 100% 100% 100% Cohen’s κFacial 0.22 0.44 0.32 Scene 0.65 0.85 0.45
+
+Agreement is consistently higher for scene images (73–93%) than facial images (57–71%), and Cohen’s κ improves corre-spondingly. Notably, in scene-category disagreements, human judgment is correct 100% of the time across all three tools, and no tool outperforms the human in any disagreement case. This indicates that scene-depicting DFs, while better detected overall by both humans and tools, present fewer ambiguous boundary cases than facial images. 
+
+C.3.2. Technique-Level Discordance. Figure 12 shows the distribution of disagreement cases across generative methods. The most prominent pattern is the concentration of disagree-ments on HeyGen images, where all three tools classified every image as real. This aligns with the complete detection failure reported in Table 5 and confirms that HeyGen outputs fall entirely outside the classifiers’ learned decision boundaries. Among GAN-based methods, StarGAN2 produces the highest disagreement rates for DecopyAI and FaceOnLive, while Bit-mind’s disagreements distribute more evenly across techniques. StyleGAN3 StarGAN2 Other    
+
+> GAN
+> HeyGen SimSwap DM
+> (facial)
+> DM
+> (scene)
+> Real
+> (facial)
+> Real
+> (scene)
+> 0
+> 2
+> 4
+> 6
+> 8
+> 10
+> 12
+> Number of Disagreement Cases
+> 1
+> 9
+> 7
+> 10
+> 3
+> 11
+> 7
+> 6
+> 2
+> 5
+> 6
+> 9
+> 1
+> 3
+> 6
+> 3
+> 6
+> 7
+> 2
+> 10
+> 3
+> 7
+> 10
+> 5
+> 1
+> Deepfake Techniques Real Images DecopyAI
+> FaceOnLive
+> Bitmind
+
+Figure 12. Number of human–AI disagreement cases across generative techniques for each AI classifier. 
+
+For diffusion model outputs, FaceOnLive shows no disagreement on scene-category images (detecting all 20 correctly), whereas DecopyAI and Bitmind exhibit 7 and 10 disagreements re-spectively in this category. Disagreements on real images are rare across all tools, consistent with the high specificity (real detection rates >91%) reported in the main paper. These technique-level patterns reinforce the finding that classi-fier blind spots are generator-specific rather than uniform, and that the combination of multiple tools with human oversight is necessary to achieve reliable coverage across the full spectrum of contemporary generation methods. 
+
+C.4. Confidence Scores Analysis 
+
+The aggregate accuracy metrics in Table 4 reveal what tools get wrong, but not how confidently they get it wrong. This distinction matters for practical deployment: a tool that assigns low confidence to its errors provides an implicit warning for manual review, whereas a tool that expresses high confidence on incorrect predictions is actively misleading. This section ex-amines whether the confidence scores produced by the three AI classifiers serve as reliable indicators of prediction correctness. A prerequisite for comparison is aligning confidence semantics across tools. DecopyAI and FaceOnLive report the estimated probability of manipulation (higher = more likely fake), whereas Bitmind reports confidence in its binary verdict. For an image classified as real, Bitmind may report 95% confidence, indicating strong certainty in the real assessment rather than high DF probability. To enable uniform comparison, Bitmind’s scores for real-classified images are inverted so that all values represent estimated DF probability. 
+
+C.4.1. Aggregate Confidence by Classification Out-come. Table 13 disaggregates average confidence scores across the four classification outcomes. Correctly classified images behave as expected: high confidence on true positives and low confidence on true negatives. The critical finding concerns errors. DecopyAI assigns 94.02% av-erage confidence to false positives, which is higher than its true positive average (88.29%). This means that the tool is more confident when wrongly flagging real images than when correctly identifying DFs. FaceOnLive and Bitmind exhibit the same pattern at reduced magnitude. For false negatives, all three 
+
+TABLE 13. A VERAGE CONFIDENCE SCORES (%, AS DEEPFAKE PROBABILITY ) FOR EACH CLASSIFICATION OUTCOME .DecopyAI FaceOnLive Bitmind True Positives 88.29 94.79 86.00 True Negatives 3.10 3.93 24.00 False Positives 94.02 75.60 79.93 False Negatives 3.91 7.26 24.27 
+
+tools assign very low DF probability (3.91–24.27%), expressing near-complete certainty that synthetic images are authentic. Prac-titioners receiving these outputs would have no basis to suspect tool failure. 
+
+C.4.2. Confidence Score Distribution. Table 14 presents the confidence distribution across five bins, alongside the human baseline. 
+
+TABLE 14. D ISTRIBUTION OF CONFIDENCE SCORES ACROSS FIVE BINS . B INS 1–5 CORRESPOND TO 0–20%, 20.01–40%, 40.01–60%, 60.01–80%, AND 80.01–100% ESTIMATED DEEPFAKE PROBABILITY ,
+
+> RESPECTIVELY
+
+.Bin Range Human DecopyAI FaceOnLive Bitmind 1 0–20% 29 97 75 52 20.01–40% 35 4 1 93 3 40.01–60% 15 4 7 04 60.01–80% 24 9 6 45 80.01–100% 47 36 61 48 
+
+DecopyAI and FaceOnLive exhibit strongly bimodal distribu-tions, clustering at the scale extremes with minimal intermediate scores. Both tools function as near-binary classifiers that express either very high or very low confidence, providing no uncertainty signal. Bitmind’s lower bin shifts toward 20–40%, consistent with its higher baseline scores in Table 13. The human evaluator, by contrast, distributes confidence across all five bins, reflecting calibrated assessment that acknowledges gradations of certainty where ambiguous cases concentrate. 
+
+C.4.3. Confidence by Generative Technique. Table 15 disaggregates confidence for correctly detected deepfakes (TP) and missed DFs (FN) by generative technique. The most consequential finding concerns HeyGen, the one gener-ation method where all three classifiers failed entirely (Table 5). TABLE 15. A VERAGE CONFIDENCE SCORES (%) FOR TRUE POSITIVES (TP) AND FALSE NEGATIVES (FN) BY GENERATIVE TECHNIQUE . “–” INDICATES NO CASES FOR THAT TOOL -TECHNIQUE COMBINATION .Technique DecopyAI FaceOnLive Bitmind StyleGAN3 TP 92.52 91.00 86.40 FN – 23.00 24.44 StarGAN2 TP 95.48 93.80 84.27 FN 0.28 3.00 22.84 Other GAN TP 54.65 91.67 86.63 FN 6.31 7.71 22.76 HeyGen TP – – –FN 0.05 5.20 24.70 SimSwap TP 89.75 90.67 86.17 FN 8.61 48.00 29.10 DM (facial) TP 89.61 96.71 84.80 FN 8.06 1.33 25.81 DM (scene) TP 90.54 97.45 87.58 FN 3.18 – 22.54 
+
+Despite detecting zero HeyGen images, the tools express near-complete certainty in their incorrect assessments: DecopyAI averages 0.05%, FaceOnLive 5.20%, and Bitmind 24.70% DF probability. A practitioner relying on these scores would receive unambiguous confirmation that every HeyGen image is authen-tic. A similar pattern appears for StarGAN2, where DecopyAI detects only 1 of 10 images but assigns 0.28% average DF probability to the 9 misses. FaceOnLive shows slightly better calibration on SimSwap false negatives (48.00%), approaching the decision boundary, but this remains isolated rather than systematic. These results establish that current AI classifier confidence scores are poorly calibrated indicators of prediction reliability. The scores reinforce correct predictions but provide no warning when the tool is wrong. For investigative workflows, confidence scores cannot substitute for independent verification, and prac-titioners should treat automated predictions as one input among several rather than as calibrated probability estimates. 
+
+C.5. Usability and Result Interpretability 
+
+Detection accuracy alone does not determine a tool’s practical value. A tool that delivers correct predictions but presents them ambiguously may be less useful than a slightly less accurate tool with clear, interpretable output. This section evaluates us-ability and feedback quality across both paradigms, combining a standardised quantitative assessment for the AI classifiers with qualitative observations for the forensic platforms. 
+
+C.5.1. AI Classifier Usability. The System Usability Scale (SUS) [32] was applied to the three AI classifiers. SUS is a ten-item Likert-scale questionnaire yielding a score from 0 to 100, where scores above 68 are considered above average and scores above 80 indicate excellent usability. Table 16 presents the full response set. All three tools score well above the “excellent” threshold of 80. Bitmind achieves the highest score (97.5), reflecting its mini-mal interface. DecopyAI scores 92.5, with its two-click work-flow contributing to perceived simplicity. FaceOnLive scores slightly lower (85.0) due to an additional analysis-initiation step and multiple sub-predictions (overall, deepfake-specific, face-manipulation-specific) that introduce minor cognitive overhead. All tools require only 2–3 clicks from image selection to result, making them accessible to non-technical users. 
+
+C.5.2. Feedback Richness and Transparency. High us-ability does not guarantee interpretable or actionable output. We evaluated each AI classifier against eight feedback quality criteria. Table 17 presents the results.                                                                               
+
+> TABLE 16. SUS RESPONSES (1 = STRONGLY DISAGREE ,5 = STRONGLY AGREE ). O DD ITEMS ARE POSITIVELY WORDED ;EVEN ITEMS NEGATIVELY WORDED . D EC . = D ECOPY AI; FOL = F ACE ONLIVE ; B IT . = B ITMIND .Statement Dec. FoL Bit. S1: Use frequently 344S2: Unnecessarily complex 121S3: Easy to use 545S4: Need technical support 111S5: Well integrated 435S6: Too much inconsistency 111S7: Learn quickly 555S8: Cumbersome 121S9: Felt confident 555S10: Needed to learn a lot 111
+> SUS Score 92.5 85.0 97.5
+> Clicks to result 233TABLE 17. F EEDBACK RICHNESS ASSESSMENT .✓=PRESENT ;× = ABSENT .Criterion DecopyAI FaceOnLive Bitmind Clear verdict ✓✓✓
+> Confidence score ✓✓✓
+> Textual explanation ×××Annotations / heatmaps ×××Easy to interpret ✓✓×Process described ××✓
+> Help / documentation ×✓×Next-step guidance ×××
+> Total (/8) 343
+
+No tool provides textual explanations, image annotations, heatmaps, or next-step recommendations. All deliver a ver-dict and confidence score, but none explains why a prediction was made. Bitmind partially compensates by displaying sub-model confidence distributions, though its inverted confidence semantics (Appendix C.4) reduce interpretive clarity. FaceOn-Live achieves the highest feedback score by providing accessible documentation and separating output into three prediction cate-gories. DecopyAI offers a downloadable PDF report containing only the verdict and score. The consistent absence of explanatory feedback represents a significant limitation for investigative use: practitioners receive a binary label and a percentage but no evidence trail. 
+
+C.5.3. Forensic Analysis Platform Usability. Forensic platforms were not evaluated using SUS because their interac-tive, multi-algorithm workflows do not conform to the single-task interaction model SUS assumes. We report qualitative observa-tions from the investigator’s experience. 
+
+FotoForensics offers the simplest interface: upload an image and navigate pre-computed analysis tabs (ELA, hidden pixels, meta-data). No parameters are adjustable and results appear within seconds, making it the fastest forensic tool for initial screening but also the most limited when results are ambiguous. 
+
+Forensically provides the greatest analytical depth through per-method sensitivity controls (sliding scales for minimal similarity, cluster size, block size, and other parameters). However, this configurability introduces a significant usability challenge: dif-ferent sensitivity settings for the same image frequently produced contradictory results. The investigator must understand each detection method’s mechanics to select appropriate parameters, making the learning curve steep and the time investment per image substantially higher. 
+
+InVID & WeVerify offers the most extensive algorithm col-lection (ELA, WAVELET, DCT, Double Quantisation, CAGI, BLOCK, CMFD, Mantranet, FUSION) but no user-adjustable sensitivity. Its documentation acknowledges that individual de-tectors may flag suspicious activity in both authentic and ma-nipulated images, recommending that confidence be drawn from convergence across multiple capabilities. In practice, this aggre-gation burden falls entirely on the investigator, contributing to the tool’s 37.8% real detection rate (Table 4). 
+
+C.5.4. Cross-Paradigm Comparison. Table 18 sum-marises usability characteristics across paradigms.                   
+
+> TABLE 18. C ROSS -PARADIGM USABILITY COMPARISON .Dimension Forensic AI Classif. Time/image Minutes Seconds Expertise req. High None Tunable params. Forensic. only None Output format Visual overlays Binary + % Interp. burden On investigator Minimal Transparency Full Opaque Explan. feedback Visual only None Evid. trace High None
+
+The two paradigms present an inverse usability–transparency trade-off. AI classifiers are highly usable (SUS 85–97.5) and require no expertise, but operate as opaque systems providing no interpretable evidence. Forensic platforms demand substantial expertise and time but offer full analytical transparency, enabling investigators to reason about why an image may be manipulated. Neither paradigm alone satisfies the requirement for tools that are simultaneously accessible, transparent, and accurate, reinforcing the hybrid workflow recommendation in Section 6.

@@ -1,0 +1,650 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-10T19:29:27.151312+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 5,
+    "deep_cap": 6,
+    "deep_selected": 5,
+    "quick_candidates": 21,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2603.01291v1",
+      "title": "JailNewsBench: Multi-Lingual and Regional Benchmark for Fake News Generation under Jailbreak Attacks",
+      "abstract": "Fake news undermines societal trust and decision-making across politics, economics, health, and international relations, and in extreme cases threatens human lives and societal safety. Because fake news reflects region-specific political, social, and cultural contexts and is expressed in language, evaluating the risks of large language models (LLMs) requires a multi-lingual and regional perspective. Malicious users can bypass safeguards through jailbreak attacks, inducing LLMs to generate fake news. However, no benchmark currently exists to systematically assess attack resilience across languages and regions. Here, we propose JailNewsBench, the first benchmark for evaluating LLM robustness against jailbreak-induced fake news generation. JailNewsBench spans 34 regions and 22 languages, covering 8 evaluation sub-metrics through LLM-as-a-Judge and 5 jailbreak attacks, with approximately 300k instances. Our evaluation of 9 LLMs reveals that the maximum attack success rate (ASR) reached 86.3% and the maximum harmfulness score was 3.5 out of 5. Notably, for English and U.S.-related topics, the defensive performance of typical multi-lingual LLMs was significantly lower than for other regions, highlighting substantial imbalances in safety across languages and regions. In addition, our analysis shows that coverage of fake news in existing safety datasets is limited and less well defended than major categories such as toxicity and social bias. Our dataset and code are available at https://github.com/kanekomasahiro/jail_news_bench.",
+      "authors": [
+        "Masahiro Kaneko",
+        "Ayana Niwa",
+        "Timothy Baldwin"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CL"
+      ],
+      "published": "2026-03-01T21:50:03+00:00",
+      "link": "https://arxiv.org/pdf/2603.01291v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark for fake news generation and robustness",
+      "llm_evidence_cn": "虚假新闻生成与鲁棒性基准",
+      "llm_evidence": "虚假新闻生成与鲁棒性基准",
+      "canonical_evidence": "虚假新闻生成与鲁棒性基准",
+      "llm_tldr_en": "Presents JailNewsBench to evaluate LLM robustness against jailbreak-induced fake news generation across regions.",
+      "llm_tldr_cn": "提出JailNewsBench，用于评估大模型在越狱攻击下生成多语言区域性虚假新闻的鲁棒性。",
+      "llm_tldr": "提出JailNewsBench，用于评估大模型在越狱攻击下生成多语言区域性虚假新闻的鲁棒性。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.01450v1",
+      "title": "Deepfake Forensics Adapter: A Dual-Stream Network for Generalizable Deepfake Detection",
+      "abstract": "The rapid advancement of deepfake generation techniques poses significant threats to public safety and causes societal harm through the creation of highly realistic synthetic facial media. While existing detection methods demonstrate limitations in generalizing to emerging forgery patterns, this paper presents Deepfake Forensics Adapter (DFA), a novel dual-stream framework that synergizes vision-language foundation models with targeted forensics analysis. Our approach integrates a pre-trained CLIP model with three core components to achieve specialized deepfake detection by leveraging the powerful general capabilities of CLIP without changing CLIP parameters: 1) A Global Feature Adapter is used to identify global inconsistencies in image content that may indicate forgery, 2) A Local Anomaly Stream enhances the model's ability to perceive local facial forgery cues by explicitly leveraging facial structure priors, and 3) An Interactive Fusion Classifier promotes deep interaction and fusion between global and local features using a transformer encoder. Extensive evaluations of frame-level and video-level benchmarks demonstrate the superior generalization capabilities of DFA, particularly achieving state-of-the-art performance in the challenging DFDC dataset with frame-level AUC/EER of 0.816/0.256 and video-level AUC/EER of 0.836/0.251, representing a 4.8% video AUC improvement over previous methods. Our framework not only demonstrates state-of-the-art performance, but also points out a feasible and effective direction for developing a robust deepfake detection system with enhanced generalization capabilities against the evolving deepfake threats. Our code is available at https://github.com/Liao330/DFA.git",
+      "authors": [
+        "Jianfeng Liao",
+        "Yichen Wei",
+        "Raymond Chan Ching Bon",
+        "Shulan Wang",
+        "Kam-Pui Chow",
+        "Kwok-Yan Lam"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-02T04:58:00+00:00",
+      "link": "https://arxiv.org/pdf/2603.01450v1",
+      "tags": [
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "vision-language models for deepfake detection",
+      "llm_evidence_cn": "用于深度伪造检测的视觉语言模型",
+      "llm_evidence": "用于深度伪造检测的视觉语言模型",
+      "canonical_evidence": "用于深度伪造检测的视觉语言模型",
+      "llm_tldr_en": "A dual-stream network leveraging CLIP for generalizable deepfake detection across emerging patterns.",
+      "llm_tldr_cn": "一种利用 CLIP 模型实现可泛化深度伪造检测的双流网络框架。",
+      "llm_tldr": "一种利用 CLIP 模型实现可泛化深度伪造检测的双流网络框架。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "state of the art multimodal fake news detection models",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.07515v1",
+      "title": "EvolveReason: Self-Evolving Reasoning Paradigm for Explainable Deepfake Facial Image Identification",
+      "abstract": "With the rapid advancement of AIGC technology, developing identification methods to address the security challenges posed by deepfakes has become urgent. Face forgery identification techniques can be categorized into two types: traditional classification methods and explainable VLM approaches. The former provides classification results but lacks explanatory ability, while the latter, although capable of providing coarse-grained explanations, often suffers from hallucinations and insufficient detail. To overcome these limitations, we propose EvolveReason, which mimics the reasoning and observational processes of human auditors when identifying face forgeries. By constructing a chain-of-thought dataset, CoT-Face, tailored for advanced VLMs, our approach guides the model to think in a human-like way, prompting it to output reasoning processes and judgment results. This provides practitioners with reliable analysis and helps alleviate hallucination. Additionally, our framework incorporates a forgery latent-space distribution capture module, enabling EvolveReason to identify high-frequency forgery cues difficult to extract from the original images. To further enhance the reliability of textual explanations, we introduce a self-evolution exploration strategy, leveraging reinforcement learning to allow the model to iteratively explore and optimize its textual descriptions in a two-stage process. Experimental results show that EvolveReason not only outperforms the current state-of-the-art methods in identification performance but also accurately identifies forgery details and demonstrates generalization capabilities.",
+      "authors": [
+        "Binjia Zhou",
+        "Dawei Luo",
+        "Shuai Chen",
+        "Feng Xu",
+        "Seow",
+        "Haoyuan Li",
+        "Jiachi Wang",
+        "Jiawen Wang",
+        "Zunlei Feng",
+        "Yijun Bei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-08T07:42:34+00:00",
+      "link": "https://arxiv.org/pdf/2603.07515v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "explainable deepfake facial image identification",
+      "llm_evidence_cn": "可解释的深度伪造人脸图像识别",
+      "llm_evidence": "可解释的深度伪造人脸图像识别",
+      "canonical_evidence": "可解释的深度伪造人脸图像识别",
+      "llm_tldr_en": "Proposes EvolveReason for explainable deepfake detection using a chain-of-thought reasoning paradigm.",
+      "llm_tldr_cn": "提出EvolveReason，利用思维链推理范式实现可解释的深度伪造人脸检测。",
+      "llm_tldr": "提出EvolveReason，利用思维链推理范式实现可解释的深度伪造人脸检测。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.03585v1",
+      "title": "Belief-Sim: Towards Belief-Driven Simulation of Demographic Misinformation Susceptibility",
+      "abstract": "Misinformation is a growing societal threat, and susceptibility to misinformative claims varies across demographic groups due to differences in underlying beliefs. As Large Language Models (LLMs) are increasingly used to simulate human behaviors, we investigate whether they can simulate demographic misinformation susceptibility, treating beliefs as a primary driving factor. We introduce BeliefSim, a simulation framework that constructs demographic belief profiles using psychology-informed taxonomies and survey priors. We study prompt-based conditioning and post-training adaptation, and conduct a multi-fold evaluation using: (i) susceptibility accuracy and (ii) counterfactual demographic sensitivity. Across both datasets and modeling strategies, we show that beliefs provide a strong prior for simulating misinformation susceptibility, with accuracy up to 92%.",
+      "authors": [
+        "Angana Borah",
+        "Zohaib Khan",
+        "Rada Mihalcea",
+        "Verónica Pérez-Rosas"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-03-03T23:29:35+00:00",
+      "link": "https://arxiv.org/pdf/2603.03585v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "simulating misinformation susceptibility",
+      "llm_evidence_cn": "模拟虚假信息易感性",
+      "llm_evidence": "模拟虚假信息易感性",
+      "canonical_evidence": "模拟虚假信息易感性",
+      "llm_tldr_en": "Investigates LLM capabilities in simulating demographic susceptibility to misinformation.",
+      "llm_tldr_cn": "研究了大语言模型在模拟不同人群对虚假信息易感性方面的能力。",
+      "llm_tldr": "研究了大语言模型在模拟不同人群对虚假信息易感性方面的能力。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.05275v1",
+      "title": "SarcasmMiner: A Dual-Track Post-Training Framework for Robust Audio-Visual Sarcasm Reasoning",
+      "abstract": "Multimodal sarcasm detection requires resolving pragmatic incongruity across textual, acoustic, and visual cues through cross-modal reasoning. To enable robust sarcasm reasoning with foundation models, we propose SarcasmMiner, a reinforcement learning based post-training framework that resists hallucination in multimodal reasoning. We reformulate sarcasm detection as structured reasoning and adopt a dual-track distillation strategy: high-quality teacher trajectories initialize the student model, while the full set of trajectories trains a generative reward model (GenRM) to evaluate reasoning quality. The student is optimized with group relative policy optimization (GRPO) using decoupled rewards for accuracy and reasoning quality. On MUStARD++, SarcasmMiner increases F1 from 59.83% (zero-shot), 68.23% (supervised finetuning) to 70.22%. These findings suggest that reasoning-aware reward modeling enhances both performance and multimodal grounding.",
+      "authors": [
+        "Zhu Li",
+        "Yongjian Chen",
+        "Huiyuan Lai",
+        "Xiyuan Gao",
+        "Shekhar Nayak",
+        "Matt Coler"
+      ],
+      "primary_category": "cs.MM",
+      "categories": [
+        "cs.MM",
+        "cs.CL",
+        "cs.SD"
+      ],
+      "published": "2026-03-05T15:22:39+00:00",
+      "link": "https://arxiv.org/pdf/2603.05275v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal sarcasm detection and cross-modal reasoning",
+      "llm_evidence_cn": "多模态讽刺检测与跨模态推理",
+      "llm_evidence": "多模态讽刺检测与跨模态推理",
+      "canonical_evidence": "多模态讽刺检测与跨模态推理",
+      "llm_tldr_en": "SarcasmMiner uses RL and dual-track distillation for robust audio-visual sarcasm reasoning and detection.",
+      "llm_tldr_cn": "SarcasmMiner利用强化学习和双轨蒸馏实现鲁棒的音视频讽刺推理与检测。",
+      "llm_tldr": "SarcasmMiner利用强化学习和双轨蒸馏实现鲁棒的音视频讽刺推理与检测。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2603.01544v1",
+      "title": "RA-Det: Towards Universal Detection of AI-Generated Images via Robustness Asymmetry",
+      "abstract": "Recent image generators produce photo-realistic content that undermines the reliability of downstream recognition systems. As visual appearance cues become less pronounced, appearance-driven detectors that rely on forensic cues or high-level representations lose stability. This motivates a shift from appearance to behavior, focusing on how images respond to controlled perturbations rather than how they look. In this work, we identify a simple and universal behavioral signal. Natural images preserve stable semantic representations under small, structured perturbations, whereas generated images exhibit markedly larger feature drift. We refer to this phenomenon as robustness asymmetry and provide a theoretical analysis that establishes a lower bound connecting this asymmetry to memorization tendencies in generative models, explaining its prevalence across architectures. Building on this insight, we introduce Robustness Asymmetry Detection (RA-Det), a behavior-driven detection framework that converts robustness asymmetry into a reliable decision signal. Evaluated across 14 diverse generative models and against more than 10 strong detectors, RA-Det achieves superior performance, improving the average performance by 7.81 percent. The method is data- and model-agnostic, requires no generator fingerprints, and transfers across unseen generators. Together, these results indicate that robustness asymmetry is a stable, general cue for synthetic-image detection and that carefully designed probing can turn this cue into a practical, universal detector. The source code is publicly available at Github.",
+      "authors": [
+        "Xinchang Wang",
+        "Yunhao Chen",
+        "Yuechen Zhang",
+        "Congcong Bian",
+        "Zihao Guo",
+        "Xingjun Ma",
+        "Hui Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-02T07:15:37+00:00",
+      "link": "https://arxiv.org/pdf/2603.01544v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "detection of AI-generated images via feature drift",
+      "llm_evidence_cn": "通过特征偏移检测AI生成的图像",
+      "llm_evidence": "通过特征偏移检测AI生成的图像",
+      "canonical_evidence": "通过特征偏移检测AI生成的图像",
+      "llm_tldr_en": "Detects AI-generated images by analyzing feature drift under perturbations, shifting from appearance to behavior.",
+      "llm_tldr_cn": "通过分析扰动下的特征偏移来检测AI生成的图像，将检测重点从外观转向行为特征。",
+      "llm_tldr": "通过分析扰动下的特征偏移来检测AI生成的图像，将检测重点从外观转向行为特征。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.01433v1",
+      "title": "DOCFORGE-BENCH: A Comprehensive Benchmark for Document Forgery Detection and Analysis",
+      "abstract": "We present DOCFORGE-BENCH, the first unified zero-shot benchmark for document forgery detection, evaluating 14 methods across eight datasets spanning text tampering, receipt forgery, and identity document manipulation. Unlike fine-tuning-oriented evaluations such as ForensicHub [Du et al., 2025], DOCFORGE-BENCH applies all methods with their published pretrained weights and no domain adaptation -- a deliberate design choice that reflects the realistic deployment scenario where practitioners lack labeled document training data. Our central finding is a pervasive calibration failure invisible under single-threshold protocols: methods achieve moderate Pixel-AUC (>=0.76) yet near-zero Pixel-F1. This AUC-F1 gap is not a discrimination failure but a score-distribution shift: tampered regions occupy only 0.27-4.17% of pixels in document images -- an order of magnitude less than in natural image benchmarks -- making the standard tau=0.5 threshold catastrophically miscalibrated. Oracle-F1 is 2-10x higher than fixed-threshold Pixel-F1, confirming that calibration, not representation, is the bottleneck. A controlled calibration experiment validates this: adapting a single threshold on N=10 domain images recovers 39-55% of the Oracle-F1 gap, demonstrating that threshold adaptation -- not retraining -- is the key missing step for practical deployment. Overall, no evaluated method works reliably out-of-the-box on diverse document types, underscoring that document forgery detection remains an unsolved problem. We further note that all eight datasets predate the era of generative AI editing; benchmarks covering diffusion- and LLM-based document forgeries represent a critical open gap on the modern attack surface.",
+      "authors": [
+        "Zengqi Zhao",
+        "Weidi Xia",
+        "Peter Wei",
+        "Yan Zhang",
+        "Yiyi Zhang",
+        "Jane Mo",
+        "Tiannan Zhang",
+        "Yuanqin Dai",
+        "Zexi Chen",
+        "Simiao Ren"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-02T04:26:57+00:00",
+      "link": "https://arxiv.org/pdf/2603.01433v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "benchmark for document forgery detection across text and image tampering",
+      "llm_evidence_cn": "针对文本和图像篡改的文档伪造检测基准",
+      "llm_evidence": "针对文本和图像篡改的文档伪造检测基准",
+      "canonical_evidence": "针对文本和图像篡改的文档伪造检测基准",
+      "llm_tldr_en": "Introduces a zero-shot benchmark for document forgery detection, evaluating methods on text and identity manipulation.",
+      "llm_tldr_cn": "引入文档伪造检测的零样本基准，评估针对文本和身份信息篡改的检测方法。",
+      "llm_tldr": "引入文档伪造检测的零样本基准，评估针对文本和身份信息篡改的检测方法。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.01806v1",
+      "title": "GCTAM: Global and Contextual Truncated Affinity Combined Maximization Model For Unsupervised Graph Anomaly Detection",
+      "abstract": "Anomalies often occur in real-world information networks/graphs, such as malevolent users, malicious comments, banned users, and fake news in social graphs. The latest graph anomaly detection methods use a novel mechanism called truncated affinity maximization (TAM) to detect anomaly nodes without using any label information and achieve impressive results. TAM maximizes the affinities among the normal nodes while truncating the affinities of the anomalous nodes to identify the anomalies. However, existing TAM-based methods truncate suspicious nodes according to a rigid threshold that ignores the specificity and high-order affinities of different nodes. This inevitably causes inefficient truncations from both normal and anomalous nodes, limiting the effectiveness of anomaly detection. To this end, this paper proposes a novel truncation model combining contextual and global affinity to truncate the anomalous nodes. The core idea of the work is to use contextual truncation to decrease the affinity of anomalous nodes, while global truncation increases the affinity of normal nodes. Extensive experiments on massive real-world datasets show that our method surpasses peer methods in most graph anomaly detection tasks. In highlights, compared with previous state-of-the-art methods, the proposed method has +15\\% $\\sim$ +20\\% improvements in two famous real-world datasets, Amazon and YelpChi. Notably, our method works well in large datasets, Amazin-all and YelpChi-all, and achieves the best results, while most previous models cannot complete the tasks.",
+      "authors": [
+        "Xiong Zhang",
+        "Hong Peng",
+        "Zhenli He",
+        "Cheng Xie",
+        "Xin Jin",
+        "Hua Jiang"
+      ],
+      "primary_category": "cs.SI",
+      "categories": [
+        "cs.SI",
+        "cs.GR",
+        "cs.LG"
+      ],
+      "published": "2026-03-02T12:40:46+00:00",
+      "link": "https://arxiv.org/pdf/2603.01806v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "fake news detection in social graphs",
+      "llm_evidence_cn": "社交图谱中的虚假新闻检测",
+      "llm_evidence": "社交图谱中的虚假新闻检测",
+      "canonical_evidence": "社交图谱中的虚假新闻检测",
+      "llm_tldr_en": "Proposes a graph anomaly detection model applicable to identifying fake news in social networks.",
+      "llm_tldr_cn": "提出了一种图异常检测模型，可用于识别社交网络中的虚假新闻。",
+      "llm_tldr": "提出了一种图异常检测模型，可用于识别社交网络中的虚假新闻。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "state of the art multimodal fake news detection models",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.01471v1",
+      "title": "Reconstructing Content via Collaborative Attention to Improve Multimodal Embedding Quality",
+      "abstract": "Multimodal embedding models, rooted in multimodal large language models (MLLMs), have yielded significant performance improvements across diverse tasks such as retrieval and classification. However, most existing approaches rely heavily on large-scale contrastive learning, with limited exploration of how the architectural and training paradigms of MLLMs affect embedding quality. While effective for generation, the causal attention and next-token prediction paradigm of MLLMs does not explicitly encourage the formation of globally compact representations, limiting their effectiveness as multimodal embedding backbones. To address this, we propose CoCoA, a Content reconstruction pre-training paradigm based on Collaborative Attention for multimodal embedding optimization. Specifically, we restructure the attention flow and introduce an EOS-based reconstruction task, encouraging the model to reconstruct input from the corresponding <EOS> embeddings. This drives the multimodal model to compress the semantic information of the input into the <EOS> token, laying the foundations for subsequent contrastive learning. Extensive experiments on MMEB-V1 demonstrate that CoCoA built upon Qwen2-VL and Qwen2.5-VL significantly improves embedding quality. Results validate that content reconstruction serves as an effective strategy to maximize the value of existing data, enabling multimodal embedding models generate compact and informative representations, raising their performance ceiling.",
+      "authors": [
+        "Jiahan Chen",
+        "Da Li",
+        "Hengran Zhang",
+        "Yinqiong Cai",
+        "Lixin Su",
+        "Jiafeng Guo",
+        "Daiting Shi",
+        "Dawei Yin",
+        "Keping Bi"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR",
+        "cs.LG"
+      ],
+      "published": "2026-03-02T05:34:45+00:00",
+      "link": "https://arxiv.org/pdf/2603.01471v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "improving multimodal embedding quality",
+      "llm_evidence_cn": "提高多模态嵌入质量",
+      "llm_evidence": "提高多模态嵌入质量",
+      "canonical_evidence": "提高多模态嵌入质量",
+      "llm_tldr_en": "Proposes a collaborative attention paradigm to improve the quality of multimodal embeddings.",
+      "llm_tldr_cn": "提出了一种协作注意力范式，以提高多模态嵌入的质量。",
+      "llm_tldr": "提出了一种协作注意力范式，以提高多模态嵌入的质量。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.02684v1",
+      "title": "HateMirage: An Explainable Multi-Dimensional Dataset for Decoding Faux Hate and Subtle Online Abuse",
+      "abstract": "Subtle and indirect hate speech remains an underexplored challenge in online safety research, particularly when harmful intent is embedded within misleading or manipulative narratives. Existing hate speech datasets primarily capture overt toxicity, underrepresenting the nuanced ways misinformation can incite or normalize hate. To address this gap, we present HateMirage, a novel dataset of Faux Hate comments designed to advance reasoning and explainability research on hate emerging from fake or distorted narratives. The dataset was constructed by identifying widely debunked misinformation claims from fact-checking sources and tracing related YouTube discussions, resulting in 4,530 user comments. Each comment is annotated along three interpretable dimensions: Target (who is affected), Intent (the underlying motivation or goal behind the comment), and Implication (its potential social impact). Unlike prior explainability datasets such as HateXplain and HARE, which offer token-level or single-dimensional reasoning, HateMirage introduces a multi-dimensional explanation framework that captures the interplay between misinformation, harm, and social consequence. We benchmark multiple open-source language models on HateMirage using ROUGE-L F1 and Sentence-BERT similarity to assess explanation coherence. Results suggest that explanation quality may depend more on pretraining diversity and reasoning-oriented data rather than on model scale alone. By coupling misinformation reasoning with harm attribution, HateMirage establishes a new benchmark for interpretable hate detection and responsible AI research.",
+      "authors": [
+        "Sai Kartheek Reddy Kasu",
+        "Shankar Biradar",
+        "Sunil Saumya",
+        "Md. Shad Akhtar"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.SI"
+      ],
+      "published": "2026-03-03T07:26:53+00:00",
+      "link": "https://arxiv.org/pdf/2603.02684v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "misinformation claims and distorted narratives",
+      "llm_evidence_cn": "虚假信息主张与扭曲叙事",
+      "llm_evidence": "虚假信息主张与扭曲叙事",
+      "canonical_evidence": "虚假信息主张与扭曲叙事",
+      "llm_tldr_en": "Introduces HateMirage, a dataset for explaining hate speech derived from debunked misinformation narratives.",
+      "llm_tldr_cn": "推出HateMirage数据集，旨在解释源自已被辟谣的虚假信息叙事中的仇恨言论。",
+      "llm_tldr": "推出HateMirage数据集，旨在解释源自已被辟谣的虚假信息叙事中的仇恨言论。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.01482v1",
+      "title": "A SUPERB-Style Benchmark of Self-Supervised Speech Models for Audio Deepfake Detection",
+      "abstract": "Self-supervised learning (SSL) has transformed speech processing, with benchmarks such as SUPERB establishing fair comparisons across diverse downstream tasks. Despite it's security-critical importance, Audio deepfake detection has remained outside these efforts. In this work, we introduce Spoof-SUPERB, a benchmark for audio deepfake detection that systematically evaluates 20 SSL models spanning generative, discriminative, and spectrogram-based architectures. We evaluated these models on multiple in-domain and out-of-domain datasets. Our results reveal that large-scale discriminative models such as XLS-R, UniSpeech-SAT, and WavLM Large consistently outperform other models, benefiting from multilingual pretraining, speaker-aware objectives, and model scale. We further analyze the robustness of these models under acoustic degradations, showing that generative approaches degrade sharply, while discriminative models remain resilient. This benchmark establishes a reproducible baseline and provides practical insights into which SSL representations are most reliable for securing speech systems against audio deepfakes.",
+      "authors": [
+        "Hashim Ali",
+        "Nithin Sai Adupa",
+        "Surya Subramani",
+        "Hafiz Malik"
+      ],
+      "primary_category": "eess.AS",
+      "categories": [
+        "eess.AS",
+        "cs.AI",
+        "cs.LG",
+        "eess.SP"
+      ],
+      "published": "2026-03-02T05:45:55+00:00",
+      "link": "https://arxiv.org/pdf/2603.01482v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "audio deepfake detection benchmark",
+      "llm_evidence_cn": "音频深度伪造检测基准",
+      "llm_evidence": "音频深度伪造检测基准",
+      "canonical_evidence": "音频深度伪造检测基准",
+      "llm_tldr_en": "Establishes Spoof-SUPERB, a benchmark for evaluating self-supervised models in audio deepfake detection.",
+      "llm_tldr_cn": "建立Spoof-SUPERB基准，用于评估自监督模型在音频深度伪造检测中的表现。",
+      "llm_tldr": "建立Spoof-SUPERB基准，用于评估自监督模型在音频深度伪造检测中的表现。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.02767v1",
+      "title": "ITO: Images and Texts as One via Synergizing Multiple Alignment and Training-Time Fusion",
+      "abstract": "Image-text contrastive pretraining has become a dominant paradigm for visual representation learning, yet existing methods often yield representations that remain partially organized by modality. We propose ITO, a framework addressing this limitation through two synergistic mechanisms. Multimodal multiple alignment enriches supervision by mining diverse image-text correspondences, while a lightweight training-time multimodal fusion module enforces structured cross-modal interaction. Crucially, the fusion module is discarded at inference, preserving the efficiency of standard dual-encoder architectures. Extensive experiments show that ITO consistently outperforms strong baselines across classification, retrieval, and multimodal benchmarks. Our analysis reveals that while multiple alignment drives discriminative power, training-time fusion acts as a critical structural regularizer -- eliminating the modality gap and stabilizing training dynamics to prevent the early saturation often observed in aggressive contrastive learning.",
+      "authors": [
+        "HanZpeng Liu",
+        "Yaqian Li",
+        "Zidan Wang",
+        "Shuoxi Zhang",
+        "Zonglin Zhao",
+        "Zihao Bo",
+        "Rinyoichi Takezoe",
+        "Kaiwen Long",
+        "Kun He"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-03T09:08:53+00:00",
+      "link": "https://arxiv.org/pdf/2603.02767v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "cross-modal interaction and alignment for multimodal representation",
+      "llm_evidence_cn": "多模态表示的跨模态交互与对齐",
+      "llm_evidence": "多模态表示的跨模态交互与对齐",
+      "canonical_evidence": "多模态表示的跨模态交互与对齐",
+      "llm_tldr_en": "Proposes ITO framework for better image-text alignment and fusion to improve multimodal representation learning.",
+      "llm_tldr_cn": "提出ITO框架，通过增强图文对齐和训练时融合来提升多模态表示学习效果。",
+      "llm_tldr": "提出ITO框架，通过增强图文对齐和训练时融合来提升多模态表示学习效果。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.02200v1",
+      "title": "Adaptive Confidence Regularization for Multimodal Failure Detection",
+      "abstract": "The deployment of multimodal models in high-stakes domains, such as self-driving vehicles and medical diagnostics, demands not only strong predictive performance but also reliable mechanisms for detecting failures. In this work, we address the largely unexplored problem of failure detection in multimodal contexts. We propose Adaptive Confidence Regularization (ACR), a novel framework specifically designed to detect multimodal failures. Our approach is driven by a key observation: in most failure cases, the confidence of the multimodal prediction is significantly lower than that of at least one unimodal branch, a phenomenon we term confidence degradation. To mitigate this, we introduce an Adaptive Confidence Loss that penalizes such degradations during training. In addition, we propose Multimodal Feature Swapping, a novel outlier synthesis technique that generates challenging, failure-aware training examples. By training with these synthetic failures, ACR learns to more effectively recognize and reject uncertain predictions, thereby improving overall reliability. Extensive experiments across four datasets, three modalities, and multiple evaluation settings demonstrate that ACR achieves consistent and robust gains. The source code will be available at https://github.com/mona4399/ACR.",
+      "authors": [
+        "Moru Liu",
+        "Hao Dong",
+        "Olga Fink",
+        "Mario Trapp"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-03-02T18:56:38+00:00",
+      "link": "https://arxiv.org/pdf/2603.02200v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal failure detection and confidence regularization",
+      "llm_evidence_cn": "多模态故障检测与置信度正则化",
+      "llm_evidence": "多模态故障检测与置信度正则化",
+      "canonical_evidence": "多模态故障检测与置信度正则化",
+      "llm_tldr_en": "Proposes Adaptive Confidence Regularization to detect failures in multimodal models by monitoring confidence drops.",
+      "llm_tldr_cn": "提出自适应置信度正则化框架，通过监测多模态模型中的置信度下降来检测预测故障。",
+      "llm_tldr": "提出自适应置信度正则化框架，通过监测多模态模型中的置信度下降来检测预测故障。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.03921v1",
+      "title": "Cyclostationarity Analysis as a Complement to Self-Supervised Representations for Speech Deepfake Detection",
+      "abstract": "Speech deepfake detection (SDD) is essential for maintaining trust in voice-driven technologies and digital media. Although recent SDD systems increasingly rely on self-supervised learning (SSL) representations that capture rich contextual information, complementary signal-driven acoustic features remain important for modeling fine-grained structural properties of speech. Most existing acoustic front ends are based on time-frequency representations, which do not fully exploit higher-order spectral dependencies inherent in speech signals. We introduce a cyclostationarity-inspired acoustic feature extraction framework for SDD based on spectral correlation density (SCD). The proposed features model periodic statistical structures in speech by capturing spectral correlations between frequency components. In particular, we propose temporally structured SCD features that characterize the evolution of spectral and cyclic-frequency components over time. The effectiveness and complementarity of the proposed features are evaluated using multiple countermeasure architectures, including convolutional neural networks, SSL-based embedding systems, and hybrid fusion models. Experiments on ASVspoof 2019 LA, ASVspoof 2021 DF, and ASVspoof 5 demonstrate that SCD-based features provide complementary discriminative information to SSL embeddings and conventional acoustic representations. In particular, fusion of SSL and SCD embeddings reduces the equal error rate on ASVspoof 2019 LA from $8.28\\%$ to $0.98\\%$, and yields consistent improvements on the challenging ASVspoof 5 dataset. The results highlight cyclostationary signal analysis as a theoretically grounded and effective front end for speech deepfake detection.",
+      "authors": [
+        "Cemal Hanilçi",
+        "Md Sahidullah",
+        "Tomi Kinnunen"
+      ],
+      "primary_category": "eess.AS",
+      "categories": [
+        "eess.AS"
+      ],
+      "published": "2026-03-04T10:28:28+00:00",
+      "link": "https://arxiv.org/pdf/2603.03921v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "speech deepfake detection for digital media trust",
+      "llm_evidence_cn": "用于数字媒体信任的语音深度伪造检测",
+      "llm_evidence": "用于数字媒体信任的语音深度伪造检测",
+      "canonical_evidence": "用于数字媒体信任的语音深度伪造检测",
+      "llm_tldr_en": "Uses cyclostationarity analysis to complement SSL representations for speech deepfake detection.",
+      "llm_tldr_cn": "利用循环平稳性分析补充自监督学习表示，以进行语音深度伪造检测。",
+      "llm_tldr": "利用循环平稳性分析补充自监督学习表示，以进行语音深度伪造检测。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.02618v1",
+      "title": "Mind the Way You Select Negative Texts: Pursuing the Distance Consistency in OOD Detection with VLMs",
+      "abstract": "Out-of-distribution (OOD) detection seeks to identify samples from unknown classes, a critical capability for deploying machine learning models in open-world scenarios. Recent research has demonstrated that Vision-Language Models (VLMs) can effectively leverage their multi-modal representations for OOD detection. However, current methods often incorporate intra-modal distance during OOD detection, such as comparing negative texts with ID labels or comparing test images with image proxies. This design paradigm creates an inherent inconsistency against the inter-modal distance that CLIP-like VLMs are optimized for, potentially leading to suboptimal performance. To address this limitation, we propose InterNeg, a simple yet effective framework that systematically utilizes consistent inter-modal distance enhancement from textual and visual perspectives. From the textual perspective, we devise an inter-modal criterion for selecting negative texts. From the visual perspective, we dynamically identify high-confidence OOD images and invert them into the textual space, generating extra negative text embeddings guided by inter-modal distance. Extensive experiments across multiple benchmarks demonstrate the superiority of our approach. Notably, our InterNeg achieves state-of-the-art performance compared to existing works, with a 3.47\\% reduction in FPR95 on the large-scale ImageNet benchmark and a 5.50\\% improvement in AUROC on the challenging Near-OOD benchmark.",
+      "authors": [
+        "Zhikang Xu",
+        "Qianqian Xu",
+        "Zitai Wang",
+        "Cong Hua",
+        "Sicong Li",
+        "Zhiyong Yang",
+        "Qingming Huang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-03T05:44:47+00:00",
+      "link": "https://arxiv.org/pdf/2603.02618v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "OOD detection using multimodal representations",
+      "llm_evidence_cn": "利用多模态表示进行分布外检测",
+      "llm_evidence": "利用多模态表示进行分布外检测",
+      "canonical_evidence": "利用多模态表示进行分布外检测",
+      "llm_tldr_en": "Proposes InterNeg to improve OOD detection in VLMs by ensuring consistency in inter-modal distances.",
+      "llm_tldr_cn": "提出InterNeg方法，通过确保模态间距离一致性来提升视觉语言模型的分布外检测性能。",
+      "llm_tldr": "提出InterNeg方法，通过确保模态间距离一致性来提升视觉语言模型的分布外检测性能。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.04456v1",
+      "title": "How Effective Are Publicly Accessible Deepfake Detection Tools? A Comparative Evaluation of Open-Source and Free-to-Use Platforms",
+      "abstract": "The proliferation of deepfake imagery poses escalating challenges for practitioners tasked with verifying digital media authenticity. While detection algorithm research is abundant, empirical evaluations of publicly accessible tools that practitioners actually use remain scarce. This paper presents the first cross-paradigm evaluation of six tools, spanning two complementary detection approaches: forensic analysis tools (InVID \\& WeVerify, FotoForensics, Forensically) and AI-based classifiers (DecopyAI, FaceOnLive, Bitmind). Both tool categories were evaluated by professional investigators with law enforcement experience using blinded protocols across datasets comprising authentic, tampered, and AI-generated images sourced from DF40, CelebDF, and CASIA-v2. We report three principal findings: forensic tools exhibit high recall but poor specificity, while AI classifiers demonstrate the inverse pattern; human evaluators substantially outperform all automated tools; and human-AI disagreement is asymmetric, with human judgment prevailing in the vast majority of discordant cases. We discuss implications for practitioner workflows and identify critical gaps in current detection capabilities.",
+      "authors": [
+        "Michael Rettinger",
+        "Ben Beaumont",
+        "Nhien-An Le-Khac",
+        "Hong-Hanh Nguyen-Le"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR"
+      ],
+      "published": "2026-03-02T14:31:51+00:00",
+      "link": "https://arxiv.org/pdf/2603.04456v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "evaluation of deepfake detection tools",
+      "llm_evidence_cn": "深度伪造检测工具评估",
+      "llm_evidence": "深度伪造检测工具评估",
+      "canonical_evidence": "深度伪造检测工具评估",
+      "llm_tldr_en": "Evaluates the effectiveness of publicly accessible deepfake detection tools for digital media authenticity.",
+      "llm_tldr_cn": "评估了公众可用的深度伪造检测工具在验证数字媒体真实性方面的有效性。",
+      "llm_tldr": "评估了公众可用的深度伪造检测工具在验证数字媒体真实性方面的有效性。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

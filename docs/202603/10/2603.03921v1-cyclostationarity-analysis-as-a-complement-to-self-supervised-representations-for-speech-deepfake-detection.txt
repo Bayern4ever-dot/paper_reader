@@ -1,0 +1,712 @@
+Title: Cyclostationarity Analysis as a Complement to Self-Supervised Representations for Speech Deepfake Detection
+
+URL Source: https://arxiv.org/pdf/2603.03921v1
+
+Published Time: Thu, 05 Mar 2026 01:51:15 GMT
+
+Number of Pages: 13
+
+Markdown Content:
+> JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 1
+
+# Cyclostationarity Analysis as a Complement to Self-Supervised Representations for Speech Deepfake Detection 
+
+Cemal Hanilc ¸i, Md. Sahidullah, Tomi H. Kinnunen 
+
+Abstract —Speech deepfake detection (SDD) is essential for maintaining trust in voice-driven technologies and digital me-dia. Although recent SDD systems increasingly rely on self-supervised learning (SSL) representations that capture rich contextual information, complementary signal-driven acoustic features remain important for modeling fine-grained structural properties of speech. Most existing acoustic front ends are based on time–frequency representations, which do not fully exploit higher-order spectral dependencies inherent in speech signals. We introduce a cyclostationarity-inspired acoustic feature extraction framework for SDD based on spectral correlation density (SCD). The proposed features model periodic statistical structures in speech by capturing spectral correlations between frequency components. In particular, we propose temporally structured SCD features that characterize the evolution of spectral and cyclic-frequency components over time. The effectiveness and complementarity of the proposed features are evaluated using multiple countermeasure architectures, including convolutional neural networks, SSL-based embedding systems, and hybrid fusion models. Experiments on ASVspoof 2019 LA, ASVspoof 2021 DF, and ASVspoof 5 demonstrate that SCD-based features provide complementary discriminative information to SSL em-beddings and conventional acoustic representations. In particular, fusion of SSL and SCD embeddings reduces the equal error rate on ASVspoof 2019 LA from 8.28% to 0.98%, and yields consistent improvements on the challenging ASVspoof 5 dataset. The results highlight cyclostationary signal analysis as a theoretically grounded and effective front end for speech deepfake detection. 
+
+Index Terms —ASVspoof, Feature extraction, Spectral correla-tion density, Spoofing countermeasures. 
+
+I. I NTRODUCTION 
+
+# SPEECH deepfake detection (SDD), also known as spoof-ing detection [1], is the task of classifying a given ut-terance either as real (bonafide) or fake (spoof). The latter includes utterances generated using text-to-speech, voice con-version, adversarial attacks (or other similar means). SDD is of increasing importance in applications ranging from audio forensics to protection of call center and teleconferencing se-curity, and maintaining trust towards online audio content [2], [3]. As in any classification task, the choice of the feature representation is of critical importance for robust SDD. SDD is usually addressed using neural network models, such as 
+
+convolutional neural networks (CNNs) [4]–[6] that excel in 
+
+C. Hanilc ¸i is with Bursa Technical University, Bursa, Turkey. (e-mail: cemal.hanilci@btu.edu.tr). Md Sahidullah is with TCG CREST, Kolkata, India (e-mail: md.sahidullah@tcgcrest.org). T. Kinnunen is with the School of Computing, University of Eastern Finland, FI-80101 Joensuu, Finland (e-mail: tomi.kinnunen@uef.fi). 
+
+learning cues relevant to SDD from a fixed time-frequency 
+
+(TF) representation. Though the most common TF represen-tation is the short-term Fourier transform (STFT), numerous alternatives [7]–[9] have been considered [5]. Another alterna-tive to these hand-crafted feature representations are end-to-end models (e.g. RawNet and AASIST) where the network implicitly learns a TF-like feature representation from the raw speech in a fully data-driven manner [10], [11]. Despite typically outperforming fixed signal processing-based front-ends, fully learned front-end representations come with an increase in run-time and memory overhead. Moreover, since these representations are jointly optimized with downstream task, they may capture dataset-specific characteristics. This motivates continued investigation of complementary feature representations grounded in signal processing theory. More recently, self-supervised learning (SSL) models have demonstrated strong performance for SDD by learning high-level speech representations directly from large-scale unla-beled audio corpora [12]–[14]. SSL-derived features provide rich contextual and linguistic information and have become a strong baseline for modern spoofing detection systems. However, handcrafted or signal-processing-motivated acoustic representations remain attractive due to their interpretability and potential robustness across domains. Consequently, inves-tigating complementary acoustic representations that capture signal characteristics (not explicitly emphasized in SSL em-beddings) remains an important research direction. In this study, we put forward a fixed TF analysis approach motivated by stochastic signal processing principles, partic-ularly on the concept of cyclostationarity. Although cyclo-stationarity has a well-established theoretical foundation and clear relevance to the spectral analysis of speech signals, its use in SDD has received limited attention so far. While a familiar example of cyclostationarity are signals produced by a known, periodic mechanism [15], any signals that exhibits hidden (latent) periodicity or repetitive patterns are also con-sidered cyclostationary [16]. These latter signals are typically aperiodic in time with random waveforms, but their statistical characteristics are periodic (or almost periodic) [17], [18]. Cyclostationary is particularly relevant to communication signals [15], [16], where periodicity arises from modulation, multiplexing, or coding. Speech can also be viewed as a communication signal and modeled as a realization of acyclostationary random process driven by a nearly-periodic excitation signal during voiced speech production. Further, si-nusoidal modeling of speech [19]–[21] represents speech using  
+
+> arXiv:2603.03921v1 [eess.AS] 4 Mar 2026 JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 2
+
+a small number of modulated sinusoids, further supporting the relevance of cyclostationary analysis. Consequently, cyclosta-tionary signal processing (CSP) techniques have previously been applied in speech modeling and analysis. For instance [22] proposed a linear prediction analysis based on a cyclic autocorrelation function, and [23] demonstrated the use of cyclostationarity in speech enhancement. More recently, cyclo-stationary spectral analysis was successfully used for speech emotion recognition in [24]. Another recent study demonstrate that voiced speech can be more accurately represented as a cyclostationary process than wide sense stationary [25]. Cyclostationarity manifests as spectral correlations between frequency components, which are captured by the spectral correlation density (SCD). SCD is a porwerful analysis tool widely used in communication signal classification, particu-larly for distinguishing signals generated by different modu-lation schemes [26]. It characterizes the cross-spectral density between frequency-shifted versions of a signal [27]. In this work, we hypotesize that SCD-based representations provide complementary spectral structure information beyond that cap-tured by conventional spectrogram-based representations and SSL embeddings commonly used in spoofing detection. Building on this motivation, we propose two-dimensional SCD-based acoustic representations for speech spoofing de-tection. The primary representation is defined over spectral frequency and cyclic frequency. To incorporate temporal dy-namics, we further introduce two modified SCD representa-tions that capture cyclic-frequency evolution over time and spectral-frequency evolution over time. These representations are evaluated using multiple countermeasure (CM) architec-tures, including acoustic-feature-based CNN systems, SSL-based systems, and hybrid fusion systems combining acoustic and SSL embeddings. Experimental validation is performed on ASVspoof 2019 LA, ASVspoof 2021 DF and the recent ASVspoof 5 benchmark to assess robustness across diverse spoofing scenarios. II. S PECTRAL CORRELATION DENSITY 
+
+A. STFT Representation of Speech Signals 
+
+The conventional spectrogram is based on the STFT, where a discrete-time speech signal s[n] is divided into short, over-lapping frames x[n, t ], each consisting of N samples indexed by n = 0 , 1, . . . , N − 1. Here, t = 0 , 1, . . . , T − 1 denotes the frame index. The STFT is defined as, 
+
+X(t, f ) =  
+
+> N−1
+
+X
+
+> n=0
+
+s[tR + n]w[n]
+
+| {z } 
+
+> ≡x[n,t ]
+
+e−j2π ffs n, (1) where w[n] is a data-tapering window of length N , and R
+
+is the hop size, resulting in an overlap of N − R samples between adjacent frames. The variable f ∈ [0 , fs 
+
+> 2
+
+] denotes the continuous frequency in Hz, where fs is the sampling rate. The frequency variable f is typically discretized, leading to practical computation through discrete Fourier transform (DFT). The squared magnitude of STFT is popularly known as the spectrogram .
+
+B. Cyclostationary Signal Processing 
+
+Consider a discrete-time wide-sense stationary (WSS) cy-clostationary random process, denoted by {x[n, t ] ∈ R : n, t ∈
+
+Z}1, with a period N0 ∈ Z. Under the WSS assumption, 
+
+E{x[n, t ]} = E{x[n + N0, t ]}, where E{·} denotes expec-tation. The autocorrelation function of the process is defined as [16], 
+
+Rx[n, τ ] = E
+
+n
+
+x
+
+h
+
+n + τ
+
+2 , t 
+
+i
+
+x
+
+h
+
+n − τ
+
+2 , t 
+
+io 
+
+, (2) and the process is said to exhibit second-order cyclostation-arity (assumed here) if Rx[n, τ ] = Rx[n + N0, τ ] [15], [16]. Speech signals can be viewed as realizations of such cyclosta-tionary processes. In particular, the autocorrelation function of a voiced speech frame is (approximately) periodic ( N0 being analogous to fundamental period of voiced excitation) [28, Ch.4]. Note that Rx[n, τ = 0] = E x2[n, t ] corresponds to the energy of the nth sample of the signal x[n, t ]. Since Rx[n, τ ]
+
+is periodic in n, it can be expanded as a Fourier series: 
+
+Rx[n, τ ] = X
+
+> α∈A
+
+rx[τ, α ]ej2παn , (3) where α is known as a cyclic frequency (CF) variable, with 
+
+A = {α0, . . . , α max } denoting its possible values. The Fourier expansion coefficients, denoted by rx[τ, α ], are defined by 
+
+rx[τ, α ] ≜ lim  
+
+> N→∞
+
+12N + 1 
+
+> N
+
+X
+
+> n=−N
+
+Rx[n, τ ]e−j2παn . (4) For a given CF α, rx[τ, α ] is a function of a time-lag variable 
+
+τ . This cyclic autocorrelation function [15], [17], [18] can be computed directly from the N samples in a frame (speech frame x[n, t ] is assumed to be zero for n ≥ N ) using: 
+
+rx[τ, α ] = ejπατ 1
+
+N 
+
+> N−1
+
+X
+
+> n=τ
+
+x[n, t ]x[n − τ, t ]e−j2παnT s , (5) where Ts := 1 /f s is the sampling period of the signal. Note that for α = 0 ,the cyclic autocorrelation function becomes the conventional (non-cyclic) autocorrelation function of the frame 
+
+x[n, t ]. Note also that although τ must be an even integer in (2), (5) allows the use of odd values. 
+
+C. Spectral Correlation Density and Its Properties 
+
+The spectral correlation density (SCD) is defined as the correlation of spectral components separated by α units. It is a complex-valued function of f and α and computed as the Fourier transform of rx[τ, α ] [15]–[17]: SCD (f, α ) = 
+
+> ∞
+
+X 
+
+> τ=−∞
+
+rx[τ, α ]e−j2πf τ . (6)           
+
+> 1Here, Rand Zrepresent the fields of real and integer numbers, respectively. To align with the definition of a spectrogram, the random process is defined as x[n, t ], where nrepresents the time variable and tdenotes the realizations of the random process for each element of the sample space. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 3
+
+For the zero CF ( α = 0 ), SCD becomes the power spectral density (PSD) function of the frame x[n, t ], by definition— PSD is the Fourier transform of the autocorrelation func-tion [29, Ch.3]. The direct definition of SCD in (6) requires calculating the cyclic autocorrelation function rx[τ, α ] for each α ∈ A using (5), followed by a Fourier transform, which is computationally expensive. To address this, various more efficient estimators have been developed. Time-smoothed average periodogram 
+
+approach [18], [30], [31], an extension of the well-known Welch’s PSD estimator [32], is the approach adopted here. It computes SCD using the spectral components of the frame, shifted by ± α 
+
+> 2
+
+in frequency [18], [30], [33], [34]. It utilizes the 
+
+frequency-shifting property of the Fourier transform, namely, 
+
+X
+
+
+
+f ± α
+
+2 , t 
+
+
+
+= 
+
+> N−1
+
+X
+
+> n=0
+
+x[n, t ]e±jπαn e−j2πf n , (7) to compute spectral correlation (SC) of frame t at CF α as, SC (f, α, t ) = X
+
+
+
+f − α
+
+2 , t 
+
+
+
+X∗ 
+
+f + α
+
+2 , t 
+
+
+
+, (8) where ∗ stands for the complex conjugate. The SCD of the signal is obtained by time averaging the SCs of all frames: SCD (f, α ) = 1
+
+T
+
+> T
+
+X
+
+> t=1
+
+SC (f, α, t ), (9) which serves as an empirical estimator of (6). As the total number of frames ( T ) approaches infinity, the two converge and become equal [27], [30]. SCD in (9) measures the time-averaged correlation between the spectral components of a signal that are spaced apart by the cyclic frequency (CF) α. It represents the distribution of the signal’s power with respect to the acoustic frequency f
+
+and the CF α [16]. Unlike the traditional STFT spectrogram, the SCD is a function of two frequency variables, f and α,which allows it to capture the spectral features associated with the cyclostationary properties of the signal. Another important interpretation of the SCD is that a non-zero value at a specific 
+
+(f, α ) pair indicates the presence of a sinusoidal modulation in the signal at the cyclic frequency α with a sinusoidal carrier at the carrier frequency f [16]. Thus, the SCD can be viewed as a joint characterization of a signal with its modulation frequencies ( α) and carrier frequencies ( f ). For real-valued signal, including speech, SCD satisfies spe-cific conjugate symmetries [30]: SCD ∗(f, α ) = SCD (−f, −α)
+
+and SCD (f, −α) = SCD ∗(f, α ) = SCD ∗(−f, α ). It is therefore sufficient to estimate SCD (f, α ) only in one quadrant of the bifrequency plane defined by (f, α ).Synthetic speech signals generated by modern TTS systems may exhibit subtle periodicity-related artifacts, which can arise from modeling biases or overfitting effects in neural vocoders [35], as well as from unnatural modulation structures introduced by frame-wise or block-wise conversion of acoustic features into audio waveforms [36]. Such artifacts are expected to differ from those typically observed in bonafide human speech. While these effects may remain difficult to discern in time-domain waveforms or conventional STFT-based spectro-gram representations, they can be more readily characterized using the SCD function. Therefore, before presenting experimental results, the fol-lowing two sections establish a foundation for the subsequent analysis by demonstrating how the SCD function reveals hid-den periodicities and modulation structures critical for distin-guishing bonafide (genuine) speech from spoofed utterances. III. SCD OF MODULATED SIGNALS 
+
+To establish an intuitive understanding of the properties of the SCD function, we first analyze synthetic modulated noise and sinusoidal signals. These controlled and application-independent examples serve to demonstrate how SCD uncov-ers latent modulation structure missed by STFT spectrograms. Thus, we demonstrate known SCD properties; readers familiar with SCD may skip to Section IV. We consider the following four modulated signals:  
+
+> •
+
+White noise amplitude-modulated by a sinusoidal carrier :
+
+x1[n] = w[n] · cos(2 πf cn/T s), (10) where w[n] is zero-mean white noise with unit variance and fc = 100 Hz is the carrier frequency.  
+
+> •
+
+Mixture of two modulated white noise signals :
+
+x2[n] = w1[n]·cos(2 πf c1 n/T s)+ w2[n]·cos(2 πf c2 n/T s),
+
+(11) where w1[n], w 2[n] ∼ N (0 , 1) are independent white noise processes, and fc1 = 100 Hz and fc2 = 250 Hz.  
+
+> •
+
+Sinusoidal amplitude-modulated signal :
+
+x3[n] = cos(2 πf 0n/T s) · cos(2 πf cn/T s), (12) where f0 ≪ fc. Here, the modulation frequency is fm =150 Hz and the carrier frequency is fc = 500 Hz.  
+
+> •
+
+Amplitude-modulated sinusoid embedded in additive noise :
+
+x4[n] = x3[n] + w[n], (13) where w[n] is zero-mean white noise with unit variance. All signals are one second long and are sampled at fs = 16 
+
+kHz. Fig. 1 visualizes the waveforms, the STFT spectrograms, the conventional SCD representations SCD (f, α ), the one-dimensional SCD (α) obtained by averaging SCD (f, α ) over spectral frequency f , and the one-dimensional SCD (f ) ob-tained by marginalizing over the cyclic frequency (CF) α.For x1[n], x2[n] and x4[n], the waveforms appear noise-like due to the dominant stochastic white noise, which masks the underlying periodic modulation. In contrast, x3[n] displays a high-frequency carrier modulated by a low-frequency enve-lope, resulting in two 2 spectral components at fc ± fm = 350 
+
+Hz and 650 Hz. Identifying these sinusoids directly from the waveforms is not easy, however. Similarly, the STFT spectrograms of x1[n] and x2[n] appear uniform and noise-like, with no observable traces of periodic structure. While the two frequency components are visible for x3[n], STFT does not explicitly decouple the modulation and carrier frequencies.                                                                                                                                      
+
+> 2This is derived using the trigonometric identity cos( A)·cos( B)=
+> 12cos ( A+B) + 12cos ( A−B)JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 40100 200 300
+> n
+> −202
+> x1[n]
+> 0100 200 300
+> n
+> x2[n]
+> 0100 200 300
+> n
+> x3[n]
+> 0100 200 300
+> n
+> x4[n]
+> 20 40 60 80 t05000
+> f (Hz)
+> 20 40 60 80 t
+> 20 40 60 80 t
+> 20 40 60 80 t
+> −1000 −500 0500 1000
+> α(Hz)
+> −5000 05000
+> f (Hz)
+> −1000 −500 0500 1000
+> α(Hz)
+> −1000 −500 0500 1000
+> α(Hz)
+> −1000 −500 0500 1000
+> α(Hz) 0250 500 750 1000
+> α(Hz) 20 30 40 SCD( α) (dB)
+> α=fc= 100 Hz
+> 0250 500 750 1000
+> α(Hz)
+> α=fc1= 100 Hz
+> α=fc2= 250 Hz
+> 0250 500 750 1000
+> α(Hz) 0250 500 750 1000
+> α(Hz)
+> α=fc= 500 Hz
+> α=f0= 150 Hz
+> α=fc+f0= 650 Hz
+> α=fc−f0= 350 Hz
+> 0250 500 750
+> f(Hz) 20 .022 .5SCD( f ) (dB) 0250 500 750
+> f(Hz) 0250 500 750
+> f(Hz) 0250 500 750
+> f(Hz)
+> f=fc= 500 Hz
+> f=f0= 150 Hz
+> f=fc+f0= 650 Hz
+> f=fc−f0= 350 Hz
+
+Fig. 1. Visualization of four modulated signals x1[n]–x4[n] defined in (10)–(13). From top to bottom: time-domain waveforms (first 320 samples, corresponding to 20 ms), STFT spectrograms, two-dimensional SCD representations SCD (f, α ), one-dimensional SCD (α) obtained by averaging SCD (f, α ) over spectral frequency f , and one-dimensional SCD (f ) obtained by averaging over cyclic frequency α. For clarity of visualization, the one-dimensional SCD (α) and SCD (f ) plots are shown over the frequency range α, f ∈ [0 , 1000] Hz. 
+
+For x4[n], the additive noise masks the spectral features, leaving only faint traces of the sidebands ( fc ± fm) visible. In contrast, the conventional SCD representation provides clear insight into the cyclostationary structure of the signals. For x1[n], we observe prominent vertical ridges at cyclic frequencies α = ±100 Hz, extending across all spectral frequencies. This indicates strong spectral correlation induced by the carrier of the modulating sinusoid. Similarly, for x2[n],the apparent vertical ridges at α = fc1 = ±100 Hz and 
+
+α = fc2 = ±250 Hz indicate persistent correlations be-tween spectral components separated by the respective carrier frequencies. The SCD of x3[n], in turn, reveals diagonal structures corresponding to the interaction between the carrier and the modulation components. Finally, despite the presence of additive noise, these diagonal patterns remain clearly visible for in the SCD of x4[n], highlighting the resilience of cyclosta-tionary analysis to noise. The ridge at α = 0 for x1[n], x 2[n]
+
+and x4[n] consistently represents the conventional PSD. The one-dimensional averaged SCD representations further reveal the latent spectral correlations. For x1[n] and x2[n], we observe strong spectral correlations at their respective carrier frequencies. For x3[n], SCD( α) displays distinct peaks both at the modulation, the carrier and the sideband frequencies. Even for x4[n], these characteristic peaks remain visible, underlining noise robustness of SCD [37], [38]. Whereas SCD( f ) for 
+
+x1[n] and x2[n] do not directly reflect the carrier frequencies, for x3[n] and x4[n] we observe distinct peaks corresponding to the carrier, modulation and sideband frequencies. This reveals that the conventional SCD( f, α ) representation encapsulates details about both the carriers and modulators. 
+
+Summary. The analysis of modulated signals presented above highlights the following key points:  
+
+> •
+
+STFT fails to capture modulation structure in noise-dominated signals.  
+
+> •
+
+SCD recovers latent periodicities by revealing dis-tinct peaks at modulation, carrier and sideband fre-quencies, even when this modulation structure is embedded in white noise.  
+
+> •
+
+SCD remains robust under additive white noise cor-ruption.  
+
+> •
+
+Vertical ridges in SCD( f, α ) indicate strong cyclo-stationary behaviour while diagonal structures are in-dicative of modulation-induced spectral correlations. These properties make SCD a useful tool in signal detection and classification especially under noisy environments, where traditional time–frequency techniques face their limits. IV. SCD OF VOCODED AND SYNTHETIC SPEECH 
+
+With the overall intuition established, we now proceed to analyze speech, a class of harmonic signals with more complex modulation structure. We are mainly concerned in the system-atic differences in SCD representations of real (bonafide) and synthetic or artificial speech, produced by waveform gener-ation models (vocoders). Natural speech inherently exhibits structured periodicity arising from the interaction between vo-cal fold excitation and time-varying vocal tract filtering. These characteristics are inevitably approximated (and potentially altered) by vocoder models used in TTS and VC systems. 
+
+A. Vocoder models 
+
+We analyze speech signals synthesized using both DSP-based and data-driven vocoders, beginning with classic si-nusoidal [39] and linear predictive coding (LPC) vocoders JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 5
+
+that model speech as a combination of periodic or quasi-periodic components. We estimate their parameters directly from bonafide speech and subsequently resynthesize an ap-proximated waveform, enabling a controlled comparison of their SCDs. The sinusoidal model [39] approximates the samples of a speech frame s[n] as a sum of K sinusoids, 
+
+s[n] ≈
+
+> K
+
+X
+
+> k=1
+
+Ak sin( ωkn + ϕk), (14) where Ak, ωk and ϕk are the amplitude, angular frequency and phase of the kth sinusoid, respectively. Speech frame can accordingly be interpreted as a cyclostationary signal consisting of multiple periodic components. We employ the classical spectral analysis-based sinusoidal parameter estima-tion method [39] where prominent peaks in the magnitude spectrum of a windowed speech frame are first detected and their corresponding frequencies, amplitudes and phases are extracted. These spectral peaks are then used to fit the sinusoidal model in (14) to bonafide speech signal. LPC [40], in contrast, models speech as the output of an all-pole filter excited by either a periodic impulse train (for voiced speech) or white noise (for unvoiced speech). LPC is widely adopted in standardized speech codecs such as CELP, MELP and AMR. More recently, it has also been integrated with neural vocoders (e.g. LPCNet [41]) to improve synthesis quality. Understanding the cyclostationary charac-teristics of LPC-synthesized speech is therefore relevant for both legacy and modern TTS systems. In LPC, a speech sample s[n] is predicted from its previous p samples as 
+
+ˆs[n] = − Ppk=1 aks[n − k] where ˆs[n] denotes the predicted sample, ak are the predictor coefficients and p is the predictor order. The coefficients ak, k = 1 , . . . p are obtained by mini-mizing the mean-squared prediction error of the residual signal 
+
+e[n] = s[n] − ˆs[n]. The frequency response of the resulting all-pole synthesis filter is H(z) = 1 / 1 − Ppk=1 akz−k. The synthesis filter can then be excited with suitable source signal to synthesize speech. While sinusoidal and LPC vocoders provide useful insight, thanks to their simplicity and transparency, vocoder imple-mentations used in practical TTS and VC systems are more nuanced. Hence, we also include another widely used DSP-based vocoder called WORLD [42]. This lightweight vocoder decomposes speech into three sets of parameters: spectral envelope, fundamental frequency ( F0), and aperiodicity. Each set of parameters are extracted using specialized algorithms 3.These parameters are then used to reconstruct speech with improved temporal resolution and perceptual quality relative to sinusoidal and LPC vocoders. In addition to the above DSP-based approaches, we further include a representative battery of modern neural vocoders: CARGAN [43], FarGAN [44], HiFi-GAN [45], LPCNet [46], and WaveGAN [47]. They employ deep generative architec-tures to learn complex, data-driven mappings between acoustic features and speech waveforms. Unlike traditional vocoders   
+
+> 3‘CheapTrick’ for spectral envelope estimation, ‘DIO’ for F0estimation, and ‘StoneMask’ for pitch refinement.
+
+that rely on explicitly defined DSP models, neural vocoders perform end-to-end optimization, often achieving superior perceptual quality and increased temporal detail. By applying SCD analysis to their outputs, we aim to assess whether neural vocoders mitigate or introduce distinctive modulation artifacts and spectral redundancies, thereby providing insights into the detectability of contemporary speech deepfakes. 
+
+B. SCD Analysis of Vocoded Speech 
+
+To ensure consistency, all synthetic speech signals were generated from a single utterance spoken by a male speaker (mic_M02_si760.wav )4 with a duration of approximately seven seconds. For sinusoidal modeling and LPC vocoders, the original (bonafide) speech was first segmented into 20 ms frames with 10 ms overlap and a Hamming window was ap-plied to each frame. Model parameters—namely, (Ak, ω k, ϕ k)
+
+for sinusoidal modeling and ak for LPC synthesis—were estimated on a frame-by-frame basis. For the LPC vocoder, a 
+
+p = 20 -th order model was estimated using the autocorrelation method [40]. Voiced frames were re-synthesized using aperfectly periodic impulse train, with the fundamental period estimated from the LP residual, whereas unvoiced frames were re-synthesized using white noise excitation. Voicing is deter-mined on a frame-by-frame basis using an autocorrelation-based pitch analysis of the LPC residual as described in [48]. Finally, for both sinusoidal and LPC-based synthesis, the reconstructed frames were combined using overlap-and-add to produce the complete waveform. Fig. 2 displays the waveforms and SCDs of bonafide and synthesized speech, along with SCD difference maps to highlight vocoder-induced artifacts in the cyclostationary domain. Whereas the waveform comparison indicates that all vocoders preserve the overall temporal structure, each vocoder introduces subtle deviations. As for general properties of SCD, the conjugate symme-try SCD (f, α ) = SCD ∗(−f, α ) is clearly visible and, as expected, the highest spectral correlation occurs at α = 0 
+
+Hz. The bonafide speech signal exhibits highly structured pattern characterized by pronounced diagonal components, indicative of strong second-order cyclostationarity arising from the periodic excitation and harmonic structure. Whereas we observe similar diagonal structure for all the vocoded signals, we also observe structural differences with the bonafide signal, providing a promising basis for distinguishing bonafide speech from vocoded speech. Among the DSP vocoders, sinusoidal and LPC-based meth-ods show substantial deviations from the SCD of bonafide speech. The LPC vocoder in particular exhibits a marked attenuation of structured cyclostationary components, as ev-idenced by the predominantly negative SCD difference (blue regions), suggesting a loss of periodic and harmonic de-pendencies due to the oversimplified excitation modeling. The sinusoidal modeling, while preserving certain diagonal                    
+
+> 4This bonafide speech signal and its synthesized counterparts generated using neural vocoders are publicly available at https://ahmed-fau.github.io/ fargan demo/, provided by the authors of [44]. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 6Original Sinusoidal LPC WORLD CARGAN FARGAN HiFi-GAN HiFi-GAN (v3) LPCNet WaveGAN
+> f (Hz)
+> f (Hz)
+> O. - Sinusoidal O. - LPC O. - WORLD O. - CARGAN O. - FARGAN O. - HiFi-GAN O. - HiFi-GAN (v3) O. - LPCNet O. - WaveGAN
+> −7.5
+> −5.0
+> SCD Magnitude (dB)
+> −2.50.0
+> SCD Difference (dB)
+> Fig. 2. Comparison of bonafide and synthesized speech signals in the time and cyclostationary domains. Top row: Time-domain waveforms of the original (bonafide) speech signal and speech synthesized using sinusoidal modeling, LPC, WORLD, and neural vocoders. Middle row: Corresponding SCD representations SCD (f, α ). Bottom row: SCD difference maps between the bonafide and synthesized signals, highlighting vocoder-induced artifacts. All synthesized signals were generated from the same bonafide utterance. For the clarity of visualization, only the first one-second long portion of the speech waveforms are displayed in the figure while SCD representations are estimated using the entire utterance.
+
+structures, introduces excessive energy at specific cyclic fre-quencies, leading to pronounced artifacts visible as strong positive SCD differences. The WORLD vocoder demonstrates improved preservation of the global SCD structure over the LPC and sinusoidal vocoders. Nonetheless, its SCD difference map reveals widespread low-magnitude discrepancies across the full bi-frequency plane. Hence, although WORLD captures harmonic organization more effectively, it still introduces subtle but systematic distortions in cyclostationary statistics. The six neural vocoders have SCDs that closely resemble those of the bonafide speech. Their SCDs retain the character-istic diagonal structure and symmetry observed in the bonafide signal, suggesting improved modeling of periodic excitation and temporal dependencies. Among these models, HiFi-GAN and HiFi-GAN (v3) display the smallest (and most uniformly distributed) SCD differences. LPCNet also performs competi-tively, even if its SCD difference reveals localized artifacts at higher cyclic frequencies, potentially attributable to limitations of its hybrid parametric–neural excitation modeling. WaveGAN and GAN-based autoregressive models (CAR-GAN and FARGAN) exhibit moderate SCD discrepancies, often manifested as fine-grained speckle-like patterns in the difference maps. These artifacts suggest that, while adversarial training enables realistic waveform generation in the time domain, subtle inconsistencies remain in higher-order temporal correlations captured by the SCD representation. Overall, the SCD analysis reveals clear distinctions be-tween bonafide and synthesized speech that are not always apparent in the time-domain waveforms alone. Traditional vocoders introduce pronounced and structured deviations in the cyclostationary domain, whereas modern neural vocoders substantially reduce—but do not entirely eliminate—these dis-crepancies. This highlights the utility of SCD-based analysis as a promising tool for characterizing synthesis artifacts and for differentiating bonafide and synthetic speech. V. T EMPORAL SPECTRAL CORRELATION DENSITY 
+
+FEATURES 
+
+What is the best way to utilize SCD for feature extraction? The conventional SCD representation defined in (9) averages the per-frame spectral correlation (SC) over the time (frame) axis. Similarly, however, one might choose to marginalize over either one of the two other variables in (8). Incorporating temporal variations could enhance the utility of SCD in deepfake detection, as temporal dynamics are important for many speech classification. To analyze this, we propose two modified SCD-based features: SCD a(α, t ) = 1
+
+Nfft 
+
+X
+
+> f
+
+SC (f, α, t )
+
+SCD b(f, t ) = 1
+
+|A| 
+
+X
+
+> α
+
+SC (f, α, t ).
+
+(15) where Nfft denotes the number of DFT frequency bins, A
+
+denotes the set of CFs used in the SC computation, and |A| 
+
+denotes its cardinality. The first representation, denoted by SCD a, captures the SC variation concerning the cyclic frequency ( α) and time ( t), incorporating the cumulative information across the acoustic frequency range ( f ). Conversely, the SCD b features repre-sent the SC variation as a function of acoustic frequency (f ) and time ( t), emphasizing the cyclostationary properties while preserving the temporal structure. Notably, while STFT spectrograms and SCD b share dependencies on f and t, SCD b
+
+uniquely encodes cyclostationary characteristics. The block diagram in Fig. 3 summarizes the three alternative feature extraction schemes. To provide further insight into the characteristics of the pro-posed representations and to highlight their differences from conventional STFT spectrogram features, Fig. 4 visualizes the STFT spectrogram, SCD a(α, t ), and SCD b(f, t ) computed from the same bonafide utterance and its HiFi-GAN (v3) synthetic counterpart used in Sect. IV. The first two rows show the feature representations of the bonafide and synthetic signals, respectively, while the third row presents relative difference maps that emphasize vocoder-induced deviations. While the three representations (STFT, SCD a and SCD b)of the bonafide and synthetic signals appear visually similar in the first two rows, the relative difference map of the STFT spectrogram reveal only weak and spatially diffuse deviations, indicating that these representations are largely preserved by JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 7    
+
+> Fig. 3. Estimation of conventional and proposed temporal SCD features (SCD a, SCD b) from speech signal s[n].∗denotes complex conjugation.
+
+the neural vocoder. In contrast, the relative difference maps of 
+
+SCD a(α, t ) and SCD b(f, t ) exhibit pronounced, temporally persistent vertical structures spanning a wide frequency range, suggesting systematic alterations in the SC patterns introduced by the synthesis process. This observation suggests that SCD features are more sensitive to vocoder-induced artifacts than conventional time–frequency magnitude representations, pro-viding intuition for the superior discriminative performance of SC-based features observed in the quantitative spoofing-detection experiments, represented next. 05000           
+
+> f (Hz)
+> STFT Spectrogram
+> α (Hz)
+> SCD a(α, t )
+> f (Hz)
+> SCD b(f, t )
+> 05000
+> f (Hz)
+> α (Hz)
+> f (Hz)
+> 100 200 300
+> t(Frame Index)
+> 05000
+> f (Hz)
+> 100 200
+> t(Frame Index)
+> α (Hz)
+> 100 200
+> t(Frame Index)
+> f (Hz)
+> −50
+> −25
+> −100
+> −50
+> −150
+> −100
+> −50
+> −25
+> −100
+> −50
+> −150
+> −100
+> −2.50.02.5
+> −0.50.00.5
+> −0.25 0.00 0.25
+> Fig. 4. Visualization of time–frequency representations for a bonafide speech signal and its HiFi-GAN (v3) synthetic version. The first row shows the STFT spectrogram, the temporal SC representation SCD a(α, t ), and the spectral-domain representation SCD b(f, t )for the bonafide signal. The second row shows the corresponding representations for the synthetic signal. The third row depicts relative difference maps between the bonafide and synthetic features.
+
+VI. E XPERIMENTAL SETUP 
+
+A. Datasets 
+
+We evaluate speech deepfake detection performance on three datasets of increasing difficulty: the logical access (LA) task of ASVspoof 2019 [49], ASVspoof 2021 Deepfake (DF) [50] and ASVspoof 5 [51]. 
+
+ASVspoof 2019 LA [49] is a widely used dataset consisting of high-quality spoofing attacks. Its training and development subsets contain spoofed utterances generated using the same six TTS and VC algorithms (A01–A06). These known at-tacks are used for model training and hyperparameter tuning, respectively. The evaluation set includes spoofed utterances generated with thirteen unseen algorithms (A07–A18), referred to as unknown attacks .
+
+ASVspoof 2021 DF is more challenging and contains bonafide and spoofed utterances processed through lossy audio codecs such as MP3 and OGG [50]. Following the recom-mended protocol [50], models are trained and tuned using ASVspoof 2019 LA training and development sets, while ASVspoof 2021 DF is used only for evaluation. 
+
+ASVspoof 5 [51] is the latest edition in the ASVspoof series. Representing much larger and even more challenging testbench for speech deepfake detection, it is built from the MLS English corpus containing over 4000 speakers. The spoofed utterances were generated using the latest TTS and VC systems, validated to effectively deceive an ECAPA-TDNN-based [52] ASV system. Similar to ASVspoof 2021 DF, the evaluation data has been processed with lossy audio codecs. Consistent with prior protocols, the training and devel-opment subsets are used for model training and tuning, while the evaluation set is reserved for performance assessment. Previous studies have shown that the ASVspoof 2019 and 2021 datasets are highly biased toward silence regions, which can lead to overly optimistic and unrealistic performance estimates [53], [54]. To mitigate this issue, silence segments are removed from the training utterances in experiments in-volving these datasets, enabling a less biased evaluation of the proposed spectral correlation features and CM systems. All CM systems are trained using the corresponding training sets without any additional data augmentation. This allows us to assess the inherent robustness of the individual features and ensures a fair comparison among the evaluated approaches. In addition, avoiding augmentation keeps the training pipeline lightweight and computationally efficient, facilitating repro-ducibility and scalability across datasets. 
+
+B. Feature extraction 
+
+In addition to the proposed SC-based features, we include a number of established front-ends as our baselines. This includes LFCCs [9], Mel-spectrograms [55], STFT spectro-grams [9], and CQT spectrograms [56]. Except for CQT, all features are extracted using 25 ms Hamming windows, 10 ms frame shift and 512-point DFT. CQT uses a 10 ms frame shift without fixed frame length.  
+
+> •
+
+LFCCs were computed by following the official base-line parameterization provided by the ASVspoof 2019 challenge [49]. They were extracted from a 20-channel filterbank spaced on a linear scale. The 20-dimensional static features were augmented with delta and double-delta coefficients, resulting in 60-dimensional features.  
+
+> •
+
+Mel-spectrograms were extracted using an 80-channel Mel-scale filterbank, yielding 80-dimensional features.  
+
+> •
+
+CQT spectrograms were obtained with 84 bins per octave, resulting in 84-dimensional features.  
+
+> •
+
+STFT spectrograms and SC-based features used a 512-point DFT, yielding 257 frequency bins. The selection of above feature representations enables com-parison between compact representations that apply filterbank-based smoothing (LFCC and Mel-Spectrogram) or logarithmic JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 8 
+
+> Fig. 5. Block diagrams of the four evaluated speech deepfake detection CMs: (a) SE-Res2Net50 CM using handcrafted acoustic features; (b) SSL–SE-Res2Net50 CM using frozen Wav2Vec 2.0 frame-level features; (c) SSL-only CM using utterance-level Wav2Vec 2.0 embeddings with lightweight projection layers; and (d) embedding fusion CM combining frozen SE-Res2Net50 and SSL embeddings via weighted sum (W. Sum), addition (Add), or concatenation (Concat.). Dashed blocks denote frozen modules; solid blocks denote trainable layers. The dimensionalities of intermediate representations are shown. The table reports the number of trainable parameters for each system (rounded to the nearest thousand), excluding the frozen SSL backbone.
+
+binning (CQT spectrogram) and full representations (STFT spectrogram, SCD, SCD a, SCD b). For training, the number of frames per utterance was fixed to 400 by cropping or replicating frames as needed, while evaluation was performed on full-length utterances. The maximum cyclic frequency parameter ( αmax ) for the SC-based features was determined through preliminary experiments on the development set of the ASVspoof 2019 LA dataset with respect to equal error rate (EER) criterion. Accordingly, αmax 
+
+was set to 2000, 2500 and 500 Hz for the conventional SCD, SCD a and SCD b features, respectively. The resulting feature dimensions are F × T , where F ∈{60 , 80 , 257 , 84 , 257 , 257 } for LFCCs, Mel-spectrograms, STFT spectrograms, CQT spectrograms, SCD a and SCD b,respectively. Here, T denotes the number of frames (fixed to 400 during training). The conventional SCD features in turn are of dimension 257 ×257 where the first dimension spans the spectral frequency range [0 , f s  
+
+> 2
+
+] while the second dimension spans the cyclic frequency range [0 , α max ].
+
+C. Speech Deepfake Detection Models 
+
+We consider four speech deepfake detection models (spooofing countermeasures, CMs):  
+
+> •
+
+a conventional SE-Res2Net50-based CM [6],  
+
+> •
+
+an SSL-SE-Res2Net50 CM , 
+
+> •
+
+an SSL-only CM based on Wav2Vec 2.0 embeddings, similar to the weighted layer-averaging approach in [57] but employing Wav2Vec 2.0 [58] instead of WavLM, and  
+
+> •
+
+an embedding fusion-based CM that combining com-plementary SSL and convolutional representations. The block diagrams of all systems and their parameter counts are shown in Fig. 5. The SE-Res2Net50-based CM serves as a strong and well-established convolutional baseline, with competitive performance particularly on the ASVspoof 2019 dataset [6]. Moreover, its convolutional architecture is well-suited for processing two-dimensional representations, making it an appropriate choice for evaluating both the baseline spectral and the proposed SCD-based features. The SSL–SE-Res2Net50 system enables a direct compar-ison between handcrafted and SSL-derived two-dimensional feature representations when processed by the same high-capacity convolutional back-end. The SSL-only system pro-vides a lightweight alternative that isolates the representational power of SSL embeddings with minimal back-end complexity. Finally, the embedding fusion-based system is designed to investigate the complementarity between convolutional and SSL representations. The first CM system (SE-Res2Net50) follows the standard front-end/back-end pipeline. Given an input waveform, frame-level acoustic features are extracted using a fixed feature extraction front-end. The resulting features are processed by an SE-Res2Net50 network adopted from [6], serving as a high-capacity feature encoder. The SE-Res2Net50 architecture comprises an initial convolutional stem composed of three 
+
+3×3 layers, followed by four stages of squeeze-and-excitation Res2Net bottleneck blocks (3–4–6–3). The SE-Res2Net blocks are followed by a global average pooling layer and a fully connected layer, producing a 256-dimensional embedding. ReLU activation is applied to all layers except the output layer, which uses softmax activation with two neurons representing bonafide and spoofed speech classes. The second CM system (SSL-SE-Res2Net50) replaces handcrafted acoustic features with SSL representations while keeping the back-end unchanged. A pre-trained Wav2Vec 2.0 base model [58] (trained on 960 hours of unlabelled Lib-rispeech data [59]) is used as the frozen SSL front-end. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 9
+
+Wav2Vec 2.0 is selected as the SSL because the use of Librispeech is permitted under ASVspoof 5 evaluation rules since there is no speaker overlap with the ASVspoof 5 dataset. Frame-level SSL features extracted from the output of the 6th transformer encoder layer, which has a dimensionality of 200 × 768 , is used as the input feature map to the SE-Res2Net50 network. The use of 6th encoder layer output is motivated by previous studies [13], [14] indicating that the intermediate SSL layers often encode richer spoofing-related cues than deeper layers, with consequently improved detection. The third, SSL-only CM system relies exclusively on Wav2Vec 2.0 base model as a frozen frame-level feature extractor. The frame-level features are combined using a train-able layer-weighted averaging approach over all encoder layers and the initial convolutional layer following [57]. Temporal average pooling yields a 768 -dimensional utterance-level em-bedding, which is mapped to a compact 256-dimensional space using two linear projection layers before softmax classifica-tion. Only the layer weights, projection layers and classifiers are trainable which allow us to analyze the impact of SSL representations independently of convolutional modeling. The fourth and final system exploits the complementarity of convolutional and SSL representations through embedding-level fusion. Two parallel branches operate on the same input waveform. In the first branch, acoustic features are extracted and processed by a pre-trained and frozen SE-Res2Net50 model to obtain a 256 -dimensional SE-Res2Net50 embedding. In the second branch, the waveform is directly passed to the frozen Wav2Vec 2.0 model to obtain a 768 -dimensional SSL embedding computed using the same layer-weighted averaging and temporal average pooling strategy as in the SSL-only system. The dimensionality of the SSL embedding is reduced to 256 using a trainable linear layer to ensure a consistent embedding size with SE-Res2Net50 embedding. Both embeddings are projected into a common 256-dimensional embedding space using a shared projection layer. Sharing the projection parameters enforces alignment between the two modalities and reduces the overall number of trainable parameters. The final embedding is obtained via an embedding fusion layer using one of three fusion strategies:  
+
+> •
+
+Element-wise weighted sum : the two projected embed-dings are combined using element-wise weighted average approach via a learnable gating mechanism. A gating vector α ∈ R256 is derived from the input embeddings to adaptively weight the contribution of each embedding per dimension. This strategy introduces only a modest number of additional parameters while providing greater flexibility than simple summation.  
+
+> •
+
+Element-wise summation (Add) : a parameter-free fu-sion approach where the two embeddings are combined via simple element-wise addition.  
+
+> •
+
+Concatenation : the two 256-dimensional embeddings are concatenated to form a 512-dimensional representation to increase the representational capacity while introducing only a small number of additional parameters compared to element-wise summation. The fused embedding is passed to a softmax classifier that outputs posterior probabilities for both classes. Across all 
+
+TABLE I EER (%) AND MIN DCF ON THE ASV SPOOF 2019 LA DEVELOPMENT AND EVALUATION SETS FOR SINGLE -SYSTEM CM S (F IG . 5): (a)
+
+SE-R ES 2N ET 50 WITH DIFFERENT FRONT -ENDS , (b)
+
+SSL-SE-R ES 2N ET 50, AND (c) SSL-ONLY WITH A LIGHTWEIGHT BACK -END . F OR SYSTEM (a), BEST RESULTS ACROSS FRONT -ENDS ARE IN 
+
+> BOLD
+
+; BEST OVERALL RESULTS ARE BOLD AND UNDERLINED . T RAINING USES SILENCE -TRIMMED TRAINING UTTERANCES ; TESTING USES ORIGINAL UTTERANCES .                                            
+
+> System Front-end feature Dev. Set Eval. Set EER minDCF EER minDCF (a) SE-Res2Net50 LFCC 17.11 0.3924 22.88 0.4960 Mel-spectrogram 3.84 0.1010 12.07 0.2752
+> CQT 6.16 0.1636 26.15 0.5395 STFT spectrogram 2.94 0.0770 35.01 0.5468 SCD 1.92 0.0475 22.88 0.5251 SCD a24.21 0.5146 36.49 0.7451 SCD b5.14 0.1261 19.78 0.4334 (b) SSL-SE-Res2Net50 SSL features 6.90 0.1690 11.62 0.3000 (c) SSL-only SSL embeddings 5.68 0.1323 8.28 0.1978
+
+systems, architectural and training configurations ensure fair, interpretable comparisons, so performance differences mainly reflect feature representation and fusion strategy rather than model capacity disparities. All systems use the Adam opti-mizer [60] with an initial learning rate of 1×10 −4, reduced by 0.9 if development loss increases for two consecutive epochs, with early stopping if development EER fails to improve for five epochs. 
+
+D. Performance criteria 
+
+The performance of the SDD system was evaluated using the EER and the minimum normalized detection cost function (minDCF) metrics [51] for all experiments. For the compu-tation of minDCF, the prior probability of spoof class and the associated costs were set to πspf = 0.05 , Cmiss = 1
+
+and Cfa = 10 in accordance with the ASVspoof 5 challenge evaluation plan 5.VII. R ESULTS 
+
+A. Results on the ASVspoof 2019 LA Dataset 
+
+Table I reports EER and minDCF on the ASVspoof 2019 LA development and evaluation sets for the three single-system CMs (a), (b) and (c) in Fig. 5. On the development set, the conventional SCD front-end yields the best SE-Res2Net50 performance, achieving 1.92% EER and 0.0475 minDCF. The STFT follows with 2.94% EER and 0.0770 minDCF. Among the baseline compact spectral features, Mel-spectrogram per-forms best, followed by CQT and then LFCC. Within the SC family, the conventional SCD is best overall, while SCD b
+
+substantially outperforms SCD a and also improves over the LFCC and CQT baselines. This highlights the potential of SC representations in SDD tasks. For SSL-based systems, SSL-only outperforms SSL-SE-Res2Net50 on both metrics, indicating that a lightweight back-end can be sufficient when using SSL representations. On the evaluation set, the SSL-only CM achieves the best single-system performance (8.28% EER, 0.1978 minDCF). Among the SE-Res2Net50 acoustic front-ends, Mel-spectrogram yields the lowest EER (12.07%) and minDCF (0.2752), followed by SCD b and conventional SCD. In contrast, STFT spectrogram features degrades sharply (35.01% EER), indicating its limited generalization. Overall, 
+
+> 5
+
+https://www.asvspoof.org/file/ASVspoof5 Evaluation Plan Phase2.pdf JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 10 
+
+these results suggest a generalization advantage for SSL em-beddings. Interestingly, SSL-only CM outperforms SSL-SE-Res2Net50 on the evaluation set (8.28% vs. 11.62% EER), corresponding to a relative EER reduction of approximately 29%. Consequently, SSL-only results are used as the primary SSL baseline in the remainder of this work. SSL+LFCC SSL+Mel-Spect. SSL+CQT SSL+ STFT Spect. SSL+SCD SSL+SCD a          
+
+> SSL+SCD b
+> 0
+> 10
+> EER (%)
+> W. Sum (Dev) W. Sum (Eval) Add (Dev) Add (Eval) Concat. (Dev) Concat. (Eval)
+> SSL+LFCC SSL+Mel-Spect. SSL+CQT SSL+ STFT Spect. SSL+SCD SSL+SCD a
+> SSL+SCD b
+> 0.0
+> 0.2
+> 0.4
+> minDCF
+> Fig. 6. ASVspoof 2019 LA embedding fusion results (Fig. 5(d))on development (hatched) and evaluation (solid) sets: EER (top) and minDCF (bottom). SSL embeddings are fused with SE-Res2Net50 embeddings from different front-ends using weighted sum (W. Sum), element-wise addition (Add), and concatenation (Concat.). Dashed lines denote the best single-system baselines (black: SE-Res2Net50 system with Mel-spectrogram front-end and red: SSL-only).
+
+Beyond the single-system baselines, we evaluate the embed-ding fusion CM with results summarized in Fig. 6 for the three fusion strategies. Across front-ends, concatenation evaluation set performance, consistently provides the strongest and most stable evaluation set performance, indicating that increased representational capacity at the fusion stage is beneficial. On the evaluation set, concatenation achieves EERs of 1.23%, 1.55%, 1.36%, 2.20%, 1.38%, and 0.98% when combined with LFCC, Mel-spectrogram, CQT, STFT spectrogram, SCD a,and SCD b, respectively. These improvements over the single-system results (Table I) indicate strong complementarity be-tween SE-Res2Net50 and SSL embeddings. Among all eval-uated configurations, concatenation-based fusion with SCD b
+
+achieves the lowest evaluation set EER and minDCF. In contrast, weighted-sum fusion exhibits larger variability and generally inferior evaluation set performance, with the element-wise addition producing results in-between. Relative to the strongest single-system baselines (horizontal reference lines), all fusion configurations outperform both the SSL-only CM and the best SE-Res2Net50 acoustic baseline except for conventional SCD. The best fused system (SSL+SCD b with concatenation) achieves 0.98% EER on the evaluation set, corresponding to EER reductions of approximately 95% and 88% relative to SE-Res2Net50+SCD b (19.78%) and the SSL-only CM (8.28%), respectively. Based on these findings, only concatenation-based fusion results are reported henceforth. 
+
+B. Results on ASVspoof 2021 DF Dataset 
+
+Table II reports ASVspoof 2021 DF results both per vocoder type and in pooled form. For SE-Res2Net50, SCD b achieves the best overall performance, with a pooled EER of 22.73% and a minDCF of 0.5596. This corresponds to improvements of ∼23% (EER) and ∼19% (minDCF) relative to the second-best SE-Res2Net50 model based on LFCC features. Across the vocoder categories, SCD b consistently outper-forms other spectral representations for attacks generated by neural non-autoregressive, DSP-based and unknown vocoders. Although LFCC yields slightly lower EER for neural au-toregressive vocoders, the performance difference relative to SCD b is modest (30.89% vs. 31.85%), indicating comparable robustness in this category. The SSL-only CM achieves uniformly low EERs across most of the vocoder types especially for DSP-based and waveform concatenation attacks. It yields a pooled EER of 9.77% and a minDCF of 0.2363, representing the best over-all performance among all systems. In contrast, SCD b with SE-Res2Net50 classifier yields considerably lower EERs for unknown vocoder attacks compared with the SSL-only CM. This indicates that SSL embeddings capture vocoder-agnostic cues that generalize to diverse unseen attacks, whereas SCD b
+
+is particularly effective for the unknown vocoder category. Consistent trends are observed across systems with respect to vocoder difficulty. Neural vocoders are generally the most challenging, while waveform concatenation attacks are easier for conventional acoustic features. The DSP-based vocoders, in turn, are best detected using SCD a and SCD b, while neural non-autoregressive attacks are of intermediate difficulty. Unlike ASVspoof 2019 LA, embedding fusion does not provide systematic improvements over the SSL-only CM. In most cases, pooled EER and minDCF increase relative to SSL-only, regardless of the acoustic front-end. While some fused systems (e.g., SSL+LFCC and SSL+SCD a) retain competitive performance, none surpass SSL-only CM. Nevertheless, em-bedding fusion substantially improves performance relative to SE-Res2Net50-based CMs alone, indicating SSL embeddings remain the dominant source of discriminative information. 
+
+C. Results on the ASVspoof5 Dataset 
+
+Our final evaluation results on the development portion of ASVspoof 5 are summarized in Table III. The error rates are considerably higher than on ASVspoof 2019, as anticipated. Among the SE-Res2Net50-based systems, the STFT spec-trogram yields the best performance, achieving EER 9.22% and minDCF 0.1296. LFCC and Mel-spectrogram provide comparable EERs, with Mel-spectrogram yielding a lower minDCF. Within the SC family, SCD b outperforms both the conventional SCD and SCD a. It also outperforms CQT in both metrics, indicating its relative robustness. Comparing the single-system baselines, SSL-only achieves the best performance with EER of 5.63% and minDCF of 0.1358, corresponding to 39% reduction in EER relative to the best SE-Res2Net50 configuration (STFT spectrogram). This again highlights the strong generalization capability of pretrained SSL representations. The fusion approach consistently improves over the corre-sponding SE-Res2Net50 baselines for most front-ends. In par-ticular, fusion with STFT spectrogram and conventional SCD embeddings yields the strongest fusion performance, achieving EERs of 8.20% and 10.42%, respectively. Despite these gains, all fusion variants remain inferior to SSL-only, suggesting SSL embeddings already capture highly discriminative spoofing cues in the development set. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 11 
+
+TABLE II EER (%) PER VOCODER CATEGORY ON THE ASV SPOOF 2021 DF DATASET . R ESULTS ARE SHOWN FOR FIG . 5 SYSTEMS : (a) SE-R ES 2N ET 50 WITH DIFFERENT ACOUSTIC FRONT -ENDS , (c) SSL-ONLY , AND (c) EMBEDDING -LEVEL FUSION USING CONCATENATED SSL AND SE-R ES 2N ET 50 
+
+EMBEDDINGS . C OLUMNS CORRESPOND TO NEURAL AR, N EURAL NON -AR, DSP-BASED , WAVEFORM CONCATENATION , AND UNKNOWN VOCODERS .THE LAST COLUMNS SHOW POOLED EER AND MIN DCF ACROSS ALL CATEGORIES . F OR EACH SYSTEM , THE HIGHEST PER -CATEGORY EER IS SHADED ;
+
+BEST RESULTS PER COLUMN ARE IN BOLD . T RAINING USES SILENCE -TRIMMED TRAINING UTTERANCES ; TESTING USES ORIGINAL UTTERANCES .                                                                                                                   
+
+> System Front-end / Fusion Vocoder Type (EERs in %) Pooled Neural AR Neural non-AR DSP-based Wav. Concat. Unknown EER minDCF (a) SE-Res2Net50 LFCC 30.89 31.34 27.77 34.50 24.68 29.39 0.6871 Mel-spectrogram 36.52 37.07 23.49 18.07 24.95 30.17 0.6923 CQT 42.25 37.95 18.66 17.94 21.29 30.06 0.6827 STFT spectrogram 49.71 41.85 33.61 24.91 32.23 39.33 0.8839 SCD 41.58 40.35 37.75 27.29 29.81 38.75 0.9995 SCD a47.05 47.59 29.20 47.85 24.93 37.87 0.8649 SCD b31.85 28.61 13.97 19.21 9.99 22.73 0.5596 (c) SSL-only SSL embeddings 13.90 10.99 4.55 8.03 13.81 9.77 0.2363
+> (d) Embedding fusion SSL + LFCC 14.89 12.79 9.48 7.64 12.73 12.12 0.3159 SSL + Mel-spectrogram 17.86 17.85 11.37 11.07 13.26 15.38 0.4201 SSL + CQT 18.74 15.83 7.25 14.50 13.08 13.58 0.3614 SSL + STFT spectrogram 25.60 22.20 8.88 12.03 10.27 17.77 0.4364 SSL + SCD 36.33 33.16 26.07 23.48 15.79 29.88 0.7078 SSL + SCD a15.21 14.29 7.97 7.88 13.86 12.24 0.3220 SSL + SCD b17.61 16.10 9.89 14.16 15.25 14.39 0.3900
+
+TABLE III EER (%) AND MIN DCF ON THE ASV SPOOF 5 DEVELOPMENT SET .RESULTS ARE REPORTED FOR THE SYSTEMS SHOWN IN FIG . 5: (a)
+
+SE-R ES 2N ET 50 WITH DIFFERENT ACOUSTIC FRONT -ENDS , (c) AN 
+
+SSL-ONLY CM AND (d) CONCATENATION -BASED EMBEDDING -FUSION 
+
+CM S COMBINING SSL AND SE-R ES 2N ET 50 EMBEDDINGS .                                  
+
+> System Front-end / Fusion EER minDCF (a) SE-Res2Net50 LFCC 17.00 0.3101 Mel-spectrogram 17.47 0.2675 CQT 27.70 0.4841 STFT spectrogram 9.22 0.1296 SCD 42.52 0.8591 SCD a29.26 0.6530 SCD b23.17 0.4752 (c) SSL-only SSL embeddings 5.63 0.1358
+> (d) Embedding fusion SSL + LFCC 15.89 0.2890 SSL + Mel-spectrogram 16.71 0.2338 SSL + CQT 15.64 0.3295 SSL + STFT spectrogram 8.20 0.1302 SSL + SCD 10.42 0.2544 SSL + SCD a11.51 0.2908 SSL + SCD b14.20 0.2741
+
+Proceeding to the evaluation set, the attack-wise results, together with pooled EER and minDCF, are reported in Table IV for selected systems based on development set performance: SSL-only as the primary reference; SSL+CQT as the best-performing fusion system with a compact spectral representation; SSL+STFT spectrogram as the best-performing fusion system based on STFT spectrograms and SSL+SCD as the best-performing SC fusion system. For reference purposes, we also include the official ASVspoof 5 baselines (B01: RawNet2 and B02: AASIST) [51]. In contrast to development set results, importantly, the embedding fusion approach with conventional SCD represen-tation yields the best evaluation set performance achieving a pooled EER of 14.80% and minDCF of 0.3423, outperforming the SSL-only CM (15.81% EER, 0.3631 minDCF). The attack-wise analysis reveals that SSL+SCD improves performance on 11 out of 16 attacks (A17–A20, A22, A25–A27, and A30– A32), including six (A18, A20, A27, and A30–A32) of seven adversarial attacks. This indicates that conventional SCD cap-tures spoofing cues that are particularly relevant for adversarial attack scenarios and that complement the information encoded in SSL embeddings. In contrast, although the SSL+STFT spectrogram configuration performed well on the development set, its performance degrades substantially on the evaluation data. This shows the limited generalization capability of STFT spectrograms on unseen and diverse attacks. To further assess generalization, Fig. 7 shows the relative degradation from the development to the evaluation set. As is evident, the SCD features (particularly the conventional SCD) exhibit consistently smaller relative degradation than other acoustic features, for both SE-Res2Net50-based and fusion-based systems. This reinforces that SCD features offer improved robustness to unseen and diverse spoofing attacks. 0 100 200 300 400 
+
+> ∆EER (%)
+> SCD SCD a
+> SCD b
+> CQT LFCC Mel-Spect. STFT Spect. SSL-only
+
+Dev → Eval Relative Change (EER)    
+
+> 0200 400 600
+> ∆minDCF (%)
+
+Dev → Eval Relative Change (minDCF)  
+
+> SE-Res2Net50 SSL+SE-Res2Net50 Emb. Fusion
+
+Fig. 7. Relative change (%) in EER (top) and minDCF (bottom) when moving from the development set to the evaluation set on ASVspoof 5, for different acoustic feature representations using SE-Res2Net50 and concatenation-based embedding-fusion CMs. Smaller relative changes indicate better generalization under unseen and diverse spoofing attacks. 
+
+VIII. D ISCUSSION 
+
+Based on the previous section’s results, several key obser-vations can be made across both metrics. 
+
+• SSL dominance and generalization: The SSL-only CM consistently yields the best performance across all datasets when compared with other single systems, namely SE-Res2Net50 and SSL-SE-Res2Net50. SSL-SE-Res2Net50 is inferior to the SSL-only system indepen-dent of the dataset. This supports the use of a lightweight back-end for SSL features. 
+
+• Dataset-dependent behavior of acoustic front-ends: 
+
+For SE-Res2Net50, the relative ranking of baseline spectral and spectral correlation features varies across datasets, indicating sensitivity to channel/codec vari-ability (ASVspoof 2021) and adversarial perturbations (ASVspoof 5). 
+
+• Effectiveness of spectral correlation features: The or-dering of proposed spectral correlation features using SE-Res2Net50 back-end is dataset-dependent: on ASVspoof 2019, SCD b < SCD < SCD a, whereas on ASVspoof 2021 and ASVspoof 5 it becomes SCD b < SCD a <
+
+SCD (for both EER and minDCF). Compared to base-line acoustic features, Mel-spectrogram is strongest on ASVspoof 2019, while SCD b is most competitive on ASVspoof 2021 and LFCC is superior on ASVspoof 5 for both EER and minDCF. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 12 
+
+TABLE IV ATTACK -WISE AND POOLED EER (%) AND MIN DCF ON THE ASV SPOOF 5 EVALUATION SET FOR SSL-ONLY AND SELECTED CONCATENATION -BASED FUSION SYSTEMS . P OOLED METRICS ARE COMPUTED FROM THE SCORES POOLED ACROSS ALL ATTACKS . L OWEST VALUES PER ATTACK /METRIC ARE IN 
+
+BOLD . C HALLENGE BASELINES B01 (R AW NET 2) AND B02 (AASIST) ARE FROM [51]. T HE LAST THREE ROWS REPORT RELATIVE CHANGE (%) W.R.T.SSL-ONLY ; NEGATIVE VALUES (GREEN ) INDICATE IMPROVEMENTS , WHILE POSITIVE VALUES (RED ) DENOTE DEGRADATION .                                                                                                                                                                                        
+
+> System A17 A18 A19 A20 A21 A22 A23 A24 A25 A26 A27 A28 A29 A30 A31 A32 EER minDCF SSL-only (c) 5.42 11.60 8.51 9.82 8.99 10.54 19.61 27.56 5.17 7.13 15.44 25.00 5.49 24.46 37.38 12.33 15.81 0.3631 SSL + CQT (d) 5.93 29.67 20.88 29.27 4.78 15.25 31.92 57.76 14.46 19.77 41.16 21.01 3.03 42.41 38.32 33.45 27.54 0.6915 SSL + STFT Spect. (d) 33.10 36.39 46.22 50.82 33.96 36.11 36.24 38.74 37.84 33.74 47.60 35.91 32.24 47.49 47.44 50.95 39.56 0.9313 SSL + SCD (d) 3.78 7.73 4.68 5.61 9.02 10.54 21.43 60.01 3.93 4.79 6.95 31.46 5.16 14.57 32.26 5.67 14.80 0.3423
+> ASVspoof 5 B01 [51] 22.58 57.64 63.75 46.95 25.67 24.50 30.35 23.61 29.78 41.95 38.85 39.43 17.54 42.26 33.22 29.78 36.04 0.8266 ASVspoof 5 B02 [51] 16.44 50.02 59.99 33.70 17.05 17.63 32.78 13.35 21.01 31.35 27.60 32.10 8.93 42.85 27.48 19.50 29.12 0.7106
+> Relative change w.r.t. SSL-only (%)
+> ∆SSL + CQT +9.4 +155.7 +145.4 +198.1 -46.8 +44.7 +62.8 +109.6 +179.7 +177.3 +166.6 -16.0 -44.8 +73.3 +2.5 +171.3 +74.2 +90.4
+> ∆SSL + STFT Spect. +510.7 +213.7 +443.1 +417.5 +277.8 +242.6 +84.8 +40.6 +631.9 +373.2 +208.3 +43.6 +487.2 +94.1 +26.9 +313.2 +150.2 +156.5
+> ∆SSL + SCD -30.2 -33.4 -45.0 -42.9 +0.3 +0.0 +9.3 +117.7 -24.0 -32.8 -55.0 +25.8 -6.0 -40.4 -13.7 -54.0 -6.4 -5.7
+
+• Fusion is beneficial but not universal: On ASVspoof 2019, embedding fusion yields large gains, and con-catenation is consistently best; SSL+SCD b is the best performing configuration. On ASVspoof 2021, fusion typically does not improve on SSL-only, indicating lim-ited complementarity under DF conditions, although it improves substantially over SE-Res2Net50 alone and SSL+SCD a is the best-performning combination among the fusion systems. On ASVspoof 5, fusion depends on the subset: SSL-only is best on the development set, while SSL+SCD is best on the evaluation set, with strong gains for adversarial attacks, suggesting conventional SCD captures complementary attack-relevant cues. In terms of generalization capability, spectral correlation-based features consistently exhibit smaller performance degra-dation when transitioning from the development set to the eval-uation set across all datasets, indicating improved robustness. Although the impact of the proposed spectral correlation features are evident in terms of both metrics, these reflect system performance at a single operating point. To gain further insight into system behavior across a wider range of operating points, Fig. 8 presents the DET curves for the SSL-only system and the embedding fusion-based system using various acoustic features across the three datasets. The DET curves show that for ASVspoof 2019, the SSL+SCD b embedding fusion consis-tently outperforms other combinations. For ASVspoof 2021, the SSL-only system achieves the best performance, followed by SSL+LFCC and SSL+SCD a. Finally, for ASVspoof 5, the SSL+full SCD configuration systematically outperforms other combinations as well as the SSL-only system. 0.2 0.5 1 2 5 10 20                    
+
+> Pfa (%)
+> 0.2
+> 0.5
+> 1
+> 2
+> 5
+> 10
+> 20
+> Pmiss  (%)
+> ASVspoof 2019 LA
+> 2510 20 40 60
+> Pfa (%)
+> 2
+> 5
+> 10
+> 20
+> 40
+> 60 ASVspoof 2021 DF
+> 2510 20 40 50 60 70 80 90
+> Pfa (%)
+> 2
+> 5
+> 10
+> 20
+> 40
+> 50
+> 60
+> 70
+> 80
+> 90 ASVspoof 5
+> SSL-only LFCC Mel-Spect. CQT STFT Spect. Full SCD SCDa SCDb
+
+Fig. 8. DET Curves for ASVspoof 2019 LA, ASVspoof 2021 DF and ASVspoof 5 evaluation sets for the SSL-only (solid blue) and the concatenation-based fusion systems with different acoustic features. 
+
+Finally, Fig. 9 illustrates t-SNE projections of embed-dings extracted from SE-Res2Net50, SSL-only and embedding fusion-based CM systems using the ASVspoof 5 evaluation set. SSL-only shows limited separation between bonafide and spoofed speech across attack types, whereas the systems lever-aging conventional SCD features—namely SE-Res2Net50 and the embedding fusion approach—demonstrate more structured x1
+
+> x2
+> SE-Res2Net50
+> x1
+> SSL-only
+> x1
+> Emb. Fusion TTS VC AT bonafide
+
+Fig. 9. t-SNE visualizations of embeddings on the ASVspoof 5 evaluation set from the SE-Res2Net50 (left), SSL-only (middle), and embedding fusion (right) systems. SE-Res2Net50 and the embedding fusion system utilize conventional SCD features, whereas the SSL-only system relies solely on self-supervised representations. Points are colored by class labels (bonafide, text-to-speech (TTS), voice conversion (VC), and adversarial attacks (AT)). 
+
+and compact embedding distributions. In particular, the fusion system produces clearer clustering, consistent with comple-mentary information from combining SSL representations with conventional SCD embeddings. IX. C ONCLUSION 
+
+This work investigated the effectiveness of cyclostationary signal processing–based SCD features for speech deepfake detection. Unlike conventional time–frequency representations such as STFT and Mel-spectrograms, as well as widely used LFCC and CQT features, the proposed approach exploits spec-tral correlation to capture higher-order temporal dependencies and periodic structures inherent in spoofed speech signals. By framing speech deepfake detection from a cyclostationary analysis perspective, this work introduces a new paradigm for frame-level speech analysis. Although recent advances in speech deepfake detection have largely reduced the emphasis on handcrafted features in favor of self-supervised learning (SSL) representations, the experimental results demonstrate that spectral correlation-based features remain highly relevant. Extensive evaluations conducted across three datasets, including the most recent and challenging ASVspoof 5 dataset, show that the proposed features achieve competitive standalone performance and con-sistently enhance detection accuracy when fused with SSL em-beddings. The observed improvements across EER, minDCF, DET characteristics, and embedding-space visualizations con-firm that spectral correlation features convey complementary spoofing cues that are not fully captured by conventional acoustic features or SSL-derived representations. Overall, the findings suggest that cyclostationary-based spectral correlation analysis offers a promising and comple-mentary direction for robust speech deepfake detection, partic-ularly in challenging conditions involving codecs, adversarial perturbations, and unseen attacks. JOURNAL OF L ATEX CLASS FILES, VOL. 14, NO. 8, AUGUST 2021 13 
+
+REFERENCES [1] Z. Wu et al. , “Spoofing and countermeasures for speaker verification: A survey,” Speech Communication , vol. 66, pp. 130–153, 2015. [2] I. Kola-Adelakin, M. Taeb, and H. Chi, “Forensic investigation of synthetic voice spoofing detection in social app,” in Proc. the 2025 ACM Southeast Conference , 2025. [3] H. Delgado et al. , “On deepfake voice detection – it’s all in the presentation,” in Proc. ICASSP (to appear) , 2026. [4] M. Sahidullah et al. , “Introduction to voice presentation attack detec-tion and recent advances,” in Handbook of Biometric Anti-Spoofing .Springer, 2019, pp. 321–361. [5] A. Nautsch et al. , “ASVspoof 2019: spoofing countermeasures for the detection of synthesized, converted and replayed speech,” IEEE Transactions on Biometrics, Behavior, and Identity Science , vol. 3, no. 2, pp. 252–265, 2021. [6] X. Li et al. , “Replay and synthetic speech detection with res2net architecture,” in Proc. ICASSP , 2021, pp. 6354–6358. [7] M. Todisco, H. Delgado, and N. Evans, “Constant Q cepstral coeffi-cients: A spoofing countermeasure for automatic speaker verification,” 
+
+Computer Speech & Language , vol. 45, pp. 516–535, 2017. [8] F. Tom et al. , “End-to-end audio replay attack detection using deep convolutional networks with attention,” in Proc. Interspeech , 2018. [9] M. Sahidullah, T. Kinnunen, and C. Hanilc ¸i, “A comparison of features for synthetic speech detection,” in Proc. Interspeech , 2015. [10] G. Hua et al. , “Towards end-to-end synthetic speech detection,” IEEE Signal Processing Letters , vol. 28, pp. 1265–1269, 2021. [11] H. Tak et al. , “End-to-end spectro-temporal graph attention networks for speaker verification anti-spoofing and speech deepfake detection,” arXiv preprint arXiv:2107.12710 , 2021. [12] X. Wang and J. Yamagishi, “Investigating self-supervised front ends for speech spoofing countermeasures,” in Proc. Odyssey , 2022. [13] Y. E. Kheir et al. , “Comprehensive layer-wise analysis of SSL models for audio deepfake detection,” in Proc. NAACL Findings 2025 , 2025. [14] S. Saha, M. Sahidullah, and S. Das, “Exploring green AI for audio deepfake detection,” in Proc. EUSIPCO , 2024, pp. 186–190. [15] W. A. Gardner et al. , “Cyclostationarity: Half a century of research,” 
+
+Signal Processing , vol. 86, no. 4, pp. 639–697, 2006. [16] J. Antoni, “Cyclic spectral analysis in practice,” Mechanical Systems and Signal Processing , vol. 21, no. 2, pp. 597–630, 2007. [17] W. A. Gardner, Cyclostationarity in Communications and Signal Pro-cessing . IEEE Press, 1994. [18] ——, Statistical Spectral Analysis: A Nonprobabilistic Theory . USA: Prentice-Hall, Inc., 1986. [19] P. Maragos, J. Kaiser, and T. Quatieri, “Energy separation in signal modulations with application to speech analysis,” IEEE Transactions on Signal Processing , 1993. [20] P. Maragos et al. , “Speech nonlinearities, modulations, and energy operators,” in Proc. ICASSP , 1991. [21] F.-G. Zeng et al. , “Speech recognition with amplitude and frequency modulations,” Proceedings of the National Academy of Sciences , vol. 102, no. 7, pp. 2293–2298, 2005. [22] K. K. Paliwal and Y. Sagisaka, “Cyclic autocorrelation-based linear prediction analysis of speech,” in Proc. Eurospeech , 1997. [23] X. Menendez-Pidal and G. H. Abrego, “System and method for per-forming speech recognition in cyclostationary noise environments,” U.S. Patent US 6,785,648, 8 31, 2004. [24] A. Jalili et al. , “Speech emotion recognition using cyclostationary spectral analysis,” in Proc. MLSP , 2018, pp. 1–6. [25] G. Bologni et al. , “Harmonics to the rescue: Why voiced speech is not a wss process,” in Proc. IWAENC . IEEE, 2024, pp. 409–413. [26] W. Gardner, “Spectral correlation of modulated signals: Part I - analog modulation,” IEEE Transactions on Communications , vol. 35, no. 6, pp. 584–594, 1987. [27] ——, “Measurement of spectral correlation,” IEEE Transactions on Acoustics, Speech, and Signal Processing , vol. 34, no. 5, pp. 1111–1123, 1986. [28] L. R. Rabiner and R. W. Schafer, Introduction to Digital Speech Processing , 1st ed. USA: Now Publishers Inc., 2007. [29] M. H. Hayes, Statistical Digital Signal Processing and Modeling , 1st ed. USA: John Wiley & Sons, Inc., 1996. [30] R. Roberts et al. , “Computationally efficient algorithms for cyclic spectral analysis,” IEEE Signal Processing Magazine , vol. 8, no. 2, pp. 38–49, 1991. [31] R. Boustany and J. Antoni, “Cyclic spectral analysis from the averaged cyclic periodogram,” IFAC Proceedings Volumes , vol. 38, no. 1, pp. 166–171, 2005. [32] P. Welch, “The use of fast fourier transform for the estimation of power spectra: A method based on time averaging over short, modified peri-odograms,” IEEE Transactions on Audio and Electroacoustics , vol. 15, no. 2, pp. 70–73, 1967. [33] W. Gardner, “Exploitation of spectral redundancy in cyclostationary signals,” IEEE Signal Processing Magazine , vol. 8, no. 2, pp. 14–36, 1991. [34] G. Elia et al. , “A novel approach for the cyclo-non-stationary analysis of speed varying signals,” in Proc. ISMA , 2010, pp. 2801–2814. [35] J. Lee et al. , “PhaseAug: A differentiable augmentation for speech synthesis to simulate one-to-many mapping,” in Proc. ICASSP , 2023. [36] Y. Gao et al. , “Generalized spoofing detection inspired from audio generation artifacts,” in Proc. Interspeech , 2021. [37] L. Yin, X. Xiang, and Y. Liang, “Cyclostationary feature based modula-tion classification with convolutional neural network in multipath fading channels,” IEEE Access , vol. 11, pp. 105 455–105 465, 2023. [38] W. Hilal, S. A. Gadsden, and J. Yawney, “Cognitive dynamic systems: A review of theory, applications, and recent advances,” Proceedings of the IEEE , vol. 111, no. 6, pp. 575–622, 2023. [39] R. McAulay and T. Quatieri, “Speech analysis/synthesis based on a sinusoidal representation,” IEEE Transactions on Acoustics, Speech, and Signal Processing , vol. 34, no. 4, pp. 744–754, 1986. [40] J. Makhoul, “Linear prediction: A tutorial review,” Proceedings of the IEEE , vol. 63, no. 4, pp. 561–580, 1975. [41] J.-M. Valin and J. Skoglund, “A real-time wideband neural vocoder at 1.6kb/s using LPCNet,” in Proc. Interspeech , 2019, pp. 3406–3410. [42] M. Morise et al. , “World: a vocoder-based high-quality speech synthesis system for real-time applications,” IEICE Transactions on Information and Systems , vol. 99, no. 7, pp. 1877–1884, 2016. [43] M. Morrison et al. , “Chunked autoregressive GAN for conditional waveform synthesis,” in Proc. ICLR , 2021. [44] J.-M. Valin, A. Mustafa, and J. B¨ uthe, “Very low complexity speech synthesis using framewise autoregressive gan (fargan) with pitch pre-diction,” IEEE Signal Processing Letters , vol. 31, pp. 2115–2119, 2024. [45] J. Kong et al. , “HiFi-GAN: generative adversarial networks for efficient and high fidelity speech synthesis,” in Proc. NeurIPS , 2020. [46] J.-M. Valin and J. Skoglund, “LPCNet: Improving neural speech syn-thesis through linear prediction,” in Proc. ICASSP , 2019. [47] A. Mustafa et al. , “Framewise WaveGAN: High speed adversarial vocoder in time domain with very low computational complexity,” in 
+
+Proc. ICASSP , 2023. [48] J. Psutka, “The use of the LPC residual error autocorrelation to pitch period extraction,” in Proc. Eurospeech , 1989. [49] X. Wang et al. , “Asvspoof 2019: A large-scale public database of synthe-sized, converted and replayed speech,” Computer Speech & Language ,vol. 64, p. 101114, 2020. [50] X. Liu et al. , “ASVspoof 2021: Towards spoofed and deepfake speech detection in the wild,” IEEE/ACM Transactions on Audio, Speech, and Language Processing , vol. 31, pp. 2507–2522, 2023. [51] X. Wang et al. , “ASVspoof 5: Design, collection and validation of resources for spoofing, deepfake, and adversarial attack detection using crowdsourced speech,” Computer Speech & Language , vol. 95, p. 101825, 2026. [52] B. Desplanques et al. , “ECAPA-TDNN: Emphasized channel attention, propagation and aggregation in TDNN based speaker verification,” in 
+
+Proc. Interspeech , 2020. [53] N. M¨ uller et al. , “Speech is silver, silence is golden: What do asvspoof-trained models really learn?” in 2021 Edition of the Automatic Speaker Verification and Spoofing Countermeasures Challenge , 2021. [54] Y. Zhang et al. , “The impact of silence on speech anti-spoofing,” 
+
+IEEE/ACM Trans. Audio, Speech and Lang. Proc. , vol. 31, p. 3374–3389, Aug. 2023. [55] A. Alenin et al. , “A subnetwork approach for spoofing aware speaker verification,” in Proc. Interspeech , 2022. [56] M. Todisco, H. Delgado, and N. Evans, “Constant Q cepstral coeffi-cients: A spoofing countermeasure for automatic speaker verification,” 
+
+Computer Speech & Language , vol. 45, pp. 516–535, 2017. [57] T. Stourbe et al. , “Exploring WavLM back-ends for speech spoofing and deepfake detection,” in The Automatic Speaker Verification Spoofing Countermeasures Workshop (ASVspoof 2024) , 2024. [58] A. Baevski et al. , “wav2vec 2.0: a framework for self-supervised learning of speech representations,” in Proc. NeurIPS , 2020. [59] V. Panayotov et al. , “Librispeech: An ASR corpus based on public domain audio books,” in Proc. ICASSP , 2015. [60] D. P. Kingma and J. Ba, “Adam: A method for stochastic optimization,” in Proc. ICLR , 2015.
