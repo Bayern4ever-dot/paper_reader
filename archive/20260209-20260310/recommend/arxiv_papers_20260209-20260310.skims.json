@@ -1,0 +1,787 @@
+{
+  "mode": "skims",
+  "generated_at": "2026-03-10T12:30:32.455090+00:00",
+  "stats": {
+    "mode": "skims",
+    "forced_all_quick": true,
+    "min_score": 8.0,
+    "deep_divecandidates": 20,
+    "deep_cap": null,
+    "deep_selected": 0,
+    "quick_candidates": 20,
+    "quick_skim_target": null,
+    "quick_selected": 20
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2602.10687v2",
+      "title": "OmniVL-Guard: Towards Unified Vision-Language Forgery Detection and Grounding via Balanced RL",
+      "abstract": "Existing forgery detection methods are often limited to uni-modal or bi-modal settings, failing to handle the interleaved text, images, and videos prevalent in real-world misinformation. To bridge this gap, this paper targets to develop a unified framework for omnibus vision-language forgery detection and grounding. In this unified setting, the {interplay} between diverse modalities and the dual requirements of simultaneous detection and localization pose a critical ``difficulty bias`` problem: the simpler veracity classification task tends to dominate the gradients, leading to suboptimal performance in fine-grained grounding during multi-task optimization. To address this challenge, we propose \\textbf{OmniVL-Guard}, a balanced reinforcement learning framework for omnibus vision-language forgery detection and grounding. Particularly, OmniVL-Guard comprises two core designs: Self-Evolving CoT Generatio and Adaptive Reward Scaling Policy Optimization (ARSPO). {Self-Evolving CoT Generation} synthesizes high-quality reasoning paths, effectively overcoming the cold-start challenge. Building upon this, {Adaptive Reward Scaling Policy Optimization (ARSPO)} dynamically modulates reward scales and task weights, ensuring a balanced joint optimization. Extensive experiments demonstrate that OmniVL-Guard significantly outperforms state-of-the-art methods and exhibits zero-shot robust generalization across out-of-domain scenarios.",
+      "authors": [
+        "Jinjie Shen",
+        "Jing Wu",
+        "Yaxiong Wang",
+        "Lechao Cheng",
+        "Shengeng Tang",
+        "Tianrui Hui",
+        "Nan Pu",
+        "Zhun Zhong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-02-11T09:41:36+00:00",
+      "link": "https://arxiv.org/pdf/2602.10687v2",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Unified vision-language forgery detection for misinformation",
+      "llm_evidence_cn": "针对虚假信息的统一视觉语言伪造检测",
+      "llm_evidence": "针对虚假信息的统一视觉语言伪造检测",
+      "canonical_evidence": "针对虚假信息的统一视觉语言伪造检测",
+      "llm_tldr_en": "A unified framework for multi-modal forgery detection and grounding to handle real-world misinformation.",
+      "llm_tldr_cn": "一个统一的视觉语言伪造检测与定位框架，旨在处理现实世界中的多模态虚假信息。",
+      "llm_tldr": "一个统一的视觉语言伪造检测与定位框架，旨在处理现实世界中的多模态虚假信息。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.14441v1",
+      "title": "D-SECURE: Dual-Source Evidence Combination for Unified Reasoning in Misinformation Detection",
+      "abstract": "Multimodal misinformation increasingly mixes realistic im-age edits with fluent but misleading text, producing persuasive posts that are difficult to verify. Existing systems usually rely on a single evidence source. Content-based detectors identify local inconsistencies within an image and its caption but cannot determine global factual truth. Retrieval-based fact-checkers reason over external evidence but treat inputs as coarse claims and often miss subtle visual or textual manipulations. This separation creates failure cases where internally consistent fabrications bypass manipulation detectors and fact-checkers verify claims that contain pixel-level or token-level corruption. We present D-SECURE, a framework that combines internal manipulation detection with external evidence-based reasoning for news-style posts. D-SECURE integrates the HAMMER manipulation detector with the DEFAME retrieval pipeline. DEFAME performs broad verification, and HAMMER analyses residual or uncertain cases that may contain fine-grained edits. Experiments on DGM4 and ClaimReview samples highlight the complementary strengths of both systems and motivate their fusion. We provide a unified, explainable report that incorporates manipulation cues and external evidence.",
+      "authors": [
+        "Gagandeep Singh",
+        "Samudi Amarasinghe",
+        "Priyanka Singh"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-02-16T03:51:49+00:00",
+      "link": "https://arxiv.org/pdf/2602.14441v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Unified reasoning for multimodal misinformation detection",
+      "llm_evidence_cn": "多模态误导信息检测的统一推理",
+      "llm_evidence": "多模态误导信息检测的统一推理",
+      "canonical_evidence": "多模态误导信息检测的统一推理",
+      "llm_tldr_en": "D-SECURE combines content-based and retrieval-based evidence for robust multimodal misinformation detection.",
+      "llm_tldr_cn": "D-SECURE框架结合内容和检索证据，实现鲁棒的多模态误导信息检测。",
+      "llm_tldr": "D-SECURE框架结合内容和检索证据，实现鲁棒的多模态误导信息检测。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "state of the art multimodal fake news detection models",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.15190v1",
+      "title": "AIC CTU@AVerImaTeC: dual-retriever RAG for image-text fact checking",
+      "abstract": "In this paper, we present our 3rd place system in the AVerImaTeC shared task, which combines our last year's retrieval-augmented generation (RAG) pipeline with a reverse image search (RIS) module. Despite its simplicity, our system delivers competitive performance with a single multimodal LLM call per fact-check at just $0.013 on average using GPT5.1 via OpenAI Batch API. Our system is also easy to reproduce and tweak, consisting of only three decoupled modules - a textual retrieval module based on similarity search, an image retrieval module based on API-accessed RIS, and a generation module using GPT5.1 - which is why we suggest it as an accesible starting point for further experimentation. We publish its code and prompts, as well as our vector stores and insights into the scheme's running costs and directions for further improvement.",
+      "authors": [
+        "Herbert Ullrich",
+        "Jan Drchal"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-02-16T21:00:29+00:00",
+      "link": "https://arxiv.org/pdf/2602.15190v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "image-text fact checking system",
+      "llm_evidence_cn": "图文事实核查系统",
+      "llm_evidence": "图文事实核查系统",
+      "canonical_evidence": "图文事实核查系统",
+      "llm_tldr_en": "Presents a dual-retriever RAG system for multimodal fact-checking using image and text search.",
+      "llm_tldr_cn": "提出了一种结合图像和文本搜索的双检索RAG系统，用于多模态事实核查。",
+      "llm_tldr": "提出了一种结合图像和文本搜索的双检索RAG系统，用于多模态事实核查。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.22944v1",
+      "title": "MViR: Multi-View Visual-Semantic Representation for Fake News Detection",
+      "abstract": "With the rise of online social networks, detecting fake news accurately is essential for a healthy online environment. While existing methods have advanced multimodal fake news detection, they often neglect the multi-view visual-semantic aspects of news, such as different text perspectives of the same image. To address this, we propose a Multi-View Visual-Semantic Representation (MViR) framework. Our approach includes a Multi-View Representation module using pyramid dilated convolution to capture multi-view visual-semantic features, a Multi-View Feature Fusion module to integrate these features with text, and multiple aggregators to extract multi-view semantic cues for detection. Experiments on benchmark datasets demonstrate the superiority of MViR. The source code of FedCoop is available at https://github.com/FlowerinZDF/FakeNews-MVIR.",
+      "authors": [
+        "Haochen Liang",
+        "Xinqi Su",
+        "Jun Wang",
+        "Chaomeng Chen",
+        "Zitong Yu"
+      ],
+      "primary_category": "cs.MM",
+      "categories": [
+        "cs.MM"
+      ],
+      "published": "2026-02-26T12:35:09+00:00",
+      "link": "https://arxiv.org/pdf/2602.22944v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Multi-view visual-semantic representation for multimodal fake news detection",
+      "llm_evidence_cn": "用于多模态虚假新闻检测的多视图视觉语义表示",
+      "llm_evidence": "用于多模态虚假新闻检测的多视图视觉语义表示",
+      "canonical_evidence": "用于多模态虚假新闻检测的多视图视觉语义表示",
+      "llm_tldr_en": "Proposes MViR framework to capture multi-view visual-semantic features for improved fake news detection.",
+      "llm_tldr_cn": "提出MViR框架，通过捕获多视图视觉语义特征来提升多模态虚假新闻检测效果。",
+      "llm_tldr": "提出MViR框架，通过捕获多视图视觉语义特征来提升多模态虚假新闻检测效果。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "state of the art multimodal fake news detection models",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.22963v1",
+      "title": "FactGuard: Agentic Video Misinformation Detection via Reinforcement Learning",
+      "abstract": "Multimodal large language models (MLLMs) have substantially advanced video misinformation detection through unified multimodal reasoning, but they often rely on fixed-depth inference and place excessive trust in internally generated assumptions, particularly in scenarios where critical evidence is sparse, fragmented, or requires external verification. To address these limitations, we propose FactGuard, an agentic framework for video misinformation detection that formulates verification as an iterative reasoning process built upon MLLMs. FactGuard explicitly assesses task ambiguity and selectively invokes external tools to acquire critical evidence, enabling progressive refinement of reasoning trajectories. To further strengthen this capability, we introduce a two-stage training strategy that combines domain-specific agentic supervised fine-tuning with decision-aware reinforcement learning to optimize tool usage and calibrate risk-sensitive decision making. Extensive experiments on FakeSV, FakeTT, and FakeVV demonstrate FactGuard's state-of-the-art performance and validate its excellent robustness and generalization capacity.",
+      "authors": [
+        "Zehao Li",
+        "Hongwei Yu",
+        "Hao Jiang",
+        "Qiang Sheng",
+        "Yilong Xu",
+        "Baolong Bi",
+        "Yang Li",
+        "Zhenlong Yuan",
+        "Yujun Cai",
+        "Zhaoqi Wang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-02-26T13:00:31+00:00",
+      "link": "https://arxiv.org/pdf/2602.22963v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "agentic video misinformation detection via MLLMs",
+      "llm_evidence_cn": "通过多模态大模型进行代理式视频虚假信息检测",
+      "llm_evidence": "通过多模态大模型进行代理式视频虚假信息检测",
+      "canonical_evidence": "通过多模态大模型进行代理式视频虚假信息检测",
+      "llm_tldr_en": "An agentic framework using MLLMs and reinforcement learning for video misinformation detection.",
+      "llm_tldr_cn": "一种利用多模态大模型和强化学习进行视频虚假信息检测的代理框架。",
+      "llm_tldr": "一种利用多模态大模型和强化学习进行视频虚假信息检测的代理框架。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.02519v1",
+      "title": "Agentic Mixed-Source Multi-Modal Misinformation Detection with Adaptive Test-Time Scaling",
+      "abstract": "Vision-language models (VLMs) have been proven effective for detecting multi-modal misinformation on social platforms, especially in zero-shot settings with unavailable or delayed annotations. However, a single VLM's capacity falls short in the more complex mixed-source multi-modal misinformation detection (M3D) task. Taking captioned images as an example, in M3D, false information can originate from untruthful texts, forged images, or mismatches between the two modalities. Although recent agentic systems can handle zero-shot M3D by connecting modality-specific VLM agents, their effectiveness is still bottlenecked by their architecture. In existing agentic M3D solutions, for any input sample, each agent performs only one forward reasoning pass, making decisions prone to model randomness and reasoning errors in challenging cases. Moreover, the lack of exploration over alternative reasoning paths prevents modern VLMs from fully utilizing their reasoning capacity. In this work, we present AgentM3D, a multi-agent framework for zero-shot M3D. To amplify the reasoning capability of VLMs, we introduce an adaptive test-time scaling paradigm in which each modality-specific VLM agent applies a Best-of-N mechanism, coupled with a critic agent for task-aligned scoring. The agents are organized in a cascading, modality-specific decision chain to reduce unnecessary computation and limit error propagation. To ensure scalability, a planning agent dynamically determines the maximum number of reasoning paths based on sample difficulty, and an adaptive stopping mechanism prevents excessive reasoning within each agent. Extensive experiments on two M3D benchmarks demonstrate that AgentM3D achieves state-of-the-art zero-shot detection performance compared with various VLM-based and agentic baselines.",
+      "authors": [
+        "Wei Jiang",
+        "Tong Chen",
+        "Wei Yuan",
+        "Quoc Viet Hung Nguyen",
+        "Hongzhi Yin"
+      ],
+      "primary_category": "cs.MM",
+      "categories": [
+        "cs.MM",
+        "cs.IR"
+      ],
+      "published": "2026-03-03T02:07:52+00:00",
+      "link": "https://arxiv.org/pdf/2603.02519v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "mixed-source multi-modal misinformation detection",
+      "llm_evidence_cn": "混合来源多模态虚假信息检测",
+      "llm_evidence": "混合来源多模态虚假信息检测",
+      "canonical_evidence": "混合来源多模态虚假信息检测",
+      "llm_tldr_en": "Proposes an agentic system with adaptive scaling for zero-shot multimodal misinformation detection.",
+      "llm_tldr_cn": "提出一种具有自适应扩展能力的智能体系统，用于零样本多模态虚假信息检测。",
+      "llm_tldr": "提出一种具有自适应扩展能力的智能体系统，用于零样本多模态虚假信息检测。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.10023v1",
+      "title": "MEVER: Multi-Modal and Explainable Claim Verification with Graph-based Evidence Retrieval",
+      "abstract": "Verifying the truthfulness of claims usually requires joint multi-modal reasoning over both textual and visual evidence, such as analyzing both textual caption and chart image for claim verification. In addition, to make the reasoning process transparent, a textual explanation is necessary to justify the verification result. However, most claim verification works mainly focus on the reasoning over textual evidence only or ignore the explainability, resulting in inaccurate and unconvincing verification. To address this problem, we propose a novel model that jointly achieves evidence retrieval, multi-modal claim verification, and explanation generation. For evidence retrieval, we construct a two-layer multi-modal graph for claims and evidence, where we design image-to-text and text-to-image reasoning for multi-modal retrieval. For claim verification, we propose token- and evidence-level fusion to integrate claim and evidence embeddings for multi-modal verification. For explanation generation, we introduce multi-modal Fusion-in-Decoder for explainability. Finally, since almost all the datasets are in general domain, we create a scientific dataset, AIChartClaim, in AI domain to complement claim verification community. Experiments show the strength of our model.",
+      "authors": [
+        "Delvin Ce Zhang",
+        "Suhan Cui",
+        "Zhelin Chu",
+        "Xianren Zhang",
+        "Dongwon Lee"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-02-10T17:44:57+00:00",
+      "link": "https://arxiv.org/pdf/2602.10023v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Multi-modal claim verification with graph-based retrieval",
+      "llm_evidence_cn": "基于图检索的多模态主张验证",
+      "llm_evidence": "基于图检索的多模态主张验证",
+      "canonical_evidence": "基于图检索的多模态主张验证",
+      "llm_tldr_en": "MEVER achieves explainable multi-modal claim verification through joint reasoning and graph-based evidence retrieval.",
+      "llm_tldr_cn": "MEVER通过联合推理和图证据检索，实现可解释的多模态主张验证。",
+      "llm_tldr": "MEVER通过联合推理和图证据检索，实现可解释的多模态主张验证。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "state of the art multimodal fake news detection models",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.18193v2",
+      "title": "BLM-Guard: Explainable Multimodal Ad Moderation with Chain-of-Thought and Policy-Aligned Rewards",
+      "abstract": "Short-video platforms now host vast multimodal ads whose deceptive visuals, speech and subtitles demand finer-grained, policy-driven moderation than community safety filters. We present BLM-Guard, a content-audit framework for commercial ads that fuses Chain-of-Thought reasoning with rule-based policy principles and a critic-guided reward. A rule-driven ICoT data-synthesis pipeline jump-starts training by generating structured scene descriptions, reasoning chains and labels, cutting annotation costs. Reinforcement learning then refines the model using a composite reward balancing causal coherence with policy adherence. A multitask architecture models intra-modal manipulations (e.g., exaggerated imagery) and cross-modal mismatches (e.g., subtitle-speech drift), boosting robustness. Experiments on real short-video ads show BLM-Guard surpasses strong baselines in accuracy, consistency and generalization.",
+      "authors": [
+        "Yiran Yang",
+        "Zhaowei Liu",
+        "Yuan Yuan",
+        "Yukun Song",
+        "Xiong Ma",
+        "Yinghao Song",
+        "Xiangji Zeng",
+        "Lu Sun",
+        "Yulu Wang",
+        "Hai Zhou",
+        "Shuai Cui",
+        "Zhaohan Gong",
+        "Jiefei Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-02-20T12:59:27+00:00",
+      "link": "https://arxiv.org/pdf/2602.18193v2",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Multimodal ad moderation modeling cross-modal mismatches and deceptive visuals",
+      "llm_evidence_cn": "针对跨模态不匹配和欺骗性视觉的多模态广告审核",
+      "llm_evidence": "针对跨模态不匹配和欺骗性视觉的多模态广告审核",
+      "canonical_evidence": "针对跨模态不匹配和欺骗性视觉的多模态广告审核",
+      "llm_tldr_en": "Presents BLM-Guard for multimodal ad moderation using CoT and rewards to detect deceptive cross-modal content.",
+      "llm_tldr_cn": "提出BLM-Guard，利用思维链和奖励机制检测多模态广告中的欺骗性跨模态内容。",
+      "llm_tldr": "提出BLM-Guard，利用思维链和奖励机制检测多模态广告中的欺骗性跨模态内容。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "state of the art multimodal fake news detection models",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.18880v1",
+      "title": "FOCA: Frequency-Oriented Cross-Domain Forgery Detection, Localization and Explanation via Multi-Modal Large Language Model",
+      "abstract": "Advances in image tampering techniques, particularly generative models, pose significant challenges to media verification, digital forensics, and public trust. Existing image forgery detection and localization (IFDL) methods suffer from two key limitations: over-reliance on semantic content while neglecting textural cues, and limited interpretability of subtle low-level tampering traces. To address these issues, we propose FOCA, a multimodal large language model-based framework that integrates discriminative features from both the RGB spatial and frequency domains via a cross-attention fusion module. This design enables accurate forgery detection and localization while providing explicit, human-interpretable cross-domain explanations. We further introduce FSE-Set, a large-scale dataset with diverse authentic and tampered images, pixel-level masks, and dual-domain annotations. Extensive experiments show that FOCA outperforms state-of-the-art methods in detection performance and interpretability across both spatial and frequency domains.",
+      "authors": [
+        "Zhou Liu",
+        "Tonghua Su",
+        "Hongshi Zhang",
+        "Fuxiang Yang",
+        "Donglin Di",
+        "Yang Song",
+        "Lei Fan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-02-21T15:53:44+00:00",
+      "link": "https://arxiv.org/pdf/2602.18880v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multimodal forgery detection and media verification",
+      "llm_evidence_cn": "多模态伪造检测与媒体验证",
+      "llm_evidence": "多模态伪造检测与媒体验证",
+      "canonical_evidence": "多模态伪造检测与媒体验证",
+      "llm_tldr_en": "Proposes a multimodal framework for image forgery detection using spatial and frequency domain features.",
+      "llm_tldr_cn": "提出了一种结合空间和频域特征的多模态图像篡改检测框架。",
+      "llm_tldr": "提出了一种结合空间和频域特征的多模态图像篡改检测框架。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.19828v1",
+      "title": "TextShield-R1: Reinforced Reasoning for Tampered Text Detection",
+      "abstract": "The growing prevalence of tampered images poses serious security threats, highlighting the urgent need for reliable detection methods. Multimodal large language models (MLLMs) demonstrate strong potential in analyzing tampered images and generating interpretations. However, they still struggle with identifying micro-level artifacts, exhibit low accuracy in localizing tampered text regions, and heavily rely on expensive annotations for forgery interpretation. To this end, we introduce TextShield-R1, the first reinforcement learning based MLLM solution for tampered text detection and reasoning. Specifically, our approach introduces Forensic Continual Pre-training, an easy-to-hard curriculum that well prepares the MLLM for tampered text detection by harnessing the large-scale cheap data from natural image forensic and OCR tasks. During fine-tuning, we perform Group Relative Policy Optimization with novel reward functions to reduce annotation dependency and improve reasoning capabilities. At inference time, we enhance localization accuracy via OCR Rectification, a method that leverages the MLLM's strong text recognition abilities to refine its predictions. Furthermore, to support rigorous evaluation, we introduce the Text Forensics Reasoning (TFR) benchmark, comprising over 45k real and tampered images across 16 languages, 10 tampering techniques, and diverse domains. Rich reasoning-style annotations are included, allowing for comprehensive assessment. Our TFR benchmark simultaneously addresses seven major limitations of existing benchmarks and enables robust evaluation under cross-style, cross-method, and cross-language conditions. Extensive experiments demonstrate that TextShield-R1 significantly advances the state of the art in interpretable tampered text detection.",
+      "authors": [
+        "Chenfan Qu",
+        "Yiwu Zhong",
+        "Jian Liu",
+        "Xuekang Zhu",
+        "Bohan Yu",
+        "Lianwen Jin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-02-23T13:26:18+00:00",
+      "link": "https://arxiv.org/pdf/2602.19828v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multimodal tampered text detection and reasoning",
+      "llm_evidence_cn": "多模态篡改文本检测与推理",
+      "llm_evidence": "多模态篡改文本检测与推理",
+      "canonical_evidence": "多模态篡改文本检测与推理",
+      "llm_tldr_en": "Uses reinforcement learning and MLLMs to detect and reason about tampered text in images.",
+      "llm_tldr_cn": "利用强化学习和多模态大模型对图像中的篡改文本进行检测和推理。",
+      "llm_tldr": "利用强化学习和多模态大模型对图像中的篡改文本进行检测和推理。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.23393v1",
+      "title": "Leveraging large multimodal models for audio-video deepfake detection: a pilot study",
+      "abstract": "Audio-visual deepfake detection (AVD) is increasingly important as modern generators can fabricate convincing speech and video. Most current multimodal detectors are small, task-specific models: they work well on curated tests but scale poorly and generalize weakly across domains. We introduce AV-LMMDetect, a supervised fine-tuned (SFT) large multimodal model that casts AVD as a prompted yes/no classification - \"Is this video real or fake?\". Built on Qwen 2.5 Omni, it jointly analyzes audio and visual streams for deepfake detection and is trained in two stages: lightweight LoRA alignment followed by audio-visual encoder full fine-tuning. On FakeAVCeleb and Mavos-DD, AV-LMMDetect matches or surpasses prior methods and sets a new state of the art on Mavos-DD datasets.",
+      "authors": [
+        "Songjun Cao",
+        "Yuqi Li",
+        "Yunpeng Luo",
+        "Jianjun Yin",
+        "Long Ma"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.CV"
+      ],
+      "published": "2026-02-25T04:39:08+00:00",
+      "link": "https://arxiv.org/pdf/2602.23393v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "large multimodal model for audio-video deepfake detection",
+      "llm_evidence_cn": "用于音视频深度伪造检测的大型多模态模型",
+      "llm_evidence": "用于音视频深度伪造检测的大型多模态模型",
+      "canonical_evidence": "用于音视频深度伪造检测的大型多模态模型",
+      "llm_tldr_en": "Introduces AV-LMMDetect, a fine-tuned multimodal model for state-of-the-art deepfake detection.",
+      "llm_tldr_cn": "引入AV-LMMDetect，一种用于最先进深度伪造检测的微调多模态模型。",
+      "llm_tldr": "引入AV-LMMDetect，一种用于最先进深度伪造检测的微调多模态模型。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "state of the art multimodal fake news detection models",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.02842v1",
+      "title": "A Browser-based Open Source Assistant for Multimodal Content Verification",
+      "abstract": "Disinformation and false content produced by generative AI pose a significant challenge for journalists and fact-checkers who must rapidly verify digital media information. While there is an abundance of NLP models for detecting credibility signals such as persuasion techniques, subjectivity, or machine-generated text, such methods often remain inaccessible to non-expert users and are not integrated into their daily workflows as a unified framework. This paper demonstrates the VERIFICATION ASSISTANT, a browser-based tool designed to bridge this gap. The VERIFICATION ASSISTANT, a core component of the widely adopted VERIFICATION PLUGIN (140,000+ users), allows users to submit URLs or media files to a unified interface. It automatically extracts content and routes it to a suite of backend NLP classifiers, delivering actionable credibility signals, estimating AI-generated content, and providing other verification guidance in a clear, easy-to-digest format. This paper showcases the tool architecture, its integration of multiple NLP services, and its real-world application to detecting disinformation.",
+      "authors": [
+        "Rosanna Milner",
+        "Michael Foster",
+        "Olesya Razuvayevskaya",
+        "Ian Roberts",
+        "Valentin Porcellini",
+        "Denis Teyssou",
+        "Kalina Bontcheva"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-03-03T10:39:32+00:00",
+      "link": "https://arxiv.org/pdf/2603.02842v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multimodal content verification for disinformation",
+      "llm_evidence_cn": "针对虚假信息的多模态内容核查",
+      "llm_evidence": "针对虚假信息的多模态内容核查",
+      "canonical_evidence": "针对虚假信息的多模态内容核查",
+      "llm_tldr_en": "Presents a browser-based tool for journalists to verify multimodal digital media and detect AI-generated content.",
+      "llm_tldr_cn": "为记者提供一种浏览器工具，用于核查多模态数字媒体并检测AI生成内容。",
+      "llm_tldr": "为记者提供一种浏览器工具，用于核查多模态数字媒体并检测AI生成内容。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.11509v1",
+      "title": "Multimodal Fact-Level Attribution for Verifiable Reasoning",
+      "abstract": "Multimodal large language models (MLLMs) are increasingly used for real-world tasks involving multi-step reasoning and long-form generation, where reliability requires grounding model outputs in heterogeneous input sources and verifying individual factual claims. However, existing multimodal grounding benchmarks and evaluation methods focus on simplified, observation-based scenarios or limited modalities and fail to assess attribution in complex multimodal reasoning. We introduce MuRGAt (Multimodal Reasoning with Grounded Attribution), a benchmark for evaluating fact-level multimodal attribution in settings that require reasoning beyond direct observation. Given inputs spanning video, audio, and other modalities, MuRGAt requires models to generate answers with explicit reasoning and precise citations, where each citation specifies both modality and temporal segments. To enable reliable assessment, we introduce an automatic evaluation framework that strongly correlates with human judgments. Benchmarking with human and automated scores reveals that even strong MLLMs frequently hallucinate citations despite correct reasoning. Moreover, we observe a key trade-off: increasing reasoning depth or enforcing structured grounding often degrades accuracy, highlighting a significant gap between internal reasoning and verifiable attribution.",
+      "authors": [
+        "David Wan",
+        "Han Wang",
+        "Ziyang Wang",
+        "Elias Stengel-Eskin",
+        "Hyunji Lee",
+        "Mohit Bansal"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-02-12T03:10:02+00:00",
+      "link": "https://arxiv.org/pdf/2602.11509v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal fact-level attribution and verification",
+      "llm_evidence_cn": "多模态事实级归因与验证",
+      "llm_evidence": "多模态事实级归因与验证",
+      "canonical_evidence": "多模态事实级归因与验证",
+      "llm_tldr_en": "Introduces a benchmark for evaluating fact-level attribution in complex multimodal reasoning scenarios.",
+      "llm_tldr_cn": "引入了一个基准，用于评估复杂多模态推理场景中的事实级归因。",
+      "llm_tldr": "引入了一个基准，用于评估复杂多模态推理场景中的事实级归因。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.19212v1",
+      "title": "Retrieval Augmented Enhanced Dual Co-Attention Framework for Target Aware Multimodal Bengali Hateful Meme Detection",
+      "abstract": "Hateful content on social media increasingly appears as multimodal memes that combine images and text to convey harmful narratives. In low-resource languages such as Bengali, automated detection remains challenging due to limited annotated data, class imbalance, and pervasive code-mixing. To address these issues, we augment the Bengali Hateful Memes (BHM) dataset with semantically aligned samples from the Multimodal Aggression Dataset in Bengali (MIMOSA), improving both class balance and semantic diversity. We propose the Enhanced Dual Co-attention Framework (xDORA), integrating vision encoders (CLIP, DINOv2) and multilingual text encoders (XGLM, XLM-R) via weighted attention pooling to learn robust cross-modal representations. Building on these embeddings, we develop a FAISS-based k-nearest neighbor classifier for non-parametric inference and introduce RAG-Fused DORA, which incorporates retrieval-driven contextual reasoning. We further evaluate LLaVA under zero-shot, few-shot, and retrieval-augmented prompting settings. Experiments on the extended dataset show that xDORA (CLIP + XLM-R) achieves macro-average F1-scores of 0.78 for hateful meme identification and 0.71 for target entity detection, while RAG-Fused DORA improves performance to 0.79 and 0.74, yielding gains over the DORA baseline. The FAISS-based classifier performs competitively and demonstrates robustness for rare classes through semantic similarity modeling. In contrast, LLaVA exhibits limited effectiveness in few-shot settings, with only modest improvements under retrieval augmentation, highlighting constraints of pretrained vision-language models for code-mixed Bengali content without fine-tuning. These findings demonstrate the effectiveness of supervised, retrieval-augmented, and non-parametric multimodal frameworks for addressing linguistic and cultural complexities in low-resource hate speech detection.",
+      "authors": [
+        "Raihan Tanvir",
+        "Md. Golam Rabiul Alam"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-02-22T14:48:25+00:00",
+      "link": "https://arxiv.org/pdf/2602.19212v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Cross-modal dual co-attention for hateful meme detection",
+      "llm_evidence_cn": "用于仇恨模因检测的跨模态双重协同注意力",
+      "llm_evidence": "用于仇恨模因检测的跨模态双重协同注意力",
+      "canonical_evidence": "用于仇恨模因检测的跨模态双重协同注意力",
+      "llm_tldr_en": "Proposes xDORA framework for Bengali hateful meme detection using retrieval augmentation and dual co-attention.",
+      "llm_tldr_cn": "提出xDORA框架，结合检索增强和双重协同注意力进行孟加拉语仇恨模因检测。",
+      "llm_tldr": "提出xDORA框架，结合检索增强和双重协同注意力进行孟加拉语仇恨模因检测。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.20412v1",
+      "title": "SimLBR: Learning to Detect Fake Images by Learning to Detect Real Images",
+      "abstract": "The rapid advancement of generative models has made the detection of AI-generated images a critical challenge for both research and society. Recent works have shown that most state-of-the-art fake image detection methods overfit to their training data and catastrophically fail when evaluated on curated hard test sets with strong distribution shifts. In this work, we argue that it is more principled to learn a tight decision boundary around the real image distribution and treat the fake category as a sink class. To this end, we propose SimLBR, a simple and efficient framework for fake image detection using Latent Blending Regularization (LBR). Our method significantly improves cross-generator generalization, achieving up to +24.85\\% accuracy and +69.62\\% recall on the challenging Chameleon benchmark. SimLBR is also highly efficient, training orders of magnitude faster than existing approaches. Furthermore, we emphasize the need for reliability-oriented evaluation in fake image detection, introducing risk-adjusted metrics and worst-case estimates to better assess model robustness. All code and models will be released on HuggingFace and GitHub.",
+      "authors": [
+        "Aayush Dhakal",
+        "Subash Khanal",
+        "Srikumar Sastry",
+        "Jacob Arndt",
+        "Philipe Ambrozio Dias",
+        "Dalton Lunga",
+        "Nathan Jacobs"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-02-23T23:22:41+00:00",
+      "link": "https://arxiv.org/pdf/2602.20412v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "State-of-the-art fake image detection with cross-generator generalization",
+      "llm_evidence_cn": "具有跨生成器泛化能力的先进虚假图像检测",
+      "llm_evidence": "具有跨生成器泛化能力的先进虚假图像检测",
+      "canonical_evidence": "具有跨生成器泛化能力的先进虚假图像检测",
+      "llm_tldr_en": "A framework for fake image detection that improves generalization by learning a tight boundary around real images.",
+      "llm_tldr_cn": "一种通过学习真实图像分布边界来提高跨生成器泛化能力的虚假图像检测框架。",
+      "llm_tldr": "一种通过学习真实图像分布边界来提高跨生成器泛化能力的虚假图像检测框架。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "state of the art multimodal fake news detection models",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.20818v1",
+      "title": "GatedCLIP: Gated Multimodal Fusion for Hateful Memes Detection",
+      "abstract": "Detecting hateful content in multimodal memes presents unique challenges, as harmful messages often emerge from the complex interplay between benign images and text. We propose GatedCLIP, a Vision-Language model that enhances CLIP's multimodal capabilities with specialized architectural improvements for hateful memes detection. Our approach introduces learned projection heads that map CLIP embeddings to a task-optimized semantic space, a dynamic gated fusion mechanism that adaptively weights visual and textual features, and a contrastive learning objective that maintains cross-modal semantic alignment. Experiments on the Hateful Memes dataset demonstrate that GatedCLIP achieves an AUROC of 0.66, substantially outperforming the CLIP baseline (AUROC 0.49) while maintaining computational efficiency with only 350K trainable parameters.",
+      "authors": [
+        "Yingying Guo",
+        "Ke Zhang",
+        "Zirong Zeng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-02-24T11:54:54+00:00",
+      "link": "https://arxiv.org/pdf/2602.20818v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Gated multimodal fusion for detecting harmful content",
+      "llm_evidence_cn": "用于检测有害内容的门控多模态融合",
+      "llm_evidence": "用于检测有害内容的门控多模态融合",
+      "canonical_evidence": "用于检测有害内容的门控多模态融合",
+      "llm_tldr_en": "Introduces GatedCLIP for hateful meme detection using dynamic gated fusion of visual and textual features.",
+      "llm_tldr_cn": "引入GatedCLIP，通过视觉和文本特征的动态门控融合来检测仇恨模因。",
+      "llm_tldr": "引入GatedCLIP，通过视觉和文本特征的动态门控融合来检测仇恨模因。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.21716v1",
+      "title": "TranX-Adapter: Bridging Artifacts and Semantics within MLLMs for Robust AI-generated Image Detection",
+      "abstract": "Rapid advances in AI-generated image (AIGI) technology enable highly realistic synthesis, threatening public information integrity and security. Recent studies have demonstrated that incorporating texture-level artifact features alongside semantic features into multimodal large language models (MLLMs) can enhance their AIGI detection capability. However, our preliminary analyses reveal that artifact features exhibit high intra-feature similarity, leading to an almost uniform attention map after the softmax operation. This phenomenon causes attention dilution, thereby hindering effective fusion between semantic and artifact features. To overcome this limitation, we propose a lightweight fusion adapter, TranX-Adapter, which integrates a Task-aware Optimal-Transport Fusion that leverages the Jensen-Shannon divergence between artifact and semantic prediction probabilities as a cost matrix to transfer artifact information into semantic features, and an X-Fusion that employs cross-attention to transfer semantic information into artifact features. Experiments on standard AIGI detection benchmarks upon several advanced MLLMs, show that our TranX-Adapter brings consistent and significant improvements (up to +6% accuracy).",
+      "authors": [
+        "Wenbin Wang",
+        "Yuge Huang",
+        "Jianqing Xu",
+        "Yue Yu",
+        "Jiangtao Yan",
+        "Shouhong Ding",
+        "Pan Zhou",
+        "Yong Luo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-02-25T09:22:46+00:00",
+      "link": "https://arxiv.org/pdf/2602.21716v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "fusion adapter in MLLMs for AI-generated image detection",
+      "llm_evidence_cn": "多模态大模型中用于AI生成图像检测的融合适配器",
+      "llm_evidence": "多模态大模型中用于AI生成图像检测的融合适配器",
+      "canonical_evidence": "多模态大模型中用于AI生成图像检测的融合适配器",
+      "llm_tldr_en": "Proposes TranX-Adapter to bridge artifacts and semantics in MLLMs for image forgery detection.",
+      "llm_tldr_cn": "提出TranX-Adapter，在多模态大模型中桥接伪影与语义以进行图像伪造检测。",
+      "llm_tldr": "提出TranX-Adapter，在多模态大模型中桥接伪影与语义以进行图像伪造检测。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.21779v1",
+      "title": "Beyond Static Artifacts: A Forensic Benchmark for Video Deepfake Reasoning in Vision Language Models",
+      "abstract": "Current Vision-Language Models (VLMs) for deepfake detection excel at identifying spatial artifacts but overlook a critical dimension: temporal inconsistencies in video forgeries. Adapting VLMs to reason about these dynamic cues remains a distinct challenge. To bridge this gap, we propose Forensic Answer-Questioning (FAQ), a large-scale benchmark that formulates temporal deepfake analysis as a multiple-choice task. FAQ introduces a three-level hierarchy to progressively evaluate and equip VLMs with forensic capabilities: (1) Facial Perception, testing the ability to identify static visual artifacts; (2) Temporal Deepfake Grounding, requiring the localization of dynamic forgery artifacts across frames; and (3) Forensic Reasoning, challenging models to synthesize evidence for final authenticity verdicts. We evaluate a range of VLMs on FAQ and generate a corresponding instruction-tuning set, FAQ-IT. Extensive experiments show that models fine-tuned on FAQ-IT achieve advanced performance on both in-domain and cross-dataset detection benchmarks. Ablation studies further validate the impact of our key design choices, confirming that FAQ is the driving force behind the temporal reasoning capabilities of these VLMs.",
+      "authors": [
+        "Zheyuan Gu",
+        "Qingsong Zhao",
+        "Yusong Wang",
+        "Zhaohong Huang",
+        "Xinqi Li",
+        "Cheng Yuan",
+        "Jiaowei Shao",
+        "Chi Zhang",
+        "Xuelong Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-02-25T10:54:55+00:00",
+      "link": "https://arxiv.org/pdf/2602.21779v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "vision-language models for video deepfake reasoning",
+      "llm_evidence_cn": "用于视频深度伪造推理的视觉语言模型",
+      "llm_evidence": "用于视频深度伪造推理的视觉语言模型",
+      "canonical_evidence": "用于视频深度伪造推理的视觉语言模型",
+      "llm_tldr_en": "A benchmark for evaluating Vision-Language Models on temporal video deepfake reasoning.",
+      "llm_tldr_cn": "一个用于评估视觉语言模型在视频深度伪造时间推理能力的基准。",
+      "llm_tldr": "一个用于评估视觉语言模型在视频深度伪造时间推理能力的基准。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2602.23863v1",
+      "title": "NAU-QMUL: Utilizing BERT and CLIP for Multi-modal AI-Generated Image Detection",
+      "abstract": "With the aim of detecting AI-generated images and identifying the specific models responsible for their generation, we propose a multi-modal multi-task model. The model leverages pre-trained BERT and CLIP Vision encoders for text and image feature extraction, respectively, and employs cross-modal feature fusion with a tailored multi-task loss function. Additionally, a pseudo-labeling-based data augmentation strategy was utilized to expand the training dataset with high-confidence samples. The model achieved fifth place in both Tasks A and B of the `CT2: AI-Generated Image Detection' competition, with F1 scores of 83.16\\% and 48.88\\%, respectively. These findings highlight the effectiveness of the proposed architecture and its potential for advancing AI-generated content detection in real-world scenarios. The source code for our method is published on https://github.com/xxxxxxxxy/AIGeneratedImageDetection.",
+      "authors": [
+        "Xiaoyu Guo",
+        "Arkaitz Zubiaga"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-02-27T10:03:54+00:00",
+      "link": "https://arxiv.org/pdf/2602.23863v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "cross-modal feature fusion for AI-generated image detection",
+      "llm_evidence_cn": "用于AI生成图像检测的跨模态特征融合",
+      "llm_evidence": "用于AI生成图像检测的跨模态特征融合",
+      "canonical_evidence": "用于AI生成图像检测的跨模态特征融合",
+      "llm_tldr_en": "Uses BERT and CLIP with cross-modal fusion to detect AI-generated images.",
+      "llm_tldr_cn": "利用BERT和CLIP结合跨模态融合来检测AI生成的图像。",
+      "llm_tldr": "利用BERT和CLIP结合跨模态融合来检测AI生成的图像。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.08483v1",
+      "title": "X-AVDT: Audio-Visual Cross-Attention for Robust Deepfake Detection",
+      "abstract": "The surge of highly realistic synthetic videos produced by contemporary generative systems has significantly increased the risk of malicious use, challenging both humans and existing detectors. Against this backdrop, we take a generator-side view and observe that internal cross-attention mechanisms in these models encode fine-grained speech-motion alignment, offering useful correspondence cues for forgery detection. Building on this insight, we propose X-AVDT, a robust and generalizable deepfake detector that probes generator-internal audio-visual signals accessed via DDIM inversion to expose these cues. X-AVDT extracts two complementary signals: (i) a video composite capturing inversion-induced discrepancies, and (ii) an audio-visual cross-attention feature reflecting modality alignment enforced during generation. To enable faithful cross-generator evaluation, we further introduce MMDF, a new multimodal deepfake dataset spanning diverse manipulation types and rapidly evolving synthesis paradigms, including GANs, diffusion, and flow-matching. Extensive experiments demonstrate that X-AVDT achieves leading performance on MMDF and generalizes strongly to external benchmarks and unseen generators, outperforming existing methods with accuracy improved by 13.1%. Our findings highlight the importance of leveraging internal audio-visual consistency cues for robustness to future generators in deepfake detection.",
+      "authors": [
+        "Youngseo Kim",
+        "Kwan Yun",
+        "Seokhyeon Hong",
+        "Sihun Cha",
+        "Colette Suhjung Koo",
+        "Junyong Noh"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-03-09T15:18:42+00:00",
+      "link": "https://arxiv.org/pdf/2603.08483v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "audio-visual cross-attention for deepfake detection",
+      "llm_evidence_cn": "用于深度伪造检测的音视频交叉注意力机制",
+      "llm_evidence": "用于深度伪造检测的音视频交叉注意力机制",
+      "canonical_evidence": "用于深度伪造检测的音视频交叉注意力机制",
+      "llm_tldr_en": "Proposes X-AVDT, using audio-visual cross-attention for robust deepfake detection.",
+      "llm_tldr_cn": "提出X-AVDT，利用音视频交叉注意力进行鲁棒的深度伪造检测。",
+      "llm_tldr": "提出X-AVDT，利用音视频交叉注意力进行鲁棒的深度伪造检测。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    }
+  ]
+}

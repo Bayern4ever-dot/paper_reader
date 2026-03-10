@@ -1,0 +1,211 @@
+Title: Leveraging large multimodal models for audio-video deepfake detection: a pilot study
+
+URL Source: https://arxiv.org/pdf/2602.23393v1
+
+Published Time: Mon, 02 Mar 2026 01:01:04 GMT
+
+Number of Pages: 5
+
+Markdown Content:
+LEVERAGING LARGE MULTIMODAL MODELS FOR AUDIO-VIDEO DEEPFAKE DETECTION: A PILOT STUDY 
+
+Songjun Cao 1,† Yuqi Li 1,2,† Yunpeng Luo 1 Jianjun Yin 2 Long Ma 11 Tencent Youtu Lab, China  
+
+> 2
+
+Fudan University, China 
+
+> †
+
+These authors contributed equally to this work. 
+
+ABSTRACT 
+
+Audio-visual deepfake detection (AVD) is increasingly im-portant as modern generators can fabricate convincing speech and video. Most current multimodal detectors are small, task-specific models: they work well on curated tests but scale poorly and generalize weakly across domains. We introduce 
+
+AV-LMMDetect , a supervised fine-tuned(SFT) large multi-modal model that casts AVD as a prompted yes/no classi-fication—“Is this video real or fake?”. Built on Qwen 2.5 Omni, it jointly analyzes audio and visual streams for deep-fake detection and is trained in two stages: lightweight LoRA alignment followed by audio-visual encoder full fine-tuning. On FakeAVCeleb and Mavos-DD, AV-LMMDetect matches or surpasses prior methods and sets a new state of the art on Mavos-DD datasets. 
+
+Index Terms — audio-visual deepfake detection, large multimodal models, fine-tuning, cross-modal forensics 
+
+1. INTRODUCTION 
+
+The realism of synthetic media has surged with recent gener-ative models, making audio-visual deepfake detection (AVD) a pressing problem for media integrity and public trust. Early research concentrated on visual-only detectors, including CNN/geometry pipelines such as MesoNet [1], Capsule[2], Xception-based baselines[3], and more recent designs like LipForensics[4], Multiple-Attention[5], and SLADD[6]. While effective on specific manipulations, vision-only sys-tems are intrinsically blind to cross-modal inconsistencies and often degrade under distribution shift. To address this, audio-visual (A-V) methods jointly model speech and video, e.g. AVN-J[7], Emotion Don’t Lie[8], AVFakeNet[9], VFD[10], AVoID-DF[11], and AVFF [12]. These systems generally improve robustness by align-ing lip motion, acoustic content, and facial dynamics. How-ever, most pipelines remain task-specific and relatively small, which limits scalability, adaptation to novel forgeries, and cross-domain generalization observed in large-scale deploy-ments. In parallel, the audio-only LLM line—exemplified by 
+
+ALLM4ADD [15]—has shown that large (audio) language Given the video, please assess if it's Real or Fake? 
+
+> Ground Truth: Fake
+> User
+> Label
+> Answer: Fake
+> Answer: Based on the provided video and description, I cannot definitively determine whether the video is real or fake. (Unknown)
+> AV-LMM Detect
+> Qwen2.5 omni
+
+Fig. 1 . Performance comparison with Qwen 2.5 Omni [13], highlighting the improved results of our AV-LMMDETECT. The video data is from the open-source MAVOS-DD dataset[14]. models are promising for deepfake detection when appropri-ately reformulated and fine-tuned, but purely audio systems cannot exploit visual cues and struggle with audio-video mismatch. We explore whether an supervised fine-tuned (SFT) large multimodal model (LMM) can serve as a unified AVD de-tector. We present AV-LMMDetect , which casts AVD as a prompted binary question—“ Is this video real or fake? ”—and fine-tunes Qwen 2.5 Omni [13] to jointly judge over audio and visual streams. As illustrated in Fig. 1, our AV-LMMDetect demonstrates superior detection capability compared to the base Qwen 2.5 Omni [13] model. While the base model responds with un-certainty content, our fine-tuned approach correctly identi-fies the deepfake video as “Fake”, validating the effective-ness of our specialized SFT fine-tuning for audio-visual deep-fake detection tasks. The quantitative comparison in Table 2 shows our fine-tuned approach achieves 85.09% accuracy ver-
+
+> arXiv:2602.23393v1 [cs.SD] 25 Feb 2026
+
+sus 32.26% for the base model in the most challenging open-set full scenario. A two-stage regimen is adopted: (i) lightweight LoRA alignment for efficient adaptation, followed by (ii) audio-visual encoder full fine-tuning to maximize cross-modal syn-ergy. 
+
+Contributions. 
+
+• We introduce AV-LMMDetect , the first supervised fine-tuned (SFT) large multimodal model for end-to-end audio-visual deepfake detection through prompted classification. • We propose a two-stage training strategy (LoRA align-ment → audio-visual encoder full tuning) that pre-serves efficiency while achieving strong cross-modal performance. • On FakeAVCeleb [16] and Mavos-DD [14], AV-LMM-Detect achieves competitive performance, with state-of-the-art results on MAVOS-DD and comparable per-formance to SOTA methods on FakeAVCeleb. Overall, these results indicate that supervised fine-tuned (SFT) LMMs are a viable path toward robust, generaliz-able AVD, complementing and extending prior small-model pipelines and audio-centric LLM efforts. 
+
+2. RELATED WORK Large Language Models for Media Forensics. Recent ad-vances in large language models have shown promising appli-cations in media forensics. ALLM4ADD [15] pioneered the use of audio large language models for deepfake detection by reformulating the task as audio question answering. However, these approaches are limited to single modalities and cannot exploit cross-modal inconsistencies that are crucial for robust detection. 
+
+Multimodal Fusion Strategies. Traditional audio-visual detection methods employ various fusion approaches, in-cluding late fusion [7], and attention-based mechanisms [9]. While effective, these approaches typically rely on hand-crafted fusion architectures and struggle with generalization across diverse manipulation techniques and domains. 
+
+Instruction Tuning for Multimodal Tasks. The suc-cess of instruction tuning in natural language processing has inspired its application to multimodal understanding tasks. Recent works have demonstrated that supervised fine-tuned (SFT) models can achieve strong performance on vision-language tasks [13]. Our work extends this paradigm to the forensics domain, leveraging the reasoning capabilities of large multimodal models for deepfake detection. 
+
+3. METHODOLOGY 3.1. Two-Stage Training Strategy Omni Thinker    
+
+> Vision
+> Encoder
+> Audio
+> Encoder
+> Omni Talker
+> Answer:Real /Fake
+> Given the video, please assess if it's Real or Fake?
+> …
+> …
+> Height
+> Width
+> Time
+> Text token
+> Vision Hidden
+> Audio Hidden
+> Trainable
+> Frozen
+> Lora
+> Omni Thinker
+> Vision
+> Encoder
+> Audio
+> Encoder
+> Omni Talker
+> Answer:Real /Fake
+> Given the video, please assess if it's Real or Fake?
+> …
+> …
+> Height
+> Width
+> Time
+> Text token
+> Vision Hidden
+> Audio Hidden
+> Trainable
+> Frozen
+> Lora
+> Stage 1 Stage 2
+
+Fig. 2 . Overview of our AV-LMMDetect . We reformulate audio-visual deepfake detection as a multimodal question an-swering task. During two-stage fine-tuning, Stage 1 employs LoRA for efficient alignment, while Stage 2 opens vision and audio encoders for audio-visual encoder full learning. The video data is from the open-source MAVOS-DD dataset[14]. Our training approach consists of two complementary stages illustarted in Fig. 2: 
+
+Stage 1: LoRA Alignment. We perform lightweight LoRA fine-tuning with frozen vision and audio encoders. This stage focuses on aligning the language model’s rea-soning capabilities with the deepfake detection task through specific instructions: “Only answer ‘Real’ or ‘Fake”’, ensur-ing efficient adaptation while preserving the model’s general knowledge. 
+
+Stage 2: Audio-Visual Encoder Full Fine-tuning. We unlock the vision and audio encoders and conduct full fine-tuning across all modalities. This stage maximizes cross-modal synergy by allowing the model to learn task-specific multimodal representations and capture subtle audio-visual inconsistencies indicative of deepfake manipulation. We also experimented with reversing the order of Stage 1 and Stage 2, and found that the results remained essentially consistent. 
+
+3.2. Question Answering Formulation 
+
+We reformulate audio-visual deepfake detection as a binary question answering task. Given an input video with audio, the model is prompted with: “ Given the video, please assess if it’s Real or Fake? ” The model generates responses from a constrained vocabulary containing only “Real” and “Fake” tokens (token IDs: 12768 and 52317, respectively). We construct a fine-tuning dataset Df t by pairing each audio-visual input with the corresponding prompt instruction. The training objective is to minimize the language modeling loss function L over Df t :θ∗ = arg min 
+
+> θN
+
+X
+
+> i=1
+
+L(Mθ (V i, A i, q ), y i), (1) where θ represents the trainable parameters of the model M,
+
+V i and Ai are the visual and audio inputs respectively, q is the prompt question, yi is the ground truth label (“Real” or “Fake”), and N is the number of training samples. These token IDs correspond to the model’s vocabulary, facilitating the extraction of prediction logits for subsequent evaluation and analysis. 
+
+3.3. Top-2 Token Prediction and Evaluation 
+
+We select the two tokens from the model’s vocabulary output, which correspond to our target “Real” and “Fake” tokens (to-ken IDs: 12768 and 52317). We then use the corresponding probabilities of “Real” and “Fake” tokens for classification. 
+
+Evaluation Metrics: We employ standard binary classi-fication metrics: • Accuracy (Acc): Proportion of correct predictions • Area Under Curve (AUC): Area under the ROC curve, measuring the model’s ability to distinguish between classes across all threshold settings • Mean Average Precision (mAP): Average precision across different recall levels, particularly important for imbalanced datasets The probabilistic output enables robust evaluation across different decision thresholds, providing comprehensive per-formance assessment beyond simple accuracy metrics. 
+
+4. EXPERIMENT 4.1. Datasets 
+
+• FakeAVCeleb[16] : English-language audio-visual deepfakes with face swapping and reenactment meth-ods. We use 70% for fine-tuning and 30% for evalua-tion. • MAVOS-DD[14] : Multilingual dataset with 250+ hours of real/fake videos in eight languages, featur-ing seven deepfake methods and four evaluation splits: 
+
+In-domain , Open-set language , Open-set model , and 
+
+Open-set full .
+
+4.2. Experiment Results 
+
+We evaluate AV-LMMDetect on two challenging bench-marks: FakeAVCeleb[16] and MAVOS-DD[14] , comparing against state-of-the-art vision-only and audio-visual methods. Our experimental results demonstrate the effectiveness of our supervised fine-tuned (SFT) multimodal approach across different evaluation scenarios. 
+
+Method Modality AUC acc 
+
+MesoNet[1] V 60.9 57.3 Capsule[2] V 70.9 68.8 Xception[3] V 70.5 67.9 LipForensics[4] V 82.4 80.2 Multiple-Attention[5] V 79.3 77.6 SLADD[6] V 72.1 70.5 AVN-J[7] A-V 77.6 73.2 Emotion Don’t Lie[8] A-V 79.8 78.1 AVFakeNet[9] A-V 83.4 78.4 VFD[10] A-V 86.1 81.5 AVoiD-DF[11] A-V 89.2 83.7 AVFF[12] A-V 99.1 98.6 AV-LMMDETECT (Ours) A-V 99.2 98.02 
+
+Table 1 . Intra-manipulation evaluation on FakeAVCeleb[16]. Following standard protocol, we use 70% as training set and 30% as test set. We report Area Under the Curve (AUC) and Accuracy (Acc) scores (%). 
+
+Performance on FakeAVCeleb. Table 1 shows our AV-LMMDetect achieves 98.02% accuracy and 99.2% AUC, achieving comparable performance to the current SOTA method AVFF (98.6% accuracy, 99.1% AUC). Our approach significantly outperforms traditional vision-only methods (MesoNet: 57.3%, Xception: 67.9%) and most audio-visual baselines (AVN-J: 73.2%, VFD: 81.5%), demonstrating the effectiveness of supervised fine-tuned (SFT) large multimodal models for audio-visual deepfake detection. 
+
+Performance on MAVOS-DD. Table 2 shows our model’s performance under the official MAVOS-DD[14] evaluation protocol, which tests generalization across four challenging scenarios: in-domain, open-set model, open-set language, and open-set full. Our Qwen 2.5 Omni [13]-based approach achieves state-of-the-art results in three out of four scenarios, with particularly strong performance in the most challenging open-set full scenario (mAP: 0.96, AUC: 0.92, Acc: 85.09%). The results reveal several key insights: (1) Fine-tuning is crucial for all methods, as evidenced by the dramatic perfor-mance improvement compared to non-fine-tuned baselines. (2) Our approach demonstrates superior generalization ca-pability, maintaining relatively stable performance across different open-set scenarios . (3) The supervised fine-tuned (SFT) formulation enables better cross-modal reasoning, par-ticularly beneficial when encountering unseen generative models. Method Fine-tuned In-domain Open-set model Open-set language Open-set full 
+
+mAP AUC acc mAP AUC acc mAP AUC acc mAP AUC acc AVFF [12] ✗ 0.51 0.51 52.45 0.50 0.50 22.58 0.51 0.51 59.46 0.50 0.50 35.34 MRDF [17] ✗ 0.50 0.46 44.04 0.52 0.52 58.04 0.46 0.41 39.35 0.51 0.49 50.78 TALL [18] ✗ 0.49 0.48 50.74 0.50 0.51 39.22 0.48 0.47 50.78 0.50 0.49 44.63 
+
+Qwen 2.5 Omni [13] ✗ 0.47 0.44 49.25 0.77 0.45 20.84 0.38 0.43 55.50 0.61 0.41 32.26 AVFF [12] ✓ 0.95 0.95 86.93 0.85 0.89 75.34 0.90 0.90 84.26 0.87 0.89 77.68 MRDF [17] ✓ 0.90 0.90 84.27 0.78 0.88 78.32 0.88 0.88 82.15 0.82 0.86 78.87 TALL [18] ✓ 0.87 0.86 78.07 0.79 0.84 66.20 0.80 0.80 73.25 0.77 0.79 67.42 
+
+AV-LMMDETECT (Ours) ✓ 0.97 0.97 92.92 0.98 0.94 87.91 0.88 0.90 85.58 0.96 0.92 85.09 
+
+Table 2 . Comparison on MAVOS-DD[14]. Best results are in bold ; second-best are underlined. 
+
+4.3. Ablation Experiment 
+
+To validate our training strategy, we conduct ablation studies on MAVOS-DD[14] Open-set full scenario. We compare four configurations: (1) Zero-shot : No fine-tuning, (2) Stage 1 only : LoRA fine-tuning with frozen encoders, (3) Stage 2 only : Direct encoder full fine-tuning, and (4) Stage 1 + Stage 2: Our complete approach. 
+
+Training Strategy mAP AUC acc 
+
+Zero-shot 0.61 0.41 32.26 Stage 1 only 0.82 0.66 73.40 Stage 2 only 0.86 0.83 80.61 
+
+Stage 1 + Stage 2 (Ours) 0.96 0.92 85.09 Table 3 . Ablation study on MAVOS-DD[14] Open-set full scenario comparing four training configurations. Table 3 shows our complete two-stage approach achieves best performance (mAP: 0.96, AUC: 0.92, Acc: 85.09%). Zero-shot baseline reaches 32.26% accuracy, Stage 1 only achieves 73.40%, and Stage 2 only reaches 80.61%. The re-sults demonstrate that both Stage 1 and Stage 2 are essential for optimal performance. 
+
+4.4. Confusion Matrix Analysis 
+
+We report the confusion matrices obtained by AVFF, MRDF, TALL, and our method for the Open-set full scenario in Fig-ure 3. In this challenging scenario, AVFF shows a significant drop in its ability to detect fake videos, with 28.0% false negatives. MRDF exhibits similar degradation with 24.5% false negatives, although it maintains better fake detection capability than AVFF. TALL demonstrates poor performance with 40.1% false negatives, indicating limited generaliza-tion to unseen models and languages. In contrast, our AV-LMMDetect achieves superior performance with only 14.9% false negatives and 7.5% false positives, demonstrating robust cross-modal detection capabilities. The superior generaliza-tion ability stems from Qwen 2.5 Omni’s large-scale training data and its inherent video-audio paired data structure. These observations validate that our supervised fine-tuned (SFT) approach provides better generalization across challenging open-set scenarios. Fake Real            
+
+> Predicted Label
+> Fake
+> Real
+> True Label
+> 72.0 28.0
+> 11.9 88.1
+> AVFF
+> Fake Real
+> Predicted Label
+> Fake
+> Real
+> True Label
+> 75.5 24.5
+> 15.0 85.0
+> MRDF
+> Fake Real
+> Predicted Label
+> Fake
+> Real
+> True Label
+> 59.9 40.1
+> 18.7 81.3
+> TALL
+> Fake Real
+> Predicted Label
+> Fake
+> Real
+> True Label
+> 85.1 14.9
+> 7.5 92.5
+> AV-LMMDetect (Ours)
+
+Fig. 3 . Confusion matrices for AVFF, MRDF, TALL, and our 
+
+AV-LMMDetect on MAVOS-DD Open-set full scenario. 
+
+5. CONCLUSION 
+
+We introduced AV-LMMDetect , the first supervised fine-tuned (SFT) large multimodal model for audio-visual deep-fake detection. Our two-stage training achieves competitive results on FakeAVCeleb[16] and state-of-the-art performance on MAVOS-DD[14]. Analyses validate our approach’s ef-fectiveness, demonstrating superior generalization across challenging open-set scenarios. 6. REFERENCES 
+
+[1] Darius Afchar, Vincent Nozick, Junichi Yamagishi, and Isao Echizen, “Mesonet: a compact facial video forgery detection network,” in 2018 IEEE international work-shop on information forensics and security (WIFS) .IEEE, 2018, pp. 1–7. [2] Huy H Nguyen, Junichi Yamagishi, and Isao Echizen, “Capsule-forensics: Using capsule networks to detect forged images and videos,” in ICASSP 2019-2019 IEEE international conference on acoustics, speech and sig-nal processing (ICASSP) . IEEE, 2019, pp. 2307–2311. [3] Franc ¸ois Chollet, “Xception: Deep learning with depth-wise separable convolutions,” in Proceedings of the IEEE conference on computer vision and pattern recog-nition , 2017, pp. 1251–1258. [4] Alexandros Haliassos, Konstantinos Vougioukas, Stavros Petridis, and Maja Pantic, “Lips don’t lie: A generalisable and robust approach to face forgery detection,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2021, pp. 5039–5049. [5] Hanqing Zhao, Wenbo Zhou, Dongdong Chen, Tianyi Wei, Weiming Zhang, and Nenghai Yu, “Multi-attentional deepfake detection,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2021, pp. 2185–2194. [6] Liang Chen, Yong Zhang, Yibing Song, Lingqiao Liu, and Jue Wang, “Self-supervised learning of adversar-ial example: Towards good generalizations for deepfake detection,” in Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 2022, pp. 18710–18719. [7] Yanmin Qian, Zhengyang Chen, and Shuai Wang, “Audio-visual deep neural network for robust per-son verification,” IEEE/ACM Transactions on Audio, Speech, and Language Processing , vol. 29, pp. 1079– 1092, 2021. [8] Trisha Mittal, Uttaran Bhattacharya, Rohan Chandra, Aniket Bera, and Dinesh Manocha, “Emotions don’t lie: An audio-visual deepfake detection method using affec-tive cues,” in Proceedings of the 28th ACM international conference on multimedia , 2020, pp. 2823–2832. [9] Hafsa Ilyas, Ali Javed, and Khalid Mahmood Malik, “Avfakenet: A unified end-to-end dense swin trans-former deep learning model for audio–visual deepfakes detection,” Applied Soft Computing , vol. 136, pp. 110124, 2023. [10] Harry Cheng, Yangyang Guo, Tianyi Wang, Qi Li, Xiao-jun Chang, and Liqiang Nie, “Voice-face homogeneity tells deepfake,” ACM Transactions on Multimedia Com-puting, Communications and Applications , vol. 20, no. 3, pp. 1–22, 2023. [11] Wenyuan Yang, Xiaoyu Zhou, Zhikai Chen, Bofei Guo, Zhongjie Ba, Zhihua Xia, Xiaochun Cao, and Kui Ren, “Avoid-df: Audio-visual joint learning for detecting deepfake,” IEEE Transactions on Information Forensics and Security , vol. 18, pp. 2015–2029, 2023. [12] Trevine Oorloff, Surya Koppisetti, Nicol` o Bonettini, Di-vyaraj Solanki, Ben Colman, Yaser Yacoob, Ali Shahri-yari, and Gaurav Bharaj, “Avff: Audio-visual feature fusion for video deepfake detection,” in Proceedings of the IEEE/CVF Conference on Computer Vision and Pat-tern Recognition , 2024, pp. 27102–27112. [13] Jin Xu, Zhifang Guo, Jinzheng He, Hangrui Hu, Ting He, Shuai Bai, Keqin Chen, Jialin Wang, Yang Fan, Kai Dang, et al., “Qwen2. 5-omni technical report,” arXiv preprint arXiv:2503.20215 , 2025. [14] Florinel-Alin Croitoru, Vlad Hondru, Marius Popescu, Radu Tudor Ionescu, Fahad Shahbaz Khan, and Mubarak Shah, “Mavos-dd: Multilingual audio-video open-set deepfake detection benchmark,” arXiv preprint arXiv:2505.11109 , 2025. [15] Hao Gu, Jiangyan Yi, Chenglong Wang, Jianhua Tao, Zheng Lian, Jiayi He, Yong Ren, Yujie Chen, and Zhengqi Wen, “ A llm4add: Unlocking the capabilities of audio large language models for audio deepfake de-tection,” arXiv preprint arXiv:2505.11079 , 2025. [16] Hasam Khalid, Shahroz Tariq, Minha Kim, and Simon S Woo, “Fakeavceleb: A novel audio-video multimodal deepfake dataset,” arXiv preprint arXiv:2108.05080 ,2021. [17] Heqing Zou, Meng Shen, Yuchen Hu, Chen Chen, Eng Siong Chng, and Deepu Rajan, “Cross-modality and within-modality regularization for audio-visual deepfake detection,” in ICASSP 2024-2024 IEEE In-ternational Conference on Acoustics, Speech and Signal Processing (ICASSP) . IEEE, 2024, pp. 4900–4904. [18] Yuting Xu, Jian Liang, Gengyun Jia, Ziming Yang, Yan-hao Zhang, and Ran He, “Tall: Thumbnail layout for deepfake video detection,” in Proceedings of the IEEE/CVF international conference on computer vision ,2023, pp. 22658–22668.

@@ -25,3 +25,24 @@ subscriptions:
     stage: A
     diff_threshold_pct: 15
   keyword_recall_mode: or
+  intent_profiles:
+    - tag: MMFND
+      description: 多模态虚假新闻检测论文检索
+      enabled: true
+      keywords:
+        - keyword: misinformation detection
+          keyword_cn: 虚假信息检测
+          query: cross-modal misinformation detection techniques
+        - keyword: fake news detection
+          keyword_cn: 虚假新闻检测
+          query: f
+        - keyword: multimodal
+          keyword_cn: 多模态
+          query: m
+      intent_queries:
+        - query: state of the art multimodal fake news detection models
+          query_cn: 最先进的多模态虚假新闻检测模型
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-03-10T12:25:01.197Z'

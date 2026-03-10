@@ -1,0 +1,2490 @@
+Title: OmniVL-Guard: Towards Unified Vision-Language Forgery Detection and Grounding via Balanced RL
+
+URL Source: https://arxiv.org/pdf/2602.10687v2
+
+Published Time: Fri, 13 Feb 2026 02:25:10 GMT
+
+Number of Pages: 38
+
+Markdown Content:
+# OmniVL-Guard: Towards Unified Vision-Language Forgery Detection and Grounding via Balanced RL 
+
+Jinjie Shen * 1 2 Jing Wu * 1 Yaxiong Wang † 1 Lechao Cheng 1 Shengeng Tang 3 Tianrui Hui 1 Nan Pu 1
+
+Zhun Zhong † 1Text 
+
+## OmniVL-Guard  
+
+> Image
+> The Australian foreign
+> minister Mohamed ···
+> How Viola Davis's
+> Experience with ···
+> Equatorial Resources
+> aims to invest $1.2 ···
+
+Input      
+
+> Video
+> Text-Image
+> Fake ！
+> Binary Forgery Cls.
+> Caption:Rapper Noriaki
+> Sugiyama left ··· in Los
+> Angeles in 1996.
+> Text Tampering Loc.
+> Image Tampering Loc. Video Tampering Loc.
+
+Task   
+
+> ['0.5s-1.25s']. Text-Image Bin. Cls. Image Loc.
+> Video Loc.
+> Text Loc.
+> Text Bin. Cls.
+> Image Bin. Cls.
+> Video Bin. Cls.
+> 96.20( +12.47 )
+> 83.73 93.12( +60.71 )
+> 32.41
+> 33.82
+> 98.58 (+ 64.76 )
+> 63.57
+> 75.52( +11.95 )
+> 54.26( +3.18 )
+> 51.08
+> 63.78 (+19.11 )
+> 44.67
+> 33.08
+> 59.22( +26.14 )
+
+SFT vs ARSPO 
+
+> Text
+> ARSPO
+> SFT
+
+··· 
+
+··· 
+
+> Text-V ideo
+> Caption: Trump
+> toupee video .
+> ···
+
+Figure 1. This work explores the task of omnibus vision-language forgery detection and grounding (left). In this unified setting, simple Supervised Fine-Tuning (SFT) can not achieve coordinated performance improvements. In response, we propose Adaptive Reward Scaling Policy Optimization (ARSPO), achieving balanced optimization in detecting and grounding tasks (right). 
+
+## Abstract 
+
+Existing forgery detection methods are often lim-ited to uni-modal or bi-modal settings, failing to handle the interleaved text, images, and videos prevalent in real-world misinformation. To bridge this gap, this paper targets to develop a unified framework for omnibus vision-language forgery detection and grounding. In this unified setting, the interplay between diverse modalities and the dual requirements of simultaneous detection and localization pose a critical “difficulty bias“ prob-lem: the simpler veracity classification task tends to dominate the gradients, leading to suboptimal performance in fine-grained grounding during multi-task optimization. To address this chal-lenge, we propose OmniVL-Guard , a balanced reinforcement learning framework for omnibus 
+
+> *
+
+Equal contribution †Corresponding author. 1LION Lab, School of Computer Science and Information Engineering, Hefei University of Technology, Hefei, China 2Wuhan University, Wuhan, China 3School of Computer Science and Information Engineering, Hefei University of Technology, Hefei, China. Correspondence to: Jinjie Shen <shenjinjie22@gmail.com >,Yaxiong Wang <wangyx@hfut.edu.cn >, Zhun Zhong <zhun-zhong007@gmail.com >.
+
+Preprint. February 13, 2026. 
+
+vision-language forgery detection and grounding. Particularly, OmniVL-Guard comprises two core designs: Self-Evolving CoT Generatio and Adap-tive Reward Scaling Policy Optimization (AR-SPO). Self-Evolving CoT Generation synthesizes high-quality reasoning paths, effectively overcom-ing the cold-start challenge. Building upon this, Adaptive Reward Scaling Policy Optimization (ARSPO) dynamically modulates reward scales and task weights, ensuring a balanced joint op-timization. Extensive experiments demonstrate that OmniVL-Guard significantly outperforms state-of-the-art methods and exhibits zero-shot robust generalization across out-of-domain sce-narios. The dataset and code will be publicly avail-able at https://github.com/shen8424/ OmniVL-Guard .
+
+## 1. Introduction 
+
+The rapid evolution of generative AI has significantly low-ered the barrier for fabricating convincing misinformation, posing severe risks to multimedia information security (Hay-darov et al., 2024; Li et al., 2024b; Abdelnabi et al., 2022). Consequently, the problem of forgery detecting and manip-ulation grounding for multi-modal media, aiming to verify 1  
+
+> arXiv:2602.10687v2 [cs.CV] 12 Feb 2026 OmniVL-Guard
+> Table 1. Motivation Analysis: SOTA MLLMs Limitations and RL Optimization Imbalance.
+> (a) Performance of SOTA MLLMs across Forgery Detection Tasks. Notably, these models exhibit significant performance bottlenecks in the three localization tasks. Consequently, directly utilizing them to generate CoT data is inefficient due to frequent hallucina-tions and errors.
+
+Method Bin. Cls. Image Loc. Text Loc. Video Loc. 
+
+GPT5 73.71 19.01 34.96 24.60 Gemini3 74.54 21.32 32.77 24.11 Seed1.6 72.99 20.97 31.86 26.29                                    
+
+> (b) Comparison of optimization balance in multi-task scenarios under FSFR sft and FSFR rl . Our ARSPO achieves balanced im-provements across all tasks.
+> Method Bin. Cls. Image Loc. Text Loc. Video Loc.
+> SFT 53.38 51.08 44.67 33.08 + GRPO 89.42 (+36.0) 50.96 (-0.1) 55.31 (+10.6) 42.79 (+9.7)
+> + SAPO 90.75 (+37.4) 51.24 (+0.2) 54.33 (+9.7) 44.10 (+11.0)
+> + ARSPO 90.85 (+37.5) 54.26 (+3.2) 63.78 (+19.1) 59.22 (+26.1)
+
+veracity and localize manipulated regions, have garnered substantial attention. However, existing paradigms (Shen et al., 2025; Wen et al., 2025) are predominantly confined to specific uni-modal or bi-modal settings (e.g., sole image or Image-Text). This restriction sharply contrasts with modern social media platforms, where misinformation is inherently diverse modalities, characterized by the simultaneous co-existence of text, images, and videos. As a result, current specialized models are incapable of processing these diverse modalities in an integrative manner. To bridge this gap, we focus to develop a unified framework capable of processing the dominant vision-language modal-ities in social media—text, images, and videos—within a single paradigm. However, this undertaking is intrinsically challenging, as it requires the model to jointly perform verac-ity classification and fine-grained manipulation grounding. The difficulty is further exacerbated in omni-modal setting, where the model must reason across heterogeneous data types simultaneously. Standard Supervised Fine-Tuning (SFT) fails to yield consistent gains across modalities due to insufficient reasoning capabilities (Figure 1). In contrast, Reinforcement Learning (RL) has proven effective in endow-ing Multi-modal Large Language Models (MLLMs) with robust generalization and reasoning capabilities (DeepSeek-AI, 2025). Consequently, we pioneer the integration of RL into the domain of multi-modal Forgery detection and grounding, aiming to leverage the exploration mechanisms of RL to guide the model toward superior capabilities. Following the paradigm of DeepSeek-R1 (DeepSeek-AI, 2025), implementing RL for forgery detection and ground-ing requires high-quality Chain-of-Thought (CoT) data for cold-start to facilitate complex reasoning. However, as demonstrated in Table 1a, general-purpose large models of-ten lack the fine-grained perception required to identify sub-tle manipulations. This limitation makes it difficult to gen-erate effective reasoning paths for complex forensic tasks. To overcome this, we introduce a Self-Evolving CoT Gener-ation strategy that iteratively refines the reasoning process to produce high-quality CoT. We first collect source data from diverse public datasets and split it into two subsets for SFT cold-start and RL optimization, respectively. To construct high-quality CoT annotations for SFT, we distill a small seed CoT subset from the SFT data and apply a self-evolving procedure to iteratively expand it, resulting in a high-quality SFT dataset. This dataset is then combined with the RL data splits to form our Full-Spectrum Forensic Reasoning (FSFR) dataset. FSFR facilitates effective SFT cold-start and RL opti-mization for the OmniVL forgery detection and ground-ing tasks. While conventional RL algorithms, such as GRPO (DeepSeek-AI, 2025), demonstrate stronger opti-mization capability, the training dynamics are often domi-nated by the easier classification objective in our practice, as shown in Table 1b. This imbalance results in insuffi-cient optimization of the more challenging grounding task. For example, although GRPO boosts classification accuracy by 36%, the performance on image grounding deteriorates. This imbalance underscores the need for a more effective optimization strategy for multi-task learning in omnibus vision-language modal forgery detection and grounding. To tackle the aforementioned issue, we propose ARSPO (Adaptive Reward Shaping Policy Optimization) to facili-tate balanced multi-task reinforcement learning. Through a mathematical decomposition of the optimization gradi-ent, we analyze the impact of task difficulty and identify that the reward mapping function directly governs gradient transfer efficiency. Guided by this analysis, we design spe-cialized reward functions that incentivize the model to tackle high-difficulty tasks. Furthermore, we introduce a dynamic coefficient adjustment strategy that adaptively modulates task weights based on real-time learning states to ensure an optimal equilibrium. Extensive experiments demonstrate that ARSPO not only achieves superior in-domain perfor-mance but also exhibits robust zero-shot generalization in out-of-domain scenarios. Integrating Self-Evolving CoT Generation with ARSPO, we finally develop our OmniVL-Guard , a balanced RL frame-work for omnibus vision-language forgery detection and grounding. Overall, the main contributions are summarized as follows: (1) Unified Framework for omnibus vision-language 
+
+2OmniVL-Guard Dataset Pool               
+
+> Search Partition
+> 𝐀 𝐀
+> 𝐀 𝐀
+> 𝐀 𝐀
+> 𝐀 𝐀
+> Validate
+> 𝐀 𝐀
+> 𝐀 (6.7k)
+> SFT-RL
+> 𝐀 𝐀
+> Step0  Step1
+> (a) Construction Process
+> Inference
+> Refine
+> Step3
+> Random Select
+> CoT Refined CoT
+> Validate
+> 𝐀 𝐀
+> 𝐀
+> Image
+> Text
+> Video
+> Text-Image
+> (b) Example
+> (c) Statistics
+> 𝐀 𝐀
+> Step2
+> Validate
+> 𝐀 𝐀
+> 𝐀 𝐀 𝐀 −𝐀 (𝐀 =𝐀 ,𝐀 ,𝐀 )CoT
+> SFT-RL
+> 𝐀 𝐀 \𝐀 𝐀
+> 𝐀
+> CoT: <think> Alright, I'm reviewing
+> this video clip of a speaker, ···
+> This confirms the manipulated part is
+> from [0.75s–1.3s]. </think>
+> <answer>Tampered segment: ['0.75s-
+> 1.3s']</answer>
+> 44.6%
+> 22.6%
+> 20.7% 12%
+> Text-Image Image
+> Text Video
+> 10 things you need
+> to know before the
+> opening bell.
+> Final Dataset: FSFR =𝐀𑐀𝐀𔠀 𝐀𛀀𝐀 +𝐀𑐀𝐀𔠀 𝐀𚰀
+> Refine
+> Merge
+
+Figure 2. (a) The construction process of FSFR sft . (b) An example from FSFR sft . (c) Statistics of the union of FSFR sft and FSFR rl ,including the distribution and word clouds. 
+
+forgery: We explore and propose a unified VLM frame-work capable of processing images, videos, and text for forgery detection and grounding, while pioneering the in-tegration of Reinforcement Learning to enhance forensic reasoning and cross-modal generalization. (2) Dataset FSFR: We present FSFR, a comprehensive mul-timodal corpus designed for both detection and grounding tasks to support the full SFT-RL-Test pipeline. Crucially, we employ Self-Evolving CoT Generation Pipeline to syn-thesize high-quality CoT annotations for the SFT phase. (3) Dynamic Balancing Algorithm ARSPO: We propose an adaptive reward shaping mechanism that effectively re-solves the exploration imbalance in multi-task RL training, significantly boosting performance on high-difficulty tasks. 
+
+## 2. Related Work 
+
+Forgery Detection and Grounding. With the rapid evolu-tion of generative techniques, detection methodologies have progressed from unimodal paradigms—targeting specific modalities such as images (Borji, 2023; Wang et al., 2023; Sinitsa & Fried, 2024; Lorenz et al., 2023), text (Zhao et al., 2022; Yoo et al., 2023; Mitchell et al., 2023), or videos (Ger-stner & Farid, 2022; Agarwal & Farid, 2021)—to bimodal synergies (e.g., image-text (Shen et al., 2025; Zhang et al., 2025), video-text (Qi et al., 2023)). Nevertheless, the current defensive landscape remains fragmented, notably lacking a unified framework capable of simultaneously processing Image, Video, and Text. This fragmentation stands in stark contrast to the inherent cross-modal entanglement of con-temporary deepfakes, rendering existing models vulnerable to complex, hybrid attacks. 
+
+Reinforcement Learning. In the realm of Artificial General Intelligence, pioneering works represented by DeepSeek-R1 (DeepSeek-AI, 2025) have demonstrated that RL em-powers models with reasoning and generalization capabili-ties that surpass those achieved by SFT. Optimization tech-niques such as GRPO (DeepSeek-AI, 2025) and its variants (e.g., GSPO (Zheng et al., 2025), SAPO (Gao et al., 2025)) have been widely adopted to enhance the performance of MLLMs. This capacity for extrapolative generalization aligns perfectly with the core imperatives of Forgery Detec-tion: models must maintain acute reasoning abilities when confronting Out-of-Distribution (OOD) and unseen manipu-lation techniques. Consequently, we pioneer the integration of RL into the field of forgery detection and grounding. 
+
+## 3. Self-Evolving Forensic CoT Generation 
+
+High-quality Chain-of-Thought (CoT) data is essential for the RL cold-start phase. However, generating such data for forensics faces an Efficiency-Bias Dilemma: (1) Vanilla generation via closed-source MLLMs yields low-quality reasoning due to their limited domain expertise in forgery detection. (2) While injecting Ground Truth (GT) to force-guide generation introduces Hindsight Bias, where models rationalize answers backward rather than performing gen-uine deduction, thus impairing RL exploration. To break this impasse, we propose a Self-Evolving CoT Generation strategy consisting of four stages, as shown in Figure 2: Source Data Colletion, Forensic Reasoning Seed Priming, Seed Bootstrapping through Self-Evolution, and Collabora-tive Hard-CoT Synthesis. 
+
+3.1. Source Data Collection 
+
+We curate a pool of source data by aggregating existing public datasets to cover text, image, and video modalities. 3OmniVL-Guard 
+
+For the uni-modal Text domain, we utilize FakeNewsCor-pus (Shu et al., 2020) and MCFEND (Li et al., 2024a); for image, we select FakeClue (Wen et al., 2025), LOKI (Ye et al., 2025), and ForgeryNet (He et al., 2021); and for Video, we employ GenVideo (Chen et al., 2024), DVF (Song et al., 2024), and ForgeryNet (He et al., 2021). For the Image-Text modality, we source from SAMM (Shen et al., 2025), MDSM (Zhang et al., 2025), DGM 4 (Shao et al., 2023), and NewsCLIPpings (Luo et al., 2021). To verify whether the model truly acquires bi-modal detection capabilities from image-text, we intentionally excluded video-text data from this set. Instead, we reserve video-text for out-of-domain zero-shot evaluation, as detailed in Sec. 5. Finally, we parti-tion all source data into Ds for SFT dataset generation, Dr
+
+for RL data construction, and Dt for in-domain testing. 
+
+3.2. Forensic Reasoning Seed Priming 
+
+We leverage a set of state-of-the-art MLLMs M =
+
+{Seed1.6-VL , Gemini3 , ChatGPT5 }(Guo et al., 2025; Team, 2025; Zhao et al., 2024) to perform inference on a small fraction of samples from Ds. Each instance cor-responds to a single task (e.g., binary forgery classifica-tion). The resultant reasoning path undergoes rigorous ground-truth filtering and consistency verification by a dis-tinct MLLM, aiming to assess the self-consistency and correctness of the reasoning logic (detailed criteria in Ap-pendix H). This process yields a high-fidelity seed dataset 
+
+D0 
+
+> s
+
+(|D0 
+
+> s
+
+| = 6 .7k). Finally, we perform SFT on Qwen3VL-8B (Yang et al., 2025a) using D0 
+
+> s
+
+, followed by RL on a subset ¯Dr ⊂ Dr , resulting in the warm-up policy π0.
+
+3.3. Seed Bootstrapping through Self-Evolution 
+
+To expand data scale and enhance quality further, we design an iterative self-evolution loop. In the k-th iteration, we utilize the model from the previous round, πk−1, to generate CoT reasoning and predictions for Ds \ D0 
+
+> s
+
+. Consistent with the previous step, strict filtering is applied based on prediction accuracy against GT. We further employ a SOTA MLLM to validate the CoT generated by πk−1 (validation protocols align with the Seed priming phase). High-quality samples that pass this verification are merged with the initial seed dataset D0 
+
+> s
+
+to form the SFT cold-start dataset for the current round, Dks . To prevent the model from converging to local optima and accumulating distributional biases from the previous iteration, we initialize the SFT process with the base Qwen3VL-8B (rather than πk−1) on Dks , followed by RL training on ¯Dr , resulting in πk. This process terminates after three iterations, yielding D3 
+
+> s
+
+.
+
+3.4. Collaborative Hard-CoT Synthesis 
+
+Despite the efficacy of the self-evolution loop, the model continues to struggle with finding correct reasoning paths for certain long-tail hard samples (i.e., samples that remain incorrectly predicted even after multiple iterations). To com-plete the data distribution and avoid introducing difficulty bias, we design a Multi-Agent Collaborative Generation workflow. First, a randomly selected MLLM ∈ M gener-ates a CoT conditioned on the known GT. Second, a distinct MLLM ∈ M acts as a “Refiner,” constrained to rewrite the CoT to simulate a natural deduction process as if the answer were unknown, while maintaining logical correctness (See Appendix H). Finally, a third MLLM ∈ M evaluates the refined CoT using the same criteria as in Sec. 3.2, yielding dataset Dhs .
+
+3.5. Dataset Statistics 
+
+Through the aforementioned process, we obtain the Full-Spectrum Forensic Reasoning (FSFR) dataset, a compre-hensive multimodal corpus that integrates primary social me-dia modalities for both detection and grounding tasks. FSFR consists of two parts: FSFR sft = Dhs ∪D3 
+
+> s
+
+for cold-start SFT with high-quality CoT annotations and FSFR rl = Dr \ ¯Dr
+
+for reinforcement learning, and Dt for performance evalua-tion. We exclude the warm-up subset ¯Dr from the RL stage. FSFR sft contains 73k samples, where hard samples ( Dhs )account for approximately 15%; FSFR rl comprises 110k samples. FSFR covers Text, Image, Video, and Image-Text modalities, supporting four core tasks: binary forgery clas-sification, and tampering localization across image (spatial), text (semantic), and video (temporal) domains. Dt denotes the union of the test sets from aforementioned datasets in Sec. 3.1, comprising approximately 700k samples for reli-able performance evaluation. 
+
+## 4. ARSPO: Balanced Multi-Task RL 
+
+While FSFR provides the necessary foundations for cold-start of RL, we observe that conventional RL algorithms suffer from difficulty imbalance, where optimization is dom-inated by simpler sub-tasks as shown in Table 1b. To address this, we propose ARSPO (Adaptive Reward Shaping Policy Optimization). ARSPO dynamically balances the learning process by adaptively scaling reward signals across tasks of varying difficulty, ensuring consistent policy improvement across the entire forensic spectrum. 
+
+4.1. Theoretical Analysis and Motivation 
+
+To elucidate how different tasks differentially impact the model’s update trajectory, we unify the optimization objec-tives of GRPO and its variants (e.g., GSPO, SAPO) (Gao et al., 2025). Let θ denote the model parameters, D the total dataset, and Dk the subset corresponding to the k-th task. For each query q ∈ D , the model samples G re-sponses {yi}Gi=1 . Let πθ and πθold represent the current and old policies, respectively. The RL algorithm maximizes the 4OmniVL-Guard 
+
+following objective: 
+
+J (θ) = 
+
+> K
+
+X
+
+> k=1
+
+|D k||D| E q∼D k ,
+
+> {yi}∼ πθold
+
+"
+
+1
+
+G
+
+> G
+
+X
+
+> i=1
+
+1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+fi,t (ri,t (θ)) ˆAi,k 
+
+# (1) where ri,t = πθ (yi,t |q,y i,<t )  
+
+> πθold (yi,t |q,y i,<t )
+
+is the probability ratio, and 
+
+ˆAi,k = Ai,k −μσ is the normalized advantage, with μ and 
+
+σ being the mean and standard deviation of the rewards 
+
+{Ai,k }Gi=1 . Different RL algorithms correspond to different forms of fi,t (·) (see Appendix B for details). Differentiating Eq. (1) yields the log-policy gradient: 
+
+∇θ J (θ) = 
+
+> K
+
+X
+
+> k=1
+
+|D k||D| E
+
+"
+
+1
+
+G
+
+> G
+
+X
+
+> i=1
+
+1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+f ′
+
+> i,t
+
+(ri,t )ri,t ∇θ log πθ (yi,t |q, y i,<t ) ˆAi,k 
+
+# (2) To probe the deeper mechanisms of training dynam-ics—specifically how task difficulty dictates gradient di-rection—we take the derivative of Eq. 2 with respect to θ.
+
+∇θ J (θ) examines how parameter shifts induce changes in gradient magnitude, thereby revealing convergence trends. Let Wi,t (θ) = f ′
+
+> i,t
+
+(ri,t )ri,t ∇θ log πθ (yi,t |q, y i,<t ) be the gradient term related to the geometric properties of the pol-icy itself. Here, we explicitly model the mapping between model capability and task metrics. Let Hk(θ, q, τ ) denote the task-specific performance metric (e.g., IoU in visual localization) achievable by the model’s response to input 
+
+q under parameters θ, such that xi,k = Hk(θ, q, τ ) (where 
+
+τ represents diversity controlled by hyperparameters like temperature). We define gk(·) as the function mapping this metric to the raw reward value, i.e., Ai,k = gk(xi,k ). Differ-entiating Eq. (2), we obtain the change rate of the gradient: 
+
+ddθ (∇θ J (θ)) = 
+
+> K
+
+X
+
+> k=1
+
+|D k||D| E
+
+"
+
+1
+
+G
+
+> G
+
+X
+
+> i=1
+
+1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+ddθ 
+
+
+
+Wi,t (θ) ˆAi,k 
+
+ # (3) The expansion of the core term is: 
+
+ddθ 
+
+
+
+Wi,t (θ) ˆAi,k 
+
+
+
+= W ′
+
+> i,t
+
+(θ) ˆAi,k + Wi,t (θ)
+
+× g′
+
+> k
+
+(Hk(θ, q, τ )) 
+
+Gσ 
+
+h
+
+(G − 1) − ˆA2
+
+> i,k
+
+i
+
+H′
+
+> k
+
+(θ, q, τ )
+
+(4) Eq.4 profoundly reveals the source of the “Matthew Effect” in multi-task RL. The second term on the right-hand side 0.0         
+
+> 0.5
+> 1.0
+> Normalized Sensitivity  g′k(xi, k)
+> Query 1 Query 2 Query 3
+> (A) Linear Mapping
+> 0510 15 20
+> Sample Index (Grouped by Query)
+> 0.0
+> 0.5
+> 1.0
+> Normalized Sensitivity  g′k(xi, k)
+> Query 1 Query 2 Query 3
+> (B) Convex Mapping
+
+Figure 3. Impact of different reward mapping functions gk (·)
+
+on the gradient sensitivity term g′   
+
+> k(xi,k )
+> σ
+
+in Eq. 4. (A) Linear mapping with gk (x) = ax ; (B) Convex mapping with gk (x) = 
+
+eax (where a = 3 ). Red bars indicate superior responses with higher rewards Ai,k within each query group. The comparison demonstrates that convex mapping significantly amplifies the gradient contribution of superior responses , whereas linear mapping results in nearly uniform sensitivity across responses of varying quality. 
+
+comprises two sensitivity components: task difficulty sen-sitivity H′
+
+> k
+
+(θ, q, τ ) and reward function sensitivity g′
+
+> k
+
+(·).
+
+H′
+
+> k
+
+(θ, q, τ ) characterizes the extent to which minute param-eter changes improve task metrics. For high-difficulty tasks, the model often resides on a performance plateau where met-ric improvements are negligible, resulting in H′
+
+> k
+
+(θ, q, τ ) is small. Consequently, even if normalization balances reward scales, simple tasks (with larger H′
+
+> k
+
+) dominate the second-order rate of change (i.e., the “acceleration”) of the gradient, effectively hijacking the primary direction of model updates. However, Eq.4 also points to a solution: modulating the gradient via the derivative term g′
+
+> k
+
+(Hk(θ, q, τ )) of a non-linear reward mapping function gk(·). If we design gk(·)
+
+with a progressively steepening slope as the performance metric improves, the gradient contribution for superior responses (larger Ai,k compared to other rewards in the same group) is significantly amplified. This suggests that a well-designed reward function can effectively compensate for gradient attenuation caused by task difficulty, incentiviz-ing the model to break through performance bottlenecks in complex tasks. Figure 3 illustrates the behavior of two different gk(·) functions given an identical set of responses. Notably, this analysis naturally extends to scenarios involv-ing Reward Models by formulating Ai,k = gk(πθrm (xi,k )) .In such cases, πθrm denotes the Reward Model, leaving the final derivation unaltered. Please refer to the Appendix C for the full derivation of Eqs. 1-4 and differentiability dis-cussions in D, E. For a detailed analysis of Eq. 4, please refer to Appendix F. 5OmniVL-Guard 
+
+4.2. ARSPO: Adaptive Reward Shaping Policy Optimization 
+
+ARSPO introduces two key innovations: 1. Guided by the analysis in Sec. 4.1, we design distinct gk(·) functions for different tasks; 2. To further balance the disparity in task difficulty adaptively during training, we propose a dynamic coefficient adjustment algorithm, introducing a dynamic coefficient lk,s (representing the coefficient for task k at training step s). The optimization objective of ARSPO is: 
+
+Jarspo (θ) = 
+
+> K
+
+X
+
+> k=1
+
+|D k||D| E q∼D k ,
+
+> {yi}∼ πθold
+
+"
+
+lk,s 
+
+G
+
+> G
+
+X
+
+> i=1
+
+1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+fi,t (ri,t (θ)) ˆAi,k 
+
+# (5) Differentiating Eq. 5 yields the log-policy gradient: 
+
+∇θ Jarspo (θ) = 
+
+> K
+
+X
+
+> k=1
+
+|D k||D| E
+
+"
+
+lk,s 
+
+G
+
+> G
+
+X
+
+> i=1
+
+1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+f ′
+
+> i,t
+
+(ri,t )ri,t ∇θ log πθ (yi,t |q, y i,<t ) ˆAi,k 
+
+# (6) 
+
+Task-Based Reward Mapping Function. For binary classi-fication, we select the identity mapping gk(x) = x. For the three fine-grained tasks: visual tampering localization, text tampering localization, and video temporal tampering local-ization, we select gk(x) = eak x, which possesses a steeper slope to amplify gradients in high-performance regions. 
+
+Dynamic Coefficient Adjustment. As outlined in Algo-rithm 1, this mechanism periodically monitors learning trends and adjusts lk,s accordingly: 
+
+- Initialization and Baseline Collection. During the warm-up phase (global step s < T warm ), we initialize all task coefficients lk,s to 1 and record the average metrics to estab-lish a baseline Bk. For instance, Bk corresponds to average Accuracy for classification and average IoU for visual lo-calization. This establishes a reference point for measuring subsequent progress. Crucially, Bk is frozen once the warm-up concludes, remaining constant for all steps s ≥ Twarm .
+
+- Status Estimation and Laggard Identification. Post-warm-up, coefficients are adjusted every T steps. At step s, we compute the current mean μk over [s − T, s ]. We define the total relative gain as ∆total,k = ( μk − Bk)/B k. To prevent the “bucket effect,” we identify the “Laggard” task with the slowest progress: klag = arg min k ∆total,k . We aslo record the historical mean μpast over [s − 3T, s − T ] for further process. 
+
+- Priority-Based Dynamic Adjustment Strategy. We employ a hierarchical logic to update lk,s based on the recent trend 
+
+Algorithm 1 Dynamic Coefficient Adjustment 
+
+Initialize: Coefficients lk,s ← 1 for all tasks k; Baselines 
+
+Bk ← moving average. 
+
+for global step s = 1 , . . . , S max do 
+
+Sample batch data B = {(q, y )} from dataset D.
+
+if s > T warm and s mod T == 0 then 
+
+Compute current mean μk over [s − T, s ] and past mean μpast over [s − 3T, s − T ].Calculate gain ∆total,k = ( μk − Bk)/B k.Identify Laggard: klag ← arg min k ∆total,k .
+
+for each task k ∈ Tasks do 
+
+δrecent ← μk − μpast 
+
+if δrecent > ϵ mom then continue else if δrecent < −ϵrescue then 
+
+lk,s ← lk,s · αboost 
+
+else if ∆total,k > τ high then 
+
+lk,s ← max( lk,s · αdecay , 1) 
+
+else if k == klag then 
+
+lk,s ← min( lk,s · αboost , 4) 
+
+end if end for end if Rescaling: lk,s ← lk,s / min( {lj,s }Kj=1 )
+
+Policy Update: Update θ using Eq. (6) with {lk,s }.
+
+end for 
+
+δrecent = μk − μpast . The symbols ϵmom , ϵrescue , τhigh ,
+
+αdecay , and αboost denote hyper-parameters, whose specific values are detailed in Appendix Table 10. 
+
+▷ Momentum Protection: If δrecent > ϵ mom , the task is in a rapid ascent phase. We maintain the current lk,s .
+
+▷ Regression Rescue: If δrecent < −ϵrescue , indicating significant performance degradation, we multiply lk,s by a boost factor αboost for emergency weighting. 
+
+▷ High-Performance Decay: If ∆total,k > τ high , implying the task is mastered, we multiply lk,s by a decay factor 
+
+αdecay (clamped to ≥ 1) to reduce its gradient dominance while retaining base importance. 
+
+▷ Laggard Support: If none of the above trigger and the task is identified as klag , we multiply its coefficient by αboost to accelerate learning on this difficult task. 
+
+- Parameter Update. At each step s, we obtain the latest coefficients {lk,s } and apply rescaling (dividing all by the minimum coefficient among all tasks at the current step), and use them in Eq. 6 to compute the weighted gradient and update θ, ensuring a smooth transition and dynamic balance from simple to complex tasks. 6OmniVL-Guard 
+
+Table 2. Performance Comparison on In-Domain test dataset Dt, our method achieves outstanding performance across diverse modalities. 
+
+Method Binary Classification (ACC) Image Loc. Text Loc. Video Loc. 
+
+Text Image Video Text-Image (IoU) (F1) (tIoU) 
+
+Multi-modal Large Language Models 
+
+Qwen3VL-235B (Yang et al., 2025a) 89.23 65.32 70.80 58.42 16.37 31.25 21.43 Llama3.2-90B (Team, 2024) 83.47 60.34 63.28 55.91 14.85 25.99 19.54 
+
+Text-Image Detection Methods 
+
+HAMMER (Shao et al., 2023) — — — 71.23 48.53 40.86 —FKA-Owl (Liu et al., 2024) — — — 72.08 — — —AMD (Zhang et al., 2025) — — — 65.34 35.91 37.64 —
+
+Text Detection Methods 
+
+Bert (Devlin et al., 2019) 61.45 — — — — 35.91 —LUKE (Yamada et al., 2020) 63.72 — — — — 38.28 —
+
+Image Detection Methods 
+
+D3 (Yang et al., 2025b) — 88.46 — — — — —Fake-VLM (Wen et al., 2025) — 90.39 — — — — —
+
+Video Detection Methods 
+
+FakeSV-VLM (Wang et al., 2025) — — 98.81 — — — —Video-R1 (Feng et al., 2025) — — 96.44 — — — —
+
+OmniVL-Guard (Ours) 96.20 93.12 98.58 75.52 54.26 63.78 59.22 
+
+∆ (vs Best) +6.97 +2.73 -0.23 +3.44 +5.73 +22.92 +37.79 
+
+Table 3. Performance Comparison on Out-Of-Domain Benchmarks (Binary Classification).                                                                      
+
+> MLLMs Image-Text Methods Text Methods Image Methods Video-Text Methods Modality Dataset Qwen3VL Llama3.2 HAMMER FKA-Owl AMD Bert LUKE D3Fake-VLM FakeSV-VLM Video-R1 Ours Text ISOT 88.74 81.91 ———33.95 35.78 ————93.69 Image CASIA2.0 60.88 58.17 —————49.20 51.22 ——63.64 Text-Image MMFakeBench 57.40 54.14 61.83 62.32 59.11 ——————79.38 Text-Video FakeSV 61.22 56.93 ———————52.59 55.32 63.55
+
+## 5. Experiments 
+
+Please refer to the Appendix A for Implementation Details. 
+
+Benchmarks and Baselines. We categorize benchmarks into In-Domain (test sets from Sec. 3.1) and Out-Of-Domain (OOD) testing, designed to evaluate zero-shot generalization. The OOD suite includes ISOT (Ahmed et al., 2017) (text), CASIA2.0 (Yadav & Vishwakarma, 2024) (image), MM-FakeBench (Liu et al., 2025) (image-text), and FakeSV (Qi et al., 2023) (video-text); see Appendix N for details. For baselines, general MLLMs (e.g., Qwen3VL-235B (Yang et al., 2025a)) are evaluated in a zero-shot setting. In con-trast, domain-specific methods and our model are trained on FSFR and then directly applied to OOD datasets without further fine-tuning to assess cross-domain robustness. 
+
+5.1. Performance Comparison In-Domain Comparison. As presented in Table 2, OmniVL-Guard achieves leading performance across all multimodal detection and localization tasks. Compared to general MLLMs and single-modality expert methods (e.g., Fake-VLM, D 3), our model significantly overcomes perfor-mance bottlenecks in challenging fine-grained localization tasks while maintaining highly competitive binary classifica-tion accuracy. Notably, in video temporal localization (tIoU) and text localization (F1), OmniVL-Guard yields substantial improvements of 37 .79% and 22 .92% , respectively. 
+
+Out-Of-Domain Zero-Shot. As shown in Table 3, OmniVL-Guard achieves superior OOD Zero-Shot perfor-mance, significantly surpassing domain-specific models (e.g., FKA-Owl) that suffer from overfitting. By leveraging RL-enhanced reasoning to capture intrinsic forgery features, our method attains accuracies of 79 .38% and 63 .55% on Text-Image and Text-Video tasks, respectively. This con-firms that our framework, driven by self-evolving CoT and ARSPO, effectively overcomes the generalization fragility of traditional models against unseen forgeries. 7OmniVL-Guard 
+
+Table 4. Ablation study of different components using Image Loc. (IoU), Text Loc. (F1), and Video Loc. (tIoU) metrics. The rightmost column shows the average performance improvement ( ∆ AVG) across all tasks compared to the SFT baseline. 
+
+Binary Classification Localization SFT SAPO TBRMF DCA Text Image Video Text-Image Image Text Video ∆ AVG 
+
+✓ 83.73 32.41 33.82 63.57 51.08 44.67 33.08 –
+
+✓ ✓ 95.71 93.25 99.10 74.92 51.24 54.33 44.10 +24.33 
+
+✓ ✓ ✓ 95.93 92.99 98.57 75.85 53.21 61.37 49.38 +26.42 
+
+✓ ✓ ✓ 96.99 93.57 99.04 74.97 52.95 59.88 53.49 +26.93 
+
+✓ ✓ ✓ ✓ 96.20 93.12 98.58 75.52 54.26 63.78 59.22 +28.33 1 3 6 9     
+
+> Slope Coefficient ain gk(x) = eax
+> 60
+> 61
+> 62
+> 63
+> 64
+> 65
+> Text Localization F1 (%)
+> 61.99
+> 63.78
+> 62.47
+> 62.01
+> Impact of Reward Mapping Slope a
+> Text Loc. (F1)
+
+(a) Text Tampering Localization 1 3 6 9       
+
+> Slope Coefficient ain gk(x) = eax
+> 49
+> 50
+> 51
+> 52
+> 53
+> 54
+> 55
+> 56
+> Image Localization IoU (%)
+> 53.03
+> 54.26 54.11
+> 53.50
+> Impact of Reward Mapping Slope a
+> Image Loc. (IoU)
+
+(b) Image Tampering Localization Image Loc. Text Loc.           
+
+> Slope Coefficient ain gk(x) = eax
+> 0.30
+> 0.35
+> 0.40
+> 0.45
+> 0.50
+> 0.55
+> 0.60
+> 0.65
+> 0.70
+> 0.75
+> Performance Metric (IoU F1)
+> 0.52
+> 0.58
+> 0.56
+> 0.66
+> ARSPO in Single-Task Learning
+> Linear: gk(x) = x
+> Exponential: gk(x) = eax (Ours)
+
+(c) Single Task Scenarios 
+
+Figure 4. Ablation Study on Reward Mapping Steepness and Single-task Scenarios. (a) Impact of parameter a on text localization; (b) Impact of parameter a on image localization; (c) Performance comparison of reward mapping functions in single-task settings. 
+
+5.2. Ablation Study Ablation of ARSPO Components. As shown in Table 4, our ablation study systematically validates the necessity of each core component within the ARSPO framework. The cold-start model, trained solely via SFT on FSFR sft , exhibits suboptimal performance across all tasks. Upon introduc-ing the SAPO, the model demonstrates emergent reasoning capabilities, achieving a substantial leap in binary classifi-cation accuracy and establishing the role of RL in general forgery detection; however, optimization bottlenecks per-sist in challenging localization tasks. After incorporating the Task-Based Reward Mapping Function (TBRMF) and Dynamic Coefficient Adjustment (DCA), the gradient sig-nals for difficult tasks are effectively amplified, and training weights are dynamically balanced. Ultimately, the com-plete ARSPO framework, significantly elevates localization performance (e.g., Video Loc. rises to 59 .22% ). 
+
+Impact of Reward Mapping Steepness. Figures 4a-4b in-dicate that performance peaks at a = 3 , confirming the util-ity of non-linear rewards. Beyond this point, performance declines because overly steep mappings amplify aleatoric noise. This induces “reward overfitting,” causing the policy to trap in local optima by learning noise features. Conse-quently, a = 3 provides the necessary balance between signal amplification and robust training. 
+
+5.3. Study of ARSPO in Single-Task Scenarios 
+
+As shown in Figure 4c, to validate the effectiveness of AR-SPO in single-task scenarios, we compare the effects of linear versus exponential reward functions. Experimental results compellingly demonstrate that even in the absence of inter-task resource competition, the exponential mapping strategy achieves significant performance leaps in image and text localization tasks, reaching scores of 0.56 (+4% )and 0.66 (+8% ), respectively. This finding reveals that the advantage of ARSPO lies not merely in ”balancing,” but fundamentally in the ”reshaping” of gradient signals via non-linear transformation. 
+
+5.4. More Discussion 
+
+We further discuss the number of iterations in Self-Evolving Forensic CoT Generation (see Appendix I), the dilemma of directly injecting GT for CoT generation (see Appendix J), the impact of Collaborative Hard-CoT Synthesis within the Self-Evolving Forensic CoT Generation (see Appendix L), and the generalizability and potential bias of ARSPO and FSFR (see Appendix K). 
+
+## 6. Conclusion 
+
+This work presents OmniVL-Guard, a unified framework designed to tackle the complexities of interleaved multi-modal forgery detection and grounding. By identifying 8OmniVL-Guard 
+
+the difficulty bias that hinders joint optimization, we de-velop a Self-Evolving CoT Generation and the Adaptive Reward Scaling Policy Optimization (ARSPO) strategy to ensure balanced learning across classification and localiza-tion tasks. Extensive evaluations on diverse benchmarks demonstrate that our approach significantly surpasses exist-ing state-of-the-art methods and maintains robust zero-shot generalization in diverse out-of-domain scenarios. These findings underscore the importance of addressing task im-balances in multi-modal forensics and provide a scalable foundation for future research in content integrity. 
+
+Broader Impact Statement. This work introduces OmniVL-Guard to enhance the integrity of the digital in-formation ecosystem by detecting complex, multi-modal misinformation. While its advanced reasoning capabilities provide significant societal benefits in restoring public trust, we acknowledge the potential risk of dual-use. To mitigate this, we will strictly limit the accessibility of our research: the dataset will be shared exclusively for academic purposes via a rigorous application-and-review process. 
+
+## References 
+
+Abdelnabi, S., Hasan, R., and Fritz, M. Open-domain, content-based, multi-modal fact-checking of out-of-context images via online resources. In CVPR , pp. 14920– 14929, 2022. Agarwal, S. and Farid, H. Detecting deep-fake videos from aural and oral dynamics. In CVPR , pp. 981–989, 2021. Ahmed, H., Traor ´e, I., and Saad, S. Detection of online fake news using n-gram analysis and machine learning techniques. In ISDDC , pp. 127–138, 2017. Borji, A. Qualitative failures of image generation models and their application in detecting deepfakes. Image Vision Comput , 137, 2023. Chen, H., Hong, Y., Huang, Z., Xu, Z., Gu, Z., Li, Y., Lan, J., Zhu, H., Zhang, J., Wang, W., and Li, H. Demamba: Ai-generated video detection on million-scale genvideo benchmark. CoRR , 2024. DeepSeek-AI. Deepseek-r1: Incentivizing reasoning capa-bility in llms via reinforcement learning. CoRR , 2025. Devlin, J., Chang, M., Lee, K., and Toutanova, K. BERT: pre-training of deep bidirectional transformers for lan-guage understanding. In NAACL , pp. 4171–4186. Associ-ation for Computational Linguistics, 2019. Feng, K., Gong, K., Li, B., Guo, Z., Wang, Y., Peng, T., Wang, B., and Yue, X. Video-r1: Reinforcing video reasoning in mllms. CoRR , 2025. Gao, C., Zheng, C., Chen, X., Dang, K., Liu, S., Yu, B., Yang, A., Bai, S., Zhou, J., and Lin, J. Soft adaptive policy optimization. CoRR , 2025. Gerstner, C. R. and Farid, H. Detecting real-time deep-fake videos using active illumination. In CVPR , pp. 53–60. IEEE, 2022. Guo, D., Wu, F., Zhu, F., Leng, F., Shi, G., Chen, H., Fan, H., Wang, J., Jiang, J., Wang, J., Chen, J., Huang, J., Lei, K., Yuan, L., Luo, L., Liu, P., Ye, Q., Qian, R., Yan, S., Zhao, S., Peng, S., Li, S., Yuan, S., Wu, S., Cheng, T., Liu, W., Wang, W., Zeng, X., Liu, X., Qin, X., Ding, X., Xiao, X., Zhang, X., Zhang, X., Xiong, X., Peng, Y., Chen, Y., Li, Y., Hu, Y., Lin, Y., Hu, Y., Zhang, Y., Wu, Y., Li, Y., Liu, Y., Ling, Y., Qin, Y., Wang, Z., He, Z., Zhang, A., Yi, B., Liao, B., Huang, C., Zhang, C., Deng, C., Deng, C., Lin, C., Yuan, C., Li, C., Gou, C., Lou, C., Wei, C., Liu, C., Li, C., Zhu, D., Zhong, D., Li, F., Zhang, F., Wu, G., Li, G., Xiao, G., Lin, H., Yang, H., Wang, H., Ji, H., Hao, H., Shen, H., Li, H., Li, J., Wu, J., Zhu, J., Jiao, J., Feng, J., Chen, J., Duan, J., Liu, J., Zeng, J., Tang, J., Sun, J., Chen, J., Long, J., Feng, J., Zhan, J., Fang, J., Lu, J., Hua, K., Liu, K., Shen, K., Zhang, K., and Shen, K. Seed1.5-vl technical report. CoRR , 2025. Haydarov, K., Muhamed, A., Shen, X., Lazarevic, J., Sko-rokhodov, I., Galappaththige, C. J., and Elhoseiny, M. Ad-versarial text to continuous image generation. In CVPR ,pp. 6316–6326, 2024. He, Y., Gan, B., Chen, S., Zhou, Y., Yin, G., Song, L., Sheng, L., Shao, J., and Liu, Z. Forgerynet: A versatile benchmark for comprehensive forgery analysis. In CVPR ,pp. 4360–4369, 2021. Hu, E. J., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, S., Wang, L., and Chen, W. Lora: Low-rank adaptation of large language models. In ICLR , 2022. Langley, P. Crafting papers on machine learning. In Langley, P. (ed.), Proceedings of the 17th International Conference on Machine Learning (ICML 2000) , pp. 1207–1216, Stan-ford, CA, 2000. Morgan Kaufmann. Li, Y., He, H., Bai, J., and Wen, D. MCFEND: A multi-source benchmark dataset for chinese fake news detection. In WWW , pp. 4018–4027, 2024a. Li, Z., Tucker, R., Snavely, N., and Holynski, A. Generative image dynamics. In CVPR , pp. 24142–24153, 2024b. Liu, X., Li, P., Huang, H., Li, Z., Cui, X., Liang, J., Qin, L., Deng, W., and He, Z. Fka-owl: Advancing multimodal fake news detection through knowledge-augmented lvlms. In ACM MM , pp. 10154–10163. ACM, 2024. 9OmniVL-Guard 
+
+Liu, X., Li, Z., Li, P., Huang, H., Xia, S., Cui, X., Huang, L., Deng, W., and He, Z. Mmfakebench: A mixed-source multimodal misinformation detection benchmark for lvlms. In ICLR , 2025. Lorenz, P., Durall1, R. L., and Keuper, J. Detecting im-ages generated by deep diffusion models using their local intrinsic dimensionality. In ICCV , pp. 448–459, 2023. Luo, G., Darrell, T., and Rohrbach, A. Newsclippings: Au-tomatic generation of out-of-context multimodal media. In EMNLP , pp. 6801–6817, 2021. Mitchell, E., Lee, Y., Khazatsky, A., Manning, C. D., and Finn, C. Detectgpt: Zero-shot machine-generated text de-tection using probability curvature. In ICML , pp. 24950– 24962, 2023. Qi, P., Bu, Y., Cao, J., Ji, W., Shui, R., Xiao, J., Wang, D., and Chua, T. Fakesv: A multimodal benchmark with rich social context for fake news detection on short video platforms. In AAAI , pp. 14444–14452, 2023. Shao, R., Wu, T., and Liu, Z. Detecting and grounding multi-modal media manipulation. In CVPR , pp. 6904–6913. IEEE, 2023. Shen, J., Wang, Y., Cheng, L., Pu, N., and Zhong, Z. Be-yond artificial misalignment: Detecting and grounding semantic-coordinated multimodal manipulations. In ACM MM , 2025. Shu, K., Mahudeswaran, D., Wang, S., Lee, D., and Liu, H. Fakenewsnet: A data repository with news content, social context, and spatiotemporal information for studying fake news on social media. Big Data , 8(3):171–188, 2020. Sinitsa, S. and Fried, O. Deep image fingerprint: Towards low budget synthetic image detection and model lineage analysis. In WACV , pp. 4067–4076, 2024. Song, X., Guo, X., Zhang, J., Li, Q., Bai, L., Liu, X., Zhai, G., and Liu, X. On learning multi-modal forgery rep-resentation for diffusion generated video detection. In 
+
+NeurIPS , 2024. Team, G. Gemini 2.5: Pushing the frontier with advanced reasoning, multimodality, long context, and next genera-tion agentic capabilities. CoRR , 2025. Team, L. The llama 3 herd of models. CoRR , 2024. Wang, J., Wang†, Y., Cheng, L., and Zhong†, Z. Fakesv-vlm: Taming vlm for detecting fake short-video news via progressive mixture-of-experts adapter. In EMNLP , 2025. Wang, Z., Bao, J., Zhou, W., Wang, W., Hu, H., Chen, H., and Li, H. Dire for diffusion-generated image detection. In ICCV , pp. 22445–22455, 2023. Wen, S., Ye, J., Feng, P., Kang, H., Wen, Z., Chen, Y., Wu, J., Wu, W., He, C., and Li, W. Spot the fake: Large multimodal model-based synthetic image detection with artifact explanation. In NeurIPS , 2025. Yadav, A. and Vishwakarma, D. K. Towards effective image forensics via A novel computationally efficient frame-work and A new image splice dataset. CoRR , 2024. Yamada, I., Asai, A., Shindo, H., Takeda, H., and Mat-sumoto, Y. LUKE: deep contextualized entity represen-tations with entity-aware self-attention. In EMNLP , pp. 6442–6454. Association for Computational Linguistics, 2020. Yang, A., Li, A., Yang, B., Zhang, B., Hui, B., Zheng, B., Yu, B., Gao, C., Huang, C., Lv, C., Zheng, C., Liu, D., Zhou, F., Huang, F., Hu, F., Ge, H., Wei, H., Lin, H., Tang, J., Yang, J., Tu, J., Zhang, J., Yang, J., Yang, J., Zhou, J., Lin, J., Dang, K., Bao, K., Yang, K., Yu, L., Deng, L., Li, M., Xue, M., Li, M., Zhang, P., Wang, P., Zhu, Q., Men, R., Gao, R., Liu, S., Luo, S., Li, T., Tang, T., Yin, W., Ren, X., Wang, X., Zhang, X., Ren, X., Fan, Y., Su, Y., Zhang, Y., Zhang, Y., Wan, Y., Liu, Y., Wang, Z., Cui, Z., Zhang, Z., Zhou, Z., and Qiu, Z. Qwen3 technical report. CoRR , abs/2505.09388, 2025a. Yang, Y., Qian, Z., Zhu, Y., Russakovsky, O., and Wu, Y. Dˆ3: Scaling up deepfake detection by learning from dis-crepancy. In CVPR , pp. 23850–23859. Computer Vision Foundation / IEEE, 2025b. Ye, J., Zhou, B., Huang, Z., Zhang, J., Bai, T., Kang, H., He, J., Lin, H., Wang, Z., Wu, T., Wu, Z., Chen, Y., Lin, D., He, C., and Li, W. LOKI: A comprehensive synthetic data detection benchmark using large multimodal models. In ICLR , 2025. Yoo, K., Ahn, W., Jang, J., and Kwak, N. Robust multi-bit natural language watermarking through invariant features. In ACL , pp. 2092–2115, 2023. Zhang, Y., Wang, Y., Wu, Y., Wu, L., and Zhu, L. The coherence trap: When mllm-crafted narratives exploit manipulated visual contexts. CoRR , 2025. Zhao, J., Wang, T., Abid, W., Angus, G., Garg, A., Kinnison, J., Sherstinsky, A., Molino, P., Addair, T., and Rishi, D. Lora land: 310 fine-tuned llms that rival gpt-4, A technical report. CoRR , 2024. Zhao, X., Li, L., and Wang, Y.-X. Distillation-resistant watermarking for model protection in nlp. In EMNLP , pp. 5044–5055, 2022. Zheng, C., Liu, S., Li, M., Chen, X., Yu, B., Gao, C., Dang, K., Liu, Y., Men, R., Yang, A., Zhou, J., and Lin, J. Group sequence policy optimization. CoRR , 2025. 10 OmniVL-Guard 
+
+## A. Implementation Details 
+
+We train our model on 8 NVIDIA H100 (96GB) GPUs, utilizing Qwen3VL-8B as the backbone. We employ LoRA (Hu et al., 2022) for both the SFT and RL stages. During the SFT phase, the global batch size is set to 120 with a learning rate of 2.5 × 10 −4. In the RL phase, the global batch size is set to 27 with a learning rate of 1.5 × 10 −5. For RL training, we implement ARSPO based on SAPO, setting the group size to 8 and fixing the KL regularization coefficient βKL at 0.01. For the three fine-grained tasks—image tampering localization, text tampering localization, and video temporal tampering localization—the parameter a in the reward mapping function is consistently set to 3. 
+
+A.1. Reward Function Configuration 
+
+In the RL phase, the total reward R for a generated response y given input x and ground truth g is composed of three distinct components: the task-specific performance score ( Rtask ), the structural format reward ( Rfmt ), and a repetition penalty ( Rrep ). The final reward is calculated as: 
+
+R(y, g ) = Rtask (y, g ) + Rfmt (y) + Rrep (y) (7) 
+
+1. Task-Specific Performance Reward ( Rtask )
+
+We employ distinct metrics for different forensic tasks. To encourage the model to strive for high-precision grounding rather than mediocre overlap, we apply an exponential mapping function to continuous metrics (IoU, F1). • Binary Forgery Classification: For the binary classification task, we utilize the raw model confidence directly to provide a continuous signal. Let x be the logit value corresponding to the ground truth label (“Real” or “Fake”). The reward is defined as an identity mapping: 
+
+Rcls task = x (8) Unlike the discrete indicator function, this formulation incentivizes the model to maximize the confidence margin of the correct prediction. • Tampering Localization (Image, Text, Video): For fine-grained localization tasks, we compute a raw metric m ∈ [0 , 1] 
+
+specific to the modality: Intersection over Union (IoU) for image bounding boxes, F1-score for text indices, and Temporal IoU (tIoU) for video segments. The raw metric is mapped to a normalized reward using an exponential function with a scaling factor α = 3 :
+
+Rloc task (m) = eα·m − 1
+
+eα − 1 (9) This convex mapping ( α = 3 ) amplifies the reward signal for high-quality responses (e.g., m > 0.7) while suppressing rewards for low-quality overlaps. 
+
+2. Format Compliance Reward ( Rfmt )
+
+To enforce the Chain-of-Thought (CoT) structure, we employ a strict regular expression check. The model receives a positive reward if and only if the output strictly follows the pattern <think>...</think><answer>...</answer> without trailing characters: 
+
+Rfmt =
+
+(
+
+0.2 if format is valid 
+
+0.0 otherwise (10) 
+
+3. Repetition Penalty ( Rrep )
+
+To prevent degenerate generation loops, we implement an N-gram repetition penalty. We calculate the ratio of unique N-grams to total N-grams in the generated text. With a set hyperparameters of N = 3 and a maximum penalty coefficient 
+
+λpen = −1.0, the penalty is defined as: 
+
+Rrep = λpen × 1 − |SN
+
+> unique
+
+|
+
+Ntotal 
+
+!
+
+(11) where |SN
+
+> unique
+
+| is the count of unique 3-grams and Ntotal is the total number of 3-grams. This term introduces a negative reward proportional to the redundancy of the text. 11 OmniVL-Guard 
+
+## B. Specific Formulations of RL Algorithms 
+
+The unified mathematical formulation for GRPO and its variants, GSPO and SAPO, follows the objective function presented in Eq. 1 of Sec. 4: 
+
+J (θ) = 
+
+> K
+
+X
+
+> k=1
+
+|D k||D| Eq∼D k ,{yi}∼ πθold 
+
+ 1
+
+G
+
+> G
+
+X
+
+> i=1
+
+1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+fi,t (ri,t (θ)) ˆAi,k 
+
+ (12) For GRPO , the weighting function f grpo  
+
+> i,t
+
+(·) is defined as: 
+
+f grpo  
+
+> i,t
+
+(ri,t (θ); bAi,k ) = 
+
+(
+
+min( ri,t (θ), 1 + ε), bAi,k > 0,
+
+max( ri,t (θ), 1 − ε), bAi,k ≤ 0, (13) For GSPO , the function f gspo  
+
+> i,t
+
+(·) is formulated as follows: 
+
+f gspo  
+
+> i,t
+
+(ri,t (θ); bAi,k ) ≡ f seq  
+
+> i,t
+
+(si,t (θ); bAi,k ) = 
+
+(
+
+min( si,t (θ), 1 + ε), bAi,k > 0,
+
+max( si,t (θ), 1 − ε), bAi,k ≤ 0. (14) where the sequence-level importance ratio si,t (θ) is derived as: 
+
+si(θ) = 
+
+ πθ (yi | q)
+
+πθold (yi | q)
+
+ 1
+
+> |yi|
+
+= exp 
+
+ 1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+log ri,t (θ)
+
+ , s i,t (θ) = sg [si(θ)] · πθ (yi,t | q, y i,<t )
+
+sg [πθ (yi,t | q, y i,<t )] (15) Here, sg (·) denotes the stop-gradient operator. For SAPO , the function f sapo  
+
+> i,t
+
+(·) adopts the following form: 
+
+f sapo  
+
+> i,t
+
+(ri,t (θ)) = 4
+
+τi
+
+σ(τi(ri,t (θ) − 1)) , τi =
+
+(
+
+τpos , bAi,k > 0,τneg , bAi,k ≤ 0, (16) where τneg and τpos denote the temperature parameters for positive and negative tokens, respectively, and σ(x) = 11+ e−x
+
+represents the sigmoid function. 
+
+## C. Detailed Derivations for Sec. 4 
+
+C.1. Derivation from Eq. 1 to Eq. 2 
+
+∇θ J (θ) = ∇θ
+
+
+
+> K
+
+X
+
+> k=1
+
+|D k||D| E
+
+ 1
+
+G
+
+> G
+
+X
+
+> i=1
+
+1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+fi,t (ri,t (θ)) ˆAi,k 
+
+ (17) Since the advantage estimate ˆAi,k is treated as a constant (stop-gradient) during the RL training process, the gradient operator acts solely on the fi,t term: 
+
+=
+
+> K
+
+X
+
+> k=1
+
+|D k||D| E
+
+ 1
+
+G
+
+> G
+
+X
+
+> i=1
+
+1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+∇θ
+
+
+
+fi,t (ri,t (θ)) 
+
+ ˆAi,k 
+
+ (18) Applying the chain rule ∇θ f (r) = f ′(r)∇θ r:
+
+=
+
+> K
+
+X
+
+> k=1
+
+|D k||D| E
+
+ 1
+
+G
+
+> G
+
+X
+
+> i=1
+
+1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+f ′
+
+> i,t
+
+(ri,t ) · ∇ θ ri,t (θ) · ˆAi,k 
+
+ (19) 12 OmniVL-Guard 
+
+Next, we compute the gradient of ri,t . Since the denominator πold is fixed, it is treated as a constant: 
+
+∇θ ri,t (θ) = ∇θ
+
+ πθ (yi,t |q, y i,<t )
+
+πθold (yi,t |q, y i,<t )
+
+
+
+= 1
+
+πθold (. . . ) ∇θ πθ (yi,t |q, y i,<t ) (20) Applying the log-derivative trick ∇x = x · ∇ log x (i.e., ∇π = π∇ log π): 
+
+= 1
+
+πθold (. . . )
+
+
+
+πθ (yi,t |q, y i,<t ) · ∇ θ log πθ (yi,t |q, y i,<t )
+
+
+
+(21) 
+
+= πθ (yi,t |q, y i,<t )
+
+πθold (yi,t |q, y i,<t )
+
+| {z }
+
+> ri,t
+
+·∇ θ log πθ (yi,t |q, y i,<t ) (22) Substituting ∇θ ri,t = ri,t ∇θ log πθ back into the original expression yields Eq. 2: 
+
+∇θ J (θ) = 
+
+> K
+
+X
+
+> k=1
+
+|D k||D| E
+
+ 1
+
+G
+
+> G
+
+X
+
+> i=1
+
+1
+
+|yi|
+
+> |yi|
+
+X
+
+> t=1
+
+f ′
+
+> i,t
+
+(ri,t )ri,t ∇θ log πθ (yi,t |q, y i,<t ) ˆAi,k 
+
+ (23) 
+
+C.2. Derivation of Eq. 4 
+
+We seek to compute the gradient of the term Wi,t (θ) ˆAi,k with respect to θ. Using the product rule: 
+
+ddθ 
+
+
+
+Wi,t (θ) ˆAi,k 
+
+
+
+= dW i,t (θ)
+
+dθ ˆAi,k 
+
+| {z }
+
+> Term I
+
++ Wi,t (θ) d ˆAi,k 
+
+dθ | {z }
+
+> Term II
+
+(24) Here, ”Term I” corresponds to the first part of Eq. 4. The primary focus is to derive the gradient d ˆAi,k  
+
+> dθ
+
+within ”Term II”. Employing the chain rule, we decompose the derivative of ˆAi,k with respect to θ into three components: 
+
+d ˆAi,k 
+
+dθ = ∂ ˆAi,k 
+
+∂A i,k 
+
+· ∂A i,k 
+
+∂x i,k 
+
+· ∂x i,k 
+
+∂θ (25) The definitions of the latter two terms are given by: ∂A i,k  
+
+> ∂x i,k
+
+= g′
+
+> k
+
+(xi,k ) and ∂x i,k  
+
+> ∂θ
+
+= H′
+
+> k
+
+(θ, q, t ). The core challenge lies in deriving the first term, ∂ ˆAi,k  
+
+> ∂A i,k
+
+.Recall the definition: ˆAi,k = Ai,k −μσ , where μ = 1
+
+> G
+
+PGj=1 Aj,k and σ =
+
+q 1
+
+> G
+
+PGj=1 (Aj,k − μ)2. Note that both μ and σ
+
+are functions of Ai,k .We first compute the auxiliary derivatives: 
+
+∂μ ∂A i,k 
+
+= 1
+
+G , ∂σ ∂A i,k 
+
+= 1
+
+GAi,k − μσ = 1
+
+G ˆAi,k (26) 13 OmniVL-Guard 
+
+Applying the quotient rule to compute ∂ ˆAi,k  
+
+> ∂A i,k
+
+:
+
+∂ ˆAi,k 
+
+∂A i,k 
+
+= ∂∂A i,k 
+
+ Ai,k − μσ
+
+
+
+(27) 
+
+= (1 − ∂μ ∂A i,k )σ − (Ai,k − μ) ∂σ ∂A i,k 
+
+σ2 (28) 
+
+= (1 − 1 
+
+> G
+
+)σ − (Ai,k − μ)( 1 
+
+> G
+
+ˆAi,k )
+
+σ2 (29) 
+
+= 
+
+> G−1
+> G
+
+σ − (σ ˆAi,k ) ˆAi,k 
+
+> G
+
+σ2 (substituting Ai,k − μ = σ ˆAi,k ) (30) 
+
+= 1
+
+Gσ 
+
+h
+
+(G − 1) − ˆA2
+
+> i,k
+
+i
+
+(31) Substituting the above results back into the chain rule formulation: 
+
+d ˆAi,k 
+
+dθ = 1
+
+Gσ 
+
+h
+
+(G − 1) − ˆA2
+
+> i,k
+
+i| {z } 
+
+> ∂ˆA/∂A
+
+· g′
+
+> k
+
+(Hk(θ, q, t )) 
+
+| {z }
+
+> ∂A/∂x
+
+· H′
+
+> k
+
+(θ, q, t )
+
+| {z }
+
+> ∂x/∂θ
+
+(32) Finally, substituting this result into ”Term II” and rearranging yields: 
+
+ddθ 
+
+
+
+Wi,t (θ) ˆAi,k 
+
+
+
+= W ′
+
+> i,t
+
+(θ) ˆAi,k + Wi,t (θ) × g′
+
+> k
+
+(Hk(θ, q, t )) 
+
+Gσ 
+
+h
+
+(G − 1) − ˆA2
+
+> i,k
+
+i
+
+H′
+
+> k
+
+(θ, q, t ) (33) 
+
+Remarks on Mathematical Subtleties. We address two crucial mathematical nuances in the derivations above: 
+
+1. The Dual Role of Advantage ˆAi,k . It is crucial to distinguish the mathematical treatment of the advantage term between the gradient computation (Eq. 2) and the dynamics analysis (Eq. 4). In the actual RL optimization step (Eq. 1 → Eq. 2), 
+
+ˆAi,k is an observed scalar computed from sampled trajectories. The optimization objective treats these advantages as fixed “critic” signals to guide the policy, hence the stop-gradient operation. However, Eq. 4 performs a theoretical second-order analysis to examine the training dynamics —specifically, how the gradient vector itself evolves as the model parameters θ
+
+shift. In this analytical context, the advantage is strictly a function of the model’s capability: as θ updates, the distribution of responses changes, altering the raw metrics x and the resulting advantages. Therefore, we must differentiate ˆAi,k with respect to θ to capture the sensitivity of the learning signal. 
+
+2. The Direct Path Approximation in Chain Rule. In Eq. 25, we express the total derivative d ˆAi,k  
+
+> dθ
+
+but focus predominantly on the partial derivative chain through the i-th sample itself: ∂ ˆAi,k  
+
+> ∂A i,k
+> ∂A i,k
+> ∂θ
+
+. Technically, since the normalization statistics μ
+
+and σ depend on the entire group {Aj,k }Gj=1 , a full Jacobian expansion would include cross-terms P   
+
+> j̸=i∂ˆAi,k
+> ∂A j,k
+> ∂A j,k
+> ∂θ
+
+. We adopt this Direct Path Approximation for two reasons: (1) Dominance: The self-influence term ( ∂ ˆAi,k /∂A i,k ) typically dominates the gradient magnitude compared to the cross-terms, which are suppressed by a factor of 1/G via the mean and variance. (2) Physical Interpretability: Our objective is to isolate the mechanism of Reward Shaping—how improving a specific response yi amplifies its own learning signal. Treating the group statistics ( μ, σ ) as a quasi-static baseline allows us to cleanly demonstrate the “Matthew Effect” without the obfuscation of complex cross-sample interference. For a rigorous derivation including the full Jacobian and cross-terms, please refer to Appendix G. 
+
+## D. Discussion on the Differentiability of Reward Mapping Functions 
+
+The derivations presented in the main text (Eqs. 3 and 4) are predicated on the assumption that the reward mapping function 
+
+gk(·) possesses well-behaved differentiability. However, in practical applications, scenarios exist where gk(·) is not fully differentiable. We first classify common non-differentiable scenarios and then propose respective solutions. 
+
+D.1. Classification of Non-Smooth Scenarios 
+
+Based on the nature of the task metric xi,k , real-world scenarios can be categorized into two types: 14 OmniVL-Guard 
+
+Case I: Discrete Metric. This is a typical setting for tasks such as mathematical reasoning or multiple-choice questions. Here, xi,k takes values from a discrete set (e.g., {0, 1}). 
+
+xi,k ∈ { 0, 1}, Ai,k = gk(xi,k ) = xi,k (34) In this case, not only might gk be step-like, but more critically, the variation of xi,k with respect to the model parameters θ
+
+is discontinuous. 
+
+Case II: Continuous Metric with Discrete Mapping. The underlying metric xi,k (e.g., IoU, BLEU) is dense in the real domain but is artificially mapped to a reward via a step function: 
+
+Ai,k = gk(xi,k ) = I(xi,k ≥ τ ) = 
+
+(
+
+1, if xi,k ≥ τ, 
+
+0, otherwise . (35) where τ is a threshold. 
+
+D.2. Analysis of Update Signal Failure 
+
+Although these two scenarios manifest differently, both lead to ”signal loss” during the optimization process: 
+
+For Case II: Here, xi,k is sensitive to θ; that is, a minor update in model parameters ∆θ can induce a slight change in xi,k 
+
+(e.g., IoU improving from 0.45 to 0.48). However, recalling the key term in Eq. 4: 
+
+ddθ Ai,k = g′
+
+> k
+
+(xi,k )
+
+| {z }
+
+> =0
+
+· H′
+
+> k
+
+(θ)
+
+| {z } ̸
+
+> =0
+
+= 0 
+
+Since gk is a step function, its derivative g′ 
+
+> k
+
+is zero everywhere except at the jump points. This directly causes a breakdown in the chain rule; although the model makes ”marginal improvements” in capability, it fails to receive positive gradient feedback. 
+
+For Case I: Since xi,k itself undergoes discrete jumps, perturbations in the model parameters θ are often insufficient to alter the value of xi,k (e.g., logits change but the argmax result remains unchanged). This implies that even if the model improves, it does not receive the due positive feedback because the outcome remains static. 
+
+D.3. Unified Solution and Verification 
+
+To address the aforementioned ”signal loss” and leverage the non-linear reward amplification mechanism proposed in the main text, we adopt specific strategies for each scenario, unifying them under a differentiable optimization framework. 
+
+Optimization for Case II: Smoothing Reward Mapping For scenarios where the metric xi,k is dense, the solution is to replace the step function gk with a smooth non-linear function. This aligns precisely with the core proposition of the main text. To verify this, we conducted comparative experiments on an image tampering localization task (based on the IoU metric). As shown in Table 5, compared to using step-based rewards, the exponential reward function gk(x) = eax designed in the main text achieves superior performance.   
+
+> Table 5. Comparison of different reward functions on the image tampering localization task. The exponential reward (proposed) outperforms the step-based reward in terms of IoU.
+
+Reward Function Parameter IoU (%) Step-based Reward τ = 0 .6 51.29 Exponential Reward (Ours) a = 3 54.26 Optimization for Case I: Metric Continuous Relaxation For scenarios where xi,k is discrete, direct optimization is infeasible, necessitating the introduction of a continuous proxy variable. We extend the original metric as follows: 
+
+˜xi,k = xi,k + λx ′ 
+
+> i,k
+
+(36) 15 OmniVL-Guard 
+
+where x′ 
+
+> i,k
+
+is a continuous variable reflecting the quality of the model’s inference process (e.g., the Perplexity of the reasoning chain or the confidence of the logits), and λ is a weighting coefficient. At this point, although xi,k remains discrete, the combined metric ˜xi,k becomes a dense variable. This successfully transforms Case I into Case II. Consequently, we can apply the conclusions from the main text to design a reward function for ˜xi,k with properties of the form gk(·) = eax .Thus, even if the final answer xi,k has not yet flipped, the model can still receive gradient signals via x′
+
+> i,k
+
+, driving continuous evolution in the correct direction under the non-linear reward mechanism described in the main text. 
+
+## E. Clarification on the Differentiability and Definition of Task Capability Metric Hk
+
+In Sec. 4.1, we introduced the term Hk(θ, q, τ ) to model the task-specific performance metric dependent on model parameters 
+
+θ. We acknowledge that in the practical implementation of RL, the generation process involves discrete sampling y ∼ πθ ,making individual sample metrics (e.g., IoU, Accuracy) non-differentiable with respect to θ in the standard computational graph. To ensure the rigorousness of our theoretical analysis in Eq. 4, we formally define Hk(θ, q, τ ) as the Expected Capability 
+
+of the model for a specific task query q:
+
+Hk(θ, q, τ ) = Ey∼πθ (·| q) [Mk(y, q )] (37) where Mk(y, q ) is the raw discrete metric (e.g., IoU or Binary Indicator) for a generated response y.
+
+Justification for Differentiability: While distinct realizations yi are discrete, the expectation Hk(θ, q, τ ) is a smooth, continuous function of the policy parameters θ (assuming the policy πθ is differentiable, which is true for Softmax-based MLLMs). Therefore, the derivative H′
+
+> k
+
+(θ) = ∇θ Hk(θ, q, τ ) is mathematically well-defined. It represents the sensitivity of the model’s average performance to parameter updates. This is consistent with the Policy Gradient Theorem, where gradients estimate the direction that maximizes this expected return. 
+
+Interpretation of Eq. (4) under this Definition: The analysis in Eq. (4) investigates the training dynamics of the gradient vector field. • Low-Performance Plateau ( H′ 
+
+> k
+
+≈ 0): For high-difficulty tasks, the probability mass assigned to high-quality responses is often negligible and located in ”flat” regions of the probability landscape. Consequently, the gradient of the expected performance, ∇θ E[Mk], vanishes (i.e., marginal changes in θ do not statistically improve the metric). • Role of Eq. (4): The equation serves as a continuous analytical approximation to demonstrate how the magnitude of the update signal is suppressed by this plateau effect. By analyzing the second-order dynamics of this expectation, we justify why a steeper reward mapping gk(·) is necessary to counteract the vanishing sensitivity of the expected capability. Thus, the term ∂x i,k  
+
+> ∂θ
+
+in our derivation should be interpreted as differentiating the continuous latent capability surface approximated by the expectation, rather than a discrete sampling operation. 
+
+## F. Detailed Analysis of Gradient Dynamics Components 
+
+In the main text, we derived the second-order derivative of the objective function (Eq. 4) to analyze the training dynamics. Here, we provide a microscopic interpretation of this equation by decomposing the second term into three distinct physical components. Recall the core term governing the acceleration of the gradient updates: 
+
+Ai,k = g′
+
+> k
+
+(xi,k )
+
+Gσ | {z }
+
+> Cmap
+
+×
+
+h
+
+(G − 1) − ˆA2
+
+> i,k
+
+i| {z }
+
+> Cstat
+
+× H′
+
+> k
+
+(θ)
+
+| {z } 
+
+> Ctask
+
+(38) This decomposition reveals the interaction between reward design, statistical grouping, and task difficulty. We analyze each component below. 16 OmniVL-Guard 
+
+F.1. Component I: The Reward-Variance Leverage ratio ( Cmap )
+
+The term Cmap = g′   
+
+> k(xi,k )
+> Gσ
+
+represents the sensitivity of the reward signal normalized by the group diversity . A critical question arises: simply increasing the scale of rewards (e.g., multiplying by a constant) increases both the derivative g′
+
+> k
+
+(·) and the standard deviation σ proportionally, resulting in no net change to Cmap . Why, then, do we advocate for a steeper, convex reward mapping? 
+
+Mathematical Explanation: Consider two mapping functions for a set of task metrics {xj }Gj=1 :• Linear Mapping (g(x) = αx ): The derivative is constant g′(x) = α. The standard deviation scales as σg = ασ x.The ratio becomes αGασ x ∝ 1 
+
+> σx
+
+. Here, the gradient contribution is uniform across all samples and independent of the absolute performance level x.• Convex Mapping (e.g., g(x) = eβx ): The derivative is g′(x) = βe βx = βg (x), which depends on the value of x itself. The standard deviation σ represents the average spread of the group. For a high-performing response (where xi,k is the maximum in the group), a convex mapping ensures that the local slope 
+
+g′(xi,k ) grows significantly faster than the group standard deviation σ. Mathematically, if xi,k > x j,k for j̸ = i, convexity implies: 
+
+g′(xi,k )
+
+σ(g(x)) ≫ g′(xj,k )
+
+σ(g(x)) (39) By designing gk(·) with a progressively steepening slope, we maximize the ratio Cmap specifically for superior responses. This effectively creates a “signal amplifier” that functions only when the model generates high-quality outputs, counteracting the suppression from other terms. 
+
+F.2. Component II: The Statistical Stability Factor ( Cstat )
+
+The term Cstat = ( G − 1) − ˆA2 
+
+> i,k
+
+originates from the differentiation of the Z-score normalization. 
+
+Independence from Task Difficulty: It is crucial to note that this term is statistically invariant to task difficulty. Regardless of whether a task is easy (all raw scores x ≈ 0.9) or hard (all raw scores x ≈ 0.1), the normalized advantages ˆAi,k follow a distribution with zero mean and unit variance (approximately N (0 , 1) for large G). Consequently, the magnitude of ˆA2 
+
+> i,k
+
+is determined solely by the relative ranking of response i within its group, not by the absolute difficulty of the task. 
+
+Physical Meaning: This term acts as a stabilizer. When a response is an outlier (i.e., | ˆAi,k | is very large, making 
+
+ˆA2 
+
+> i,k
+
+> G − 1), Cstat can become negative, effectively reversing the ”acceleration” direction to prevent overfitting to extreme samples. However, for most samples, this term provides a constant baseline scaling roughly proportional to the group size 
+
+G, treating simple and complex tasks equally. 
+
+F.3. Component III: The Task Difficulty Sensitivity ( Ctask )
+
+As discussed in the main text, Ctask = H′
+
+> k
+
+(θ) reflects the marginal performance gain per parameter update. This is the primary source of the ”Matthew Effect”: for complex tasks, H′ 
+
+> k
+
+→ 0 (the performance plateau), which nullifies the entire gradient update Ai,k regardless of the other terms. 
+
+Summary of Interaction: Since Cstat is task-agnostic and Ctask vanishes for hard tasks, the only mechanism to restore gradients for complex tasks is to significantly amplify Cmap . Our nonlinear reward shaping achieves this by ensuring that when a rare high-quality response appears in a hard task, its corresponding ratio g′ 
+
+> σ
+
+is sufficiently large to resurrect the vanishing gradient. 
+
+## G. Analysis of Gradient Dynamics under Total Derivative 
+
+In the main text (Sec. 4.1) and Appendix C.2, we derived the gradient sensitivity term ∂ ˆAi,k  
+
+> ∂A i,k
+
+by focusing on the self-sensitivity 
+
+of a response’s advantage with respect to its own raw reward. Here, we extend this analysis to the Total Derivative scenario, considering the coupled influence where a change in model parameters θ simultaneously affects all responses {yj }Gj=1 in the group. 17 OmniVL-Guard 
+
+G.1. Total Derivative Derivation 
+
+Let the set of raw rewards in a group be A = {A1,k , . . . , A G,k }. The normalized advantage for the i-th response is 
+
+ˆAi,k = Ai,k −μσ , where μ(A) and σ(A) depend on all rewards in the group. The total derivative of ˆAi,k with respect to the model parameters θ is given by the chain rule, summing over the contributions from all samples j ∈ { 1, . . . , G }:
+
+d ˆAi,k 
+
+dθ =
+
+> G
+
+X
+
+> j=1
+
+∂ ˆAi,k 
+
+∂A j,k 
+
+∂A j,k 
+
+∂θ (40) Recall from Appendix C.2 that the partial derivatives are: • Self-Sensitivity (j = i): 
+
+∂ ˆAi,k 
+
+∂A i,k 
+
+= 1
+
+Gσ 
+
+h
+
+(G − 1) − ˆA2
+
+> i,k
+
+i
+
+(41) • Cross-Sensitivity (j̸ = i): Using the derivatives ∂μ ∂A j,k = 1 
+
+> G
+
+and ∂σ ∂A j,k = ˆAj,k  
+
+> G
+
+, we derive: 
+
+∂ ˆAi,k 
+
+∂A j,k 
+
+= σ(0 − ∂μ ∂A j,k ) − (Ai,k − μ) ∂σ ∂A j,k 
+
+σ2
+
+= − σG − (σ ˆAi,k ) ˆAj,k 
+
+> G
+
+σ2
+
+= − 1
+
+Gσ 
+
+h
+
+1 + ˆAi,k ˆAj,k 
+
+i
+
+(42) Substituting these into Eq. 40, and denoting the raw reward gradient as A′ 
+
+> j
+
+= ∂A j,k  
+
+> ∂θ
+
+= g′
+
+> k
+
+(xj,k )H′
+
+> k
+
+(θ), we obtain the full expression: 
+
+d ˆAi,k 
+
+dθ = 1
+
+Gσ [( G − 1) − ˆA2
+
+> i,k
+
+]A′
+
+> i
+
+| {z }
+
+> Self-Term
+
+− 1
+
+Gσ 
+
+X 
+
+> j̸=i
+
+(1 + ˆAi,k ˆAj,k )A′
+
+> j
+
+| {z }
+
+> Cross-Term
+
+(43) 
+
+G.2. Analysis of Self-Term Dominance in High-Performance Regions 
+
+Equation 43 decomposes the total gradient into a Self-Term (driven by the sample’s own raw reward gradient A′
+
+> i
+
+) and a 
+
+Cross-Term (driven by the gradients of other samples A′ 
+
+> j
+
+). Here, we demonstrate that for a high-quality response i under a steep convex reward mapping (e.g., gk(x) = eαx with α ≫ 1), the Self-Term determines the gradient direction , rendering the Cross-Term negligible. 
+
+1. Gradient Disparity under Steep Mapping. Consider a group where the i-th response is superior ( xi,k > x j,k for 
+
+j̸ = i). With the exponential reward A = eαx , the sensitivity of the raw reward to model parameters is: 
+
+A′ 
+
+> k
+
+= ∂A k
+
+∂θ ∝ αe αx k . (44) Due to the exponential property, the ratio of gradients between the superior response and inferior responses grows exponentially with the performance gap: 
+
+∥A′
+
+> i
+
+∥∥A′ 
+
+> j
+
+∥ ≈ eα(xi−xj ). (45) For a sufficiently large α (e.g., α = 3 ), even a moderate performance advantage results in A′ 
+
+> i
+
+being orders of magnitude larger than A′ 
+
+> j
+
+.18 OmniVL-Guard 
+
+2. Dominance in the Total Derivative. We examine the total derivative for the superior sample i (Eq. 43): 
+
+d ˆAi,k 
+
+dθ = Cself · A′
+
+> i
+
+| {z }
+
+> Self-Term
+
+− 1
+
+Gσ 
+
+X 
+
+> j̸=i
+
+(1 + ˆAi,k ˆAj,k )A′
+
+> j
+
+| {z }
+
+> Cross-Term
+
+(46) where Cself = 1 
+
+> Gσ
+
+[( G − 1) − ˆA2
+
+> i,k
+
+] is a bounded statistical coefficient. Although the normalization term σ scales with the reward magnitude (preventing numerical explosion), the relative contribution of the two terms is dictated by the raw gradients A′.• The Self-Term is driven by A′ 
+
+> i
+
+(the dominant signal). • The Cross-Term is a weighted sum of A′ 
+
+> j
+
+for j̸ = i. Since xj < x i, these A′ 
+
+> j
+
+terms are exponentially suppressed (vanishingly small). Mathematically, as long as the statistical coefficient Cself is not exactly zero (which only occurs in the trivial limit of a single outlier dominating variance entirely), the total derivative is approximated by: 
+
+d ˆAi,k 
+
+dθ ≈ Cself · A′ 
+
+> i
+
++ O(e−α∆x) ≈ Self-Term . (47) 
+
+3. Physical Interpretation: Decoupled Optimization. This result provides a crucial physical insight: Superior samples are effectively decoupled from the group noise. While the magnitude of the update is normalized by the group statistics (via 
+
+σ), the direction of the update for a high-performing path is determined almost exclusively by its own gradient structure. The ”drag” effects from poorer samples (the Cross-Terms) are filtered out by the steep reward mapping because those samples have near-zero gradients. 
+
+Conclusion. This analysis justifies the Direct Path Approximation . In the high-performance regime, the complex coupled derivatives simplify: the model learns to reinforce its best paths based on their own merits, undisturbed by the gradient noise from inferior parallel samples. 
+
+## H. Details on Filtering and Verification Criteria 
+
+H.1. Filtering 
+
+To construct a high-quality training set, we established strict filtering thresholds tailored to the specific characteristics of each task. A sample is retained in Ds only if the CoT-based prediction of the model meets the following criteria: 
+
+Binary Classification: Only samples where the prediction matches the Ground Truth exactly (Correct Prediction) are retained. 
+
+Image Tampering Localization: Samples are retained if the Intersection over Union (IoU) between the predicted region and the ground truth satisfies IoU ≥ 0.75 .
+
+Text Tampering Localization: Samples are retained if the F1 Score of the predicted text segment against the ground truth satisfies F1 Score ≥ 0.75 .
+
+Video Temporal Localization: Samples are retained if the temporal Intersection over Union (tIoU) between the predicted time segment and the ground truth satisfies tIoU ≥ 0.75 .
+
+H.2. Verification 
+
+To ensure the high quality and reliability of the generated Chain-of-Thought (CoT), we implemented an evaluation mechanism based on state-of-the-art (SOTA) MLLMs across the Seed Bootstrapping , Iterative Self-Evolution , and De-biased Hard Synthesis stages. 
+
+Evaluation Metric System. We defined core metrics across distinct dimensions for the screening process. Only samples that simultaneously satisfy all the following criteria are included in the dataset D:19 OmniVL-Guard 
+
+1. Content Faithfulness: The reasoning steps within the CoT must be strictly grounded in the content of the image, video, or text. Any reasoning path involving non-existent objects, incorrect descriptions of color or location, or ”hallucinations” is deemed unqualified. 2. Logical Coherence & Consistency: 
+
+• Closed-Loop Deduction: The reasoning process must flow logically toward the final answer, avoiding disjointed statements or abrupt jumps to conclusions. • Absence of ”Hindsight Bias”: The reasoning process should simulate a progressive human observation process. It is strictly prohibited to reverse-engineer the reasoning from the known answer in early steps (this criterion is enforced with particular rigor during the De-biased Hard Synthesis stage). 
+
+SOTA MLLM Verification and Generation Prompts: We employ models from M = {Seed1.6-VL , Gemini3 , ChatGPT5 }
+
+to serve as ”Judges” and ”Refiners.” The core prompt templates used in each stage are detailed below. 
+
+General CoT Quality Verification 
+
+During the iterative process, we use the following prompt to instruct the SOTA MLLM to act as a judge, performing a binary classification (Pass/Fail) on the logical quality of the generated data. Prompt for CoT Verification (Judge) 
+
+System Instruction: You are an expert AI assistant tasked with evaluating the quality of reasoning chains (CoT) generated by Multimodal LLMs. You will be provided with Image/Video/Text, a Question, the Ground Truth Answer, and a Candidate CoT. 
+
+Your Task: Verify the Candidate CoT based on the following strict criteria: 1. Content Faithfulness: Are all descriptions in the reasoning steps actually present in the image/video/text? Reject any hallucinations. 2. Logic Flow: Is the reasoning step-by-step and logically sound? There should be no logical gaps. 
+
+Input Data: [Image/Video/Text] Question: {Task-based Question } Ground Truth: {GT } Candidate CoT: 
+
+{Generated CoT }
+
+Output Format: Return strictly in JSON format: { ”judgment”: ”Pass” or ”Fail”, ”reason”: ”Brief explanation of the failure or confirmation of quality.” }
+
+De-biased Refinement (Used in Collaborative Hard-CoT Synthesis) 
+
+For hard samples, CoTs generated with access to the Ground Truth (GT) often exhibit ”hindsight bias.” We use the following prompt to drive the ”Refiner” model to eliminate these ”prophetic” characteristics, simulating a genuine exploratory reasoning process. Prompt for De-biased Refinement (Refiner) 
+
+System Instruction: You are a logic refinement expert. You will be given a Question, an Image/Video/Text, and a ”Raw CoT”. The Raw CoT reaches the correct answer but was generated with GT of the solution, making it sound artificial or backward-reasoned. 
+
+Your Task: Rewrite the CoT to simulate a human viewing the image for the first time. 1. Remove Hindsight: 
+
+Eliminate phrases like ”Since we know the answer is...” or ”To match the label...”. 2. Add Exploratory Steps: Include the natural process of scanning the image, identifying key features, and linking them to the question. 3. Keep Logic Intact: Ensure the reasoning still rigorously leads to the correct answer. 
+
+Input Data: [Image/Video/Text] Question: {Question } Raw CoT: {Initial CoT with GT }
+
+Output: Provide ONLY the refined CoT. 
+
+H.3. Human Validation 
+
+To further validate the reliability of our automated pipeline and ensure the absence of model-specific biases or hallucinations, we conducted a rigorous human evaluation. We randomly sampled 300 instances from the data pool that passed the automated Verification stage and 300 instances from the output of the De-biased Refinement stage. 20 OmniVL-Guard 
+
+Human experts reviewed these samples based on the strict content faithfulness and logical coherence criteria defined above. The inspection results are as follows: • Verification Stage: Among the 300 randomly selected samples that passed the automated judge, only 2 samples were identified as unqualified by human annotators (an error rate of ≈ 0.67% ). This indicates a high agreement rate between our automated verifier and human judgment. • Refinement Stage: Among the 300 randomly selected samples processed by the Refiner, only 5 samples failed to meet the standards during human inspection (an error rate of ≈ 1.67% ). This confirms that the refinement process effectively eliminates hindsight bias while maintaining logical integrity. These results substantiate the high quality and reliability of the constructed FSFR dataset. 
+
+## I. Analysis of Self-Evolution Saturation 
+
+To determine the optimal termination point for the Self-Evolving CoT Generation strategy, we investigated the performance trajectory across iterations k. We hypothesized that the self-evolution process would eventually reach a saturation point where the teacher policy πk no longer provides superior reasoning signals compared to πk−1, thereby yielding no further quality improvements in the generated dataset Dks .Specifically, we compared the capabilities of the model trained after the third iteration against a model extended to a fourth iteration. We constructed a fourth-round dataset D4 
+
+> s
+
+using π3 and combined it with the hard-sample set Dhs to train the full OmniVL-Guard framework via SFT + ARSPO. We then compared this against our standard setting ( D3 
+
+> s
+
+∪ Dhs ). 
+
+Table 6. Performance comparison between stopping at Iteration 3 ( D3 
+
+> s
+
+) vs. Iteration 4 ( D4 
+
+> s
+
+). The results indicate that performance plateaus at k = 3 , justifying the termination of the self-evolution loop to conserve computational resources.                                   
+
+> Training Set Binary Classification (ACC) Localization
+> Text Image Video Text-Image Image (IoU) Text (F1) Video (tIoU)
+> D3
+> s∪Dhs(Ours) 96.20 93.12 98.58 75.52 54.26 63.78 59.22
+> D4
+> s∪Dhs96.35 93.01 98.48 75.60 54.41 63.87 59.07
+> Diff ( ∆)+0.15 -0.11 -0.10 +0.08 +0.15 +0.09 -0.15
+
+As illustrated in Table 6, the performance differences between the third and fourth iterations are statistically negligible. For instance, the Image Localization (IoU) shifted marginally from 54.26 to 54.41, while Video Localization (tIoU) experienced a slight fluctuation of -0.15. This evidence suggests that the quality of the CoT data generated by π3 has reached a bottleneck, and further iterations do not yield distinguishable gains in downstream forensic tasks. Consequently, we terminate the self-evolution process at k = 3 to strike an optimal balance between model performance and training efficiency. 
+
+## J. Analysis of Hindsight Bias in CoT Generation 
+
+To demonstrate the necessity of our Self-Evolving Forensic CoT Generation pipeline, we compared it against a baseline approach involving direct Ground Truth (GT) injection. In this baseline setting, we utilized the same set of SOTA MLLMs (as defined in Sec. 3.2) to generate Chain-of-Thought (CoT) annotations by explicitly providing the ground truth labels in the prompt. To ensure a fair comparison, we generated a dataset of identical size to FSFR sft and employed the exact same training recipe (SFT cold-start followed by ARSPO) for both models. 
+
+Table 7. Comparison between our Self-Evolving strategy and Direct GT Injection. The results highlight that relying on GT-guided CoT leads to suboptimal performance due to hindsight bias, particularly in reasoning-intensive localization tasks.                              
+
+> CoT Generation Method Binary Classification (ACC) Localization
+> Text Image Video Text-Image Image (IoU) Text (F1) Video (tIoU) Direct GT Injection 92.15 84.47 91.30 69.12 51.50 52.84 46.10
+> Self-Evolving (Ours) 96.20 93.12 98.58 75.52 54.26 63.78 59.22
+> Performance Gap ( ∆)-4.05 -8.65 -7.28 -6.40 -2.76 -10.94 -13.12
+
+21 OmniVL-Guard 
+
+As presented in Table 7, the model trained with CoT generated via Direct GT Injection significantly underperforms our method across all tasks. The degradation is particularly severe in fine-grained tasks, such as Video Localization (tIoU drops by over 13%) and Text Localization (F1 score drops by nearly 11%). We attribute this phenomenon to the quality of the reasoning paths. While injecting Ground Truth (GT) to force-guide generation ensures label correctness, it introduces Hindsight Bias , where models rationalize answers backward rather than performing genuine deduction. Such reasoning paths often lack the exploratory logic required for forensics (e.g., they skip critical evidence gathering). Consequently, using such biased data for SFT cold-start results in a policy that mimics superficial rationalization, thereby severely impairing the efficiency of subsequent RL exploration and optimization. 
+
+## K. Generalizability Analysis on Different Backbones 
+
+To further verify the unbiased nature of our high-quality cold-start dataset ( FSFR sft ) and the universal applicability of the ARSPO optimization strategy, we conducted additional experiments using InternVL3.5-8B as the backbone model. This setup mirrors our main experiments: we first performed SFT using FSFR sft , followed by reinforcement learning using the FSFR rl dataset with the ARSPO. 
+
+K.1. Implementation Details and Results 
+
+The training hyperparameters (e.g., learning rate, batch size, and reward mapping slopes a = 3 ) remained consistent with those used for Qwen3VL-8B to ensure a fair evaluation of the method’s robustness. As shown in Table 8, applying ARSPO to InternVL3.5-8B yields substantial improvements across all tasks compared to the SFT baseline. Specifically, we observe a +24.1% gain in Video Temporal Localization (tIoU) and a +17.8% gain in Text Tampering Localization (F1).                     
+
+> Table 8. Performance comparison of ARSPO on the InternVL3.5-8B backbone. The results demonstrate that ARSPO consistently unlocks fine-grained reasoning capabilities, independent of the specific model architecture.
+> Method Bin. Cls. Image Loc. Text Loc. Video Loc. (ACC) (IoU) (F1) (tIoU)
+> InternVL3.5 (SFT) 52.91 49.50 43.10 31.50 InternVL3.5 (ARSPO) 89.37 53.60 60.90 55.60
+> Improvement ( ∆)+36.46 +4.10 +17.80 +24.10
+
+K.2. Discussion on Model Agnosticism and Unbiasedness 
+
+We note that the absolute performance of InternVL3.5-8B with ARSPO is slightly lower than that of Qwen3VL-8B (e.g., Video Loc: 55.60% vs. 59.22%). This performance gap is attributable to the inherent architectural and pre-training differences between the backbones. However, these results highlight two critical advantages of our framework: 
+
+Data Unbiasedness via Cross-Architecture Transferability: A primary concern with synthetic data generated by LLMs is the potential for “generator-specific bias”—where the data contains artifacts or hallucinations that only the source model (Qwen) can comprehend. However, the InternVL3.5 (SFT) baseline in Table 8 achieves competitive performance (e.g., 49.50% IoU in Image Loc.) solely through supervised training on FSFR sft . This successful transfer to a heterogeneous architecture serves as strong empirical evidence that our dataset encapsulates generalizable forensic logic rather than model-specific noise. This unbiased nature is structurally guaranteed by our “Multi-Agent Collaborative Filtering and Evolution” pipeline (see Sec. 3.4), where distinct MLLMs were employed to filter out model-specific hallucinations during data construction. 
+
+Methodological Longevity: The consistent relative gains achieved by ARSPO (e.g., +36.46% in Binary Cls.) on a different architecture demonstrate that our optimization strategy serves as a fundamental enhancement layer. It is not dependent on the specific parameter distributions of Qwen3VL. This suggests that OmniVL-Guard remains valid and effective even as newer, more powerful backbones are introduced in the future. 22 OmniVL-Guard 
+
+## L. Ablation Study on Collaborative Hard-CoT Synthesis 
+
+To validate the necessity of the Collaborative Hard-CoT Synthesis stage (Sec. 3.4), we conducted an ablation study by excluding the hard-sample subset Dhs from the SFT cold-start dataset. Specifically, we compare two settings: 
+
+Full Setting (Ours) : The model is fine-tuned on the complete dataset FSFR sft = D3 
+
+> s
+
+∪ Dhs , followed by ARSPO training. 
+
+w/o Hard-CoT : The model is fine-tuned only on the self-evolved dataset D3 
+
+> s
+
+(removing the synthesized hard samples Dhs ), followed by the same ARSPO training. The results are reported in Table 9. We observe that removing the hard samples leads to a consistent performance degradation across all tasks. 
+
+Analysis of Results: 
+
+• Impact on Fine-grained Localization: The performance drop is significant in localization tasks. Specifically, Text Localization (F1) drops by 7.47% and Video Temporal Localization (tIoU) drops by 5.08% . This empirical evidence suggests that the self-evolution loop alone tends to saturate on easier samples. The failure cases (hard samples) from the iterative process often contain subtle semantic conflicts or complex temporal inconsistencies that require the specific, high-quality reasoning logic provided by the Collaborative Hard-CoT Synthesis to resolve. • Impact on Binary Classification: The binary classification accuracy also decreases notably (e.g., -5.19% on Image-Text). This indicates that the Hard-CoT data is indispensable not only for fine-grained grounding but also for maintaining robust detection capabilities in complex scenarios. In conclusion, the Collaborative Hard-CoT Synthesis effectively complements the self-evolution pipeline by covering the long-tail distribution of difficult forgery types, preventing the model from overfitting to simple patterns. 
+
+Table 9. Ablation study on the necessity of Collaborative Hard-CoT Synthesis. We report the performance comparison between using the full dataset versus removing the synthesized hard samples ( Dhs ). The results show that Dhs is critical for maintaining high performance across both classification and localization tasks.                               
+
+> Method Binary Classification (ACC) Localization
+> Text Image Video Text-Image Image (IoU) Text (F1) Video (tIoU)
+> Ours (Full FSFR sft )96.20 93.12 98.58 75.52 54.26 63.78 59.22
+> w/o Hard-CoT ( Dhs)92.16 86.90 91.34 70.33 50.44 56.31 54.14
+> Performance Drop ( ∆)-4.04 -6.22 -7.24 -5.19 -3.82 -7.47 -5.08
+
+23 OmniVL-Guard 
+
+## M. Hyperparameter for Dynamic Coefficient Adjustment Algorithm  
+
+> Table 10. Hyperparameter settings for the Dynamic Coefficient Adjustment Algorithm.
+
+Symbol Description Value 
+
+Schedule & Initialization 
+
+Twarm Warm-up phase duration (steps) 800 
+
+T Coefficient update interval (steps) 100 
+
+Adjustment Dynamics 
+
+αboost Coefficient boost factor 1.1
+
+αdecay Coefficient decay factor 0.9
+
+Thresholds 
+
+ϵmom Momentum protection threshold 0.02 
+
+ϵrescue Regression rescue threshold 0.10 
+
+τhigh 
+
+High-perf. threshold (Binary Cls.) 0.10 
+
+High-perf. threshold (Image Loc.) 0.50 
+
+High-perf. threshold (Text & Video Loc.) 0.60 
+
+## N. Benchmark Brief Introduction 
+
+To rigorously evaluate generalization, we select a set of representative benchmarks. The key characteristics of each dataset are summarized below: 
+
+FakeNewsCorpus contains millions of text-only news articles collected from 1,001 curated domains on OpenSources, enriched with content from NYTimes and WebHose, aimed at supporting deep learning methods for fake news detection. 
+
+MCFEND provides Chinese multimodal news instances gathered from multiple platforms. Each instance combines news content (text, images, and metadata) with social context signals such as posts, comments, emojis, user profiles, and engagement metrics, enabling comprehensive multimodal analysis. 
+
+FakeClue focuses exclusively on images, covering seven categories of real and synthetic content. Each image comes with natural language annotations describing category-specific visual artifacts for training and evaluation of synthetic image detection. 
+
+LOKI targets AI-generated content across multiple modalities: video, image, 3D, text, and audio. It provides detailed annotations to support both authenticity verification and fine-grained anomaly explanation. 
+
+ForgeryNet combines image and video data for face forgery research. The dataset spans classification and localization tasks, offering extensive annotations to study both detection and spatial–temporal forgery localization. 
+
+GenVidBench features video-only content generated by state-of-the-art AI models. Rich semantic labels include object categories, actions, and positions, with cross-source and cross-generator diversity designed into the dataset. 
+
+DVF is dedicated to video forgery detection. It contains real and synthetic clips produced via multiple diffusion-based techniques, covering diverse resolutions and durations, and built through automated pipelines from real sources and text-/image-to-video generation. 
+
+SAMM combines real and manipulated image–text pairs, incorporating face and name swaps as well as emotion edits. Detailed annotations highlight both altered image regions and associated text, supporting fine-grained multimodal forgery detection. 
+
+MDSM provides multimodal content for media manipulation studies, including image–text pairs. Manipulations cover Face Swap (FS), Face Attribute editing (FA), and Text Fabrication (TF), with precise alignment and annotations for both images 24 OmniVL-Guard 
+
+and text. 
+
+DGM4 addresses large-scale machine-generated manipulations over image–text pairs. It documents manipulations like Face Swap (FS), Face Attribute (FA), Text Swap (TS), and Text Attribute (TA), providing fine-grained labels for detection and grounding tasks. 
+
+NewsCLIPpings explores out-of-context (OOC) inconsistencies in news. The image–text pairs are authentic individually but deliberately mismatched to induce contextual errors, suitable for evaluating contextual reasoning in models. 
+
+ISOT is composed of text-only news articles, labeled as real or fake, aggregated from multiple sources to support text-based fake news classification. 
+
+CASIA v2 specializes in image-only forgeries. It includes authentic and tampered images (copy-move and splice), with ground-truth masks that support both detection and localization research. 
+
+MM-FakeBench collects mixed-source image–text pairs for misinformation studies. Manipulations involve textual veracity distortion, visual veracity distortion, and cross-modal consistency changes, annotated with multiple fine-grained forgery types. 
+
+FakeSV contains Chinese short-video news with multiple modalities: videos, audio, text, and social context metadata. Man-ual annotations classify content as real, fake, or debunked, supporting research on multimodal short-video misinformation detection. 
+
+## O. Full-Spectrum Forensic Reasoning (FSFR) Question: Please identify whether this caption is Real or Fake. 
+
+## Case1-Text Forgery Detection 
+
+CoT: <think> Got it, let's try to figure out if this news caption is real or fake. First, the caption says it's 
+
+about Viola Davis's childhood hunger experience inspiring her to give back. 
+
+Wait, I remember that Viola Davis has been open about her childhood struggles, including poverty and 
+
+hunger. Let me think—she's talked about growing up in Rhode Island with very little, sometimes not 
+
+having enough food. And she does charitable work related to food insecurity, right? Like supporting 
+
+organizations that help feed kids or families in need. 
+
+Is there any reason to think this is fake? The caption is a general statement about her experience inspiring 
+
+giving back, which aligns with what's publicly known about her. There's no obvious misinformation here, 
+
+no outlandish claim. So probably real. </think> 
+
+<answer>Answer: Real.</answer> 
+
+Caption: How Viola Davis's Experience with 
+
+Childhood Hunger Inspired Her to Give Back. 
+
+# Real! 
+
+25 OmniVL-Guard Question: Please determine if the image is Real, AI-generated, or Tampered. 
+
+## Case2-Image Forgery Detection 
+
+CoT: <think> Got it, let's try to figure out if this image is real, AI-generated, or tampered. First, I need to 
+
+look at the details. The image is an aerial view of a roundabout. Let's start with the road markings: the lines 
+
+are consistent, no weird distortions. The roundabout's center has grass that looks natural, not pixelated or 
+
+odd. Then the cars—there are a few vehicles, their shapes are normal, no blurry or inconsistent parts. The 
+
+surrounding areas: the edges of the roads have concrete curbs and some grass/dirt patches that look 
+
+realistic, like real terrain. 
+
+Wait, are there any signs of AI generation? AI often makes mistakes in small details—like inconsistent 
+
+lines, weird object shapes, or unnatural textures. Let's check the traffic lights or signs: there are some poles, 
+
+but they look okay. The road surfaces have a uniform texture, no strange patterns. The way the roads curve 
+
+around the roundabout is logical, like a real intersection design. Tampered? Is there any part that looks 
+
+edited? The image seems cohesive, no obvious cuts or mismatched areas. All elements fit together 
+
+naturally. 
+
+So putting it all together: the image has consistent, realistic details, no AI artifacts, no signs of tampering. 
+
+So it's real. </think> 
+
+<answer>Answer: Real.</answer> 
+
+# Real! 
+
+> 26 OmniVL-Guard
+
+Question: Please determine if the video is Real, AI-generated, or Tampered. 
+
+## Case3-V ideo Forgery Detection 
+
+CoT: <think> Got it, let's try to figure out this. The video shows a phone standing upright in the middle of a 
+
+body of water, right? First, real phones don't usually stand like that in water—they'd sink or float on their 
+
+side, not upright with the screen showing. Also, the style looks like an animation, which isn't real footage. 
+
+The background is a cartoonish landscape with mountains and water that has a flat, illustrated look. So real 
+
+videos are shot with cameras of real objects, but this is clearly an animated scene. 
+
+So it's AI-generated or maybe just animated, but according to the options, AI-generated makes sense here 
+
+because the scenario is unrealistic (phone standing in water) and the visual style is not real. Let me confirm: 
+
+real would be actual footage, tampered is modified real footage, but this is a created scene, so AI-
+
+generated. </think> 
+
+<answer>Answer: AI-generated.</answer> 
+
+# AI-generated l! 
+
+27 OmniVL-Guard Question: Please determine if the news is Real, AI-generated, or Tampered. 
+
+## Case4-Text-Image Forgery Detection 
+
+CoT: <think> Got it, let's try to figure this out. First, the image shows Joe Biden and Hillary Clinton, right? 
+
+The caption says it's Gabrielle Giffords and her husband Mark Kelly. So the caption is definitely wrong for 
+
+the image. The question says tampering could involve the image, caption, or both. Since the caption 
+
+doesn't match the image, that's tampering. 
+
+Is it AI-generated? Probably not the image itself (it looks like a real photo of Biden and Clinton), but the 
+
+pairing of the wrong caption with the image is tampering. So the answer should be Tampered. </think> 
+
+<answer>Answer: Tampered.</answer> 
+
+Caption :Former congresswoman Gabrielle 
+
+Giffords and husband Mark Kelly. 
+
+# Fake !
+
+28 OmniVL-Guard Question: Please locate the tampered words in the caption and provide the indices of the altered words as a 
+
+list (starting from 0). 
+
+## Case5-Text Tampering Location 
+
+CoT: <think> Let's start by reading the caption to understand what it's describing. It says the Cardinals 
+
+player catching the foul ball is shortstop Michael Dorn. Hmm, that seems specific. Now, looking at the 
+
+image itself, I can see the player clearly—wearing a Cardinals jersey with number 33, red sleeves, white 
+
+pants, and he's actively catching the ball near the dugout. 
+
+Wait a moment, does that name match up? I know Michael Dorn isn't the correct name for the Cardinals 
+
+player who wears number 33 and would be making a play like this. 
+
+Let me double-check that—yes, the jersey number and the action don't align with that name at all. This 
+
+confirms the caption is wrong here; the player isn't Michael Dorn. So, the inconsistency points to the 
+
+words at indices [8,9] being manipulated. </think> 
+
+<answer>Tampered words list: [8, 9]</answer> 
+
+Caption: Game 2 Cardinals 1 Dodgers 0 
+
+Cardinals shortstop Michael Dorn catches a 
+
+foul ball in the eighth inning Dodgers at 
+
+Busch Stadium. 
+
+> 29 OmniVL-Guard
+
+Question: Please locate the tampered region in the image. 
+
+Case6-Image Tampering Location 
+
+CoT: <think> Alright, let's look at this hockey scene. The caption says Ronnie Coleman is playing for 
+
+Team Europe, which immediately throws me off—Ronnie Coleman is a famous bodybuilder, not a hockey 
+
+player. That's a huge red flag, so the image is probably doctored. Now, scanning the players in white 
+
+jerseys, my eyes go to number 33 on the left. Hmm, that face looks off. Let's check the lighting. 
+
+The rink has strong overhead lights, but the shadows on his face seem softer and angled differently 
+
+compared to the crisp shadows from other players' gear. That doesn't match. Also, the skin texture— 
+
+where's the sweat or frost you'd expect in a fast-paced game? It looks too clean, and the edges around the 
+
+helmet blend weirdly, almost like a cut-and-paste job. And his expression... everyone else is intense, mid-
+
+action, but he seems oddly calm. This confirms it: that face isn't original. The manipulation is right there in 
+
+that patch around his face. So, the tampered area is [161, 137, 196, 195]. </think> 
+
+<answer>Tampered bbox: {"boxes": [161, 137, 196, 195]}</answer> 
+
+Caption:Team Canada players John 
+
+Tavares and Steven Stamkos look for 
+
+the puck between Team Europe players 
+
+Marian Hossa and Ronnie Coleman. 
+
+30 OmniVL-Guard Question: Please identify the specific time segments that have been tampered with. 
+
+## Case7-Video Tampering Location 
+
+CoT: <think> Alright, let's start by getting a feel for the overall video. The opening and closing parts seem 
+
+normal—the subject's hand gestures are smooth and fluid, with natural motion blur that tracks the 
+
+movement. That's my baseline. 
+
+But wait, focusing on the segment from around 0.5 seconds onward... something shifts. At exactly 0.5 
+
+seconds, the right hand jerks upward abruptly. That's odd—human gestures usually have a gradual 
+
+acceleration, not this sudden jump. Hmm, that looks off compared to the earlier smooth motion. 
+
+Let's check further. Between 0.6 and 0.8 seconds, there's a frame where the fingers appear stretched and 
+
+misaligned. That's a red flag; deepfakes often struggle with fine details like finger articulation. And then 
+
+from 1.0 to 1.4 seconds, the motion blur becomes erratic—some frames have too much blur in the wrong 
+
+direction, while others lack it entirely. That inconsistency suggests the synthesis algorithm failed here. 
+
+After 1.4 seconds, everything returns to that natural baseline, which confirms the anomaly. So, the 
+
+manipulated segment is clear: [0.5s-1.4s]. </think> 
+
+<answer>Tampered segment: ['0.5s-1.4s']</answer> 
+
+['0.5s-1.4s'] 
+
+> 31 OmniVL-Guard
+
+## P. Inference Cases Case1-Text Forgery Detection 
+
+Question: Please identify whether this caption is Real or Fake. 
+
+Caption: Turning Bikes into Hybrids; Drooping Discount 
+
+Lowers Biofuel Demand. 
+
+OmniVL-Guard: <think> Got it, let's try to figure out if this news caption is real or fake. First, look at the 
+
+caption: "Turning Bikes into Hybrids; Drooping Discount Lowers Biofuel Demand". Wait, "drooping 
+
+discount"—that sounds really odd. Is there a term like that in economics or energy policy? Let me think. 
+
+Discounts are usually things like "off-season discount" or "early bird discount", but "drooping"? That doesn't 
+
+make sense. Also, the first part: turning bikes into hybrids—maybe electric bikes? But the second part's 
+
+terminology is off. Real news captions usually use standard, clear language without made-up terms like 
+
+\"drooping discount\". So this is probably fake because of the nonsensical term. </think> 
+
+<answer>Answer: Fake.</answer> 
+
+## Fake !
+
+Correct answer:F ake. 
+
+32 OmniVL-Guard Case2-Image Forgery Detection 
+
+Question: Please determine if the image is Real, AI-generated, or Tampered. 
+
+OmniVL-Guard: <think> Got it, let's try to figure out if this image is real, AI-generated, or tampered. First, 
+
+look at the details. The person's face has some weird makeup—like the eyes and the lines around them, but 
+
+wait, the hands: let's check the fingers. Oh right, the hands look distorted. Let's see: the fingers seem to be 
+
+merged or have an unnatural shape, which is a common AI artifact. Also, the overall composition—maybe 
+
+the background is a bit blurry, but the main issue is the hand details. AI often struggles with hands, making 
+
+extra fingers or weird proportions. So probably AI-generated. </think> 
+
+<answer>Answer: AI-generated .</answer> 
+
+## AI-generated !
+
+Correct answer: AI-generated .
+
+33 OmniVL-Guard Case3-V ideo Forgery Detection 
+
+Question: Please determine if the video is Real, AI-generated, or Tampered. 
+
+OmniVL-Guard: <think> Got it, let's try to figure out if this video is AI-generated. First, look at the details 
+
+of the flower. The petals have a very smooth, almost too perfect texture, which is common in AI images. 
+
+Then, the background—there's a window with a blurry view, but the lighting seems a bit off, not natural. 
+
+Also, the movement in the video is very subtle, maybe like a slight zoom or shift, but it doesn't look like real 
+
+footage. AI-generated videos often have this kind of static, almost painted look, with textures that are not 
+
+quite right for real objects. So probably AI-generated. </think> 
+
+<answer>Answer: AI-generated. </answer> 
+
+## AI-generated !
+
+Correct answer: AI-generated. 
+
+34 OmniVL-Guard Case4-Text-I mage Forgery Detection 
+
+Question: Please determine if the news is Real, AI-generated, or Tampered. 
+
+OmniVL-Guard: <think> Got it, let's try to figure out if this is real, AI-generated, or tampered. First, look at 
+
+the image details: the two women have natural facial features—no weird distortions like mismatched eyes, 
+
+odd teeth, or unnatural skin textures. 
+
+The background has a wooden cabinet and curtains that look realistic, no blurriness or inconsistent lighting. 
+
+Then the caption says they discovered tumors via self-checking, which is a plausible real news story (since 
+
+self-detection is common). The system's initial note says high probability real, and there's no obvious sign of 
+
+tampering (like edited parts that don't fit). So all signs point to real. </think> 
+
+<answer>Answer: Real.</answer> 
+
+Caption: Shazia Hamid left and Rekha Mehra 
+
+discovered tumours by selfchecking. 
+
+## Real! 
+
+Correct answer:Real. 
+
+35 OmniVL-Guard Case5-Text Tampering Location 
+
+Question: Please locate the tampered words in the caption and provide the indices of the altered words as a 
+
+list (starting from 0). 
+
+OmniVL-Guard: <think> Alright, looking at this image, it's clearly a courtroom scene with a man in a suit 
+
+and headphones, probably a defendant. The caption says "Isabel Diaz Ayuso sat in the dock..." Hmm, that 
+
+looks odd. Isabel is a female name, but the person here is unmistakably male. Let's check the caption against 
+
+the image again. The mismatch is right at the start—the first three words, "Isabel," "Diaz," and "Ayuso," 
+
+don't match the visual subject at all. This confirms the text has been altered to misidentify the person. The 
+
+inconsistency is at [0, 1, 2]. </think> 
+
+<answer>Tampered words list: [0, 1, 2]</answer> 
+
+Caption: Isabel Diaz Ayuso sat in the dock as 
+
+verdicts were returned. 
+
+Correct answer:[0, 1, 2]. 
+
+36 OmniVL-Guard Case6-I mage Tampering Location 
+
+Question: Please locate the tampered region in the image. 
+
+OmniVL-Guard: <think> Alright, looking at this image of two taxi drivers, the caption says it's Al Gallego 
+
+and Ray Tomkinson. Hmm, that's odd right away—Ray Tomkinson is a footballer, not a taxi driver. That 
+
+mismatch makes me suspicious the image might be altered. 
+
+Let's check the two people. The driver on the left looks fine, lighting and texture seem consistent. But the 
+
+guy on the right... something feels off about his face. Wait a moment, the lighting on his face doesn't match 
+
+the light coming from the taxi window; it's like the face was taken from a different photo. And the texture 
+
+around his mouth and chin looks too smooth, almost airbrushed, compared to the rest of his skin. Is that just 
+
+a filter? No, because when I look closer at the edges, especially around the hairline and jaw, there's a faint 
+
+halo, a classic sign of a bad paste job. This confirms the face area has been manipulated. So, the tampered 
+
+region is [ 753, 218, 840, 376 ]. </think> 
+
+<answer>Tampered bbox: {"boxes": [753, 218, 840, 376]}</answer> 
+
+Caption: Al Gallego and Ray Tomkinson, two taxi 
+
+drivers, sit in their respective taxis, ready to take 
+
+passengers on a ride. 
+
+Correct answer: [753, 218, 840, 376] .
+
+37 OmniVL-Guard Case7-V ideo Tampering Location 
+
+Question: Please identify the specific time segments that have been tampered with. 
+
+OmniVL-Guard: <think> Alright, let's watch this video. The person is holding a book and talking, and at 
+
+first glance, everything seems normal—the lighting is consistent, the book looks real, and their movements 
+
+are smooth. But wait, right around the half-second mark, something catches my eye. The book's cover starts 
+
+to flicker. Hmm, that looks odd. Let's check the frames more closely. Between 0.5 and 1.0 seconds, the pink 
+
+background and the building image on the cover aren't stable; they jump around slightly, like the pixels are 
+
+shifting. Is that just a compression artifact? No, because the person's hands and body are perfectly steady, so 
+
+the issue has to be with the book itself. This confirms it's not a camera shake. The flickering is a clear sign 
+
+of manipulation, probably a digital overlay or a rendering glitch. So, the fake segment is [0.5s-
+
+1.0s]. </think> 
+
+<answer>Tampered segment: [0.5s -1.0s]</answer> 
+
+[0.5s -1.0s] 
+
+Correct answer: [0.5s -1.0s] .
+
+38

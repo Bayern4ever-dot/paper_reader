@@ -1,0 +1,660 @@
+Title: Beyond Static Artifacts: A Forensic Benchmark for Video Deepfake Reasoning in Vision Language Models
+
+URL Source: https://arxiv.org/pdf/2602.21779v1
+
+Published Time: Thu, 26 Feb 2026 01:52:41 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+# Beyond Static Artifacts: A Forensic Benchmark for Video Deepfake Reasoning in Vision Language Models 
+
+## Zheyuan Gu 1,2∗ Qingsong Zhao 1,3∗ Yusong Wang 1∗ Zhaohong Huang 1
+
+## Xinqi Li 2 Cheng Yuan 1 Jiaowei Shao 1 Chi Zhang 1 Xuelong Li 1†
+
+> 1
+
+## Institute of Artificial Intelligence, China Telecom (TeleAI) 2Peking University 3Fudan University 
+
+## Abstract 
+
+Current Vision-Language Models (VLMs) for deepfake de-tection excel at identifying spatial artifacts but overlook a critical dimension: temporal inconsistencies in video forgeries. Adapting VLMs to reason about these dynamic cues remains a distinct challenge. To bridge this gap, we propose Forensic Answer-Questioning (FAQ), a large-scale benchmark that formulates temporal deepfake analysis as a multiple-choice task. FAQ introduces a three-level hierar-chy to progressively evaluate and equip VLMs with foren-sic capabilities: (1) Facial Perception, testing the ability to identify static visual artifacts; (2) Temporal Deepfake Grounding, requiring the localization of dynamic forgery artifacts across frames; and (3) Forensic Reasoning, chal-lenging models to synthesize evidence for final authenticity verdicts. We evaluate a range of VLMs on FAQ and gen-erate a corresponding instruction-tuning set, FAQ-IT. Ex-tensive experiments show that models fine-tuned on FAQ-IT achieve advanced performance on both in-domain and cross-dataset detection benchmarks. Ablation studies fur-ther validate the impact of our key design choices, confirm-ing that FAQ is the driving force behind the temporal rea-soning capabilities of these VLMs. 
+
+## 1. Introduction 
+
+With the rapid rise of AIGC [16–18, 27, 34], the cre-ation of realistic deepfakes has become significantly eas-ier, leading to growing social concerns about their potential risks [9, 19]. Consequently, researchers have begun explor-ing Vision–Language Models (VLMs) for deepfake detec-tion, leveraging their strong visual understanding acquired through large-scale pre-training [1, 45] and achieved a num-ber of encouraging results. FakeRadar and DeepShield [3, 23] adapt CLIP [33] for deepfake detection, with the 
+
+> *Equal contribution.
+> †Corresponding author.
+
+former using contrastive learning and the latter employing anomaly detection to enhance generalization. To achieve better interpretability, some researchers have also employed larger VLM models for deepfake detection. SIDA [14] and FakeShield [43] constructed the SID-Set and MMTD-Set, respectively. Through training on these datasets, VLMs can localize and describe forgeries while demonstrating remark-able detection performance. These early successes demon-strate the potential of using VLMs for deepfake detection, suggesting that larger, more challenging training data is ex-pected to further enhance this capability. We therefore ask: Which VLM training paradigm is most effective for deepfake detection tasks? What constitutes the most promising training data? The mainstream approach is supervised fine-tuning (SFT) [31] with high-quality ques-tion answering (QA) datasets. Previous works [36, 46] ex-tract images from videos and generate annotations using limited question templates and predefined forged regions. We observed that data obtained from such annotations pro-vides spatial discriminative information only, whereas tem-poral inconsistencies in deepfake videos have been widely adopted as an important signal in conventional deepfake de-tection methods [10, 13, 29, 42]. We therefore speculate that VLMs trained solely on such data are unable to lever-age the significant temporal cues. One remaining issue is 
+
+how to effectively guide VLMs to discover and reason about temporal inconsistencies via constructing QA training data. 
+
+In this work, we continue the vein of SFT-based learn-ing, aiming to establish a comprehensive and robust base-line for the deepfake detection task. We introduce Forensic Answer-Questioning (FAQ), a multiple-choice question (MCQ) benchmark designed to improve the performance of VLMs in deepfake detection. We extract clips from videos based on human annotations, build QA pairs through a re-producible automated process, and include carefully de-signed distractors in the available options. We construct hierarchical data, which gradually enhances the model’s reasoning capabilities for deepfake detection. Comparison 1
+
+> arXiv:2602.21779v1 [cs.CV] 25 Feb 2026
+
+Level 1: Facial Perception 
+
+Region Perception 
+
+Observe the mouth in the image. Which of 
+
+the following options best describes the 
+
+visual quality of this region? A. 
+
+Clear, well -defined, and with natural textures. 
+
+B. 
+
+Blurred, distorted, or exhibiting unnatural textures. 
+
+Level 2: Temporal Deepfake Grounding 
+
+Level 3: Forensic Reasoning 
+
+Edge Perception 
+
+Observe the edge of the Mouth . How would 
+
+you describe its definition? 
+
+A. 
+
+The contour is clear and well -separated. 
+
+B
+
+. The contour looks smudged with nearby areas. 
+
+Type Understanding Region Grounding Temporal Grounding 
+
+video 
+
+> Is this a fake
+> video?
+
+Final Assessment Forgery Analysis  
+
+> Answer the following question based on the video.
+> Which of the following descriptions best matches
+> the manipulated content of this video segment?
+> A
+> .No modification.
+> C.
+> Unnatural shapes.
+> E.
+> Texture inconsistencies.
+
+video video video                      
+
+> A-D
+> .Between _____, the ______ shows signs of ______.
+> 1.04s and 2.24s
+> 2.73s and 3.68s
+> …
+> Mouth
+> Nose
+> …
+> Texture inconsistencies
+> Unnatural shapes.
+> …
+> E
+> .The record shows
+> no evidence
+> of artificial modification .
+> ①
+> ①
+> ②③
+> ③②
+> Look at the Eyes between
+> 7.60s -9.24s , which artifact
+> types best matches the video?
+> Look at the face between 3.60s and
+> 5.80s . In which area is Texture
+> inconsistencies most noticeable?
+> During which time range did
+> the Nose shows signs of
+> Texture inconsistencies ?
+> A
+> . 6.2s ‒7.4s.
+> C
+> . 9.7s ‒10.1s
+> E.
+> 1.2s ‒4.2s B
+> . 4.5s ‒6.2s
+> D
+> . No modification.
+> A
+> . Nose.
+> C.
+> Mouth.
+> E.
+> No modification. B
+> . Jaw.
+> D.
+> Eyes.
+> B
+> . Pixelation.
+> D. Color distortion.
+
+A.
+
+Yes .
+
+B.
+
+No Figure 1. Illustration of our hierarchical benchmark. 
+
+with other deepfake benchmark in Table 1. Specifically, questions in FAQ are formulated in three levels to guide VLMs for accurate deepfake detection. Fa-cial perception (level 1) strengthens the model’s perception of fine-grained visual artifacts. Temporal deepfake ground-ing (level 2) improves its grounding ability for dynamic artifacts. Forensic reasoning (level 3) elevates its reason-ing capabilities to reach an accurate conclusion. FAQ con-tains 33K QA pairs across approximately 4,500 manipu-lated videos. Our main contributions are: • To our best knowledge, FAQ is the first QA benchmark focused on temporal inconsistencies in deepfake videos. • We construct a comprehensive QA generation pipeline that leverages static human annotations to locate video segments exhibiting dynamic artifacts and then transform them into QA pairs. • Through extensive experiments, we demonstrate that con-verting temporal inconsistencies into QA pairs is a feasi-ble VLM training paradigm for deepfake detection. Mod-els trained on FAQ show performance gains on widely used detection benchmarks. 
+
+## 2. Related Work 
+
+2.1. Traditional Deepfake Detection Datasets 
+
+Early research on deepfake detection datasets focused on binary classification of manipulated and authentic videos. The most widely adopted benchmark is FaceForensics++ (FF++) [35], which contains videos tampered by face-swapping and reenactment methods under different com-
+
+Table 1. Comparison between FAQ and other forgery detection benchmarks. H and A respectively indicate human and automatic annotation.                                               
+
+> Benchmark MCQ #Sample Annotation #Task Types Trace
+> Image-based Benchmarks
+> GenImage [47] -2,681,167 A1-DDVQA [46] -14,784 H1-VLFFD [36] -25,663 A+H 1-MMTD-Set [43] -34,470 A2-SID-Set desc [14] -3,000 A2-
+> Video-based Benchmarks
+> GenVideo [4] -2,294,594 A1-Forensics-Bench [40] ✓63,292 A+H 4-FAQ ✓33,000 A+H 7✓
+
+pression levels. To enhance realism and data diversity, Celeb-DF [22] employed an improved synthesis pipeline to generate visually convincing manipulations common in online media. Similarly, DeeperForensics [15] emphasized data diversity by applying extensive perturbations such as compression, blurring, and color distortion to simulate real-world degradations. Beyond curated studio-quality sam-ples, WildDeepfake [48] directly collected videos from the Internet with uncontrolled variations in pose, lighting, and quality, challenging the generalization capability of detec-tion methods. While these traditional datasets are instru-mental for developing detection methods, they do not ex-plicitly explain why or where a video is fake. As a result, models trained on such data often lack interpretability and reasoning capability, especially in cross-domain scenarios. 22.2. VLMs for Multimedia Forensics 
+
+Recent advances in VLMs have inspired a new paradigm for multimedia forensics, where deepfake detection is no longer treated as a simple classification problem but as a multimodal reasoning task combining visual perception and textual interpretation [12, 14, 43]. FakeShield [43] intro-duced an explainable framework for image forgery detec-tion and localization, which leverages VLMs to provide interpretable textual reasoning and pixel-level localization rather than binary predictions. Huang et al. [14] extended deepfake image detection to the social media scenario and proposed a unified model that detects, localizes, and ex-plains potential manipulations in online content. Concur-rently, M2F2-Det [12] examined the role of contrastive language-image pretraining in face forgery detection. This model conducts prompt-driven language reasoning based on CLIP representations to produce both authenticity judg-ments and detailed explanations. However, these methods [12, 14, 43] treat videos as a collection of static frames and largely neglect the temporal evidence on manipulations. In contrast, our method focuses on dynamic inconsistencies in the time domain and constructs temporal grounding and rea-soning QA pairs to equip VLMs with the capabilities to dis-cover this evidence. 
+
+2.3. QA-based Deepfake Detection Datasets 
+
+The adoption of VLMs in deepfake detection has stimu-lated the development of QA datasets. DD-VQA [46] is the first QA-based face forgery dataset on human percep-tual anomalies such as lighting, texture, and facial inconsis-tency, with the objective of producing interpretable analy-sis. VLFFD [36] further employs an automatic prompt gen-eration pipeline to synthesize large-scale QA pairs of higher quality, enabling coarse-to-fine supervision for face forgery detection. Forensics-Bench [40] includes diverse tasks such as recognition, localization, and reasoning, with a focus on synthetic videos from generative models. Existing datasets are restricted to static images [36, 46] or AI-generated con-tent [40]. Conversely, our dataset guides VLMs to detect deepfake videos through curated three-layer QA pairs. 
+
+## 3. FAQ Benchmark 
+
+We develop a benchmark to assess the performance of video-language models on the critical task of detecting video forgeries. Specifically, we focus on the temporal in-consistencies inherent in manipulated footage, a non-trivial yet underexplored dimension. FAQ is a large-scale MCQ benchmark that evaluates and enhances the capabilities of VLMs in perceiving, grounding, and reasoning about tem-poral artifacts. An overview of our benchmark construction pipeline is shown in Figure 2. 
+
+3.1. Deepfake Video Curation 
+
+Collection. We collect 5,000 deepfake videos and 1,000 authentic videos from FaceForensics++ (i.e., FF++ [35]), a widely-used benchmark for facial forgery detection. FF++ provides diverse forgeries with high visual quality, yielding challenging and well-structured video samples. For each fake video, we augment the dataset with manual annotations, including video-level descriptions and precise spatiotemporal clicks C = {ci|ci := ( xi, y i, t i)} that pin-point forgery artifacts, where ci is the i-th click, (xi, y i) are its spatial coordinates, and ti is the timestamp. The fine-grained annotations allow us to design challenging forensic reasoning tasks that bridge low-level authenticity discrimi-nation to high-level deepfake analysis. 
+
+Filtering. For quality control, we deploy YOLOv8 [39] to detect faces in every frame of each fake video and filter out low-quality, easily identifiable samples. Specifically, we calculate the average, minimum, and maximum confidence scores of face detection across all frames for each video. A video is retained only if its average face confidence score exceeds 0.78 and its minimum confidence is above 0.71, ensuring consistent and high-quality facial presence throughout. This rigorous filtering process removes approx-imately 10% of unsatisfactory samples, yielding a refined set of over 4500 high-quality fake videos for subsequent use. Detailed statistics, including the sample distribution across confidence intervals, are reported in the Appendix. 
+
+3.2. Preprocessing 
+
+For a systematic evaluation of video authenticity, we struc-ture the raw annotations into three hierarchical tags, serving as the foundational ground truth for generating FAQ. 
+
+Spatio-Temporal Clustering. We obtained a total of 14,392 remarkable forged video segments (average dura-tion 2.1 seconds) utilizing over 50,000 sparse clicks pro-vided by human annotators. Specifically, we aggregate the sparse clicks into manipulated segments that contain salient dynamic artifacts by grouping those that are spatiotempo-rally proximate. This intuitive clustering approach con-verts discrete annotations into coherent forgery segments. In view of this, we define a spatio-temporal adjacency func-tion f (ci, c j ) that evaluates to true when two clicks ci and 
+
+cj are within a spatial threshold τs and a temporal threshold 
+
+τt, indicating that they belong to the same video segment. The function is formally expressed as: 
+
+f (ci, c j ) =  ∥ci − cj ∥2 ≤ τs
+
+ ∧  || ci − cj || 1 ≤ τt
+
+ , (1) where ∥·∥ 2 and ∥·∥ 1 correspond to the Euclidean and Man-hattan distances, respectively. In practice, we set τs = 4 and 
+
+τt = 1 . Following clustering, one group of clicks defines an individual segment. The segment’s temporal boundaries 
+
+(ti, t j ) are determined directly from the earliest and latest 3timestamps within its click set as the start and end points of a video segment. For any click that cannot be grouped, we generate a segment with a symmetric temporal padding of δ seconds (e.g., δ = 0.5s), resulting in the window 
+
+(ti − δ, t i + δ), to capture the complete dynamic artifact. 
+
+Landmark Extraction. From the 14,392 forged video clips obtained in the previous section, we obtain 71,960 trajecto-ries of the manipulated regions. We extract frame facial landmarks from a video clip using dlib [20] and track them to obtain the motion trajectory of a specific facial compo-nent. The facial landmarks (i.e., P ∈ { p1, p 2, · · · , p 5})consist of five dominant facial components: eyes, nose, mouth, jaw, and ears. For each video clip spanning the in-terval (ti, t j ), we compute its spatial centroid c(i,j ) by av-eraging the coordinates of its constituent clicks. We then formulate a spatial relevance function that evaluates facial regions based on their distance to the centroid c(i,j ).The function computes the total Euclidean distance Sn
+
+between the spatial centroid c(i,j ) and all P(k) facial land-marks of the k-th frame in a video clip, formulated as: 
+
+Sn =
+
+> K
+
+X
+
+> k=1
+
+d
+
+
+
+P(k) 
+
+> n
+
+, c (i,j )
+
+
+
+,n∗ = arg min  
+
+> n
+
+Sn,
+
+s.t. n ∈ { 1, 2, · · · , 5},
+
+(2) where n indexes all facial components, and n∗ denotes the forgery-relevant part most associated with the current video clip. Let P(k) 
+
+> n
+
+denote the screen coordinate vector of the 
+
+n-th facial component in the k-th frame. The geometric centroids Pn∗ from all frames are concatenated to form the forgery trajectory for the current video clip. 
+
+Description Parsing. We leverage 4000 raw descriptions of the uncut videos to generate 34,921 atomic annotations that specify forgery types, and subsequently align these fine-grained descriptions with the 14,392 video clips ob-tained previously. We begin by performing word frequency analysis (i.e., nltk [2]) on raw descriptions to identify com-mon artifact patterns, leading to the definition of distinct forgery categories such as blurred edges, color distortion, unnatural facial contours, texture inconsistencies, pixela-tion, and lighting anomalies. We then design structured prompts to guide an open-source large language model (e.g., gpt-oss-120b [30]) in decomposing the original de-scriptions into fine-grained, atomic annotations, each de-scribing only a single facial region and one type of arti-fact. Finally, we associate these atomic descriptions with corresponding video clips by matching the described facial components to the video clips obtained by clustering above. 
+
+3.3. Task Hierarchy in FAQ 
+
+Based on the collected forged videos with varying manip-ulation traces, we define FAQ’s three-level task hierarchy, benchmarking VLMs on facial forgery videos ranging from fine-grained artifact perception to complex forensic reason-ing. This design enables us to progressively evaluate mod-els’ capabilities: whether they can perceive subtle visual inconsistencies, localize dynamic forgery artifacts across frames, and ultimately reason about the authenticity of the video. Figure 1 illustrates this hierarchical structure. 
+
+Level 1: Facial Perception. This level is designed to eval-uate the model’s basic perception of visual information in the video through targeted MCQ tasks: • Region Perception. Determine whether specific facial regions in the video exhibit clear or blurry visual qual-ity, assessing the model’s discernment regarding coarse-grained artifacts. • Edge Perception. Evaluate whether the model can distin-guish between sharp and blurred facial boundaries, testing its sensitivity to fine-grained artifacts. 
+
+Level 2: Temporal Deepfake Grounding. These tasks aim to evaluate the model’s ability to localize dynamic artifact cues at spatial and temporal levels, including: • Type Understanding. Given a specific time window and facial region, determine which type of forgery artifact ap-pears in that region. • Region Grounding. Given a temporal segment and ar-tifact type, identify the facial region exhibiting such ma-nipulation traces. • Temporal Grounding. Provided with potential forgery regions and artifact types, localize the time period most likely to contain these artifacts. 
+
+Level 3: Forensic Reasoning. This level evaluates mod-els’ integrated reasoning capacity for holistic deepfake de-tection through two challenging tasks that require compre-hensive analysis of spatiotemporal inconsistencies and evi-dence synthesis: • Forgery Analysis. Requires the model to sequentially identify forgery artifact types, locate corresponding facial regions, and determine their temporal segments, and then select the option that best matches the video content from carefully designed distractors. • Final Assessment. After thorough analysis, demand the model to synthesize all forensic evidence and determine the video’s authenticity with a conclusive judgment. 
+
+3.4. QA Generation with Forged Trace 
+
+Our annotation pipeline employs a semi-automated strategy that combines LLM assistance with human instructor super-vision. To maintain focus on dynamic traces, we construct all QA pairs based on the spatiotemporal forgery trajecto-ries derived above, rather than relying on static single-frame descriptions. In addition, candidates are carefully designed to be visually and temporally plausible, forcing models to rely on dynamic visual semantics rather than linguistic cues or LLM priors. To reduce LLM deviation, the LLM is re-4Level 3. Forensic Reasoning 
+
+Level 2. Temporal Deepfake Grounding 
+
+Level 1. Facial Perception 
+
+> QA Text Quality
+> Event Authenticity
+
+1. Data Collection 
+
+2. Data Preprocessing 
+
+3. QA Generation 
+
+4. Human Verification                       
+
+> Videos Clicks Raw descriptions
+> Description
+> Parsing
+> With spatial &
+> temporal label
+> 3500+ manipulated
+> videos from FF++
+> Video -level
+> descriptions
+> The size of the chin
+> increases. The eyes
+> look blurred ,with
+> unclear edge.
+> Clicks
+> Clustering
+> Segments
+> Landmark
+> Extraction
+> Trajectory
+> Videos
+> (x, y)
+> …
+> Atomic
+> Annotation
+> ……
+> ……
+> Raw
+> desc
+> QA pairs:
+> (Level 1)…
+> (Level 2)…
+> (Level 3)…
+> Verifying…… Verification Principals
+> ……
+> 33,000
+> QA pairs
+> Region Perception Edge Perception
+> Forgery analysis Final assessment
+> Region
+> QA Template QA Template
+> Time
+> QA template
+> Time
+> Type QA template
+> Region
+> Time
+> Type
+> Time Type
+> Region Type
+> Time Region
+> Type Understanding
+> Temporal Grounding
+> Region Grounding
+> Question: Answer: Time
+> Answer:
+> Answer:
+> Type
+> Region
+> Question:
+> Question:
+> ……
+> 3.4s -4.2s
+> Mouth
+> Pixelation
+
+Region Time Type Figure 2. An overview of FAQ’s data construction pipeline. 
+
+stricted to generating content only from human-specified dimensions, including facial regions, temporal segments, and artifact types. Human instructors then review, refine, and validate all annotations for correctness. Building upon the hierarchy introduced in subsection 3.3, we construct the benchmark as follows. 
+
+Facial Perception. For the two perception tasks Region Quality and Edge Perception , candidate captions are first extracted from atomic annotations by LLM. The human guidance defines the criteria for attribute preservation, in-structing the LLM to retain objective artifact attributes (e.g., blurriness, clarity, key facial areas) while filtering out vague or subjective descriptions. Then, these resulting captions are converted into four-option MCQs, where distractors are generated by the LLM following task-specific prompt rules. The Region Quality task is designed to reflect plau-sible visual alternatives in adjacent facial regions. Con-versely, Edge Perception represents common boundary ar-tifacts with similar visual characteristics, forcing models to ground their answers in fine-grained visual signals. 
+
+Temporal Deepfake Grounding. For the three ground-ing tasks of Type Understanding , Region Grounding , and 
+
+Temporal Grounding , we employ gpt-oss-120b [30] to gen-erate questions based on any two of the three annotation dimensions including temporal window, artifact type, and facial region, with the answer derived from the remain-ing dimension. The same annotation strategy used in Fa-cial Perception which converts target descriptions into four-option multiple-choice questions, is applied to produce cor-responding QA pairs. Each question includes a real video option, though only the actual authentic video corresponds to that choice. Distractors are designed to let models rely on dynamic visual semantics for temporal grounding, estab-lishing the necessary basis for robust forgery identification. 
+
+Forensic Reasoning. For both Forgery Analysis and Fi-nal Assessment tasks, the constructed questions,unlike the previous levels, contain no explicit cue information such as time windows, facial regions, or artifact types. This re-quires the model to autonomously establish its reasoning process and effectively perceive forgery patterns through-out the video. The distractors are carefully designed as partially correct options, demanding comprehensive under-standing of dynamic visual semantics for accurate discrim-ination. Additionally, we employ the annotation method from Temporal Deepfake Grounding to construct authentic video samples, ensuring balanced positive and negative ex-5amples in the dataset. 
+
+3.5. Human Verification 
+
+All annotations undergo rigorous human verification. We develop an online validation platform (see Appendix) and recruit volunteers from our institution for the evaluation process. Each level follows distinct verification protocols. For Facial Perception , validators verify that answers accu-rately describe the specified facial regions or edge prop-erties visible in the video frames. Concerning Temporal Deepfake Grounding , they confirm the presence of arti-fact types and regions mentioned in answers while ensur-ing distractors reference facial areas absent from the video. Specifically for temporal grounding questions, validators must locate the start-end frames corresponding to each an-swer and verify temporal consistency. Regarding Forensic Reasoning , evaluators examine all options against the full video sequence and select the optimal choice, retaining only those matching the ground-truth annotation. Across all lev-els, questions with unanswerable content or annotation mis-matches are discarded, while those with imperfect distrac-tors or phrasing undergo revision. This iterative refinement continues until all QA pairs meet our quality standards. On average, validation requires 1.5 minutes per question for level 1, 3 minutes for level 2, and 5 minutes for level 3, resulting in a final curated set of 33K QA pairs. 
+
+3.6. FAQ Statistics 
+
+We conducted statistical analysis on FAQ to ensure its bal-ance and diversity. We visualized the data based on the fol-lowing factors: the length of the video clip; the facial region involved and the artifact type. See Figure 3 for details. 
+
+## 4. Experiment 
+
+We evaluate multiple VLMs on our proposed FAQ bench-mark. To support its utility, we also generate the instruction-tuning set (aka, FAQ-IT) using the same pipeline. Fine-tuning experiments confirm that FAQ-IT leads to effective models, validating our data process. Further ablation stud-ies provide an analysis of the impact of key design choices. 
+
+Evaluation models. We evaluate a set of VLMs in-cluding both open-source and closed-source models. The open-source models comprise InternVL-Chat-V1.2 [8], LLaVA-1.5 [24], DeepSeek-VL [26], LLaVA-InternLM2 [11], ShareGPT4V [5], InternVL2 [7], InternVideo2.5 [41], ShareGPT4Video [6], Qwen3-VL [32], LLaVA-NeXT [25] and Qwen2.5-VL [1]. The closed-source models include GPT-4o [38] and Gemini-2.5-Flash [37]. 
+
+Training Implementation Details. Supervised fine-tuning was conducted on the FAQ-IT dataset with Qwen2.5-VL-7B [1] and LLaVA-NeXT-7B [25]. Specifically, Qwen2.5-VL-7B employs a redesigned Vision Transformer trained from scratch as the vision encoder, while LLaVA-NeXT-7B utilizes CLIP-ViT-L/336. We adopt a frozen vision encoder for our training, based on an empirical finding that unfreez-ing it yields no significant gains. Consequently, we keep the encoder frozen and update the parameters of the visual con-nector and full-set parameters of the large language model. We train the models for one epoch using the AdamW opti-mizer with a weight decay of 0.1, a global batch size of 16, and a cosine learning rate scheduler featuring a peak learn-ing rate of 1e-5 and 500 warm-up steps. All experiments were run on 4× NVIDIA H200 GPU. See the appendix for more modeling details. 
+
+Metrics. Unless otherwise noted, we adopt MCQ accu-racy as our main evaluation metric following [14, 43]. For cross-dataset detection, it reflects the accuracy of a binary (i.e., “ real ” or “ fake ”) classification. For the in-domain FAQ benchmark, we compute Top-1 accuracy across its three lev-els, where a model must exactly match the ground-truth op-tion. This requires accurately identifying artifacts in forg-eries and pristine “ No artifact ” cases in authentic videos. 
+
+4.1. Results 
+
+Zero-Shot Evaluation. We conducted a zero-shot evalua-tion of 13 VLMs on the proposed FAQ benchmark, as re-ported in Table 2. The results reveal a significant capabil-ity gap in deepfake detection. While models show some competency in basic facial perception (level 1), they strug-gle with the transition to the spatio-temporal grounding and complex reasoning required at level 2 and level 3. No-tably, the leading commercial models did not achieve top performance, potentially due to a lack of prior exposure to forensic data in their training. Among open-source mod-els, ShareGPT4V-7B delivered the strongest overall results, a success we attribute to its training data’s closer align-ment with our benchmark, which includes landmarks and celebrity images. In addition, Qwen3-VL-8B achieved the best performance on the spatio-temporal grounding task, a strength we attribute to its robust video-text alignment ca-pabilities from pre-training. 
+
+Training with FAQ-IT. We fine-tuned Qwen2.5-VL and LLaVA-NeXT on the FAQ dataset due to their distinct and widely adopted architectures. As shown in Table 3, full-data fine-tuning yielded significant gains across all question tiers. Notably, LLaVA-NeXT achieved the most substantial improvement (48.8% average accuracy increase), compared to 30.79% for Qwen2.5-VL. However, training with only static-cue data provided limited and unstable benefits, par-ticularly for LLaVA-NeXT which saw negligible gains. We hypothesize that this discrepancy stems from architectural differences, specifically LLaVA-NeXT’s vision encoder and its initially weaker instruction-following capability, making it more dependent on the diverse spatio-temporal informa-tion in our full dataset. 
+
+Downstream Deepfake Detection Capabilities. Follow-6(a) (b) (c) 
+
+Figure 3. Visualization of data distribution in FAQ across three levels. (a), (b) and (c) shows QA distribution under different facial region, duration and artifact, respectively. Table 2. Average and per-level accuracy (%) of various VLMs on our proposed FAQ benchmark. Our benchmark evaluates fine-grained reasoning across three levels. 
+
+Model Level 1 Level 2 Level 3 Average 
+
+Proprietary Large Vision Language Models 
+
+GPT-4o 26 .9 27 .1 13 .2 22 .8
+
+Gemini-2.5-Flash 40 .0 25 .6 15 .3 27 .8
+
+Open-sourced Large Vision Language Models 
+
+InternVL-Chat-V1-2 29 .4 21 .4 13 .7 21 .5
+
+LLaVA-1.5-13b 36 .6 27 .2 17 .3 27 .3
+
+DeepSeek-VL-7B 54 .7 26 .1 13 .7 32 .1
+
+LLaVA-InternLM2-7B 32 .1 23 .2 14 .2 22 .8
+
+ShareGPT4V-7B 73.8 20 .5 22.3 39.7 
+
+InternVL2-8B 24 .0 29 .2 15 .1 22 .8
+
+InternVideo2.5 54 .6 21 .8 14 .7 30 .3
+
+ShareGPT4Video-7B 50 .7 19 .3 21 .1 30 .3
+
+Qwen3-VL-8B 45 .6 29.4 15 .0 30 .3
+
+LLaVA-NeXT-7B 40 .0 29 .0 21 .2 30 .3
+
+Qwen2.5-VL-7B 24 .1 23 .8 16 .8 21 .6
+
+Table 3. Ablation study of BenchIT fine-tuning on LLaVA-NeXT and Qwen2.5-VL models across our benchmark levels. VE de-notes Vision Encoder. The symbol ϕ denotes a zero-shot scenario where the model has not been trained. Symbol F AQ − IT ♠ and 
+
+F AQ − IT means training models on static-only QA from FAQ and training on full FAQ, respectively. 
+
+Model Condition Level 1 Level 2 Level 3 Average 
+
+Qwen2.5-VL  
+
+> ϕ
+
+24.1 23.8 16.8 21.6     
+
+> F AQ −IT ♠
+
+31.3 ↑7.2 21.9 ↓1.9 17.9 ↑1.1 23.9 ↑2.3   
+
+> F AQ −IT
+
+89.9 ↑65 .8 41.4 ↑17 .6 25.8 ↑9.0 52.4 ↑30 .8
+
+LLaVA-NeXT  
+
+> ϕ
+
+40.0 29.0 21.2 30.3     
+
+> F AQ −IT ♠
+
+49.2 ↑9.2 28.8 ↓0.2 23.3 ↑2.1 33.8 ↑3.5   
+
+> F AQ −IT
+
+88.8 ↑48 .8 45.8 ↑16 .8 26.5 ↑5.3 53.7 ↑23 .4
+
+ing conventional metrics, we evaluate models on FF++ in both zero-shot and fine-tuned settings. FAQ training leads to significant gains over baselines (details in Table 4 be-low). Qwen2.5-VL excels in detection across all manipula-tion types, owing to its vision encoder’s sensitivity to low-level artifacts. LLaVA-NeXT’s superior video-text align-
+
+Table 4. In-domain MCQ accuracy & In-domain Detection accu-racy. Symbol definitions follow Table 3.                                                                                                    
+
+> Model Condition FS NT F2F DF FSh Avg
+> In-domain MCQ ACC (%)
+> Qwen2.5-VL
+> ϕ9.7 7.4 13.5 9.6 7.7 9.6
+> F AQ −IT ♠10.5 ↑0.813.3 ↑5.812.8 ↓0.710.4 ↑0.810.7 ↑3.011.5 ↑1.9
+> F AQ −IT 45.9 ↑36 .246.7 ↑39 .324.4 ↑10 .945.3 ↑35 .745.3 ↑37 .641.5 ↑31 .9
+> LLaVA-NeXT
+> ϕ24.7 23.0 19.7 21.6 24.2 22.6
+> F AQ −IT ♠27.2 ↑2.520.8 ↓2.225.0 ↑5.322.4 ↑0.827.9 ↑3.724.7 ↑2.1
+> F AQ −IT 49.3 ↑24 .650.6 ↑27 .626.0 ↑6.349.2 ↑27 .646.9 ↑22 .744.4 ↑21 .8
+> In-domain Detection ACC (%)
+> Qwen2.5-VL
+> ϕ17.8 11.6 20.3 36.7 27.9 22.8
+> F AQ −IT ♠27.2 ↑9.434.5 ↑22 .947.4 ↑27 .169.2 ↑32 .549.7 ↑21 .845.6 ↑22 .8
+> F AQ −IT 71.7 ↑53 .959.8 ↑48 .274.7 ↑54 .492.7 ↑56 .069.9 ↑42 .073.8 ↑51 .0
+> LLaVA-NeXT
+> ϕ14.0 13.9 17.9 29.9 24.3 20.0
+> F AQ −IT ♠29.4 ↑15 .426.3 ↑12 .430.7 ↑12 .842.1 ↑12 .246.9 ↑22 .635.1 ↑15 .1
+> F AQ −IT 64.8 ↑50 .860.1 ↑46 .269.7 ↑51 .878.2 ↑48 .373.7 ↑49 .469.3 ↑49 .3
+
+ment and temporal grounding capabilities make it particu-larly adept at leveraging our FAQ training, which in turn leads to greater gains in overall performance. 
+
+4.2. Ablations 
+
+Cross-Manipulation Evaluations. Following the protocol of prior works [21, 28, 42, 44], we evaluate models trained on FAQ on unseen forgery techniques within FF++. As Ta-ble 4 above shows, full training on FAQ–IT yields substan-tial gains, boosting MCQ accuracy by 20% to 30% across most manipulations. This indicates that FAQ enhances gen-eral forgery detection capabilities, rather than overfitting to specific artifacts. A notable exception is the performance on Face2Face (F2F), which remains low. We hypothesize that F2F’s forgery artifacts are more temporally subtle and are not adequately captured by our cross-frame sampling strat-egy, limiting the model’s ability to learn robust features. 
+
+Robustness Analysis. The robustness of the SFT-trained models was evaluated against baseline methods across a range of video compression levels, including original qual-ity, c23, and c40. Here, c23 and c40 denote the Constant Rate Factor (CRF) values used in H.264 video encoding, representing light and heavy compression levels, respec-tively. Results in Table 4 show that both models maintain high accuracy at original quality and under light compres-7Table 5. In-domain MCQ accuracy under different compressions on FF++. Symbol definitions follow Table 3.                                     
+
+> Model Com. FS NT F2F DF FSh
+> Qwen2.5-VL F AQ −IT
+> c23 45 .946 .724 .445 .345 .3
+> c40 41 .842 .220 .940 .140 .4
+> original 46 .146 .527.2 47 .346 .0
+> LLaVA-NeXT F AQ −IT
+> c23 49.3 50 .626 .049 .246.9
+> c40 44 .146 .221 .246 .142 .9
+> original 49 .151.9 26 .950.9 43 .7
+
+Table 6. MCQ performance for different artifact types in deepfake videos. Symbol definitions follow Table 3.                                                 
+
+> Model Condition Edges Color Light Texture Pixel Shapes
+> Qwen2.5-VL
+> ϕ11.3 8.4 4.5 8.0 13.2 9.0
+> F AQ −IT ♠13.5 9.1 7.9 10.9 14.3 12.1
+> F AQ −IT 52.9 45.9 46.2 43.1 50.2 44.3 LLaVA-NeXT
+> ϕ9.8 11.1 14.9 16.6 10.7 11.4
+> F AQ −IT ♠12.8 13.9 18.8 16.4 14.3 13.4
+> F AQ −IT 45.7 42.1 47.9 42.1 43.9 46.8
+
+sion (c23), but suffer severe degradation under high com-pression (c40). LLaVA-NeXT remains the top performer across most settings. We hypothesize that aggressive com-pression destroys subtle spatial forgery artifacts, thereby de-priving the visual encoders of the critical cues necessary for reliable detection. 
+
+Analysis on Forgery Properties. As presented in Table 6, evaluation across different artifact types indicates robust overall performance from our trained models. Note that un-like Table 3, this evaluation utilizes only the “FAKE” video samples and not all of them. A notable exception is Tex-ture Inconsistencies , where models fine-tuned on our non-full FAQ data (i.e., FAQ-IT ♠) show reduced accuracy. We hypothesize that detecting such fine-grained, low-level arti-facts demands a higher degree of visual acuity and texture discrimination, which may exceed the current capabilities of general-purpose VLMs. Furthermore, empirical results indicate that Qwen2.5-VL attains the best performance af-ter full FAQ fine-tuning, outperforming LLaVA-NeXT. This result underscores its superior instruction-following capa-bility among current open-source VLMs. 
+
+Cross-Dataset Evaluations. To assess the generaliza-tion ability of our FAQ-trained models, we conduct open-ended inference on three unseen deepfake datasets includ-ing Celeb-DF (CDF [22]), DeeperForensics (DFo [15]), and WildDeepfake (WDF [48]). Following the CLIP’s prompt engineering [33], we use the question template “ Does this video contain forged information? ” to guide the model to output a “ yes ” or “ no ” answer. This allows the model to make determinations about any customized unseen video. The results are reported in Table 7. After training on FAQ, both Qwen2.5-VL and LLaVA-NeXT have a noticeable im-
+
+Table 7. Cross-dataset generalization accuracy (%) and F1-score (%) on CDF [22], DFo [15], and WDF [48] with different training settings. Symbol definitions follow Table 3.                                                         
+
+> Training Setup CDF DFo WDF Model Training Data Acc F1 Acc F1 Acc F1
+> Qwen2.5-VL
+> ϕ17.9 13.8 14.5 11.1 10.8 8.9
+> F AQ −IT ♠49.1 59.1 54.7 57.9 40.9 54.8
+> F AQ −IT 73.3 71.0 78.6 70.1 65.9 59.3 LLaVA-NeXT
+> ϕ12.3 10.2 10.5 9.5 8.7 7.6
+> F AQ −IT ♠47.2 49.0 52.3 54.8 39.8 49.6
+> F AQ −IT 72.9 69.1 77.8 72.3 63.1 62.9
+
+Figure 4. Effect of frame sampling strategies. 
+
+provement on detection accuracy especially on CDF. We speculate that the model performs relatively better on CDF because the forgery types are more standardized and the synthesis process is more controlled. In contrast, DFo in-volves greater variability and WDF is collected from the web, resulting in greater data diversity. The model strug-gles to adapt to unknown forgeries. 
+
+Effect of Frame Sampling Strategies. We ablate the video frame sampling strategy to assess its impact on forgery de-tection performance. Models are trained and evaluated with different frame counts per video: {2, 4, 8, 12 , 16 , 24 }. As illustrated in Figure 4, model accuracy peaks at 16 frames. We hypothesize that with fewer than 16 frames, the model lacks sufficient temporal context for robust feature learning. Beyond this point, performance degrades, likely due to re-dundant visual information from uniform sampling, which can distract the model and dilute spatiotemporal cues. 
+
+Supervision Design and Shortcut Analysis. To further validate FAQ, we conduct ablations on LLaVA-NeXT along robustness, training strategy, and open-ended evaluation (Table R1). Under perturbations, performance is stable to brightness shifts (-1.6%) but degrades under compression (-4.6%) and more severely under Gaussian blur. Since blur suppresses high-frequency inter-frame inconsistencies, this sensitivity confirms reliance on fine-grained temporal arti-8Table R1. New Exp on LLaVA-NeXT. Left: Robustness. Mid: 
+
+Training Strategy. Right: Open-Ended QA.                            
+
+> Exp 1: Robustness Exp 2: Strategy Exp 3: Open-Ended QA
+> Cond. Acc Strategy Acc Model Score Original 54.4% Baseline 30.3% Random ≈0.0% Bright. 52 .8% -1.6 Multi-Stage 35 .6% +5.3 GPT-4o 13.2% Compr. 49 .8% -4.6 Lvl 3 Only 37 .8% +7.5 Baseline 18.5% Blur 46 .2% -8.2 Mixed 54 .4%+24.1 Ours 49 .1%
+
+facts rather than static cues. For training strategy, multi-stage and Lvl-3-only supervision yield moderate gains, but remain far below the proposed Mixed SFT. The gap sug-gests staged training induces partial catastrophic forgetting, whereas mixed supervision preserves multimodal alignment while enforcing temporal aggregation. Thus, performance gains arise from stable curriculum design rather than su-pervision scale alone. To exclude MCQ bias, we evalu-ate open-ended QA. GPT-4o achieves 13.2%, the baseline VLM 18.5%, and our model 49.1%, closely matching its MCQ accuracy. The consistency rules out option elimina-tion heuristics and confirms genuine temporally grounded reasoning. 
+
+## 5. Conclusion 
+
+In this paper, we present FAQ, a QA benchmark focused on leveraging the potential of temporal inconsistencies in deepfake videos for VLMs to learn. Starting with man-ual annotation, we use a comprehensive process to convert static annotations into questions and answers related to tem-poral information. Thanks to carefully designed task defi-nitions and distractors, these QAs effectively evaluate mod-els’ temporal reasoning capability for deepfake videos. We validated that our dataset can effectively enhance model’s performance on deepfake detection tasks and temporal rea-soning tasks through training. 
+
+## References 
+
+[1] Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai Dang, Peng Wang, Shijie Wang, Jun Tang, Humen Zhong, Yuanzhi Zhu, Mingkun Yang, Zhao-hai Li, Jianqiang Wan, Pengfei Wang, Wei Ding, Zheren Fu, Yiheng Xu, Jiabo Ye, Xi Zhang, Tianbao Xie, Zesen Cheng, Hang Zhang, Zhibo Yang, Haiyang Xu, and Junyang Lin. Qwen2.5-vl technical report, 2025. 1, 6 [2] Steven Bird and Edward Loper. NLTK: The natural language toolkit. In Proceedings of the ACL Interactive Poster and Demonstration Sessions , pages 214–217, Barcelona, Spain, 2004. Association for Computational Linguistics. 4 [3] Yinqi Cai, Jichang Li, Zhaolun Li, Weikai Chen, Rushi Lan, Xi Xie, Xiaonan Luo, and Guanbin Li. Deepshield: Fortifying deepfake video detection with local and global forgery analysis. In Proceedings of the IEEE/CVF In-ternational Conference on Computer Vision (ICCV) , pages 12524–12534, 2025. 1 [4] Haoxing Chen, Yan Hong, Zizheng Huang, Zhuoer Xu, Zhangxuan Gu, Yaohui Li, Jun Lan, Huijia Zhu, Jianfu Zhang, Weiqiang Wang, and Huaxiong Li. Demamba: Ai-generated video detection on million-scale genvideo bench-mark. arXiv preprint arXiv:2405.19707 , 2024. 2 [5] Lin Chen, Jisong Li, Xiaoyi Dong, Pan Zhang, Conghui He, Jiaqi Wang, Feng Zhao, and Dahua Lin. Sharegpt4v: Improving large multi-modal models with better captions. 
+
+arXiv preprint arXiv:2311.12793 , 2023. 6 [6] Lin Chen, Xilin Wei, Jinsong Li, Xiaoyi Dong, Pan Zhang, Yuhang Zang, Zehui Chen, Haodong Duan, Bin Lin, Zhenyu Tang, et al. Sharegpt4video: Improving video understand-ing and generation with better captions. arXiv preprint arXiv:2406.04325 , 2024. 6 [7] Zhe Chen, Weiyun Wang, Hao Tian, Shenglong Ye, Zhang-wei Gao, Erfei Cui, Wenwen Tong, Kongzhi Hu, Jiapeng Luo, Zheng Ma, et al. How far are we to gpt-4v? closing the gap to commercial multimodal models with open-source suites. arXiv preprint arXiv:2404.16821 , 2024. 6 [8] Zhe Chen, Jiannan Wu, Wenhai Wang, Weijie Su, Guo Chen, Sen Xing, Muyan Zhong, Qinglong Zhang, Xizhou Zhu, Lewei Lu, Bin Li, Ping Luo, Tong Lu, Yu Qiao, and Jifeng Dai. Intern vl: Scaling up vision foundation models and aligning for generic visual-linguistic tasks. In 
+
+2024 IEEE/CVF Conference on Computer Vision and Pat-tern Recognition (CVPR) , pages 24185–24198, 2024. 6 [9] Robert Chesney and Danielle Citron. Deepfakes and the new disinformation war: The coming age of post-truth geopoli-tics. Foreign Affairs , 98(1):pp. 147–155, 2019. 1 [10] Jongwook Choi, Taehoon Kim, Yonghyun Jeong, Seungryul Baek, and Jongwon Choi. Exploiting style latent flows for generalizing deepfake video detection, 2024. 1 [11] XTuner Contributors. Xtuner: A toolkit for efficiently fine-tuning llm. https://github.com/InternLM/ xtuner , 2023. 6 [12] Xiao Guo, Xiufeng Song, Yue Zhang, Xiaohong Liu, and Xiaoming Liu. Rethinking vision-language model in face forensics: Multi-modal interpretable forged face detector. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vi-sion and Pattern Recognition (CVPR) , pages 105–116, 2025. 3[13] Yue-Hua Han, Tai-Ming Huang, Kai-Lung Hua, and Jun-Cheng Chen. Towards more general video-based deepfake detection through facial component guided adaptation for foundation model, 2025. 1 [14] Zhenglin Huang, Jinwei Hu, Xiangtai Li, Yiwei He, Xingyu Zhao, Bei Peng, Baoyuan Wu, Xiaowei Huang, and Guan-gliang Cheng. SIDA: social media image deepfake detection, localization and explanation with large multimodal model. In IEEE/CVF Conference on Computer Vision and Pattern Recognition(CVPR) 2025 , 2025. 1, 2, 3, 6 [15] Liming Jiang, Ren Li, Wayne Wu, Chen Qian, and Chen Change Loy. Deeperforensics-1.0: A large-scale dataset for real-world face forgery detection, 2020. 2, 8 [16] Minguk Kang, Jun-Yan Zhu, Richard Zhang, Jaesik Park, Eli Shechtman, Sylvain Paris, and Taesung Park. Scaling up gans for text-to-image synthesis, 2023. 1 
+
+9[17] Minguk Kang, Jun-Yan Zhu, Richard Zhang, Jaesik Park, Eli Shechtman, Sylvain Paris, and Taesung Park. Scaling up gans for text-to-image synthesis, 2023. [18] Tero Karras, Timo Aila, Samuli Laine, and Jaakko Lehtinen. Progressive growing of gans for improved quality, stability, and variation, 2018. 1 [19] Rizwan Khan, Mohd Taqi, and Mohd Afzal. Deepfakes in Finance: Unraveling the Threat Landscape and Detection Challenges , pages 91–120. 2024. 1 [20] Davis E. King. Dlib-ml: A machine learning toolkit. J. Mach. Learn. Res. , 10:1755–1758, 2009. 4 [21] Hanzhe Li, Jiaran Zhou, Yuezun Li, Baoyuan Wu, Bin Li, and Junyu Dong. Freqblender: Enhancing deepfake detec-tion by blending frequency knowledge. In Advances in Neu-ral Information Processing Systems , pages 44965–44988. Curran Associates, Inc., 2024. 7 [22] Yuezun Li, Xin Yang, Pu Sun, Honggang Qi, and Siwei Lyu. Celeb-df: A large-scale challenging dataset for deep-fake forensics, 2020. 2, 8 [23] Zhaolun Li, Jichang Li, Yinqi Cai, Junye Chen, Xiaonan Luo, Guanbin Li, and Rushi Lan. Fakeradar: Probing forgery outliers to detect unknown deepfake videos. In Proceedings of the IEEE/CVF International Conference on Computer Vi-sion (ICCV) , pages 13382–13392, 2025. 1 [24] Haotian Liu, Chunyuan Li, Yuheng Li, and Yong Jae Lee. Improved baselines with visual instruction tuning, 2024. 6 [25] Haotian Liu, Chunyuan Li, Yuheng Li, Bo Li, Yuanhan Zhang, Sheng Shen, and Yong Jae Lee. Llava-next: Im-proved reasoning, ocr, and world knowledge, 2024. 6 [26] Haoyu Lu, Wen Liu, Bo Zhang, Bingxuan Wang, Kai Dong, Bo Liu, Jingxiang Sun, Tongzheng Ren, Zhuoshu Li, Hao Yang, Yaofeng Sun, Chengqi Deng, Hanwei Xu, Zhenda Xie, and Chong Ruan. Deepseek-vl: Towards real-world vision-language understanding, 2024. 6 [27] Francesco Marra, Diego Gragnaniello, Luisa Verdoliva, and Giovanni Poggi. Do gans leave artificial fingerprints?, 2018. 1[28] Dat NGUYEN, Nesryne MEJRI, Inder Pal SINGH, Polina KULESHOVA, Marcella ASTRID, Anis KACEM, Enjie GHORBEL, and Djamila AOUADA. Laa-net: Localized artifact attention network for quality-agnostic and general-izable deepfake detection. In 2024 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 17395–17405, 2024. 7 [29] Dat Nguyen, Marcella Astrid, Anis Kacem, Enjie Ghorbel, and Djamila Aouada. Vulnerability-aware spatio-temporal learning for generalizable deepfake video detection, 2025. 1 [30] OpenAI. gpt-oss-120b & gpt-oss-20b model card, 2025. 4, 5[31] Long Ouyang, Jeffrey Wu, Xu Jiang, Diogo Almeida, Car-roll Wainwright, Pamela Mishkin, Chong Zhang, Sandhini Agarwal, Katarina Slama, Alex Ray, John Schulman, Jacob Hilton, Fraser Kelton, Luke Miller, Maddie Simens, Amanda Askell, Peter Welinder, Paul F Christiano, Jan Leike, and Ryan Lowe. Training language models to follow instructions with human feedback. In Advances in Neural Information Processing Systems , pages 27730–27744. Curran Associates, Inc., 2022. 1 [32] QwenLM. Qwen3-VL. https : / / github . com / QwenLM/Qwen3-VL , 2025. Accessed: 2025-11-07. 6 [33] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen Krueger, and Ilya Sutskever. Learning transferable visual models from natural language supervision. In Proceedings of the 38th International Conference on Machine Learning ,pages 8748–8763. PMLR, 2021. 1, 8 [34] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Bj¨ orn Ommer. High-resolution image syn-thesis with latent diffusion models, 2022. 1 [35] Andreas R¨ ossler, Davide Cozzolino, Luisa Verdoliva, Chris-tian Riess, Justus Thies, and Matthias Nießner. Faceforen-sics++: Learning to detect manipulated facial images, 2019. 2, 3 [36] Ke Sun, Shen Chen, Taiping Yao, Haozhe Yang, Xiaoshuai Sun, Shouhong Ding, and Rongrong Ji. Towards general visual-linguistic face forgery detection. In CVPR , 2025. 1, 2, 3 [37] Gemini team. Gemini 2.5: Pushing the frontier with ad-vanced reasoning, multimodality, long context, and next gen-eration agentic capabilities, 2025. 6 [38] OpenAI team. Gpt-4o system card, 2024. 6 [39] Rejin Varghese and Sambath M. Yolov8: A novel object detection algorithm with enhanced performance and robust-ness. In 2024 International Conference on Advances in Data Engineering and Intelligent Computing Systems (ADICS) ,pages 1–6, 2024. 3 [40] Jin Wang, Chenghui Lv, Xian Li, Shichao Dong, Huadong Li, Kelu Yao, Chao Li, Wenqi Shao, and Ping Luo. Forensics-bench: A comprehensive forgery detection bench-mark suite for large vision language models. In 2025 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) , pages 4233–4245, 2025. 2, 3 [41] Yi Wang, Xinhao Li, Ziang Yan, Yinan He, Jiashuo Yu, Xi-angyu Zeng, Chenting Wang, Changlian Ma, Haian Huang, Jianfei Gao, Min Dou, Kai Chen, Wenhai Wang, Yu Qiao, Yali Wang, and Limin Wang. Internvideo2.5: Empowering video mllms with long and rich context modeling, 2025. 6 [42] Zhendong Wang, Jianmin Bao, Wen gang Zhou, Weilun Wang, and Houqiang Li. Altfreezing for more general video face forgery detection. 2023 IEEE/CVF Conference on Com-puter Vision and Pattern Recognition (CVPR) , pages 4129– 4138, 2023. 1, 7 [43] Zhipei Xu, Xuanyu Zhang, Runyi Li, Zecheng Tang, Qing Huang, and Jian Zhang. Fakeshield: Explainable image forgery detection and localization via multi-modal large lan-guage models. In International Conference on Learning Representations , 2025. 1, 2, 3, 6 [44] Zhiyuan Yan, Yuhao Luo, Siwei Lyu, Qingshan Liu, and Baoyuan Wu. Transcending forgery specificity with latent space augmentation for generalizable deepfake detection. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vi-sion and Pattern Recognition (CVPR) , pages 8984–8994, 2024. 7 [45] Zhengyuan Yang, Linjie Li, Kevin Lin, Jianfeng Wang, Chung-Ching Lin, Zicheng Liu, and Lijuan Wang. The dawn 
+
+10 of lmms: Preliminary explorations with gpt-4v(ision), 2023. 1[46] Yue Zhang, Ben Colman, Xiao Guo, Ali Shahriyari, and Gaurav Bharaj. Common sense reasoning for deepfake de-tection. In European conference on computer vision , pages 399–415. Springer, 2024. 1, 2, 3 [47] Mingjian Zhu, Hanting Chen, Qiangyu Yan, Xudong Huang, Guanyu Lin, Wei Li, Zhijun Tu, Hailin Hu, Jie Hu, and Yunhe Wang. Genimage: A million-scale benchmark for de-tecting ai-generated image, 2023. 2 [48] Bojia Zi, Minghao Chang, Jingjing Chen, Xingjun Ma, and Yu-Gang Jiang. Wilddeepfake: A challenging real-world dataset for deepfake detection, 2024. 2, 8 
+
+11 Beyond Static Artifacts: A Forensic Benchmark for Video Deepfake Reasoning in Vision Language Models 
+
+# Supplementary Material 
+
+Figure 5. Distribution of Videos across Face Detection Con-fidence Metrics and the Filtering Boundary. Each point rep-resents a video from the original set. The filtering boundary (dashed light blue lines) separates the retained high-quality sam-ples (blue points) from the removed low-quality samples (light purple points), demonstrating the rigorous exclusion of videos with unstable or weak face detections. 
+
+## 6. Data Filtering 
+
+We performed frame-level face detection on all video files in the FF++ dataset, and utilized the confidence scores from face detection as the benchmark for data cleaning. A video was deemed satisfactory and thus retained only if its average face confidence score exceeded 0.78 and its minimum per-frame confidence score was above 0.71. This two-pronged criterion ensures not only a high overall quality but, cru-cially, prevents the inclusion of videos with transient but severe detection failures (e.g., due to heavy occlusion or poor camera angle). As visualized in Figure 5, this pro-cess effectively removes approximately 10% of the initial unsatisfactory videos, yielding a refined set of over 4500 high-quality samples. To empirically validate the efficacy of our data curation strategy, we conducted a sensitivity analysis by varying the retention ratio (100%, 90%, 80%, and 70%) based on the confidence scores of the filtering mechanism. The results are shown in Table 9. Comparing the 90% setting against the full dataset (100%), we observe a measurable degradation in the lat-ter, particularly in in-domain detection accuracy (e.g., a de-
+
+Table 9. Ablation study on data filtering ratios. The table reports 
+
+(Top) Overall benchmark accuracy including real cases; and (Bot-tom) In-domain and Cross-domain tasks. 90% corresponds to our proposed setting.                                                                                                                      
+
+> Overall Benchmark Accuracy (%)
+> Model Data Ratio Level 1 Level 2 Level 3 Average
+> Qwen2.5-VL 100% (Raw) 90.3 40.1 23.5 51.3 90% (Ours) 89.9 41.4 25.8 52.4
+> 80% 89.7 41.0 24.9 51.9 70% 88.1 39.5 23.2 50.3 60% 85.4 36.8 20.1 47.4 50% 81.2 33.2 18.5 44.3 LLaVA-NeXT 100% (Raw) 89.2 43.9 24.2 52.4 90% (Ours) 88.8 45.8 26.5 53.7
+> 80% 88.5 45.9 26.1 53.5 70% 86.9 43.5 24.4 51.6 60% 83.5 40.1 21.8 48.5 50% 79.4 36.5 19.6 45.2
+> In-domain (Avg) & Cross-domain Generalization (Acc)
+> Model Data Ratio In-MCQ In-Det CDF DFo WDF
+> Qwen2.5-VL 100% (Raw) 40.2 71.5 71.5 76.2 63.8 90% (Ours) 41.5 73.8 73.3 78.6 65.9
+> 80% 41.7 74.2 72.8 78.1 64.9 70% 39.8 72.1 69.5 76.4 62.5 60% 36.5 67.2 66.1 72.8 58.9 50% 33.2 60.8 62.4 68.5 55.1 LLaVA-NeXT 100% (Raw) 43.1 67.5 70.8 75.9 61.2 90% (Ours) 44.4 69.3 72.9 77.8 63.1
+> 80% 44.2 69.0 73.1 77.2 62.5 70% 42.5 66.8 69.1 74.8 60.4 60% 39.1 62.4 65.3 70.5 57.2 50% 35.8 58.1 61.7 66.2 53.8
+
+cline from 73.8% to 71.5% for Qwen2.5-VL). This suggests that the bottom 10% of samples introduce detrimental noise rather than informative features. These low-confidence samples likely contain severe visual degradation or align-ment errors, which impair the optimization process by con-fusing the model’s decision boundaries. Conversely, increasing the filtering strictness to 80% and 70% negatively impacts cross-domain generalization (CDF, DFo, WDF). This decline indicates that while the bottom 10% constitutes noise, the subsequent data segments con-tribute significantly to the distributional diversity of the training set. Excluding these samples reduces the feature variance necessary for the model to learn robust representa-tions against unseen manipulation types. Consequently, the 190% threshold establishes an optimal equilibrium between maximizing data quality and preserving the semantic diver-sity required for effective generalization. 
+
+## 7. Prompt Details 
+
+To facilitate reproducibility and provide comprehensive im-plementation details, we present the exact prompts em-ployed to guide the LLM in our pipeline. 
+
+Prompt for Description Parsing. This prompt guides the LLM to decompose raw video descriptions into atomic, structured annotations. 
+
+Listing 1. Prompt for Description Parsing 
+
+You are a data processing assistant. Your task is to extract fine-grained "atomic annotations" from a raw video description. Input Description: "{raw_description}" (e.g., "The video shows a person whose nose looks blurry and the mouth area has inconsistent skin textures.") Instructions: 1. Decompose the description into separate atomic units. 2. Each unit must describe exactly ONE facial region and ONE specific artifact type. 3. Map the facial region to one of these categories: [Eyes, Nose, Mouth, Jaw, Ears]. 4. Map the artifact type to standard forensic terms: [Blur, Color Distortion, Texture Inconsistency, Boundary Artifacts, Lighting Anomaly]. 5. Ignore subjective adjectives (e.g., "weird", "ugly") and focus on visual evidence. Output Format (JSON): [{"region": "Nose", "artifact": "Blur"}, {"region": "Mouth", "artifact": "Texture Inconsistency"} ]
+
+Prompt for Generating QA in Level 1. This prompt con-structs Region Perception and Edge Perception tasks with visually plausible distractors. 
+
+Listing 2. Prompt for Generating QA in Level 1 
+
+You are a Visual QA generator. Generate abinary choice question (A/B) to test the perception of artifacts in a specific facial region. Input Data: - Region: "{region}" (e.g., Skin) - State: "{state}" (e.g., Pixelated / Real) Instructions: 1. Question: Must start with "Observe the { region}." followed by "Which option best describes its visual quality?" 2. Options: - Option A: Describe a high-quality, natural appearance (e.g., "Clear, well-defined..."). - Option B: Describe the artifact or distortion (e.g., "Pixelated, blurry, or fake-looking"). - Randomize the order of A and B in the final output. Example Output: {"question": "Observe the Skin. Which option best describes its visual quality?", "options": {"A": "Clear, well-defined, with natural appearance.", "B": "Blurred, distorted, or fake-looking." }, "answer": "B" }
+
+Prompt for Generating QA in Level 2. This prompt gen-erates Type Understanding, Region Grounding, and Tempo-ral Grounding tasks by masking one dimension of the anno-tation. 
+
+Listing 3. Prompt for Generating QA in Level 2 
+
+You are a generic QA generator. Given a video timeline and artifact details, generate a temporal grounding question. Input Data: - Artifact: "{artifact}" - Manipulation Time: "{start}s-{end}s" (or "None" if Real) - Task: "Identify the time range of the manipulation." Instructions: 1. Question: "During which time range does the face appear most realistic, without manipulation artifacts?" (or inverse for fake). 2. Options (Generate 5 options A-E): - Include the Correct Time Range. - Include 3 Distractor Time Ranges (non-
+
+2overlapping or partial). - ALWAYS include one "Authentic" option: "The video appears harmonious and consistent, showing no signs of manipulation. It is authentic." Example Output: {"question": "During which time range does the face appear most realistic, without manipulation artifacts?", "options": { "A": "8.40s-10.72s", "B": "10.72s-13.44s", "C": "3.80s-7.04s", "D": "The video appears harmonious and consistent, showing no signs of manipulation. It is authentic.", "E": "10.44s-12.88s" }, "answer": "D" }
+
+Prompt for Generating QA in Level 3. This prompt con-structs complex options combining temporal, spatial, and artifact attributes. 
+
+Listing 4. Prompt for Generating QA in Level 3 
+
+You are a Forensic Expert. Generate amultiple-choice question where the options are detailed forensic descriptions. Input Trace: - Correct: Time="{t_start}-{t_end}", Region ="{region}", Artifact="{type}" Instructions: 1. Question: "Which of the following descriptions best matches the manipulated content of this video segment?" 2. Option Format: MUST follow this template : "Between {t_start} and {t_end}, the {region} shows signs of {type}." 3. Distractors: - Generate options that mix up the dimensions (e.g., Correct Time but Wrong Region, or Correct Region but Wrong Type). - Include an "Authentic" option if applicable. Example Output: {"question": "<video>Which of the following descriptions best matches the manipulated content of this video segment?", "options": {"A": "Between 4.44s and 4.96s, the Mouth shows signs of Blurred edges .", "B": "The visual sequence is continuous and believable... It looks real.", "C": "Between 5.29s and 5.87s, the Ears shows signs of Pixelation.", "D": "Between 4.44s and 4.96s, the Ears shows signs of Pixelation." }, "answer": "D" }
+
+## 8. Modeling Details 
+
+The models and corresponding parameters used for training and evaluation are presented in Table 10. 
+
+Table 10. Hyperparameters for Training and Inference 
+
+Configuration Value 
+
+Video Input Preprocessing 
+
+Max Pixels per Video 50176 
+
+Max Frames per Video 36 
+
+Input Video Frame Resolution 448 × 448 
+
+Training / Fine-tuning Configuration 
+
+Total Training Epochs 1
+
+Optimizer AdamW (β1 = 0 .9, β 2 = 0 .95 )Weight Decay 0.1
+
+Global Batch Size 16 
+
+Batch Size (per GPU) 4
+
+Total GPUs Used 4
+
+Learning Rate (LR) 1 × 10 −5
+
+LR Scheduler Cosine Decay Warm-up Steps 500 
+
+## 9. Annotation Platform 
+
+We have developed an online human annotation platform and recruited volunteers within the organization, all holding at least a bachelor’s degree, to perform the annotations. The annotation platform is displayed as shown in Figure 6. 
+
+## 10. Verification Platform 
+
+Following the annotation process section 9, we have estab-lished an online data validation platform to assess the us-ability of the QA data we have created. The verification platform is displayed as shown in Figure 7, Figure 8 and Figure 9. For each level, we have designed distinct verifica-tion processes. 3Figure 6. Overview of our custom-developed video annotation interface. The platform is designed to capture fine-grained spatiotemporal forgery traces. The central player allows annotators to mark dynamic artifacts (indicated by red dots) in real-time, recording precise (x, y, t )
+
+coordinates. The right panel displays the sequential list of annotated clicks with corresponding frame previews, while the bottom text field captures a detailed natural language description of the observed manipulation anomalies. 
+
+Figure 7. User interface of our verification platform for Level 1 (Facial Perception). To ensure high data quality, validators execute a dual-check protocol: (1) Answer Verification, ensuring the selected option (e.g., “soft or blurred edges”) accurately reflects the visual artifacts observed in the video; and (2) Text Quality Assessment, confirming that the phrasing is unambiguous. The “Exception” panel at the bottom allows validators to flag and discard samples with severe hallucinations or low-quality generation. 
+
+4Figure 8. The verification interface for Level 2 (Temporal Deepfake Grounding). In contrast to Level 1, this stage requires rigorous temporal verification. Validators must manually use the “Mark Start” and “Mark End” buttons to define the precise boundaries of the artifact, ensuring the timestamps in the generated QA match the actual video content. Additional checks for Artifact Presence, Region Correctness, and Distractor Validity are implemented to prevent ambiguous or incorrectly grounded samples. 
+
+Figure 9. The verification interface for Level 3 (Forensic Reasoning). Unlike lower-level tasks, this stage requires validators to perform a holistic assessment of the entire video sequence. Validators are tasked with: (1) independently selecting the most accurate description among complex options to confirm the ground truth’s validity; and (2) evaluating Distractor Quality, ensuring that incorrect options are “plausible and non-trivial” to guarantee the task effectively challenges the model’s reasoning capabilities. 
+
+5
