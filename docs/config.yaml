@@ -46,3 +46,23 @@ subscriptions:
           source: manual
           note: ''
       updated_at: '2026-03-10T12:25:01.197Z'
+    - tag: TSDS
+      description: 时序数据分割论文检索
+      enabled: true
+      keywords:
+        - keyword: change point detection
+          keyword_cn: 变点检测
+          query: c
+        - keyword: segmentation
+          keyword_cn: 分割
+          query: s
+        - keyword: time series segmentation
+          keyword_cn: 时序数据分割
+          query: r
+      intent_queries:
+        - query: State of the art time sereis segmentation
+          query_cn: 最先进的时序分段方法
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-03-11T02:52:01.087Z'

@@ -1,0 +1,54 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-11T02:58:22.192195+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 0,
+    "deep_cap": 7,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 12,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2603.04921v1",
+      "title": "AILS-NTUA at SemEval-2026 Task 10: Agentic LLMs for Psycholinguistic Marker Extraction and Conspiracy Endorsement Detection",
+      "abstract": "This paper presents a novel agentic LLM pipeline for SemEval-2026 Task 10 that jointly extracts psycholinguistic conspiracy markers and detects conspiracy endorsement. Unlike traditional classifiers that conflate semantic reasoning with structural localization, our decoupled design isolates these challenges. For marker extraction, we propose Dynamic Discriminative Chain-of-Thought (DD-CoT) with deterministic anchoring to resolve semantic ambiguity and character-level brittleness. For conspiracy detection, an \"Anti-Echo Chamber\" architecture, consisting of an adversarial Parallel Council adjudicated by a Calibrated Judge, overcomes the \"Reporter Trap,\" where models falsely penalize objective reporting. Achieving 0.24 Macro F1 (+100\\% over baseline) on S1 and 0.79 Macro F1 (+49\\%) on S2, with the S1 system ranking 3rd on the development leaderboard, our approach establishes a versatile paradigm for interpretable, psycholinguistically-grounded NLP.",
+      "authors": [
+        "Panagiotis Alexios Spanakis",
+        "Maria Lymperaiou",
+        "Giorgos Filandrianos",
+        "Athanasios Voulodimos",
+        "Giorgos Stamou"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-03-05T08:09:10+00:00",
+      "link": "https://arxiv.org/pdf/2603.04921v1",
+      "tags": [
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "agentic LLMs for conspiracy endorsement detection",
+      "llm_evidence_cn": "用于阴谋论支持检测的智能体大模型",
+      "llm_evidence": "用于阴谋论支持检测的智能体大模型",
+      "canonical_evidence": "用于阴谋论支持检测的智能体大模型",
+      "llm_tldr_en": "Uses agentic LLMs to extract psycholinguistic markers and detect conspiracy endorsement.",
+      "llm_tldr_cn": "利用智能体大模型提取心理语言学标记并检测阴谋论支持。",
+      "llm_tldr": "利用智能体大模型提取心理语言学标记并检测阴谋论支持。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

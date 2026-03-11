@@ -1,0 +1,23 @@
+{
+  "label": "2026-03-02 ~ 2026-03-11",
+  "date": "2026-03-02 ~ 2026-03-11",
+  "generated_at": "2026-03-11T02:59:28",
+  "count": 1,
+  "papers": [
+    {
+      "paper_id": "20260302-20260311/2603.04921v1-ails-ntua-at-semeval-2026-task-10-agentic-llms-for-psycholinguistic-marker-extraction-and-conspiracy-endorsement-detection",
+      "section": "quick",
+      "title_en": "AILS-NTUA at SemEval-2026 Task 10: Agentic LLMs for Psycholinguistic Marker Extraction and Conspiracy Endorsement Detection",
+      "authors": "Panagiotis Alexios Spanakis, Maria Lymperaiou, Giorgos Filandrianos, Athanasios Voulodimos, Giorgos Stamou",
+      "date": "2026-03-05",
+      "pdf": "https://arxiv.org/pdf/2603.04921v1",
+      "score": "6.0",
+      "evidence": "用于阴谋论支持检测的智能体大模型",
+      "tldr": "该研究针对SemEval-2026任务10，提出了一种解耦的智能体LLM流水线，用于提取心理语言学阴谋论标记并检测阴谋论认可。通过动态判别思维链（DD-CoT）解决标记提取中的语义歧义，并利用“反回声室”架构克服模型在检测中的“报告者陷阱”。实验表明，该方法在两项子任务上均显著优于基准，为可解释且具有心理语言学基础的NLP提供了新范式。",
+      "tags": "query:mmfnd",
+      "abstract_en": "This paper presents a novel agentic LLM pipeline for SemEval-2026 Task 10 that jointly extracts psycholinguistic conspiracy markers and detects conspiracy endorsement. Unlike traditional classifiers that conflate semantic reasoning with structural localization, our decoupled design isolates these challenges. For marker extraction, we propose Dynamic Discriminative Chain-of-Thought (DD-CoT) with deterministic anchoring to resolve semantic ambiguity and character-level brittleness. For conspiracy detection, an \"Anti-Echo Chamber\" architecture, consisting of an adversarial Parallel Council adjudicated by a Calibrated Judge, overcomes the \"Reporter Trap,\" where models falsely penalize objective reporting. Achieving 0.24 Macro F1 (+100\\% over baseline) on S1 and 0.79 Macro F1 (+49\\%) on S2, with the S1 system ranking 3rd on the development leaderboard, our approach establishes a versatile paradigm for interpretable, psycholinguistically-grounded NLP.",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
