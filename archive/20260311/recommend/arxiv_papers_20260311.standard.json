@@ -1,0 +1,780 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-11T19:30:13.652788+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 10,
+    "deep_cap": 7,
+    "deep_selected": 7,
+    "quick_candidates": 39,
+    "quick_skim_target": 12,
+    "quick_selected": 12
+  },
+  "deep_dive": [
+    {
+      "id": "2603.07215v1",
+      "title": "Towards Objective Gastrointestinal Auscultation: Automated Segmentation and Annotation of Bowel Sound Patterns",
+      "abstract": "Bowel sounds (BS) are typically momentary and have low amplitude, making them difficult to detect accurately through manual auscultation. This leads to significant variability in clinical assessment. Digital acoustic sensors allow the acquisition of high-quality BS and enable automated signal analysis, offering the potential to provide clinicians with both objective and quantitative feedback on bowel activity. This study presents an automated pipeline for bowel sound segmentation and classification using a wearable acoustic SonicGuard sensor. BS signals from 83 subjects were recorded using a SonicGuard sensor. Data from 40 subjects were manually annotated by clinical experts and used to train an automatic annotation algorithm, while the remaining subjects were used for further model evaluation. An energy-based event detection algorithm was developed to detect BS events. Detected sound segments were then classified into BS patterns using a pretrained Audio Spectrogram Transformer (AST) model. Model performance was evaluated separately for healthy individuals and patients. The best configuration used two specialized models, one trained on healthy subjects and one on patients, achieving (accuracy: 0.97, AUROC: 0.98) for healthy group and (accuracy: 0.96, AUROC: 0.98) for patient group. The auto-annotation method reduced manual labeling time by approximately 70%, and expert review showed that less than 12% of automatically detected segments required correction. The proposed automated segmentation and classification system enables quantitative assessment of bowel activity, providing clinicians with an objective diagnostic tool that may improve the diagnostic of gastrointestinal function and support the annotation of large-scale datasets.",
+      "authors": [
+        "Zahra Mansour",
+        "Verena Uslar",
+        "Dirk Weyhe",
+        "Danilo Hollosi",
+        "Nils Strodthoff"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.LG",
+        "eess.AS",
+        "eess.SP"
+      ],
+      "published": "2026-03-07T13:45:47+00:00",
+      "link": "https://arxiv.org/pdf/2603.07215v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Automated segmentation of bowel sound patterns in acoustic signals",
+      "llm_evidence_cn": "声学信号中肠鸣音模式的自动分割",
+      "llm_evidence": "声学信号中肠鸣音模式的自动分割",
+      "canonical_evidence": "声学信号中肠鸣音模式的自动分割",
+      "llm_tldr_en": "An automated pipeline for the segmentation and classification of time-series bowel sound signals.",
+      "llm_tldr_cn": "一个用于时序肠鸣音信号分割和分类的自动流水线。",
+      "llm_tldr": "一个用于时序肠鸣音信号分割和分类的自动流水线。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.09533v1",
+      "title": "Enhancing Debunking Effectiveness through LLM-based Personality Adaptation",
+      "abstract": "This study proposes a novel methodology for generating personalized fake news debunking messages by prompting Large Language Models (LLMs) with persona-based inputs aligned to the Big Five personality traits: Extraversion, Agreeableness, Conscientiousness, Neuroticism, and Openness. Our approach guides LLMs to transform generic debunking content into personalized versions tailored to specific personality profiles. To assess the effectiveness of these transformations, we employ a separate LLM as an automated evaluator simulating corresponding personality traits, thereby eliminating the need for costly human evaluation panels. Our results show that personalized messages are generally seen as more persuasive than generic ones. We also find that traits like Openness tend to increase persuadability, while Neuroticism can lower it. Differences between LLM evaluators suggest that using multiple models provides a clearer picture. Overall, this work demonstrates a practical way to create more targeted debunking messages exploiting LLMs, while also raising important ethical questions about how such technology might be used.",
+      "authors": [
+        "Pietro Dell'Oglio",
+        "Alessandro Bondielli",
+        "Francesco Marcelloni",
+        "Lucia C. Passaro"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-03-10T11:44:17+00:00",
+      "link": "https://arxiv.org/pdf/2603.09533v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "LLM-based fake news debunking and personality adaptation",
+      "llm_evidence_cn": "基于大模型的虚假新闻揭露与人格自适应",
+      "llm_evidence": "基于大模型的虚假新闻揭露与人格自适应",
+      "canonical_evidence": "基于大模型的虚假新闻揭露与人格自适应",
+      "llm_tldr_en": "Generates personalized fake news debunking messages using LLMs and personality traits.",
+      "llm_tldr_cn": "利用大语言模型和人格特质生成个性化的虚假新闻辟谣信息。",
+      "llm_tldr": "利用大语言模型和人格特质生成个性化的虚假新闻辟谣信息。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.04865v1",
+      "title": "The First Environmental Sound Deepfake Detection Challenge: Benchmarking Robustness, Evaluation, and Insights",
+      "abstract": "Recent progress in audio generation has made it increasingly easy to create highly realistic environmental soundscapes, which can be misused to produce deceptive content, such as fake alarms, gunshots, and crowd sounds, raising concerns for public safety and trust. While deepfake detection for speech and singing voice has been extensively studied, environmental sound deepfake detection (ESDD) remains underexplored. To advance ESDD, the first edition of the ESDD challenge was launched, attracting 97 registered teams and receiving 1,748 valid submissions. This paper presents the task formulation, dataset construction, evaluation protocols, baseline systems, and key insights from the challenge results. Furthermore, we analyze common architectural choices and training strategies among top-performing systems. Finally, we discuss potential future research directions for ESDD, outlining key opportunities and open problems to guide subsequent studies in this field.",
+      "authors": [
+        "Han Yin",
+        "Yang Xiao",
+        "Rohan Kumar Das",
+        "Jisheng Bai",
+        "Ting Dang"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD"
+      ],
+      "published": "2026-03-05T06:40:57+00:00",
+      "link": "https://arxiv.org/pdf/2603.04865v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "environmental sound deepfake detection and deceptive content",
+      "llm_evidence_cn": "环境音深度伪造检测与欺骗性内容",
+      "llm_evidence": "环境音深度伪造检测与欺骗性内容",
+      "canonical_evidence": "环境音深度伪造检测与欺骗性内容",
+      "llm_tldr_en": "Benchmarks environmental sound deepfake detection to combat deceptive audio content.",
+      "llm_tldr_cn": "建立了环境音深度伪造检测基准，以应对欺骗性音频内容。",
+      "llm_tldr": "建立了环境音深度伪造检测基准，以应对欺骗性音频内容。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.04882v1",
+      "title": "DeformTrace: A Deformable State Space Model with Relay Tokens for Temporal Forgery Localization",
+      "abstract": "Temporal Forgery Localization (TFL) aims to precisely identify manipulated segments in video and audio, offering strong interpretability for security and forensics. While recent State Space Models (SSMs) show promise in precise temporal reasoning, their use in TFL is hindered by ambiguous boundaries, sparse forgeries, and limited long-range modeling. We propose DeformTrace, which enhances SSMs with deformable dynamics and relay mechanisms to address these challenges. Specifically, Deformable Self-SSM (DS-SSM) introduces dynamic receptive fields into SSMs for precise temporal localization. To further enhance its capacity for temporal reasoning and mitigate long-range decay, a Relay Token Mechanism is integrated into DS-SSM. Besides, Deformable Cross-SSM (DC-SSM) partitions the global state space into query-specific subspaces, reducing non-forgery information accumulation and boosting sensitivity to sparse forgeries. These components are integrated into a hybrid architecture that combines the global modeling of Transformers with the efficiency of SSMs. Extensive experiments show that DeformTrace achieves state-of-the-art performance with fewer parameters, faster inference, and stronger robustness.",
+      "authors": [
+        "Xiaodong Zhu",
+        "Suting Wang",
+        "Yuanming Zheng",
+        "Junqi Yang",
+        "Yangxu Liao",
+        "Yuhong Yang",
+        "Weiping Tu",
+        "Zhongyuan Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.MM"
+      ],
+      "published": "2026-03-05T07:19:50+00:00",
+      "link": "https://arxiv.org/pdf/2603.04882v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Temporal forgery localization in video and audio",
+      "llm_evidence_cn": "视频和音频中的时序伪造定位",
+      "llm_evidence": "视频和音频中的时序伪造定位",
+      "canonical_evidence": "视频和音频中的时序伪造定位",
+      "llm_tldr_en": "Enhances State Space Models for precise temporal forgery localization in multimodal media.",
+      "llm_tldr_cn": "增强状态空间模型，用于多模态媒体中精确的时序伪造定位。",
+      "llm_tldr": "增强状态空间模型，用于多模态媒体中精确的时序伪造定位。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.08332v1",
+      "title": "Detecting Fake Reviewer Groups in Dynamic Networks: An Adaptive Graph Learning Method",
+      "abstract": "The proliferation of fake reviews, often produced by organized groups, undermines consumer trust and fair competition on online platforms. These groups employ sophisticated strategies that evade traditional detection methods, particularly in cold-start scenarios involving newly launched products with sparse data. To address this, we propose the \\underline{D}iversity- and \\underline{S}imilarity-aware \\underline{D}ynamic \\underline{G}raph \\underline{A}ttention-enhanced \\underline{G}raph \\underline{C}onvolutional \\underline{N}etwork (DS-DGA-GCN), a new graph learning model for detecting fake reviewer groups. DS-DGA-GCN achieves robust detection since it focuses on the joint relationships among products, reviews, and reviewers by modeling product-review-reviewer networks. DS-DGA-GCN also achieves adaptive detection by integrating a Network Feature Scoring (NFS) system and a new dynamic graph attention mechanism. The NFS system quantifies network attributes, including neighbor diversity, network self-similarity, as a unified feature score. The dynamic graph attention mechanism improves the adaptability and computational efficiency by captures features related to temporal information, node importance, and global network structure. Extensive experiments conducted on two real-world datasets derived from Amazon and Xiaohongshu demonstrate that DS-DGA-GCN significantly outperforms state-of-the-art baselines, achieving accuracies of up to \\textbf{89.8\\% and 88.3\\%}, respectively.",
+      "authors": [
+        "Jing Zhang",
+        "Ke Huang",
+        "Yao Zhang",
+        "Bin Guo",
+        "Zhiwen Yu"
+      ],
+      "primary_category": "cs.SI",
+      "categories": [
+        "cs.SI",
+        "cs.AI"
+      ],
+      "published": "2026-03-09T12:49:17+00:00",
+      "link": "https://arxiv.org/pdf/2603.08332v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "detecting fake reviewer groups in dynamic networks",
+      "llm_evidence_cn": "检测动态网络中的虚假评论者群体",
+      "llm_evidence": "检测动态网络中的虚假评论者群体",
+      "canonical_evidence": "检测动态网络中的虚假评论者群体",
+      "llm_tldr_en": "An adaptive graph learning method for detecting organized fake reviewer groups in online platforms.",
+      "llm_tldr_cn": "一种用于检测在线平台中有组织虚假评论者群体的自适应图学习方法。",
+      "llm_tldr": "一种用于检测在线平台中有组织虚假评论者群体的自适应图学习方法。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.09111v1",
+      "title": "Progressive Representation Learning for Multimodal Sentiment Analysis with Incomplete Modalities",
+      "abstract": "Multimodal Sentiment Analysis (MSA) seeks to infer human emotions by integrating textual, acoustic, and visual cues. However, existing approaches often rely on all modalities are completeness, whereas real-world applications frequently encounter noise, hardware failures, or privacy restrictions that result in missing modalities. There exists a significant feature misalignment between incomplete and complete modalities, and directly fusing them may even distort the well-learned representations of the intact modalities. To this end, we propose PRLF, a Progressive Representation Learning Framework designed for MSA under uncertain missing-modality conditions. PRLF introduces an Adaptive Modality Reliability Estimator (AMRE), which dynamically quantifies the reliability of each modality using recognition confidence and Fisher information to determine the dominant modality. In addition, the Progressive Interaction (ProgInteract) module iteratively aligns the other modalities with the dominant one, thereby enhancing cross-modal consistency while suppressing noise. Extensive experiments on CMU-MOSI, CMU-MOSEI, and SIMS verify that PRLF outperforms state-of-the-art methods across both inter- and intra-modality missing scenarios, demonstrating its robustness and generalization capability.",
+      "authors": [
+        "Jindi Bao",
+        "Jianjun Qian",
+        "Mengkai Yan",
+        "Jian Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-10T02:45:02+00:00",
+      "link": "https://arxiv.org/pdf/2603.09111v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal representation learning with incomplete modalities",
+      "llm_evidence_cn": "不完整模态下的多模态表示学习",
+      "llm_evidence": "不完整模态下的多模态表示学习",
+      "canonical_evidence": "不完整模态下的多模态表示学习",
+      "llm_tldr_en": "Proposes a progressive representation learning framework for multimodal sentiment analysis with missing data.",
+      "llm_tldr_cn": "提出一种渐进式表示学习框架，用于处理模态缺失情况下的多模态情感分析。",
+      "llm_tldr": "提出一种渐进式表示学习框架，用于处理模态缺失情况下的多模态情感分析。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.07627v1",
+      "title": "Task Breakpoint Generation using Origin-Centric Graph in Virtual Reality Recordings for Adaptive Playback",
+      "abstract": "We propose a method for generating task breakpoints based on an Origin-Centric Graph (OCG) to segment goal-oriented activity recordings into task units for adaptive playback in Virtual Reality (VR) environments. With the development of Augmented Reality (AR)/VR head-mounted displays (HMDs), research on adaptive tutorials and authoring tools has become active, but existing task segmentation methods mainly rely on manual annotation or are restricted to 2D video which limits their applicability to 3D VR contexts. In our approach, assembly scenarios with clearly defined task boundaries are recorded using a structured spatio-temporal scene graph (STSG), and the OCG is employed to track changes in the central object and the formation of new groups, thereby generating task breakpoints automatically. A user study collected user-perceived task breakpoints to establish ground truth (GT), and comparison with the algorithm-detected breakpoints demonstrated high agreement and confirmed accuracy in supporting adaptive playback. The proposed task segmentation method provides a foundation for dynamically adjusting VR playback according to user proficiency and progress, with potential for extension into automatic timeline segmentation systems for diverse VR recordings.",
+      "authors": [
+        "Selin Choi",
+        "Dooyoung Kim",
+        "Taewook Ha",
+        "Seonji Kim",
+        "Woontack Woo"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC"
+      ],
+      "published": "2026-03-08T13:28:00+00:00",
+      "link": "https://arxiv.org/pdf/2603.07627v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "segmenting activity recordings into task units",
+      "llm_evidence_cn": "将活动记录分割为任务单元",
+      "llm_evidence": "将活动记录分割为任务单元",
+      "canonical_evidence": "将活动记录分割为任务单元",
+      "llm_tldr_en": "Develops a method to segment 3D spatio-temporal recordings into task units for VR playback.",
+      "llm_tldr_cn": "开发了一种将3D时空记录分割为任务单元的方法，用于虚拟现实回放。",
+      "llm_tldr": "开发了一种将3D时空记录分割为任务单元的方法，用于虚拟现实回放。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2603.08803v1",
+      "title": "The Temporal Markov Transition Field",
+      "abstract": "The Markov Transition Field (MTF), introduced by Wang and Oates (2015), encodes a time series as a two-dimensional image by mapping each pair of time steps to the transition probability between their quantile states, estimated from a single global transition matrix. This construction is efficient when the transition dynamics are stationary, but produces a misleading representation when the process changes regime over time: the global matrix averages across regimes and the resulting image loses all information about \\emph{when} each dynamical regime was active. In this paper we introduce the \\emph{Temporal Markov Transition Field} (TMTF), an extension that partitions the series into $K$ contiguous temporal chunks, estimates a separate local transition matrix for each chunk, and assembles the image so that each row reflects the dynamics local to its chunk rather than the global average. The resulting $T \\times T$ image has $K$ horizontal bands of distinct texture, each encoding the transition dynamics of one temporal segment. We develop the formal definition, establish the key structural properties of the representation, work through a complete numerical example that makes the distinction from the global MTF concrete, analyse the bias--variance trade-off introduced by temporal chunking, and discuss the geometric interpretation of the local transition matrices in terms of process properties such as persistence, mean reversion, and trending behaviour. The TMTF is amplitude-agnostic and order-preserving, making it suitable as an input channel for convolutional neural networks applied to time series characterisation tasks.",
+      "authors": [
+        "Michael Leznik"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "stat.ML"
+      ],
+      "published": "2026-03-09T18:04:40+00:00",
+      "link": "https://arxiv.org/pdf/2603.08803v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Partitions time series into contiguous temporal chunks based on local transition dynamics",
+      "llm_evidence_cn": "根据局部转移动态将时间序列划分为连续的时间块",
+      "llm_evidence": "根据局部转移动态将时间序列划分为连续的时间块",
+      "canonical_evidence": "根据局部转移动态将时间序列划分为连续的时间块",
+      "llm_tldr_en": "Introduces TMTF to capture non-stationary dynamics by partitioning time series into local temporal chunks.",
+      "llm_tldr_cn": "引入TMTF，通过将时间序列划分为局部时间块来捕捉非平稳动态，改进了时序表征。",
+      "llm_tldr": "引入TMTF，通过将时间序列划分为局部时间块来捕捉非平稳动态，改进了时序表征。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.02663v1",
+      "title": "Evaluating Cross-Modal Reasoning Ability and Problem Characteristics with Multimodal Item Response Theory",
+      "abstract": "Multimodal Large Language Models (MLLMs) have recently emerged as general architectures capable of reasoning over diverse modalities. Benchmarks for MLLMs should measure their ability for cross-modal integration. However, current benchmarks are filled with shortcut questions, which can be solved using only a single modality, thereby yielding unreliable rankings. For example, in vision-language cases, we can find the correct answer without either the image or the text. These low-quality questions unnecessarily increase the size and computational requirements of benchmarks. We introduce a multi-modal and multidimensional item response theory framework (M3IRT) that extends classical IRT by decomposing both model ability and item difficulty into image-only, text-only, and cross-modal components. M3IRT estimates cross-modal ability of MLLMs and each question's cross-modal difficulty, enabling compact, high-quality subsets that better reflect multimodal reasoning. Across 24 VLMs on three benchmarks, M3IRT prioritizes genuinely cross-modal questions over shortcuts and preserves ranking fidelity even when 50% of items are artificially generated low-quality questions, thereby reducing evaluation cost while improving reliability. M3IRT thus offers a practical tool for assessing cross-modal reasoning and refining multimodal benchmarks.",
+      "authors": [
+        "Shunki Uebayashi",
+        "Kento Masui",
+        "Kyohei Atarashi",
+        "Han Bao",
+        "Hisashi Kashima",
+        "Naoto Inoue",
+        "Mayu Otani",
+        "Koh Takeuchi"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.CV"
+      ],
+      "published": "2026-03-03T06:51:08+00:00",
+      "link": "https://arxiv.org/pdf/2603.02663v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "evaluating cross-modal integration and reasoning in MLLMs",
+      "llm_evidence_cn": "评估多模态大模型中的跨模态整合与推理",
+      "llm_evidence": "评估多模态大模型中的跨模态整合与推理",
+      "canonical_evidence": "评估多模态大模型中的跨模态整合与推理",
+      "llm_tldr_en": "Introduces M3IRT to evaluate cross-modal integration, essential for robust multimodal misinformation detection.",
+      "llm_tldr_cn": "引入M3IRT框架评估跨模态整合能力，这对稳健的多模态虚假信息检测至关重要。",
+      "llm_tldr": "引入M3IRT框架评估跨模态整合能力，这对稳健的多模态虚假信息检测至关重要。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.02482v1",
+      "title": "MUSE: A Run-Centric Platform for Multimodal Unified Safety Evaluation of Large Language Models",
+      "abstract": "Safety evaluation and red-teaming of large language models remain predominantly text-centric, and existing frameworks lack the infrastructure to systematically test whether alignment generalizes to audio, image, and video inputs. We present MUSE (Multimodal Unified Safety Evaluation), an open-source, run-centric platform that integrates automatic cross-modal payload generation, three multi-turn attack algorithms (Crescendo, PAIR, Violent Durian), provider-agnostic model routing, and an LLM judge with a five-level safety taxonomy into a single browser-based system. A dual-metric framework distinguishes hard Attack Success Rate (Compliance only) from soft ASR (including Partial Compliance), capturing partial information leakage that binary metrics miss. To probe whether alignment generalizes across modality boundaries, we introduce Inter-Turn Modality Switching (ITMS), which augments multi-turn attacks with per-turn modality rotation. Experiments across six multimodal LLMs from four providers show that multi-turn strategies can achieve up to 90-100% ASR against models with near-perfect single-turn refusal. ITMS does not uniformly raise final ASR on already-saturated baselines, but accelerates convergence by destabilizing early-turn defenses, and ablation reveals that the direction of modality effects is model-family-specific rather than universal, underscoring the need for provider-aware cross-modal safety testing.",
+      "authors": [
+        "Zhongxi Wang",
+        "Yueqian Lin",
+        "Jingyang Zhang",
+        "Hai Helen Li",
+        "Yiran Chen"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CL",
+        "cs.CV",
+        "cs.SD",
+        "eess.AS"
+      ],
+      "published": "2026-03-03T00:10:23+00:00",
+      "link": "https://arxiv.org/pdf/2603.02482v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multimodal safety evaluation and cross-modal payload generation",
+      "llm_evidence_cn": "多模态安全评估与跨模态攻击生成",
+      "llm_evidence": "多模态安全评估与跨模态攻击生成",
+      "canonical_evidence": "多模态安全评估与跨模态攻击生成",
+      "llm_tldr_en": "A platform for multimodal safety evaluation of LLMs using cross-modal attack algorithms.",
+      "llm_tldr_cn": "一个利用跨模态攻击算法对大语言模型进行多模态安全评估的平台。",
+      "llm_tldr": "一个利用跨模态攻击算法对大语言模型进行多模态安全评估的平台。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.09130v1",
+      "title": "From Verification to Amplification: Auditing Reverse Image Search as Algorithmic Gatekeeping in Visual Misinformation Fact-checking",
+      "abstract": "As visual misinformation becomes increasingly prevalent, platform algorithms act as intermediaries that curate information for users' verification practices. Yet, it remains unclear how algorithmic gatekeeping tools, such as reverse image search (RIS), shape users' information exposure during fact-checking. This study systematically audits Google RIS by reversely searching newly identified misleading images over a 15-day window and analyzing 34,486 collected top-ranked search results. We find that Google RIS returns a substantial volume of irrelevant information and repeated misinformation, whereas debunking content constitutes less than 30% of search results. Debunking content faces visibility challenges in rankings amid repeated misinformation and irrelevant information. Our findings also indicate an inverted U-shaped curve of RIS results page quality over time, likely due to search engine \"data voids\" when visual falsehoods first appear. These findings contribute to scholarship of visual misinformation verification, and extend algorithmic gatekeeping research to the visual domain.",
+      "authors": [
+        "Cong Lin",
+        "Yifei Chen",
+        "Jiangyue Chen",
+        "Yingdan Lu",
+        "Yilang Peng",
+        "Cuihua Shen"
+      ],
+      "primary_category": "cs.SI",
+      "categories": [
+        "cs.SI",
+        "cs.CY",
+        "cs.IR"
+      ],
+      "published": "2026-03-10T03:07:27+00:00",
+      "link": "https://arxiv.org/pdf/2603.09130v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Auditing visual misinformation and reverse image search for fact-checking",
+      "llm_evidence_cn": "审计视觉虚假信息和用于事实核查的反向图像搜索",
+      "llm_evidence": "审计视觉虚假信息和用于事实核查的反向图像搜索",
+      "canonical_evidence": "审计视觉虚假信息和用于事实核查的反向图像搜索",
+      "llm_tldr_en": "Audits Google Reverse Image Search effectiveness in debunking visual misinformation.",
+      "llm_tldr_cn": "审计谷歌反向图像搜索在揭露视觉虚假信息方面的有效性。",
+      "llm_tldr": "审计谷歌反向图像搜索在揭露视觉虚假信息方面的有效性。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.02695v1",
+      "title": "Addressing Missing and Noisy Modalities in One Solution: Unified Modality-Quality Framework for Low-quality Multimodal Data",
+      "abstract": "Multimodal data encountered in real-world scenarios are typically of low quality, with noisy modalities and missing modalities being typical forms that severely hinder model performance and robustness. However, prior works often handle noisy and missing modalities separately. In contrast, we jointly address missing and noisy modalities to enhance model robustness in low-quality data scenarios. We regard both noisy and missing modalities as a unified low-quality modality problem, and propose a unified modality-quality (UMQ) framework to enhance low-quality representations for multimodal affective computing. Firstly, we train a quality estimator with explicit supervised signals via a rank-guided training strategy that compares the relative quality of different representations by adding a ranking constraint, avoiding training noise caused by inaccurate absolute quality labels. Then, a quality enhancer for each modality is constructed, which uses the sample-specific information provided by other modalities and the modality-specific information provided by the defined modality baseline representation to enhance the quality of unimodal representations. Finally, we propose a quality-aware mixture-of-experts module with particular routing mechanism to enable multiple modality-quality problems to be addressed more specifically. UMQ consistently outperforms state-of-the-art baselines on multiple datasets under the settings of complete, missing, and noisy modalities.",
+      "authors": [
+        "Sijie Mai",
+        "Shiqin Han",
+        "Haifeng Hu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-03T07:38:13+00:00",
+      "link": "https://arxiv.org/pdf/2603.02695v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "unified framework for low-quality multimodal data",
+      "llm_evidence_cn": "低质量多模态数据的统一框架",
+      "llm_evidence": "低质量多模态数据的统一框架",
+      "canonical_evidence": "低质量多模态数据的统一框架",
+      "llm_tldr_en": "Proposes UMQ framework to handle missing and noisy modalities in multimodal computing.",
+      "llm_tldr_cn": "提出UMQ框架，统一解决多模态计算中的模态缺失和噪声问题。",
+      "llm_tldr": "提出UMQ框架，统一解决多模态计算中的模态缺失和噪声问题。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.02754v1",
+      "title": "Seeing Clearly without Training: Mitigating Hallucinations in Multimodal LLMs for Remote Sensing",
+      "abstract": "Multimodal large language models (MLLMs) suffer from pronounced hallucinations in remote sensing visual question-answering (RS-VQA), primarily caused by visual grounding failures in large-scale scenes or misinterpretation of fine-grained small targets. To systematically analyze these issues, we introduce RSHBench, a protocol-based benchmark for fine-grained diagnosis of factual and logical hallucinations. To mitigate grounding-induced factual hallucinations, we further propose Relative Attention-Driven Actively Reasoning (RADAR), a training-free inference method that leverages intrinsic attention in MLLMs to guide progressive localization and fine-grained local reasoning at test time. Extensive experiments across diverse MLLMs demonstrate that RADAR consistently improves RS-VQA performance and reduces both factual and logical hallucinations. Code and data will be publicly available at: https://github.com/MiliLab/RADAR",
+      "authors": [
+        "Yi Liu",
+        "Jing Zhang",
+        "Di Wang",
+        "Xiaoyu Tian",
+        "Haonan Guo",
+        "Bo Du"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-03T08:53:20+00:00",
+      "link": "https://arxiv.org/pdf/2603.02754v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "mitigating hallucinations in multimodal LLMs",
+      "llm_evidence_cn": "减轻多模态大语言模型中的幻觉",
+      "llm_evidence": "减轻多模态大语言模型中的幻觉",
+      "canonical_evidence": "减轻多模态大语言模型中的幻觉",
+      "llm_tldr_en": "Proposes RADAR to mitigate factual hallucinations in multimodal models, relevant to information reliability.",
+      "llm_tldr_cn": "提出RADAR方法以减轻多模态模型中的事实幻觉，与信息可靠性相关。",
+      "llm_tldr": "提出RADAR方法以减轻多模态模型中的事实幻觉，与信息可靠性相关。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.09349v1",
+      "title": "TA-GGAD: Testing-time Adaptive Graph Model for Generalist Graph Anomaly Detection",
+      "abstract": "A significant number of anomalous nodes in the real world, such as fake news, noncompliant users, malicious transactions, and malicious posts, severely compromises the health of the graph data ecosystem and urgently requires effective identification and processing. With anomalies that span multiple data domains yet exhibit vast differences in features, cross-domain detection models face severe domain shift issues, which limit their generalizability across all domains. This study identifies and quantitatively analyzes a specific feature mismatch pattern exhibited by domain shift in graph anomaly detection, which we define as the \\emph{Anomaly Disassortativity} issue ($\\mathcal{AD}$). Based on the modeling of the issue $\\mathcal{AD}$, we introduce a novel graph foundation model for anomaly detection. It achieves cross-domain generalization in different graphs, requiring only a single training phase to perform effectively across diverse domains. The experimental findings, based on fourteen diverse real-world graphs, confirm a breakthrough in the model's cross-domain adaptation, achieving a pioneering state-of-the-art (SOTA) level in terms of detection accuracy. In summary, the proposed theory of $\\mathcal{AD}$ provides a novel theoretical perspective and a practical route for future research in generalist graph anomaly detection (GGAD). The code is available at https://anonymous.4open.science/r/Anonymization-TA-GGAD/.",
+      "authors": [
+        "Xiong Zhang",
+        "Hong Peng",
+        "Changlong Fu",
+        "Xin Jin",
+        "Yun Yang",
+        "Cheng Xie"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-03-10T08:30:19+00:00",
+      "link": "https://arxiv.org/pdf/2603.09349v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "graph anomaly detection for fake news across domains",
+      "llm_evidence_cn": "跨领域的虚假新闻图异常检测",
+      "llm_evidence": "跨领域的虚假新闻图异常检测",
+      "canonical_evidence": "跨领域的虚假新闻图异常检测",
+      "llm_tldr_en": "Introduces a testing-time adaptive graph model to address domain shift in fake news and anomaly detection.",
+      "llm_tldr_cn": "引入一种测试时自适应图模型，以解决虚假新闻和异常检测中的领域偏移问题。",
+      "llm_tldr": "引入一种测试时自适应图模型，以解决虚假新闻和异常检测中的领域偏移问题。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.03939v1",
+      "title": "Cross-Modal Mapping and Dual-Branch Reconstruction for 2D-3D Multimodal Industrial Anomaly Detection",
+      "abstract": "Multimodal industrial anomaly detection benefits from integrating RGB appearance with 3D surface geometry, yet existing \\emph{unsupervised} approaches commonly rely on memory banks, teacher-student architectures, or fragile fusion schemes, limiting robustness under noisy depth, weak texture, or missing modalities. This paper introduces \\textbf{CMDR-IAD}, a lightweight and modality-flexible unsupervised framework for reliable anomaly detection in 2D+3D multimodal as well as single-modality (2D-only or 3D-only) settings. \\textbf{CMDR-IAD} combines bidirectional 2D$\\leftrightarrow$3D cross-modal mapping to model appearance-geometry consistency with dual-branch reconstruction that independently captures normal texture and geometric structure. A two-part fusion strategy integrates these cues: a reliability-gated mapping anomaly highlights spatially consistent texture-geometry discrepancies, while a confidence-weighted reconstruction anomaly adaptively balances appearance and geometric deviations, yielding stable and precise anomaly localization even in depth-sparse or low-texture regions. On the MVTec 3D-AD benchmark, CMDR-IAD achieves state-of-the-art performance while operating without memory banks, reaching 97.3\\% image-level AUROC (I-AUROC), 99.6\\% pixel-level AUROC (P-AUROC), and 97.6\\% AUPRO. On a real-world polyurethane cutting dataset, the 3D-only variant attains 92.6\\% I-AUROC and 92.5\\% P-AUROC, demonstrating strong effectiveness under practical industrial conditions. These results highlight the framework's robustness, modality flexibility, and the effectiveness of the proposed fusion strategies for industrial visual inspection. Our source code is available at https://github.com/ECGAI-Research/CMDR-IAD/",
+      "authors": [
+        "Radia Daci",
+        "Vito Renò",
+        "Cosimo Patruno",
+        "Angelo Cardellicchio",
+        "Abdelmalik Taleb-Ahmed",
+        "Marco Leo",
+        "Cosimo Distante"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-04T10:57:32+00:00",
+      "link": "https://arxiv.org/pdf/2603.03939v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Cross-modal mapping for multimodal anomaly detection",
+      "llm_evidence_cn": "用于多模态异常检测的跨模态映射",
+      "llm_evidence": "用于多模态异常检测的跨模态映射",
+      "canonical_evidence": "用于多模态异常检测的跨模态映射",
+      "llm_tldr_en": "A framework for 2D-3D multimodal industrial anomaly detection using cross-modal mapping.",
+      "llm_tldr_cn": "一个利用跨模态映射进行2D-3D多模态工业异常检测的框架。",
+      "llm_tldr": "一个利用跨模态映射进行2D-3D多模态工业异常检测的框架。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.02767v2",
+      "title": "ITO: Images and Texts as One via Synergizing Multiple Alignment and Training-Time Fusion",
+      "abstract": "Image-text contrastive pretraining has become a dominant paradigm for visual representation learning, yet existing methods often yield representations that remain partially organized by modality. We propose ITO, a framework addressing this limitation through two synergistic mechanisms. Multimodal multiple alignment enriches supervision by mining diverse image-text correspondences, while a lightweight training-time multimodal fusion module enforces structured cross-modal interaction. Crucially, the fusion module is discarded at inference, preserving the efficiency of standard dual-encoder architectures. Extensive experiments show that ITO consistently outperforms strong baselines across classification, retrieval, and multimodal benchmarks. Our analysis reveals that while multiple alignment drives discriminative power, training-time fusion acts as a critical structural regularizer -- eliminating the modality gap and stabilizing training dynamics to prevent the early saturation often observed in aggressive contrastive learning.",
+      "authors": [
+        "HanZpeng Liu",
+        "Yaqian Li",
+        "Zidan Wang",
+        "Shuoxi Zhang",
+        "Zonglin Zhao",
+        "Zihao Bo",
+        "Rinyoichi Takezoe",
+        "Kaiwen Long",
+        "Kun He"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-03T09:08:53+00:00",
+      "link": "https://arxiv.org/pdf/2603.02767v2",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "structured cross-modal interaction and multimodal fusion",
+      "llm_evidence_cn": "结构化跨模态交互与多模态融合",
+      "llm_evidence": "结构化跨模态交互与多模态融合",
+      "canonical_evidence": "结构化跨模态交互与多模态融合",
+      "llm_tldr_en": "Introduces ITO framework for synergizing image-text alignment and training-time fusion.",
+      "llm_tldr_cn": "提出ITO框架，通过协同多种对齐方式和训练时融合来增强图像文本表示。",
+      "llm_tldr": "提出ITO框架，通过协同多种对齐方式和训练时融合来增强图像文本表示。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.03949v1",
+      "title": "The SIS Competition Model for Conflicting Rumors",
+      "abstract": "We propose an SIS competition model describing the propagation of conflicting rumors, such as fake news and its corrections. This simple model captures the interaction between rumor propagation and opinion dynamics, where rumors drive opinion changes and, conversely, individuals' opinions determine the infection rates of rumors. We analytically derive all steady states and their stability. These results uncover a novel coexistence mechanism. This coexistence corresponds to a scenario where belief in one rumor (e.g., fake news) paradoxically aids the spread of the opposing rumor (e.g., corrective information). Due to this mechanism, a nontrivial but realistic phenomenon occurs where a lower infection rate actually enhances the spread of a rumor. Furthermore, although the model does not explicitly incorporate majority conformity, a phenomenon where the majority gains an advantage emerges spontaneously. Consequently, even if one rumor has a higher infection rate, it may be eliminated by the other if its initial share fails to exceed a critical threshold. We analytically derive this threshold using the singular perturbation method.",
+      "authors": [
+        "Yu Takiguchi",
+        "Koji Nemoto"
+      ],
+      "primary_category": "physics.soc-ph",
+      "categories": [
+        "physics.soc-ph"
+      ],
+      "published": "2026-03-04T11:20:42+00:00",
+      "link": "https://arxiv.org/pdf/2603.03949v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "propagation of conflicting rumors and fake news",
+      "llm_evidence_cn": "冲突谣言与虚假新闻的传播",
+      "llm_evidence": "冲突谣言与虚假新闻的传播",
+      "canonical_evidence": "冲突谣言与虚假新闻的传播",
+      "llm_tldr_en": "Models the competition and coexistence between fake news and corrective information.",
+      "llm_tldr_cn": "构建了虚假新闻与其更正信息之间竞争与共存的传播模型。",
+      "llm_tldr": "构建了虚假新闻与其更正信息之间竞争与共存的传播模型。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.03276v1",
+      "title": "Beyond Language Modeling: An Exploration of Multimodal Pretraining",
+      "abstract": "The visual world offers a critical axis for advancing foundation models beyond language. Despite growing interest in this direction, the design space for native multimodal models remains opaque. We provide empirical clarity through controlled, from-scratch pretraining experiments, isolating the factors that govern multimodal pretraining without interference from language pretraining. We adopt the Transfusion framework, using next-token prediction for language and diffusion for vision, to train on diverse data including text, video, image-text pairs, and even action-conditioned video. Our experiments yield four key insights: (i) Representation Autoencoder (RAE) provides an optimal unified visual representation by excelling at both visual understanding and generation; (ii) visual and language data are complementary and yield synergy for downstream capabilities; (iii) unified multimodal pretraining leads naturally to world modeling, with capabilities emerging from general training; and (iv) Mixture-of-Experts (MoE) enables efficient and effective multimodal scaling while naturally inducing modality specialization. Through IsoFLOP analysis, we compute scaling laws for both modalities and uncover a scaling asymmetry: vision is significantly more data-hungry than language. We demonstrate that the MoE architecture harmonizes this scaling asymmetry by providing the high model capacity required by language while accommodating the data-intensive nature of vision, paving the way for truly unified multimodal models.",
+      "authors": [
+        "Shengbang Tong",
+        "David Fan",
+        "John Nguyen",
+        "Ellis Brown",
+        "Gaoyue Zhou",
+        "Shengyi Qian",
+        "Boyang Zheng",
+        "Théophane Vallaeys",
+        "Junlin Han",
+        "Rob Fergus",
+        "Naila Murray",
+        "Marjan Ghazvininejad",
+        "Mike Lewis",
+        "Nicolas Ballas",
+        "Amir Bar",
+        "Michael Rabbat",
+        "Jakob Verbeek",
+        "Luke Zettlemoyer",
+        "Koustuv Sinha",
+        "Yann LeCun",
+        "Saining Xie"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-03T18:58:00+00:00",
+      "link": "https://arxiv.org/pdf/2603.03276v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "native multimodal models and cross-modal pretraining",
+      "llm_evidence_cn": "原生多模态模型与跨模态预训练",
+      "llm_evidence": "原生多模态模型与跨模态预训练",
+      "canonical_evidence": "原生多模态模型与跨模态预训练",
+      "llm_tldr_en": "Investigates design space for native multimodal foundation models using Transfusion framework.",
+      "llm_tldr_cn": "研究原生多模态基础模型的涉及空间，利用Transfusion框架进行预训练。",
+      "llm_tldr": "研究原生多模态基础模型的涉及空间，利用Transfusion框架进行预训练。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.04727v1",
+      "title": "Are Multimodal LLMs Ready for Surveillance? A Reality Check on Zero-Shot Anomaly Detection in the Wild",
+      "abstract": "Multimodal large language models (MLLMs) have demonstrated impressive general competence in video understanding, yet their reliability for real-world Video Anomaly Detection (VAD) remains largely unexplored. Unlike conventional pipelines relying on reconstruction or pose-based cues, MLLMs enable a paradigm shift: treating anomaly detection as a language-guided reasoning task. In this work, we systematically evaluate state-of-the-art MLLMs on the ShanghaiTech and CHAD benchmarks by reformulating VAD as a binary classification task under weak temporal supervision. We investigate how prompt specificity and temporal window lengths (1s--3s) influence performance, focusing on the precision--recall trade-off. Our findings reveal a pronounced conservative bias in zero-shot settings; while models exhibit high confidence, they disproportionately favor the 'normal' class, resulting in high precision but a recall collapse that limits practical utility. We demonstrate that class-specific instructions can significantly shift this decision boundary, improving the peak F1-score on ShanghaiTech from 0.09 to 0.64, yet recall remains a critical bottleneck. These results highlight a significant performance gap for MLLMs in noisy environments and provide a foundation for future work in recall-oriented prompting and model calibration for open-world surveillance, which demands complex video understanding and reasoning.",
+      "authors": [
+        "Shanle Yao",
+        "Armin Danesh Pazho",
+        "Narges Rashvand",
+        "Hamed Tabkhi"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-05T02:00:53+00:00",
+      "link": "https://arxiv.org/pdf/2603.04727v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multimodal LLMs for anomaly detection and video understanding",
+      "llm_evidence_cn": "多模态大模型用于异常检测和视频理解",
+      "llm_evidence": "多模态大模型用于异常检测和视频理解",
+      "canonical_evidence": "多模态大模型用于异常检测和视频理解",
+      "llm_tldr_en": "Evaluates multimodal LLMs for zero-shot video anomaly detection as a language-guided reasoning task.",
+      "llm_tldr_cn": "评估多模态大模型在零样本视频异常检测中作为语言引导推理任务的表现。",
+      "llm_tldr": "评估多模态大模型在零样本视频异常检测中作为语言引导推理任务的表现。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
