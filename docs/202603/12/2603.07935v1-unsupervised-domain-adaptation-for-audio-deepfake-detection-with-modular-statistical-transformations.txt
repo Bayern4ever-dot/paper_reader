@@ -1,0 +1,229 @@
+Title: Unsupervised Domain Adaptation for Audio Deepfake Detection with Modular Statistical Transformations
+
+URL Source: https://arxiv.org/pdf/2603.07935v1
+
+Published Time: Tue, 10 Mar 2026 01:49:24 GMT
+
+Number of Pages: 9
+
+Markdown Content:
+# Unsupervised Domain Adaptation for Audio Deepfake Detection with Modular Statistical Transformations 
+
+# Urawee Thani, Gagandeep Singh, Priyanka Singh 
+
+# Abstract 
+
+Audio deepfake detection systems trained on one dataset of-ten fail when deployed on data from different sources due to distributional shifts in recording conditions, synthesis methods, and acoustic environments. We present a modular pipeline for unsupervised domain adaptation that combines pre-trained Wav2Vec 2.0 embeddings with statistical trans-formations to improve cross-domain generalization with-out requiring labeled target data. Our approach applies power transformation for feature normalization, ANOVA-based feature selection, joint PCA for domain-agnostic di-mensionality reduction, and CORAL alignment to match source and target covariance structures before classifica-tion via logistic regression. We evaluate on two cross-domain transfer scenarios: ASVspoof 2019 LA → Fake-or-Real (FoR) and FoR → ASVspoof, achieving 62.7–63.6% accuracy with balanced performance across real and fake classes. Systematic ablation experiments reveal that fea-ture selection (+3.5%) and CORAL alignment (+3.2%) pro-vide the largest individual contributions, with the complete pipeline improving accuracy by 10.7% over baseline. While performance is modest compared to within-domain detec-tion (94–96%), our pipeline offers transparency and mod-ularity, making it suitable for deployment scenarios requir-ing interpretable decisions. 
+
+# 1. Introduction 
+
+Generative models now produce synthetic media that is in-creasingly difficult to distinguish from authentic content. Text generators can fabricate plausible news articles that are difficult to detect even for politically informed readers [9], while image, video, and audio generators create real-istic but entirely artificial scenes and voices [6]. The rapid development of neural speech synthesis and voice conver-sion systems has made high-quality voice cloning widely accessible, raising concerns in security-sensitive applica-tions such as fraud, impersonation, and the circumvention of voice biometric authentication systems [8, 18]. Social science studies and systematic reviews of disin-formation highlight that modern misinformation campaigns often combine multiple modalities and exploit the dynamics of social platforms [11, 14]. Manipulated media therefore rarely appears in isolation and instead contributes to mul-timodal narratives designed to maximize persuasive impact and audience reach [5]. For audio deepfakes, human perception studies indicate that listeners struggle to reliably distinguish synthetic from authentic speech. Muller et al. show that both humans and machine detectors fail on several types of attacks in controlled experiments [13]. Similarly, Mai et al. demon-strate that even after warnings and exposure to examples, human participants cannot consistently detect speech deep-fakes across languages and speaker identities [12]. These findings reinforce the need for automated detection systems capable of identifying subtle acoustic artifacts and inconsis-tencies introduced by generative models. Recent surveys on audio deepfake detection summarize a rapidly growing body of work on model architectures, fea-ture representations, and training strategies [1, 20]. Early approaches relied on handcrafted spectral representations such as constant-Q cepstral coefficients and phase-based features [15]. More recent work leverages deep neural architectures including RawNet [16], AASIST [17], and transformer-based speech encoders derived from large-scale self-supervised pretraining [2, 4, 7]. Despite these advances, benchmark initiatives such as ASVspoof 2021 have shown that many systems fail to gen-eralize to realistic transmission conditions and previously unseen attack families [10]. Cross-dataset evaluation often reveals that detectors exploit dataset-specific artifacts rather than intrinsic properties of synthetic speech [8]. To address this limitation, recent work on domain generalization pro-poses architectures designed to learn domain-invariant fea-tures on top of self-supervised speech representations [19]. In parallel, the DeepSpeak dataset has recently been introduced as a more realistic benchmark for audiovisual deepfake detection with more than one hundred hours of real and manipulated webcam-style footage [3]. The dataset includes diverse speakers, recording conditions, and mod-ern deepfake generation pipelines, providing both frame-level and clip-level labels. Such datasets enable research into multimodal manipulation detection and cross-modal 
+
+> arXiv:2603.07935v1 [cs.SD] 9 Mar 2026
+
+consistency analysis. In this paper we focus on cross-domain voice deep-fake detection. Building on prior work that combines Wav2Vec 2.0 embeddings with shallow classifiers, we pro-pose a hybrid feature pipeline that introduces a sequence of distributional and geometric transformations prior to clas-sification. Instead of relying on large end-to-end networks, our approach emphasizes a transparent sequence of opera-tions that can be inspected, interpreted, and ablated. Our contributions are as follows: • We formalize a cross-domain audio deepfake detec-tion setting that emphasizes train–test distribution shifts across datasets and synthesis systems. • We design a hybrid feature pipeline that combines power transformation, feature selection, joint principal compo-nent analysis, correlation alignment (CORAL), and an optimized classifier on top of self-supervised speech rep-resentations. • We empirically study the impact of each component through ablation experiments and discuss how the pipeline can extend to multimodal settings such as Deep-Speak. 
+
+# 2. Background and Motivation 
+
+2.1. Misinformation, Disinformation, and Deep-fakes 
+
+The broader context for audio deepfakes lies within the study of misinformation and disinformation. Critical reviews highlight how coordinated misinformation cam-paigns can erode public trust in institutions and exploit platform-specific amplification mechanisms [14]. Model-ing and simulation studies further demonstrate that mis-information dynamics often follow complex diffusion pat-terns influenced by network structure, belief updating pro-cesses, and platform algorithms [11]. Within this broader landscape, deepfakes act as a techno-logical enabler that lowers the cost of producing convincing fabricated media. Chesney and Citron argue that deepfakes represent a new class of information integrity threats capa-ble of undermining trust in audiovisual evidence and com-plicating fact-checking processes [5]. Surveys of deepfake generation and detection methods across modalities high-light that detection performance depends strongly on the choice of representation, dataset realism, and assumptions about future attack models [6]. Audio deepfakes are particularly relevant in high-stakes scenarios such as financial fraud, political manipulation, and social engineering attacks. In these settings, convincing voice clones can bypass traditional authentication systems or exploit the trust associated with familiar voices [18]. 
+
+2.2. Human Perception of Speech Deepfakes 
+
+Human perception studies provide an important comple-ment to algorithmic detection. Muller et al. compare hu-man and machine performance on synthetic speech detec-tion and find that both humans and detectors fail on certain attack types [13]. Mai et al. conduct large-scale controlled experiments across multiple languages and report that hu-man listeners cannot reliably identify synthetic speech even when trained on examples [12]. These studies suggest that listeners often rely on se-mantic plausibility and contextual expectations rather than acoustic cues when judging authenticity. Consequently, high-quality neural speech synthesis systems can evade hu-man detection even when subtle artifacts remain present in the waveform. These findings reinforce the need for au-tomated detectors that are robust to variations in speakers, recording environments, and synthesis methods. 
+
+2.3. Audio Deepfake Detection and Domain Gener-alization 
+
+Survey articles on audio deepfake detection identify three major axes of variation: feature representation, back-end classifier, and training strategy [1, 20]. Traditional sys-tems rely on handcrafted acoustic features such as constant-Q cepstral coefficients or log-Mel spectrograms [15]. Re-cent work instead employs self-supervised models such as Wav2Vec 2.0 [2], HuBERT [7], and WavLM [4] to extract high-level speech representations. Specialized neural architectures for spoof detection have also emerged. RawNet2 processes raw waveforms directly and achieves strong performance on ASVspoof benchmarks [16]. The AASIST architecture introduces graph attention mechanisms to model spectro-temporal relationships and capture subtle artifacts across frequency bands [17]. Nevertheless, cross-dataset robustness remains a signif-icant challenge. The ASVspoof 2021 challenge demon-strates that models achieving high in-domain performance often degrade substantially when evaluated on new codecs, channels, or synthesis techniques [10]. To address this limitation, Xie et al. propose an Aggregation and Separa-tion Domain Generalization (ASDG) framework that learns domain-invariant representations on top of Wav2Vec 2.0 embeddings and improves cross-corpus detection perfor-mance [19]. 
+
+# 3. Problem Formulation 
+
+We focus on binary audio deepfake detection under unsu-pervised domain adaptation. Let x denote a speech utter-ance and y ∈ { 0, 1} denote a label indicating bona fide (0) or deepfake (1). We consider a source domain Ds with la-beled samples {(xis, y is)}ns 
+
+> i=1
+
+and a target domain Dt with unlabeled samples {xjt }nt 
+
+> j=1
+
+for adaptation and labeled sam-ples {(xkt , y kt )}ntest  
+
+> k=1
+
+for evaluation (labels used only for evaluation, not training). The domains differ in one or more of the following fac-tors: • speaker demographics and languages, • recording channels and codecs, • synthesis models and attack types. The goal is to learn a detector f (x) trained on labeled source data Ds that generalizes to unlabeled target domain 
+
+Dt by leveraging unlabeled target samples for distribution alignment. 
+
+Unsupervised Domain Adaptation vs. Domain Gen-eralization: This setting is unsupervised domain adapta-tion (UDA), not domain generalization (DG). In DG, no tar-get data is available during training. In UDA, unlabeled tar-get samples are accessible for distribution alignment (Joint PCA, CORAL) but not for supervised learning. This reflects realistic deployment scenarios where unlabeled audio from the target platform (e.g., user uploads to a content modera-tion system) is available for adaptation before classification begins [19]. In practice, we assume that both Ds and Dt provide seg-mented utterances with Wav2Vec 2.0 embeddings. We fur-ther assume that bona fide and deepfake proportions may differ between domains. Our method aims to reduce distri-bution mismatch at the feature level while preserving dis-criminative structure between bona fide and deepfake sam-ples. 
+
+# 4. Proposed Method 
+
+4.1. Overview 
+
+Our pipeline builds on a self-supervised speech encoder and a sequence of shallow but carefully chosen feature transfor-mations as illustrated in Figure 1: Wav2Vec 2.0 embeddings are extracted for each utterance; a power transformation is applied to reduce skewness and stabilize variances; super-vised feature selection is performed to discard noisy or re-dundant dimensions; a joint principal component analysis (PCA) basis is learned over combined source- and target-like data to obtain low-dimensional representations; cor-relation alignment (CORAL) is applied to match second-order statistics between source and target features; and an optimized classifier is trained on the transformed source features. Each step can be ablated independently and visualized to understand its effect on class separability and domain align-ment. 
+
+4.2. Self-Supervised Front End 
+
+We use Wav2Vec 2.0 as a front end, following prior work on audio deepfake detection and domain generalization [19, 20]. For each utterance x, we obtain frame-level em-beddings and then aggregate them into a fixed-length vector, for example by averaging or using a statistics pooling layer. This produces a high-dimensional feature vector z ∈ R1024 
+
+for each utterance. 
+
+4.3. Power Transformation 
+
+The raw embedding dimensions often exhibit skewed distri-butions and heavy tails. To mitigate this, we apply a power transformation such as the Yeo–Johnson transform indepen-dently to each feature dimension, followed by standardiza-tion. This step aims to bring feature distributions closer to Gaussian, which can improve the effectiveness of linear and covariance-based methods in subsequent stages. 
+
+4.4. Feature Selection 
+
+Not all embedding dimensions contribute equally to dis-crimination between bona fide and deepfake speech. We perform supervised feature selection on the source domain using ANOVA F-test, which computes the F-statistic mea-suring the ratio of between-class variance to within-class variance for each feature. We retain the top k=512 features (50% of the original dimensionality), yielding a reduced feature space z′ ∈ Rd′
+
+with d′ ≪ d where d′ = 512 ≪ d =1024 . Features with low F-scores, indicating high within-class variance or low discriminative power, are discarded as noisy or redundant. 
+
+4.5. Joint PCA 
+
+To obtain a compact representation that captures domi-nant variation across both domains, we perform PCA on a combined set of source and unlabeled target embeddings. Specifically, we concatenate the selected features from both domains and fit a PCA model to reduce dimensionality to n=256 components. Joint PCA serves two purposes. First, it reduces dimensionality and noise. Second, by including both domains in the covariance estimate, it encourages the principal components to capture shared directions of vari-ance rather than domain-specific artifacts. The number of components (256) is chosen to balance information reten-tion with computational efficiency, ensuring at least three samples per component for stable estimation. 
+
+4.6. Correlation Alignment 
+
+Even after joint PCA, residual domain mismatch may re-main. We adopt correlation alignment (CORAL) as a lightweight domain adaptation step that matches the covari-ance of source features to that of the target [19]. Figure 2 illustrates the effect of CORAL on aligning the second-order statistics of the source and target domains. Before alignment, the two domains exhibit mismatched co-variance structures, leading to poor cross-domain general-ization. After applying the CORAL transformation, the source features are linearly adjusted so that their covariance Figure 1. Cross-Domain Audio Deepfake Detection Pipeline. Audio from source (ASVspoof) and target (FoR) datasets undergoes feature extraction (Wav2Vec 2.0), power transformation (Yeo–Johnson), feature selection (ANOVA), dimensionality reduction (Joint PCA n=256), and domain alignment (CORAL). The aligned features are classified via logistic regression for binary real/fake prediction. Arrow connec-tions show the data flow from datasets through preprocessing stages to final predictions. 
+
+Figure 2. CORAL Domain Alignment Visualization. Top: Pre-alignment feature distributions show ASVspoof (blue) and FoR (orange) datasets with a large distributional gap. Bottom: Post-CORAL alignment ( λ = 10 −6) reduces the inter-domain gap through covariance matching, creating overlapping feature spaces. Performance gains: Acc +7.0%, AUC +5.8%, EER -5.7%. 
+
+more closely matches that of the target, reducing distribu-tional shift and enabling more robust model transfer. Given source features with covariance Σs and target fea-tures with covariance Σt, CORAL applies a linear trans-form A such that the transformed source covariance approx-imates Σt.We estimate Σs and Σt from samples and add regulariza-tion λI (with λ = 10 −6) to the diagonal to ensure numer-ical stability and positive definiteness. The transformation is computed using Cholesky decomposition for efficiency: given LsL⊤ 
+
+> s
+
+= Σ s and LtL⊤ 
+
+> t
+
+= Σ t, we solve 
+
+A = L−1 
+
+> s
+
+Lt
+
+and apply the aligned features 
+
+zaligned = zA ⊤.
+
+If the Cholesky decomposition fails due to ill-conditioned matrices, we fall back to eigendecomposition with eigen-value regularization. 
+
+4.7. Classifier and Training 
+
+On top of the transformed features we train a logistic re-gression classifier with L2 regularization (C=0.01). This provides a simple linear decision boundary with strong regularization to prevent overfitting to source-domain pat-terns. The classifier uses balanced class weights to handle class imbalance in the training data, automatically adjusting the loss function to penalize misclassifications of minority classes more heavily. 
+
+# 5. Experimental Setup 
+
+5.1. Datasets 
+
+We evaluate our approach on two publicly available bench-mark datasets that differ in recording conditions, speak-ers, and synthesis methods. The first domain is ASVspoof 2019 Logical Access (LA), which contains approximately 12,500 audio samples including 9,005 text-to-speech and voice conversion spoofs and 1,002 bona fide utterances. The second domain is the Fake-or-Real (FoR) dataset, which comprises 17,870 balanced samples (50% authentic, 50% deepfake) generated using different synthesis pipelines than ASVspoof. For each dataset, we create training and evaluation splits using stratified random sampling with an 80/20 ra-tio (80% for training, 20% for testing) to maintain class distribution balance. We fix the random seed to 42 for reproducibility. Unlike the official ASVspoof protocol, which provides separate train, development, and evaluation partitions, our cross-domain experiments require matched train/test splits across both datasets to enable symmetric evaluation in both transfer directions (ASVspoof →FoR and FoR →ASVspoof). We use 80/20 stratified splits rather than official ASVspoof protocols for three reasons: (1) symmetric cross-domain evaluation requires matched splits across both datasets; (2) our fixed hyperparameters eliminate the need for separate dev/eval splits; (3) reproducibility via fixed random seed. We acknowledge potential speaker over-lap within ASVspoof but note that cross-domain evalua-tion on FoR (different speakers entirely) validates speaker-independent detection. For future work we plan to extend experiments to the DeepSpeak dataset, which contains more than one hun-dred hours of authentic and deepfake audiovisual content recorded in webcam conditions [3]. In that setting, the au-dio pipeline described here would be combined with visual features and multimodal fusion. 
+
+5.2. Evaluation Protocol 
+
+Within each experiment, we follow a cross-domain protocol where the model is trained on one dataset (source domain) and evaluated on the other (target domain). We conduct two cross-domain transfer experiments: training on ASVspoof and testing on FoR, and training on FoR and testing on ASVspoof. We report standard classification metrics including ac-curacy, precision, recall, and F1-score. For alignment with prior deepfake detection work, we also compute equal er-ror rate (EER), defined as the point where false positive rate equals false negative rate, and area under the receiver op-erating characteristic curve (AUC-ROC). Additionally, we report class-specific accuracies for both bona fide and deep-fake classes to identify potential bias toward either class. All metrics are computed on the held-out test set of the tar-get domain. 
+
+5.3. Implementation Details 
+
+We use Wav2Vec 2.0 embeddings pre-extracted using the base model from the Hugging Face Transformers library. Each audio file is processed to obtain a 1024-dimensional utterance-level embedding via mean pooling over frame-level representations. These embeddings are stored offline and loaded from CSV files during training. Power transformation uses the Yeo–Johnson method with standardization. Feature selection via ANOVA F-test retains k=512 features. Joint PCA reduces dimensionality to n=256 components. CORAL alignment uses Cholesky decomposition with regularization parameter λ = 10 −6 for numerical stability. Logistic regression is trained with L2 regularization (C=0.01) and balanced class weights. All hyperparameters are fixed based on preliminary val-idation experiments rather than tuned via grid search or cross-validation within each run. This design choice prior-itizes computational efficiency and reproducibility over ex-haustive hyperparameter optimization. We use a single ran-dom seed for all stochastic operations including data split-ting, PCA initialization, and classifier training, ensuring de-terministic and reproducible results. 
+
+# 6. Results and Analysis 
+
+6.1. In-Domain Performance Baselines 
+
+Before presenting cross-domain results, we establish in-domain baselines to contextualize generalization difficulty. Table 1 shows within-domain accuracy when training and testing on the same dataset (80/20 splits).  
+
+> Table 1. Within-Domain Performance (Train & Test on Same Dataset)
+
+Configuration ASVspoof FoR 
+
+Raw Wav2Vec 2.0 + LR 89.3% 91.7% Full Pipeline (Ours) 94.8% 96.2% When domain shift is absent, our pipeline achieves ¿94% accuracy, demonstrating that the components are effective for general deepfake detection. Comparing in-domain (94– 96%) to cross-domain (62–64%) reveals a 30–34% accu-racy drop, quantifying the severity of distributional shift be-tween ASVspoof (studio recordings) and FoR (diverse con-ditions). 
+
+6.2. Ablation Study: Component-wise Contribu-tion Analysis 
+
+To quantify which pipeline components provide the largest marginal benefit, we conduct systematic ablation experi-ments. Starting from a baseline of raw Wav2Vec 2.0 embed-dings with logistic regression, we incrementally add each transformation and measure its individual contribution on the ASVspoof →FoR transfer scenario. Table 2 presents re-sults. 
+
+> Table 2. Ablation Study: Incremental Component Contributions
+
+Configuration Acc AUC EER Step ∆
+
+Baseline (Raw Wav2Vec) 52.0 56.4 48.1 –+ Power Transform 54.5 59.1 45.6 +2.5% + Feature Selection 58.0 62.3 42.1 +3.5% + PCA 59.5 63.8 40.6 +1.5% + CORAL 62.7 69.6 37.4 +3.2% Total Improvement +10.7% Power Transformation (+2.5%): Yeo–Johnson nor-malization addresses skewed feature distributions in Wav2Vec 2.0 embeddings, improving the logistic regres-sion’s linear separability assumption. 
+
+Feature Selection (+3.5%): ANOVA F-test provides the largest single-step improvement by identifying the 512 most discriminative features. This suggests that not all Wav2Vec 2.0 dimensions are equally informative, many en-code speaker identity or prosody irrelevant to synthesis ar-tifacts. 
+
+Joint PCA (+1.5%): Dimensionality reduction from 512 →256 provides modest gains by removing correlated features and creating a domain-agnostic subspace through joint fitting on source+target data. 
+
+CORAL Alignment (+3.2%): Domain adaptation pro-vides the second-largest improvement, reducing distribu-tional mismatch. The 5.8% AUC gain and 5.7% EER re-duction demonstrate CORAL’s effectiveness in aligning co-variance structures (visualized in Figure 2). All five components contribute positively, with feature selection and CORAL accounting for 63% of total improve-ment. Computational cost is negligible: total preprocessing time ∼1.1 seconds for 10,000 samples on CPU. 
+
+6.3. Cross-Domain Transfer Results 
+
+Figure 3 presents cross-domain results for both transfer di-rections using the complete pipeline. When training on ASVspoof 2019 LA and testing on FoR, the model achieves 62.7% accuracy with 37.4% EER and 69.6% AUC. In the reverse direction (training on FoR, testing on ASVspoof 2019 LA), we observe 63.6% accuracy with 38.2% EER and 64.6% AUC. The balanced performance in both directions suggests the pipeline captures domain-invariant acoustic patterns characteristic of synthetic speech rather than memorizing source-specific artifacts. Class-specific accuracies confirm balanced detection: ASVspoof →FoR achieves 63.5% (au-thentic) and 62.0% (deepfakes); FoR →ASVspoof achieves 60.2% (authentic) and 64.0% (deepfakes). This prevents majority-class collapse. 
+
+6.4. Comparison with State-of-the-Art Methods 
+
+Table 3 compares our pipeline against recent cross-domain deepfake detection methods. Direct comparison is challeng-ing due to different evaluation protocols, but we provide ap-proximate performance ranges from literature.             
+
+> Table 3. Cross-Domain Audio Deepfake Detection: SOTA Com-parison
+> Method Acc GPU Interpret.
+> ASDG [19] 72–78% Hours Low AASIST (no adapt) 55–60% Yes Medium
+> Ours 62–64% None High
+
+ASDG Advantages: End-to-end learning with speaker-aware adaptation achieves 10–15% higher accuracy than our pipeline through learned alignment and deep classifiers. 
+
+Our Pipeline Advantages: (1) Transparency: Each component (PowerTransform, ANOVA, PCA, CORAL) is interpretable with quantified contributions; (2) Efficiency: 
+
+CPU training in ¡5 minutes vs. GPU hours; (3) Modularity: 
+
+Components can be swapped independently; (4) No speaker labels: Works with any dataset. 
+
+Trade-offs: Our linear classifier and hand-designed transformations limit capacity compared to ASDG’s deep networks. However, for deployment scenarios requiring au-ditable decisions (legal forensics, content moderation with human oversight), interpretability outweighs the accuracy gap. 
+
+6.5. Statistical Robustness 
+
+To verify statistical significance, we perform paired t-tests comparing baseline vs. full pipeline across 10 random train/test splits (seeds 0–9): • Baseline: 52.1% ± 1.2% • Full Pipeline: 62.5% ± 0.9% • Difference: +10.4% ± 1.5% • Paired t-test: t(9) = 18 .7, p < 0.001 
+
+The improvement is highly significant ( p < 0.001 ), con-firming genuine benefit beyond random variation. Each ablation stage also shows significance: Power Transform (+2.4% ± 0.6%, p < 0.01 ), Feature Selection (+3.6% ±
+
+0.7%, p < 0.001 ), PCA (+1.6% ± 0.5%, p < 0.05 ), CORAL (+3.1% ± 0.8%, p < 0.001 ). 
+
+6.6. Limitations 
+
+Performance Gap: Our 62–64% cross-domain accuracy remains substantially below in-domain performance (94– 96%) and SOTA methods like ASDG (72–78%). This re-flects trade-offs between interpretability and capacity. Figure 3. Baseline vs. Final Cross-Domain Performance. Striped bars represent baseline performance using raw Wav2Vec 2.0 fea-tures, while solid bars show results after applying power transform, feature selection (ANOVA), PCA reduction (n=256), and CORAL alignment. The final pipeline achieves consistent improvements across Accuracy, AUC, and EER metrics for both ASVspoof →FoR and FoR →ASVspoof transfer scenarios, with accuracy gains exceeding 10% in both directions. 
+
+Limited Scope: (1) Only two datasets evaluated; (2) English only; (3) No per-attack-type analysis; (4) No ad-versarial robustness testing; (5) Relatively clean audio (stu-dio/controlled conditions). 
+
+Methodological Constraints: (1) Linear classifier lim-its capacity; (2) CORAL matches only second-order statis-tics; (3) Static adaptation (one-time alignment); (4) No ex-haustive hyperparameter search. 
+
+Generalization Uncertainty: Performance on noisy, compressed, or telephony audio remains unknown. Cross-lingual generalization is unvalidated. Additional cross-domain transfers (e.g., to In-the-Wild, DFDC-Audio) would strengthen claims. These limitations motivate ongoing work to bridge the gap between interpretable statistical methods and high-performance deep learning while preserving transparency. 
+
+# 7. Future Work: Multimodal Extension 
+
+The pipeline presented in this paper focuses exclusively on audio-only deepfake detection. As future work, we propose extending this modular approach to multimodal datasets such as DeepSpeak [3], which contains more than one hun-dred hours of audiovisual deepfake content recorded in we-bcam conditions. Important: The architecture described below is a hypothetical design for future implementa-tion. 
+
+A natural extension would apply parallel pipelines to au-dio (Wav2Vec 2.0) and visual (ResNet-50 or Vision Trans-former) modalities, followed by late fusion for combined prediction: 
+
+Proposed Multimodal Pipeline: 
+
+• Audio Branch: Wav2Vec 2.0 → PowerTransform →
+
+ANOVA → PCA → CORAL • Video Branch: ResNet-50 (frame-level) → Temporal pooling → PowerTransform → PCA → CORAL • Fusion: Concatenate aligned audio + video features →
+
+Logistic Regression Figure 4 illustrates this hypothetical architecture. The design remains modular and interpretable, allowing inde-pendent analysis of audio vs. visual contributions. How-ever, implementing and validating this architecture requires substantial engineering effort beyond the scope of this work. Other future directions include: (1) extending to multi-source domain adaptation (training on ASVspoof + FoR simultaneously); (2) investigating online adaptation for streaming audio; (3) developing counterfactual explana-tions for individual predictions; (4) testing on adversarially Figure 4. Proposed Multimodal Architecture for Future Work. Audio (Wav2Vec 2.0) and video (ResNet-50) feature extraction branches would process inputs independently through power trans-form, feature selection (ANOVA), PCA reduction, and CORAL domain alignment. This is a hypothetical design for future im-plementation. 
+
+perturbed audio; (5) cross-lingual evaluation. 
+
+# 8. Discussion 
+
+Our study demonstrates that a modular pipeline combining self-supervised speech representations with classical statis-tical transformations can provide a transparent approach to cross-domain audio deepfake detection. Building on pre-trained Wav2Vec 2.0 embeddings and applying power nor-malization, supervised feature selection, joint PCA, and CORAL alignment, we achieve cross-domain detection ac-curacies of approximately 63% on two challenging transfer scenarios. While modest compared to within-domain detection rates typically exceeding 95% [10, 20], this performance reflects the substantial difficulty of cross-domain general-ization. The distribution shift between ASVspoof 2019 LA (studio-quality recordings) and FoR (diverse conditions and synthesis methods) is considerable, and our results indi-cate that even sophisticated domain adaptation techniques face significant challenges. An important advantage of our pipeline is its modularity and interpretability. Each trans-formation step can be understood and modified indepen-dently, offering practical benefits in deployment scenar-ios where model decisions must be auditable or domain-specific tuning is required. This contrasts with fully end-to-end approaches that may achieve higher performance but at the cost of reduced transparency. Several limitations re-main. Our experiments focus on binary detection and do not address fine-grained categorization of attack types or localization of manipulated regions. We evaluate on only two datasets with a single language (English) and specific recording conditions. More extensive evaluation across multiple languages, diverse speakers, and acoustic environ-ments will be necessary to validate generalizability. Addi-tionally, our pipeline relies on pre-extracted embeddings, precluding end-to-end optimization that could potentially improve performance at the cost of increased complexity. 
+
+# 9. Conclusion 
+
+We have presented a modular pipeline for unsupervised do-main adaptation in audio deepfake detection that combines self-supervised Wav2Vec 2.0 embeddings with a sequence of statistical transformations: power normalization, super-vised feature selection, joint PCA, and CORAL alignment. Our approach achieves 62–64% accuracy on two challeng-ing cross-domain transfer scenarios (ASVspoof ↔FoR), representing a 10.7% improvement over baseline while maintaining full interpretability. Systematic ablation studies quantify each component’s contribution, with feature selection (+3.5%) and CORAL alignment (+3.2%) providing the largest gains. While our performance remains below state-of-the-art domain adap-tation methods such as ASDG (72–78%), our pipeline of-fers critical advantages for deployment scenarios requir-ing transparency: each transformation is independently in-spectable, CPU training completes in under 5 minutes, and components can be modified without full system retraining. The substantial gap between in-domain performance (94–96%) and cross-domain performance (62–64%) under-scores the difficulty of deepfake detection under distribu-tion shift. Our modular framework provides a transparent baseline for future work combining interpretable statistical methods with learned representations. 
+
+# References   
+
+> [1] Zaynab Almutairi and Hebah Elgibreen. A review of modern audio deepfake detection methods: Challenges and future di-rections. Algorithms , 15(5):155, 2022. 1, 2 [2] Alexei Baevski, Henry Zhou, Abdelrahman Mohamed, and Michael Auli. wav2vec 2.0: A framework for self-supervised learning of speech representations. 2020. 1, 2 [3] Sarah Barrington, Matyas Bohacek, and Hany Farid. The
+
+deepspeak dataset. arXiv preprint , 2025. arXiv:2408.05366. 1, 5, 7 [4] Sanyuan Chen, Chengyi Wang, Zhengyang Chen, Yu Wu, Shujie Liu, Zhuo Chen, Jinyu Li, Naoyuki Kanda, Takuya Yoshioka, Xiong Xiao, Jian Wu, Long Zhou, Shuo Ren, Yan-min Qian, Yao Qian, Jian Wu, Michael Zeng, Xiangzhan Yu, and Furu Wei. Wavlm: Large-scale self-supervised pre-training for full stack speech processing. pages 1505–1518, 2022. 1, 2 [5] Robert Chesney and Danielle Citron. Deepfakes and the new disinformation war. Foreign Affairs , 98(1):147–155, 2019. 1, 2[6] Deepak Dagar and Dinesh Kumar Vishwakarma. A literature review and perspectives in deepfakes: Generation, detection, and applications. International Journal of Multimedia Infor-mation Retrieval , 11(3):219–289, 2022. 1, 2 [7] Wei-Ning Hsu, Benjamin Bolte, Yao-Hung Hubert Tsai, Kushal Lakhotia, Ruslan Salakhutdinov, and Abdelrahman Mohamed. Hubert: Self-supervised speech representa-tion learning by masked prediction of hidden units. page 3451–3460. IEEE Press, 2021. 1, 2 [8] Tomi Kinnunen, Hector Delgado, Nicholas Evans, Kong Aik Lee, Ville Vestman, Andreas Nautsch, Massimiliano Todisco, Xin Wang, Md Sahidullah, Junichi Yamagishi, and Douglas A. Reynolds. Tandem assessment of spoofing coun-termeasures and automatic speaker verification: Fundamen-tals. IEEE/ACM Transactions on Audio, Speech, and Lan-guage Processing , 28:2195–2210, 2020. 1 [9] Sarah Kreps, R. Miles McCain, and Miles Brundage. All the news that’s fit to fabricate: AI-generated text as a tool of media misinformation. Journal of Experimental Political Science , 9(1):104–117, 2022. 1 [10] Xuechen Liu, Xin Wang, Md Sahidullah, Jose Patino, H´ ector Delgado, Tomi Kinnunen, Massimiliano Todisco, Junichi Yamagishi, Nicholas Evans, Andreas Nautsch, and Kong Aik Lee. ASVspoof 2021: Towards spoofed and deepfake speech detection in the wild. IEEE/ACM Transactions on Audio, Speech, and Language Processing , 2023. arXiv:2210.02437. 1, 2, 8 [11] Alejandro Buitrago L´ opez, Javier Pastor-Galindo, and Jos´ e A. Ruip´ erez-Valiente. Frameworks, modeling and simulations of misinformation and disinformation: A sys-tematic literature review. ACM Computing Surveys , 2024. arXiv:2406.09343. 1, 2 [12] Kimberly T. Mai, Sergi D. Bray, Toby Davies, and Lewis D. Griffin. Warning: Humans cannot reliably detect speech deepfakes. PLOS ONE , 18(8):e0285333, 2023. 1, 2 [13] Nicolas M. M¨ uller, Karla Pizzi, and Jennifer Williams. Hu-man perception of audio deepfakes. Proceedings of the First International Workshop on Deepfake Detection for Audio Multimedia , 2021. arXiv:2107.09667. 1, 2 [14] Dwi Surjatmodjo, Andi Alimuddin Unde, Hafied Cangara, and Alem Febri Sonni. Information pandemic: A critical re-view of disinformation spread on social media and its impli-cations for state resilience. Social Sciences , 13(8):418, 2024. 1, 2 [15] Massimiliano Todisco, H´ ector Delgado, and Nicholas Evans. Constant q cepstral coefficients: A spoofing countermeasure for automatic speaker verification. pages 516–535, 2017. 1, 2[16] Jee weon Jung, Hee-Soo Heo, Ju ho Kim, Hye jin Shim, and Ha-Jin Yu. Rawnet: Advanced end-to-end deep neural net-work using raw waveforms for text-independent speaker ver-ification. 2019. 1, 2 [17] Jee weon Jung, Hee-Soo Heo, Hemlata Tak, Hye jin Shim, Joon Son Chung, Bong-Jin Lee, Ha-Jin Yu, and Nicholas Evans. Aasist: Audio anti-spoofing using integrated spectro-temporal graph attention networks. 2021. 1, 2 [18] Zhizheng Wu, Nicholas Evans, Tomi Kinnunen, Junichi Ya-magishi, Federico Alegre, and Haizhou Li. Spoofing and countermeasures for speaker verification: A survey. Speech Communication , 66:130–153, 2015. 1, 2 [19] Yuankun Xie, Haonan Cheng, Yutian Wang, and Long Ye. Domain generalization via aggregation and separation for audio deepfake detection. IEEE Transactions on Informa-tion Forensics and Security , 19:344–358, 2024. 1, 2, 3, 6 [20] Bowen Zhang, Hui Cui, Van Nguyen, and Monica Whitty. Audio deepfake detection: What has been achieved and what lies ahead. Sensors , 25(7):1989, 2025. 1, 2, 3, 8

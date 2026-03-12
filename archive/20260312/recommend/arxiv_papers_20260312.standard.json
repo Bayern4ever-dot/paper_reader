@@ -1,0 +1,731 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-12T19:30:18.989477+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 6,
+    "deep_cap": 7,
+    "deep_selected": 6,
+    "quick_candidates": 44,
+    "quick_skim_target": 12,
+    "quick_selected": 12
+  },
+  "deep_dive": [
+    {
+      "id": "2603.05181v1",
+      "title": "Mario: Multimodal Graph Reasoning with Large Language Models",
+      "abstract": "Recent advances in large language models (LLMs) have opened new avenues for multimodal reasoning. Yet, most existing methods still rely on pretrained vision-language models (VLMs) to encode image-text pairs in isolation, ignoring the relational structure that real-world multimodal data naturally form. This motivates reasoning on multimodal graphs (MMGs), where each node has textual and visual attributes and edges provide structural cues. Enabling LLM-based reasoning on such heterogeneous multimodal signals while preserving graph topology introduces two key challenges: resolving weak cross-modal consistency and handling heterogeneous modality preference. To address this, we propose Mario, a unified framework that simultaneously resolves the two above challenges and enables effective LLM-based reasoning over MMGs. Mario consists of two innovative stages. Firstly, a graph-conditioned VLM design that jointly refines textual and visual features through fine-grained cross-modal contrastive learning guided by graph topology. Secondly, a modality-adaptive graph instruction tuning mechanism that organizes aligned multimodal features into graph-aware instruction views and employs a learnable router to surface, for each node and its neighborhood, the most informative modality configuration to the LLM. Extensive experiments across diverse MMG benchmarks demonstrate that Mario consistently outperforms state-of-the-art graph models in both supervised and zero-shot scenarios for node classification and link prediction. The code will be made available at https://github.com/sunyuanfu/Mario.",
+      "authors": [
+        "Yuanfu Sun",
+        "Kang Li",
+        "Pengkang Guo",
+        "Jiajin Liu",
+        "Qiaoyu Tan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-05T13:49:41+00:00",
+      "link": "https://arxiv.org/pdf/2603.05181v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal graph reasoning with weak cross-modal consistency",
+      "llm_evidence_cn": "处理弱跨模态一致性的多模态图推理",
+      "llm_evidence": "处理弱跨模态一致性的多模态图推理",
+      "canonical_evidence": "处理弱跨模态一致性的多模态图推理",
+      "llm_tldr_en": "Proposes Mario, a framework for LLM-based reasoning on multimodal graphs with heterogeneous signals.",
+      "llm_tldr_cn": "提出Mario框架，利用大语言模型在具有异构信号的多模态图上进行推理。",
+      "llm_tldr": "提出Mario框架，利用大语言模型在具有异构信号的多模态图上进行推理。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.06976v1",
+      "title": "A Systematic Investigation of Document Chunking Strategies and Embedding Sensitivity",
+      "abstract": "We present the first large-scale, cross-domain evaluation of document chunking strategies for dense retrieval, addressing a critical but underexplored aspect of retrieval-augmented systems. In our study, 36 segmentation methods spanning fixed-size, semantic, structure-aware, hierarchical, adaptive, and LLM-assisted approaches are benchmarked across six diverse knowledge domains using five different embedding models. Retrieval performance is assessed using graded relevance scores from a state-of-the-art LLM evaluator, with Normalised DCG@5 as the primary metric (complemented by Hit@5 and MRR). Our experiments show that content-aware chunking significantly improves retrieval effectiveness over naive fixed-length splitting. The top-performing strategy, Paragraph Group Chunking, achieved the highest overall accuracy (mean nDCG@5~0.459) and substantially better top-rank hit rates (Precision@1~24%, Hit@5~59%). In contrast, simple fixed-size character chunking as baselines performed poorly (nDCG@5 < 0.244, Precision@1~2-3%). We observe pronounced domain-specific differences: dynamic token sizing is strongest in biology, physics and health, while paragraph grouping is strongest in legal and maths. Larger embedding models yield higher absolute scores but remain sensitive to suboptimal segmentation, indicating that better chunking and large embeddings provide complementary benefits. In addition to accuracy gains, we quantify the efficiency trade-offs of advanced chunking. Producing more, smaller chunks can increase index size and latency. Consequently, we identify methods (like dynamic chunking) that approach an optimal balance of effectiveness and efficiency. These findings establish chunking as a vital lever for improving retrieval performance and reliability.",
+      "authors": [
+        "Muhammad Arslan Shaukat",
+        "Muntasir Adnan",
+        "Carlos C. N. Kuhn"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-03-07T01:33:44+00:00",
+      "link": "https://arxiv.org/pdf/2603.06976v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "semantic and adaptive document segmentation",
+      "llm_evidence_cn": "语义和自适应文档分割",
+      "llm_evidence": "语义和自适应文档分割",
+      "canonical_evidence": "语义和自适应文档分割",
+      "llm_tldr_en": "Evaluates 36 document chunking strategies for dense retrieval, showing content-aware methods excel.",
+      "llm_tldr_cn": "对36种文档分块策略进行大规模评估，证明内容感知分割能显著提升检索效果。",
+      "llm_tldr": "对36种文档分块策略进行大规模评估，证明内容感知分割能显著提升检索效果。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.07935v1",
+      "title": "Unsupervised Domain Adaptation for Audio Deepfake Detection with Modular Statistical Transformations",
+      "abstract": "Audio deepfake detection systems trained on one dataset often fail when deployed on data from different sources due to distributional shifts in recording conditions, synthesis methods, and acoustic environments. We present a modular pipeline for unsupervised domain adaptation that combines pre-trained Wav2Vec 2.0 embeddings with statistical transformations to improve cross-domain generalization without requiring labeled target data. Our approach applies power transformation for feature normalization, ANOVA-based feature selection, joint PCA for domain-agnostic dimensionality reduction, and CORAL alignment to match source and target covariance structures before classification via logistic regression. We evaluate on two cross-domain transfer scenarios: ASVspoof 2019 LA to Fake-or-Real (FoR) and FoR to ASVspoof, achieving 62.7--63.6\\% accuracy with balanced performance across real and fake classes. Systematic ablation experiments reveal that feature selection (+3.5%) and CORAL alignment (+3.2%) provide the largest individual contributions, with the complete pipeline improving accuracy by 10.7% over baseline. While performance is modest compared to within-domain detection (94-96%), our pipeline offers transparency and modularity, making it suitable for deployment scenarios requiring interpretable decisions.",
+      "authors": [
+        "Urawee Thani",
+        "Gagandeep Singh",
+        "Priyanka Singh"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD"
+      ],
+      "published": "2026-03-09T04:00:38+00:00",
+      "link": "https://arxiv.org/pdf/2603.07935v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Unsupervised domain adaptation for audio deepfake detection",
+      "llm_evidence_cn": "音频深度伪造检测的无监督领域自适应",
+      "llm_evidence": "音频深度伪造检测的无监督领域自适应",
+      "canonical_evidence": "音频深度伪造检测的无监督领域自适应",
+      "llm_tldr_en": "Presents a modular pipeline for cross-domain generalization in audio deepfake detection.",
+      "llm_tldr_cn": "提出一种模块化流水线，用于提升音频深度伪造检测的跨领域泛化能力。",
+      "llm_tldr": "提出一种模块化流水线，用于提升音频深度伪造检测的跨领域泛化能力。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.08898v1",
+      "title": "Towards Visual Query Segmentation in the Wild",
+      "abstract": "In this paper, we introduce visual query segmentation (VQS), a new paradigm of visual query localization (VQL) that aims to segment all pixel-level occurrences of an object of interest in an untrimmed video, given an external visual query. Compared to existing VQL locating only the last appearance of a target using bounding boxes, VQS enables more comprehensive (i.e., all object occurrences) and precise (i.e., pixel-level masks) localization, making it more practical for real-world scenarios. To foster research on this task, we present VQS-4K, a large-scale benchmark dedicated to VQS. Specifically, VQS-4K contains 4,111 videos with more than 1.3 million frames and covers a diverse set of 222 object categories. Each video is paired with a visual query defined by a frame outside the search video and its target mask, and annotated with spatial-temporal masklets corresponding to the queried target. To ensure high quality, all videos in VQS-4K are manually labeled with meticulous inspection and iterative refinement. To the best of our knowledge, VQS-4K is the first benchmark specifically designed for VQS. Furthermore, to stimulate future research, we present a simple yet effective method, named VQ-SAM, which extends SAM 2 by leveraging target-specific and background distractor cues from the video to progressively evolve the memory through a novel multi-stage framework with an adaptive memory generation (AMG) module for VQS, significantly improving the performance. In our extensive experiments on VQS-4K, VQ-SAM achieves promising results and surpasses all existing approaches, demonstrating its effectiveness. With the proposed VQS-4K and VQ-SAM, we expect to go beyond the current VQL paradigm and inspire more future research and practical applications on VQS. Our benchmark, code, and results will be made publicly available.",
+      "authors": [
+        "Bing Fan",
+        "Minghao Li",
+        "Hanzhi Zhang",
+        "Shaohua Dong",
+        "Naga Prudhvi Mareedu",
+        "Weishi Shi",
+        "Yunhe Feng",
+        "Yan Huang",
+        "Heng Fan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-09T20:09:04+00:00",
+      "link": "https://arxiv.org/pdf/2603.08898v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Visual query segmentation in untrimmed videos",
+      "llm_evidence_cn": "未修剪视频中的视觉查询分割",
+      "llm_evidence": "未修剪视频中的视觉查询分割",
+      "canonical_evidence": "未修剪视频中的视觉查询分割",
+      "llm_tldr_en": "Introduces a new paradigm and benchmark for segmenting object occurrences in videos via visual queries.",
+      "llm_tldr_cn": "为通过视觉查询分割视频中出现的对象提出了一种新范式和基准。",
+      "llm_tldr": "为通过视觉查询分割视频中出现的对象提出了一种新范式和基准。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.07990v1",
+      "title": "MJ1: Multimodal Judgment via Grounded Verification",
+      "abstract": "Multimodal judges struggle to ground decisions in visual evidence. We present MJ1, a multimodal judge trained with reinforcement learning that enforces visual grounding through a structured grounded verification chain (observations $\\rightarrow$ claims $\\rightarrow$ verification $\\rightarrow$ evaluation $\\rightarrow$ scoring) and a counterfactual consistency reward that penalizes position bias. Even without training, our mechanism improves base-model accuracy on MMRB2 by +3.8 points on Image Editing and +1.7 on Multimodal Reasoning. After training, MJ1, with only 3B active parameters, achieves 77.0% accuracy on MMRB2 and surpasses orders-of-magnitude larger models like Gemini-3-Pro. These results show that grounded verification and consistency-based training substantially improve multimodal judgment without increasing model scale.",
+      "authors": [
+        "Bhavesh Kumar",
+        "Dylan Feng",
+        "Leonard Tang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-09T05:55:48+00:00",
+      "link": "https://arxiv.org/pdf/2603.07990v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal judge for grounded verification and claim evaluation",
+      "llm_evidence_cn": "用于接地验证和主张评估的多模态裁判模型",
+      "llm_evidence": "用于接地验证和主张评估的多模态裁判模型",
+      "canonical_evidence": "用于接地验证和主张评估的多模态裁判模型",
+      "llm_tldr_en": "Presents MJ1, a multimodal judge that uses grounded verification to improve reasoning and scoring accuracy.",
+      "llm_tldr_cn": "提出MJ1多模态裁判模型，通过接地验证增强推理能力和评分准确性。",
+      "llm_tldr": "提出MJ1多模态裁判模型，通过接地验证增强推理能力和评分准确性。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.10504v1",
+      "title": "Naïve Exposure of Generative AI Capabilities Undermines Deepfake Detection",
+      "abstract": "Generative AI systems increasingly expose powerful reasoning and image refinement capabilities through user-facing chatbot interfaces. In this work, we show that the naïve exposure of such capabilities fundamentally undermines modern deepfake detectors. Rather than proposing a new image manipulation technique, we study a realistic and already-deployed usage scenario in which an adversary uses only benign, policy-compliant prompts and commercial generative AI systems. We demonstrate that state-of-the-art deepfake detection methods fail under semantic-preserving image refinement. Specifically, we show that generative AI systems articulate explicit authenticity criteria and inadvertently externalize them through unrestricted reasoning, enabling their direct reuse as refinement objectives. As a result, refined images simultaneously evade detection, preserve identity as verified by commercial face recognition APIs, and exhibit substantially higher perceptual quality. Importantly, we find that widely accessible commercial chatbot services pose a significantly greater security risk than open-source models, as their superior realism, semantic controllability, and low-barrier interfaces enable effective evasion by non-expert users. Our findings reveal a structural mismatch between the threat models assumed by current detection frameworks and the actual capabilities of real-world generative AI. While detection baselines are largely shaped by prior benchmarks, deployed systems expose unrestricted authenticity reasoning and refinement despite stringent safety controls in other domains.",
+      "authors": [
+        "Sunpill Kim",
+        "Chanwoo Hwang",
+        "Minsu Kim",
+        "Jae Hong Seo"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-03-11T07:58:38+00:00",
+      "link": "https://arxiv.org/pdf/2603.10504v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Evaluation of state-of-the-art deepfake detection methods",
+      "llm_evidence_cn": "对最先进深度伪造检测方法的评估",
+      "llm_evidence": "对最先进深度伪造检测方法的评估",
+      "canonical_evidence": "对最先进深度伪造检测方法的评估",
+      "llm_tldr_en": "Investigates how generative AI capabilities can undermine current deepfake detection methods.",
+      "llm_tldr_cn": "研究生成式人工智能的能力如何削弱当前的深度伪造检测方法。",
+      "llm_tldr": "研究生成式人工智能的能力如何削弱当前的深度伪造检测方法。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2603.03583v1",
+      "title": "ByteFlow: Language Modeling through Adaptive Byte Compression without a Tokenizer",
+      "abstract": "Modern language models still rely on fixed, pre-defined subword tokenizations. Once a tokenizer is trained, the LM can only operate at this fixed level of granularity, which often leads to brittle and counterintuitive behaviors even in otherwise strong reasoning models. We introduce \\textbf{ByteFlow Net}, a new hierarchical architecture that removes tokenizers entirely and instead enables models to learn their own segmentation of raw byte streams into semantically meaningful units. ByteFlow Net performs compression-driven segmentation based on the coding rate of latent representations, yielding adaptive boundaries \\emph{while preserving a static computation graph via Top-$K$ selection}. Unlike prior self-tokenizing methods that depend on brittle heuristics with human-designed inductive biases, ByteFlow Net adapts its internal representation granularity to the input itself. Experiments demonstrate that this compression-based chunking strategy yields substantial performance gains, with ByteFlow Net outperforming both BPE-based Transformers and previous byte-level architectures. These results suggest that end-to-end, tokenizer-free modeling is not only feasible but also more effective, opening a path toward more adaptive and information-grounded language models.",
+      "authors": [
+        "Chunyuan Deng",
+        "Sanket Lokegaonkar",
+        "Colin Lockard",
+        "Besnik Fetahu",
+        "Nasser Zalmout",
+        "Xian Li"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-03-03T23:20:31+00:00",
+      "link": "https://arxiv.org/pdf/2603.03583v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Adaptive byte compression for semantic segmentation of streams",
+      "llm_evidence_cn": "原始字节流语义分割的自适应压缩",
+      "llm_evidence": "原始字节流语义分割的自适应压缩",
+      "canonical_evidence": "原始字节流语义分割的自适应压缩",
+      "llm_tldr_en": "Introduces ByteFlow Net for tokenizer-free language modeling via adaptive byte stream segmentation.",
+      "llm_tldr_cn": "提出ByteFlow Net，通过自适应字节流分割实现无分词器的语言建模。",
+      "llm_tldr": "提出ByteFlow Net，通过自适应字节流分割实现无分词器的语言建模。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.03827v1",
+      "title": "Evolutionary Multimodal Reasoning via Hierarchical Semantic Representation for Intent Recognition",
+      "abstract": "Multimodal intent recognition aims to infer human intents by jointly modeling various modalities, playing a pivotal role in real-world dialogue systems. However, current methods struggle to model hierarchical semantics underlying complex intents and lack the capacity for self-evolving reasoning over multimodal representations. To address these issues, we propose HIER, a novel method that integrates HIerarchical semantic representation with Evolutionary Reasoning based on Multimodal Large Language Model (MLLM). Inspired by human cognition, HIER introduces a structured reasoning paradigm that organizes multimodal semantics into three progressively abstracted levels. It starts with modality-specific tokens capturing localized semantic cues, which are then clustered via a label-guided strategy to form mid-level semantic concepts. To capture higher-order structure, inter-concept relations are selected using JS divergence scores to highlight salient dependencies across concepts. These hierarchical representations are then injected into MLLM via CoT-driven prompting, enabling step-wise reasoning. Besides, HIER utilizes a self-evolution mechanism that refines semantic representations through MLLM feedback, allowing dynamic adaptation during inference. Experiments on three challenging benchmarks show that HIER consistently outperforms state-of-the-art methods and MLLMs with 1-3% gains across all metrics. Code and more results are available at https://github.com/thuiar/HIER.",
+      "authors": [
+        "Qianrui Zhou",
+        "Hua Xu",
+        "Yunjin Gu",
+        "Yifan Wang",
+        "Songze Li",
+        "Hanlei Zhang"
+      ],
+      "primary_category": "cs.MM",
+      "categories": [
+        "cs.MM"
+      ],
+      "published": "2026-03-04T08:25:05+00:00",
+      "link": "https://arxiv.org/pdf/2603.03827v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal reasoning via hierarchical semantic representation",
+      "llm_evidence_cn": "通过分层语义表示进行多模态推理",
+      "llm_evidence": "通过分层语义表示进行多模态推理",
+      "canonical_evidence": "通过分层语义表示进行多模态推理",
+      "llm_tldr_en": "Proposes HIER for multimodal intent recognition using hierarchical semantic representations.",
+      "llm_tldr_cn": "提出HIER方法，通过分层语义表示实现多模态意图识别。",
+      "llm_tldr": "提出HIER方法，通过分层语义表示实现多模态意图识别。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.03637v1",
+      "title": "Image-based Prompt Injection: Hijacking Multimodal LLMs through Visually Embedded Adversarial Instructions",
+      "abstract": "Multimodal Large Language Models (MLLMs) integrate vision and text to power applications, but this integration introduces new vulnerabilities. We study Image-based Prompt Injection (IPI), a black-box attack in which adversarial instructions are embedded into natural images to override model behavior. Our end-to-end IPI pipeline incorporates segmentation-based region selection, adaptive font scaling, and background-aware rendering to conceal prompts from human perception while preserving model interpretability. Using the COCO dataset and GPT-4-turbo, we evaluate 12 adversarial prompt strategies and multiple embedding configurations. The results show that IPI can reliably manipulate the output of the model, with the most effective configuration achieving up to 64\\% attack success under stealth constraints. These findings highlight IPI as a practical threat in black-box settings and underscore the need for defenses against multimodal prompt injection.",
+      "authors": [
+        "Neha Nagaraja",
+        "Lan Zhang",
+        "Zhilong Wang",
+        "Bo Zhang",
+        "Pawan Patil"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CR"
+      ],
+      "published": "2026-03-04T01:58:08+00:00",
+      "link": "https://arxiv.org/pdf/2603.03637v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "hijacking multimodal LLMs through visually embedded adversarial instructions",
+      "llm_evidence_cn": "通过视觉嵌入对抗指令劫持多模态大模型",
+      "llm_evidence": "通过视觉嵌入对抗指令劫持多模态大模型",
+      "canonical_evidence": "通过视觉嵌入对抗指令劫持多模态大模型",
+      "llm_tldr_en": "Investigates image-based prompt injection attacks that override multimodal LLM behavior via embedded instructions.",
+      "llm_tldr_cn": "研究基于图像的提示注入攻击，通过嵌入对抗指令覆盖多模态大模型的行为。",
+      "llm_tldr": "研究基于图像的提示注入攻击，通过嵌入对抗指令覆盖多模态大模型的行为。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.03983v1",
+      "title": "GeoSeg: Training-Free Reasoning-Driven Segmentation in Remote Sensing Imagery",
+      "abstract": "Recent advances in MLLMs are reframing segmentation from fixed-category prediction to instruction-grounded localization. While reasoning based segmentation has progressed rapidly in natural scenes, remote sensing lacks a generalizable solution due to the prohibitive cost of reasoning-oriented data and domain-specific challenges like overhead viewpoints. We present GeoSeg, a zero-shot, training-free framework that bypasses the supervision bottleneck for reasoning-driven remote sensing segmentation. GeoSeg couples MLLM reasoning with precise localization via: (i) bias-aware coordinate refinement to correct systematic grounding shifts and (ii) a dual-route prompting mechanism to fuse semantic intent with fine-grained spatial cues. We also introduce GeoSeg-Bench, a diagnostic benchmark of 810 image--query pairs with hierarchical difficulty levels. Experiments show that GeoSeg consistently outperforms all baselines, with extensive ablations confirming the effectiveness and necessity of each component.",
+      "authors": [
+        "Lifan Jiang",
+        "Yuhang Pei",
+        "oxi Wu",
+        "Yan Zhao",
+        "Tianrun Wu",
+        "Shulong Yu",
+        "Lihui Zhang",
+        "Deng Cai"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-04T12:24:16+00:00",
+      "link": "https://arxiv.org/pdf/2603.03983v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "reasoning-driven segmentation in remote sensing imagery",
+      "llm_evidence_cn": "遥感图像中推理驱动的分割技术",
+      "llm_evidence": "遥感图像中推理驱动的分割技术",
+      "canonical_evidence": "遥感图像中推理驱动的分割技术",
+      "llm_tldr_en": "Introduces GeoSeg, a training-free framework for reasoning-driven segmentation in remote sensing.",
+      "llm_tldr_cn": "提出GeoSeg，一个用于遥感图像推理驱动分割的零样本、无需训练的框架。",
+      "llm_tldr": "提出GeoSeg，一个用于遥感图像推理驱动分割的零样本、无需训练的框架。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.04846v1",
+      "title": "Multi-Paradigm Collaborative Adversarial Attack Against Multi-Modal Large Language Models",
+      "abstract": "The rapid progress of Multi-Modal Large Language Models (MLLMs) has significantly advanced downstream applications. However, this progress also exposes serious transferable adversarial vulnerabilities. In general, existing adversarial attacks against MLLMs typically rely on surrogate models trained within a single learning paradigm and perform independent optimisation in their respective feature spaces. This straightforward setting naturally restricts the richness of feature representations, delivering limits on the search space and thus impeding the diversity of adversarial perturbations. To address this, we propose a novel Multi-Paradigm Collaborative Attack (MPCAttack) framework to boost the transferability of adversarial examples against MLLMs. In principle, MPCAttack aggregates semantic representations, from both visual images and language texts, to facilitate joint adversarial optimisation on the aggregated features through a Multi-Paradigm Collaborative Optimisation (MPCO) strategy. By performing contrastive matching on multi-paradigm features, MPCO adaptively balances the importance of different paradigm representations and guides the global perturbation optimisation, effectively alleviating the representation bias. Extensive experimental results on multiple benchmarks demonstrate the superiority of MPCAttack, indicating that our solution consistently outperforms state-of-the-art methods in both targeted and untargeted attacks on open-source and closed-source MLLMs. The code is released at https://github.com/LiYuanBoJNU/MPCAttack.",
+      "authors": [
+        "Yuanbo Li",
+        "Tianyang Xu",
+        "Cong Hu",
+        "Tao Zhou",
+        "Xiao-Jun Wu",
+        "Josef Kittler"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-05T06:01:26+00:00",
+      "link": "https://arxiv.org/pdf/2603.04846v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "adversarial vulnerabilities and attacks in multimodal large language models",
+      "llm_evidence_cn": "多模态大语言模型中的对抗性漏洞与攻击",
+      "llm_evidence": "多模态大语言模型中的对抗性漏洞与攻击",
+      "canonical_evidence": "多模态大语言模型中的对抗性漏洞与攻击",
+      "llm_tldr_en": "Introduces MPCAttack to enhance the transferability of adversarial examples against multimodal large language models.",
+      "llm_tldr_cn": "提出MPCAttack框架，旨在增强针对多模态大语言模型的对抗样本的可迁移性。",
+      "llm_tldr": "提出MPCAttack框架，旨在增强针对多模态大语言模型的对抗样本的可迁移性。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.04836v1",
+      "title": "Beyond Text: Aligning Vision and Language for Multimodal E-Commerce Retrieval",
+      "abstract": "Modern e-commerce search is inherently multimodal: customers make purchase decisions by jointly considering product text and visual informations. However, most industrial retrieval and ranking systems primarily rely on textual information, underutilizing the rich visual signals available in product images. In this work, we study unified text-image fusion for two-tower retrieval models in the e-commerce domain. We demonstrate that domain-specific fine-tuning and two stage alignment between query with product text and image modalities are both crucial for effective multimodal retrieval. Building on these insights, we propose a noval modality fusion network to fuse image and text information and capture cross-modal complementary information. Experiments on large-scale e-commerce datasets validate the effectiveness of the proposed approach.",
+      "authors": [
+        "Qujiaheng Zhang",
+        "Guagnyue Xu",
+        "Fengjie Li"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR"
+      ],
+      "published": "2026-03-05T05:43:45+00:00",
+      "link": "https://arxiv.org/pdf/2603.04836v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "cross-modal complementary information fusion in multimodal retrieval",
+      "llm_evidence_cn": "多模态检索中的跨模态互补信息融合",
+      "llm_evidence": "多模态检索中的跨模态互补信息融合",
+      "canonical_evidence": "多模态检索中的跨模态互补信息融合",
+      "llm_tldr_en": "Introduces a modality fusion network to align vision and language for improved multimodal e-commerce retrieval.",
+      "llm_tldr_cn": "引入模态融合网络对齐视觉与语言，以提升多模态电子商务检索效果。",
+      "llm_tldr": "引入模态融合网络对齐视觉与语言，以提升多模态电子商务检索效果。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.04925v1",
+      "title": "Detecting RAG Advertisements Across Advertising Styles",
+      "abstract": "Large language models (LLMs) enable a new form of advertising for retrieval-augmented generation (RAG) systems in which organic responses are blended with contextually relevant ads. The prospect of such \"generated native ads\" has sparked interest in whether they can be detected automatically. Existing datasets, however, do not reflect the diversity of advertising styles discussed in the marketing literature. In this paper, we (1) develop a taxonomy of advertising styles for LLMs, combining the style dimensions of explicitness and type of appeal, (2) simulate that advertisers may attempt to evade detection by changing their advertising style, and (3) evaluate a variety of ad-detection approaches with respect to their robustness under these changes. Expanding previous work on ad detection, we train models that use entity recognition to exactly locate an ad in an LLM response and find them to be both very effective at detecting responses with ads and largely robust to changes in the advertising style. Since ad blocking will be performed on low-resource end-user devices, we include lightweight models like random forests and SVMs in our evaluation. These models, however, are brittle under such changes, highlighting the need for further efficiency-oriented research for a practical approach to blocking of generated ads.",
+      "authors": [
+        "Sebastian Heineking",
+        "Wilhelm Pertsch",
+        "Ines Zelch",
+        "Janek Bevendorff",
+        "Benno Stein",
+        "Matthias Hagen",
+        "Martin Potthast"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR"
+      ],
+      "published": "2026-03-05T08:16:21+00:00",
+      "link": "https://arxiv.org/pdf/2603.04925v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "detecting generated native ads in RAG systems",
+      "llm_evidence_cn": "检测RAG系统中的生成式原生广告",
+      "llm_evidence": "检测RAG系统中的生成式原生广告",
+      "canonical_evidence": "检测RAG系统中的生成式原生广告",
+      "llm_tldr_en": "Develops a taxonomy and detection approaches for identifying AI-generated advertisements in RAG systems.",
+      "llm_tldr_cn": "开发了一种分类法和检测方法，用于识别RAG系统中的AI生成广告。",
+      "llm_tldr": "开发了一种分类法和检测方法，用于识别RAG系统中的AI生成广告。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.04860v1",
+      "title": "Rethinking Temporal Models for TinyML: LSTM versus 1D-CNN in Resource-Constrained Devices",
+      "abstract": "Time series classification underpins applications such as human activity recognition, healthcare monitoring, and gesture detection in the IoT domain. Tiny Machine Learning enables models to run directly on low-power microcontroller units, improving efficiency, ensuring privacy, and reducing cost by avoiding reliance on cloud or edge computing. While Long Short-Term Memory networks are widely used for capturing temporal dependencies, their high computational and memory demands make real-time MCU deployment impractical. In this work, we conduct a hardware-aware feasibility study of LSTM versus 1D Convolutional Neural Networks across five benchmark datasets. Results show that 1D-CNN consistently achieves comparable or higher accuracy around 95% than LSTM which is around 89%, while requiring 35% less RAM, approx. 25% less Flash, and enabling real-time inference that is 27.6 ms vs. 2038 ms. Being so lightweight, 1D-CNN is particularly suitable for on-device processing in wearables and other low-power, battery-operated systems, establishing it as a practical and resource-efficient choice for TinyML deployment.",
+      "authors": [
+        "Bidyut Saha",
+        "Riya Samanta"
+      ],
+      "primary_category": "cs.PF",
+      "categories": [
+        "cs.PF"
+      ],
+      "published": "2026-03-05T06:34:21+00:00",
+      "link": "https://arxiv.org/pdf/2603.04860v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Temporal models for time series classification in TinyML",
+      "llm_evidence_cn": "TinyML中用于时间序列分类的时间模型",
+      "llm_evidence": "TinyML中用于时间序列分类的时间模型",
+      "canonical_evidence": "TinyML中用于时间序列分类的时间模型",
+      "llm_tldr_en": "Compares LSTM and 1D-CNN for efficient time series classification on resource-constrained devices.",
+      "llm_tldr_cn": "比较了LSTM和1D-CNN在资源受限设备上进行高效时间序列分类的性能。",
+      "llm_tldr": "比较了LSTM和1D-CNN在资源受限设备上进行高效时间序列分类的性能。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.04951v1",
+      "title": "Retrieval-Augmented Generation with Covariate Time Series",
+      "abstract": "While RAG has greatly enhanced LLMs, extending this paradigm to Time-Series Foundation Models (TSFMs) remains a challenge. This is exemplified in the Predictive Maintenance of the Pressure Regulating and Shut-Off Valve (PRSOV), a high-stakes industrial scenario characterized by (1) data scarcity, (2) short transient sequences, and (3) covariate coupled dynamics. Unfortunately, existing time-series RAG approaches predominantly rely on generated static vector embeddings and learnable context augmenters, which may fail to distinguish similar regimes in such scarce, transient, and covariate coupled scenarios. To address these limitations, we propose RAG4CTS, a regime-aware, training-free RAG framework for Covariate Time-Series. Specifically, we construct a hierarchal time-series native knowledge base to enable lossless storage and physics-informed retrieval of raw historical regimes. We design a two-stage bi-weighted retrieval mechanism that aligns historical trends through point-wise and multivariate similarities. For context augmentation, we introduce an agent-driven strategy to dynamically optimize context in a self-supervised manner. Extensive experiments on PRSOV demonstrate that our framework significantly outperforms state-of-the-art baselines in prediction accuracy. The proposed system is deployed in Apache IoTDB within China Southern Airlines. Since deployment, our method has successfully identified one PRSOV fault in two months with zero false alarm.",
+      "authors": [
+        "Kenny Ye Liang",
+        "Zhongyi Pei",
+        "Huan Zhang",
+        "Yuhui Liu",
+        "Shaoxu Song",
+        "Jianmin Wang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-03-05T08:45:24+00:00",
+      "link": "https://arxiv.org/pdf/2603.04951v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "regime-aware RAG framework for covariate time-series",
+      "llm_evidence_cn": "用于协变量时序数据的状态感知RAG框架",
+      "llm_evidence": "用于协变量时序数据的状态感知RAG框架",
+      "canonical_evidence": "用于协变量时序数据的状态感知RAG框架",
+      "llm_tldr_en": "Proposes RAG4CTS, a training-free RAG framework for time-series forecasting in industrial scenarios.",
+      "llm_tldr_cn": "提出RAG4CTS，一种无需训练的检索增强生成框架，用于工业场景下的时序预测。",
+      "llm_tldr": "提出RAG4CTS，一种无需训练的检索增强生成框架，用于工业场景下的时序预测。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.04957v1",
+      "title": "VisionPangu: A Compact and Fine-Grained Multimodal Assistant with 1.7B Parameters",
+      "abstract": "Large Multimodal Models (LMMs) have achieved strong performance in vision-language understanding, yet many existing approaches rely on large-scale architectures and coarse supervision, which limits their ability to generate detailed image captions. In this work, we present VisionPangu, a compact 1.7B-parameter multimodal model designed to improve detailed image captioning through efficient multimodal alignment and high-quality supervision. Our model combines an InternVL-derived vision encoder with the OpenPangu-Embedded language backbone via a lightweight MLP projector and adopts an instruction-tuning pipeline inspired by LLaVA. By incorporating dense human-authored descriptions from the DOCCI dataset, VisionPangu improves semantic coherence and descriptive richness without relying on aggressive model scaling. Experimental results demonstrate that compact multimodal models can achieve competitive performance while producing more structured and detailed captions. The code and model weights will be publicly available at https://www.modelscope.cn/models/asdfgh007/visionpangu.",
+      "authors": [
+        "Jiaxin Fan",
+        "Wenpo Song"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-03-05T08:51:33+00:00",
+      "link": "https://arxiv.org/pdf/2603.04957v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multimodal alignment and vision-language understanding",
+      "llm_evidence_cn": "多模态对齐与视觉语言理解",
+      "llm_evidence": "多模态对齐与视觉语言理解",
+      "canonical_evidence": "多模态对齐与视觉语言理解",
+      "llm_tldr_en": "Presents VisionPangu, a compact multimodal model for fine-grained image captioning.",
+      "llm_tldr_cn": "推出VisionPangu，一个用于精细图像描述的轻量级多模态大模型。",
+      "llm_tldr": "推出VisionPangu，一个用于精细图像描述的轻量级多模态大模型。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.05471v1",
+      "title": "Leveraging LLM Parametric Knowledge for Fact Checking without Retrieval",
+      "abstract": "Trustworthiness is a core research challenge for agentic AI systems built on Large Language Models (LLMs). To enhance trust, natural language claims from diverse sources, including human-written text, web content, and model outputs, are commonly checked for factuality by retrieving external knowledge and using an LLM to verify the faithfulness of claims to the retrieved evidence. As a result, such methods are constrained by retrieval errors and external data availability, while leaving the models intrinsic fact-verification capabilities largely unused. We propose the task of fact-checking without retrieval, focusing on the verification of arbitrary natural language claims, independent of their source. To study this setting, we introduce a comprehensive evaluation framework focused on generalization, testing robustness to (i) long-tail knowledge, (ii) variation in claim sources, (iii) multilinguality, and (iv) long-form generation. Across 9 datasets, 18 methods and 3 models, our experiments indicate that logit-based approaches often underperform compared to those that leverage internal model representations. Building on this finding, we introduce INTRA, a method that exploits interactions between internal representations and achieves state-of-the-art performance with strong generalization. More broadly, our work establishes fact-checking without retrieval as a promising research direction that can complement retrieval-based frameworks, improve scalability, and enable the use of such systems as reward signals during training or as components integrated into the generation process.",
+      "authors": [
+        "Artem Vazhentsev",
+        "Maria Marina",
+        "Daniil Moskovskiy",
+        "Sergey Pletenev",
+        "Mikhail Seleznyov",
+        "Mikhail Salnikov",
+        "Elena Tutubalina",
+        "Vasily Konovalov",
+        "Irina Nikishina",
+        "Alexander Panchenko",
+        "Viktor Moskvoretskii"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-03-05T18:42:51+00:00",
+      "link": "https://arxiv.org/pdf/2603.05471v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "fact checking natural language claims without retrieval",
+      "llm_evidence_cn": "无需检索的自然语言声明事实核查",
+      "llm_evidence": "无需检索的自然语言声明事实核查",
+      "canonical_evidence": "无需检索的自然语言声明事实核查",
+      "llm_tldr_en": "Explores using LLM parametric knowledge for fact-checking without external retrieval.",
+      "llm_tldr_cn": "探索利用大模型参数知识在无需外部检索的情况下进行事实核查。",
+      "llm_tldr": "探索利用大模型参数知识在无需外部检索的情况下进行事实核查。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.05075v1",
+      "title": "UniM: A Unified Any-to-Any Interleaved Multimodal Benchmark",
+      "abstract": "In real-world multimodal applications, systems usually need to comprehend arbitrarily combined and interleaved multimodal inputs from users, while also generating outputs in any interleaved multimedia form. This capability defines the goal of any-to-any interleaved multimodal learning under a unified paradigm of understanding and generation, posing new challenges and opportunities for advancing Multimodal Large Language Models (MLLMs). To foster and benchmark this capability, this paper introduces the UniM benchmark, the first Unified Any-to-Any Interleaved Multimodal dataset. UniM contains 31K high-quality instances across 30 domains and 7 representative modalities: text, image, audio, video, document, code, and 3D, each requiring multiple intertwined reasoning and generation capabilities. We further introduce the UniM Evaluation Suite, which assesses models along three dimensions: Semantic Correctness & Generation Quality, Response Structure Integrity, and Interleaved Coherence. In addition, we propose UniMA, an agentic baseline model equipped with traceable reasoning for structured interleaved generation. Comprehensive experiments demonstrate the difficulty of UniM and highlight key challenges and directions for advancing unified any-to-any multimodal intelligence. The project page is https://any2any-mllm.github.io/unim.",
+      "authors": [
+        "Yanlin Li",
+        "Minghui Guo",
+        "Kaiwen Zhang",
+        "Shize Zhang",
+        "Yiran Zhao",
+        "Haodong Li",
+        "Congyue Zhou",
+        "Weijie Zheng",
+        "Yushen Yan",
+        "Shengqiong Wu",
+        "Wei Ji",
+        "Lei Cui",
+        "Furu Wei",
+        "Hao Fei",
+        "Mong-Li Lee",
+        "Wynne Hsu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-05T11:45:16+00:00",
+      "link": "https://arxiv.org/pdf/2603.05075v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "unified any-to-any interleaved multimodal benchmark for understanding and generation",
+      "llm_evidence_cn": "用于理解与生成的统一任意到任意交错多模态基准",
+      "llm_evidence": "用于理解与生成的统一任意到任意交错多模态基准",
+      "canonical_evidence": "用于理解与生成的统一任意到任意交错多模态基准",
+      "llm_tldr_en": "Introduces UniM, a large-scale benchmark for any-to-any interleaved multimodal learning across 7 modalities.",
+      "llm_tldr_cn": "推出UniM基准，这是首个涵盖7种模态的统一任意到任意交错多模态学习数据集。",
+      "llm_tldr": "推出UniM基准，这是首个涵盖7种模态的统一任意到任意交错多模态学习数据集。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
