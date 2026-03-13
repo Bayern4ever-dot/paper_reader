@@ -6,75 +6,79 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-03-12
-- 运行时间：2026-03-12 19:33:10 UTC
+- 最新运行日期：2026-03-13
+- 运行时间：2026-03-13 19:27:47 UTC
 - 运行状态：成功
-- 本次总论文数：18
-- 精读区：6
+- 本次总论文数：19
+- 精读区：7
 - 速读区：12
 
 ### 今日简报（AI）
-今日深挖 18 篇前沿成果，重点攻克多模态图推理与 RAG 文档分块优化两大核心课题。
-推荐关注 Mario 框架的图推理表现，以及文档
-- 详情：[/202603/12/README](/202603/12/README)
+今日深度研读 19 篇 AI 论文，重点攻克多模态取证与高效时间序列预测两大核心领域。
+满分佳作 ForensicZip 重新定义了视觉取证的 Token 效率，TimeSqueeze 则通过动态补丁技术实现了预测性能的跨越。
+建议优先关注 AI 伪造检测相关成果，以应对日益复杂的文档与语音深度造假挑战。
+- 详情：[/202603/13/README](/202603/13/README)
 
 ### 精读区论文标签
-1. [Mario: Multimodal Graph Reasoning with Large Language Models](/202603/12/2603.05181v1-mario-multimodal-graph-reasoning-with-large-language-models)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：处理弱跨模态一致性的多模态图推理
-2. [A Systematic Investigation of Document Chunking Strategies and Embedding Sensitivity](/202603/12/2603.06976v1-a-systematic-investigation-of-document-chunking-strategies-and-embedding-sensitivity)  
+1. [ForensicZip: More Tokens are Better but Not Necessary in Forensic Vision-Language Models](/202603/13/2603.12208v1-forensiczip-more-tokens-are-better-but-not-necessary-in-forensic-vision-language-models)  
+   标签：评分：10.0/10、query:mmfnd
+   evidence：用于多媒体取证和伪造检测的多模态大语言模型
+2. [TimeSqueeze: Dynamic Patching for Efficient Time Series Forecasting](/202603/13/2603.11352v1-timesqueeze-dynamic-patching-for-efficient-time-series-forecasting)  
+   标签：评分：9.0/10、query:tsds
+   evidence：时序数据的内容感知分割
+3. [Permutation-Equivariant 2D State Space Models: Theory and Canonical Architecture for Multivariate Time Series](/202603/13/2603.08753v1-permutation-equivariant-2d-state-space-models-theory-and-canonical-architecture-for-multivariate-time-series)  
    标签：评分：8.0/10、query:tsds
-   evidence：语义和自适应文档分割
-3. [Unsupervised Domain Adaptation for Audio Deepfake Detection with Modular Statistical Transformations](/202603/12/2603.07935v1-unsupervised-domain-adaptation-for-audio-deepfake-detection-with-modular-statistical-transformations)  
+   evidence：多元时间序列动力学的规范架构
+4. [When Detectors Forget Forensics: Blocking Semantic Shortcuts for Generalizable AI-Generated Image Detection](/202603/13/2603.09242v1-when-detectors-forget-forensics-blocking-semantic-shortcuts-for-generalizable-ai-generated-image-detection)  
    标签：评分：8.0/10、query:mmfnd
-   evidence：音频深度伪造检测的无监督领域自适应
-4. [MJ1: Multimodal Judgment via Grounded Verification](/202603/12/2603.07990v1-mj1-multimodal-judgment-via-grounded-verification)  
+   evidence：AI 生成图像检测与伪造特征追踪
+5. [Probabilistic Verification of Voice Anti-Spoofing Models](/202603/13/2603.10713v1-probabilistic-verification-of-voice-anti-spoofing-models)  
    标签：评分：8.0/10、query:mmfnd
-   evidence：用于接地验证和主张评估的多模态裁判模型
-5. [Towards Visual Query Segmentation in the Wild](/202603/12/2603.08898v1-towards-visual-query-segmentation-in-the-wild)  
+   evidence：验证语音防欺骗模型的鲁棒性
+6. [Towards Robust Speech Deepfake Detection via Human-Inspired Reasoning](/202603/13/2603.10725v1-towards-robust-speech-deepfake-detection-via-human-inspired-reasoning)  
+   标签：评分：8.0/10、query:mmfnd
+   evidence：利用人类启发式推理和音频语言模型进行语音深度伪造检测
+7. [Follow the Saliency: Supervised Saliency for Retrieval-augmented Dense Video Captioning](/202603/13/2603.11460v1-follow-the-saliency-supervised-saliency-for-retrieval-augmented-dense-video-captioning)  
    标签：评分：8.0/10、query:tsds
-   evidence：未修剪视频中的视觉查询分割
-6. [Naïve Exposure of Generative AI Capabilities Undermines Deepfake Detection](/202603/12/2603.10504v1-nave-exposure-of-generative-ai-capabilities-undermines-deepfake-detection)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：对最先进深度伪造检测方法的评估
+   evidence：用于视频字幕生成的显著性引导时间分割
 
 ### 速读区论文标签
-1. [ByteFlow: Language Modeling through Adaptive Byte Compression without a Tokenizer](/202603/12/2603.03583v1-byteflow-language-modeling-through-adaptive-byte-compression-without-a-tokenizer)  
+1. [Towards Robust Speech Deepfake Detection via Human-Inspired Reasoning](/202603/13/2603.10725v2-towards-robust-speech-deepfake-detection-via-human-inspired-reasoning)  
+   标签：评分：8.0/10、query:mmfnd
+   evidence：使用大型音频语言模型和推理进行语音深度伪造检测
+2. [GPT4o-Receipt: A Dataset and Human Study for AI-Generated Document Forensics](/202603/13/2603.11442v1-gpt4o-receipt-a-dataset-and-human-study-for-ai-generated-document-forensics)  
+   标签：评分：8.0/10、query:mmfnd
+   evidence：用于AI生成文档取证和检测的多模态大模型
+3. [Trust Oriented Explainable AI for Fake News Detection](/202603/13/2603.11778v1-trust-oriented-explainable-ai-for-fake-news-detection)  
+   标签：评分：8.0/10、query:mmfnd
+   evidence：基于NLP和可解释性AI的虚假新闻检测研究
+4. [T2SGrid: Temporal-to-Spatial Gridification for Video Temporal Grounding](/202603/13/2603.06973v1-t2sgrid-temporal-to-spatial-gridification-for-video-temporal-grounding)  
    标签：评分：7.0/10、query:tsds
-   evidence：原始字节流语义分割的自适应压缩
-2. [Image-based Prompt Injection: Hijacking Multimodal LLMs through Visually Embedded Adversarial Instructions](/202603/12/2603.03637v1-image-based-prompt-injection-hijacking-multimodal-llms-through-visually-embedded-adversarial-instructions)  
+   evidence：定位与自然语言查询对应的视频片段
+5. [Gender Fairness in Audio Deepfake Detection: Performance and Disparity Analysis](/202603/13/2603.09007v1-gender-fairness-in-audio-deepfake-detection-performance-and-disparity-analysis)  
    标签：评分：7.0/10、query:mmfnd
-   evidence：通过视觉嵌入对抗指令劫持多模态大模型
-3. [Multi-Paradigm Collaborative Adversarial Attack Against Multi-Modal Large Language Models](/202603/12/2603.04846v1-multi-paradigm-collaborative-adversarial-attack-against-multi-modal-large-language-models)  
+   evidence：音频深度伪造检测与合成语音识别
+6. [Multimodal Graph Representation Learning with Dynamic Information Pathways](/202603/13/2603.09258v1-multimodal-graph-representation-learning-with-dynamic-information-pathways)  
    标签：评分：7.0/10、query:mmfnd
-   evidence：多模态大语言模型中的对抗性漏洞与攻击
-4. [Detecting RAG Advertisements Across Advertising Styles](/202603/12/2603.04925v1-detecting-rag-advertisements-across-advertising-styles)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：检测RAG系统中的生成式原生广告
-5. [Retrieval-Augmented Generation with Covariate Time Series](/202603/12/2603.04951v1-retrieval-augmented-generation-with-covariate-time-series)  
+   evidence：针对图像和文本等异构特征的多模态图表示学习
+7. [OilSAM2: Memory-Augmented SAM2 for Scalable SAR Oil Spill Detection](/202603/13/2603.10231v1-oilsam2-memory-augmented-sam2-for-scalable-sar-oil-spill-detection)  
    标签：评分：7.0/10、query:tsds
-   evidence：用于协变量时序数据的状态感知RAG框架
-6. [Leveraging LLM Parametric Knowledge for Fact Checking without Retrieval](/202603/12/2603.05471v1-leveraging-llm-parametric-knowledge-for-fact-checking-without-retrieval)  
+   evidence：针对无序图像集的记忆增强分割
+8. [Layer Consistency Matters: Elegant Latent Transition Discrepancy for Generalizable Synthetic Image Detection](/202603/13/2603.10598v1-layer-consistency-matters-elegant-latent-transition-discrepancy-for-generalizable-synthetic-image-detection)  
    标签：评分：7.0/10、query:mmfnd
-   evidence：无需检索的自然语言声明事实核查
-7. [Evolutionary Multimodal Reasoning via Hierarchical Semantic Representation for Intent Recognition](/202603/12/2603.03827v1-evolutionary-multimodal-reasoning-via-hierarchical-semantic-representation-for-intent-recognition)  
+   evidence：用于媒体可信度的通用合成图像检测
+9. [TSEmbed: Unlocking Task Scaling in Universal Multimodal Embeddings](/202603/13/2603.04772v1-tsembed-unlocking-task-scaling-in-universal-multimodal-embeddings)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：通过分层语义表示进行多模态推理
-8. [GeoSeg: Training-Free Reasoning-Driven Segmentation in Remote Sensing Imagery](/202603/12/2603.03983v1-geoseg-training-free-reasoning-driven-segmentation-in-remote-sensing-imagery)  
+   evidence：用于增强判别能力的通用多模态嵌入框架
+10. [Aura: Universal Multi-dimensional Exogenous Integration for Aviation Time Series](/202603/13/2603.05092v1-aura-universal-multi-dimensional-exogenous-integration-for-aviation-time-series)  
    标签：评分：6.0/10、query:tsds
-   evidence：遥感图像中推理驱动的分割技术
-9. [Beyond Text: Aligning Vision and Language for Multimodal E-Commerce Retrieval](/202603/12/2603.04836v1-beyond-text-aligning-vision-and-language-for-multimodal-e-commerce-retrieval)  
-   标签：评分：6.0/10、query:mmfnd
-   evidence：多模态检索中的跨模态互补信息融合
-10. [Rethinking Temporal Models for TinyML: LSTM versus 1D-CNN in Resource-Constrained Devices](/202603/12/2603.04860v1-rethinking-temporal-models-for-tinyml-lstm-versus-1d-cnn-in-resource-constrained-devices)  
+   evidence：整合时间序列的多维外部因素
+11. [GALACTIC: Global and Local Agnostic Counterfactuals for Time-series Clustering](/202603/13/2603.05318v1-galactic-global-and-local-agnostic-counterfactuals-for-time-series-clustering)  
    标签：评分：6.0/10、query:tsds
-   evidence：TinyML中用于时间序列分类的时间模型
-11. [VisionPangu: A Compact and Fine-Grained Multimodal Assistant with 1.7B Parameters](/202603/12/2603.04957v1-visionpangu-a-compact-and-fine-grained-multimodal-assistant-with-17b-parameters)  
+   evidence：时间序列聚类和模式发现的可解释性
+12. [VirtueBench: Evaluating Trustworthiness under Uncertainty in Long Video Understanding](/202603/13/2603.07071v2-virtuebench-evaluating-trustworthiness-under-uncertainty-in-long-video-understanding)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：多模态对齐与视觉语言理解
-12. [UniM: A Unified Any-to-Any Interleaved Multimodal Benchmark](/202603/12/2603.05075v1-unim-a-unified-any-to-any-interleaved-multimodal-benchmark)  
-   标签：评分：6.0/10、query:mmfnd
-   evidence：用于理解与生成的统一任意到任意交错多模态基准
+   evidence：评估多模态长视频理解中的信任度和不确定性
 
 
 <div class="dpr-home-promo-card">

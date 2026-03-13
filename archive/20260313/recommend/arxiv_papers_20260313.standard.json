@@ -1,0 +1,775 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-13T19:24:17.757731+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 10,
+    "deep_cap": 7,
+    "deep_selected": 7,
+    "quick_candidates": 32,
+    "quick_skim_target": 12,
+    "quick_selected": 12
+  },
+  "deep_dive": [
+    {
+      "id": "2603.12208v1",
+      "title": "ForensicZip: More Tokens are Better but Not Necessary in Forensic Vision-Language Models",
+      "abstract": "Multimodal Large Language Models (MLLMs) enable interpretable multimedia forensics by generating textual rationales for forgery detection. However, processing dense visual sequences incurs high computational costs, particularly for high-resolution images and videos. Visual token pruning is a practical acceleration strategy, yet existing methods are largely semantic-driven, retaining salient objects while discarding background regions where manipulation traces such as high-frequency anomalies and temporal jitters often reside. To address this issue, we introduce ForensicZip, a training-free framework that reformulates token compression from a forgery-driven perspective. ForensicZip models temporal token evolution as a Birth-Death Optimal Transport problem with a slack dummy node, quantifying physical discontinuities indicating transient generative artifacts. The forensic scoring further integrates transport-based novelty with high-frequency priors to separate forensic evidence from semantic content under large-ratio compression. Experiments on deepfake and AIGC benchmarks show that at 10\\% token retention, ForensicZip achieves $2.97\\times$ speedup and over 90\\% FLOPs reduction while maintaining state-of-the-art detection performance.",
+      "authors": [
+        "Yingxin Lai",
+        "Zitong Yu",
+        "Jun Wang",
+        "Linlin Shen",
+        "Yong Xu",
+        "Xiaochun Cao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-12T17:30:49+00:00",
+      "link": "https://arxiv.org/pdf/2603.12208v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Multimodal Large Language Models for multimedia forensics and forgery detection",
+      "llm_evidence_cn": "用于多媒体取证和伪造检测的多模态大语言模型",
+      "llm_evidence": "用于多媒体取证和伪造检测的多模态大语言模型",
+      "canonical_evidence": "用于多媒体取证和伪造检测的多模态大语言模型",
+      "llm_tldr_en": "ForensicZip optimizes token pruning in MLLMs for efficient and interpretable multimedia forgery detection.",
+      "llm_tldr_cn": "ForensicZip优化了多模态大模型中的令牌剪枝，以实现高效且可解释的多媒体伪造检测。",
+      "llm_tldr": "ForensicZip优化了多模态大模型中的令牌剪枝，以实现高效且可解释的多媒体伪造检测。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.11352v1",
+      "title": "TimeSqueeze: Dynamic Patching for Efficient Time Series Forecasting",
+      "abstract": "Transformer-based time series foundation models face a fundamental trade-off in choice of tokenization: point-wise embeddings preserve temporal fidelity but scale poorly with sequence length, whereas fixed-length patching improves efficiency by imposing uniform boundaries that may disrupt natural transitions and blur informative local dynamics. In order to address these limitations, we introduce TimeSqueeze, a dynamic patching mechanism that adaptively selects patch boundaries within each sequence based on local signal complexity. TimeSqueeze first applies a lightweight state-space encoder to extract full-resolution point-wise features, then performs content-aware segmentation by allocating short patches to information-dense regions and long patches to smooth or redundant segments. This variable-resolution compression preserves critical temporal structure while substantially reducing the token sequence presented to the Transformer backbone. Specifically for large-scale pretraining, TimeSqueeze attains up to 20x faster convergence and 8x higher data efficiency compared to equivalent point-token baselines. Experiments across long-horizon forecasting benchmarks show that TimeSqueeze consistently outperforms comparable architectures that use either point-wise tokenization or fixed-size patching.",
+      "authors": [
+        "Sravan Kumar Ankireddy",
+        "Nikita Seleznev",
+        "Nam H. Nguyen",
+        "Yulun Wu",
+        "Senthil Kumar",
+        "Furong Huang",
+        "C. Bayan Bruss"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-03-11T22:38:13+00:00",
+      "link": "https://arxiv.org/pdf/2603.11352v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "content-aware segmentation for time series",
+      "llm_evidence_cn": "时序数据的内容感知分割",
+      "llm_evidence": "时序数据的内容感知分割",
+      "canonical_evidence": "时序数据的内容感知分割",
+      "llm_tldr_en": "Introduces TimeSqueeze for dynamic patching and content-aware segmentation in time series forecasting.",
+      "llm_tldr_cn": "引入TimeSqueeze，在时间序列预测中实现动态补丁和内容感知分割。",
+      "llm_tldr": "引入TimeSqueeze，在时间序列预测中实现动态补丁和内容感知分割。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.09242v1",
+      "title": "When Detectors Forget Forensics: Blocking Semantic Shortcuts for Generalizable AI-Generated Image Detection",
+      "abstract": "AI-generated image detection has become increasingly important with the rapid advancement of generative AI. However, detectors built on Vision Foundation Models (VFMs, \\emph{e.g.}, CLIP) often struggle to generalize to images created using unseen generation pipelines. We identify, for the first time, a key failure mechanism, termed \\emph{semantic fallback}, where VFM-based detectors rely on dominant pre-trained semantic priors (such as identity) rather than forgery-specific traces under distribution shifts. To address this issue, we propose \\textbf{Geometric Semantic Decoupling (GSD)}, a parameter-free module that explicitly removes semantic components from learned representations by leveraging a frozen VFM as a semantic guide with a trainable VFM as an artifact detector. GSD estimates semantic directions from batch-wise statistics and projects them out via a geometric constraint, forcing the artifact detector to rely on semantic-invariant forensic evidence. Extensive experiments demonstrate that our method consistently outperforms state-of-the-art approaches, achieving 94.4\\% video-level AUC (+\\textbf{1.2\\%}) in cross-dataset evaluation, improving robustness to unseen manipulations (+\\textbf{3.0\\%} on DF40), and generalizing beyond faces to the detection of synthetic images of general scenes, including UniversalFakeDetect (+\\textbf{0.9\\%}) and GenImage (+\\textbf{1.7\\%}).",
+      "authors": [
+        "Chao Shuai",
+        "Zhenguang Liu",
+        "Shaojing Fan",
+        "Bin Gong",
+        "Weichen Lian",
+        "Xiuli Bi",
+        "Zhongjie Ba",
+        "Kui Ren"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-10T06:16:35+00:00",
+      "link": "https://arxiv.org/pdf/2603.09242v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "AI-generated image detection and forgery-specific traces",
+      "llm_evidence_cn": "AI 生成图像检测与伪造特征追踪",
+      "llm_evidence": "AI 生成图像检测与伪造特征追踪",
+      "canonical_evidence": "AI 生成图像检测与伪造特征追踪",
+      "llm_tldr_en": "Addresses semantic fallback in AI-generated image detection by decoupling semantic priors from forgery traces.",
+      "llm_tldr_cn": "通过解耦语义先验与伪造痕迹，解决 AI 生成图像检测中的语义回退问题。",
+      "llm_tldr": "通过解耦语义先验与伪造痕迹，解决 AI 生成图像检测中的语义回退问题。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.11460v1",
+      "title": "Follow the Saliency: Supervised Saliency for Retrieval-augmented Dense Video Captioning",
+      "abstract": "Existing retrieval-augmented approaches for Dense Video Captioning (DVC) often fail to achieve accurate temporal segmentation aligned with true event boundaries, as they rely on heuristic strategies that overlook ground truth event boundaries. The proposed framework, \\textbf{STaRC}, overcomes this limitation by supervising frame-level saliency through a highlight detection module. Note that the highlight detection module is trained on binary labels derived directly from DVC ground truth annotations without the need for additional annotation. We also propose to utilize the saliency scores as a unified temporal signal that drives retrieval via saliency-guided segmentation and informs caption generation through explicit Saliency Prompts injected into the decoder. By enforcing saliency-constrained segmentation, our method produces temporally coherent segments that align closely with actual event transitions, leading to more accurate retrieval and contextually grounded caption generation. We conduct comprehensive evaluations on the YouCook2 and ViTT benchmarks, where STaRC achieves state-of-the-art performance across most of the metrics. Our code is available at https://github.com/ermitaju1/STaRC",
+      "authors": [
+        "Seung hee Choi",
+        "MinJu Jeon",
+        "Hyunwoo Oh",
+        "Jihwan Lee",
+        "Dong-Jin Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-12T02:37:21+00:00",
+      "link": "https://arxiv.org/pdf/2603.11460v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Saliency-guided temporal segmentation for video captioning",
+      "llm_evidence_cn": "用于视频字幕生成的显著性引导时间分割",
+      "llm_evidence": "用于视频字幕生成的显著性引导时间分割",
+      "canonical_evidence": "用于视频字幕生成的显著性引导时间分割",
+      "llm_tldr_en": "STaRC uses supervised saliency to achieve accurate temporal segmentation aligned with event boundaries in videos.",
+      "llm_tldr_cn": "STaRC利用监督显著性实现与视频事件边界对齐的精确时间分割。",
+      "llm_tldr": "STaRC利用监督显著性实现与视频事件边界对齐的精确时间分割。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.08753v1",
+      "title": "Permutation-Equivariant 2D State Space Models: Theory and Canonical Architecture for Multivariate Time Series",
+      "abstract": "Multivariate time series (MTS) modeling often implicitly imposes an artificial ordering over variables, violating the inherent exchangeability found in many real-world systems where no canonical variable axis exists. We formalize this limitation as a violation of the permutation symmetry principle and require state-space dynamics to be permutation-equivariant along the variable axis. In this work, we theoretically characterize the complete canonical form of linear variable coupling under this symmetry constraint. We prove that any permutation-equivariant linear 2D state-space system naturally decomposes into local self-dynamics and a global pooled interaction, rendering ordered recurrence not only unnecessary but structurally suboptimal. Motivated by this theoretical foundation, we introduce the Variable-Invariant Two-Dimensional State Space Model (VI 2D SSM), which realizes the canonical equivariant form via permutation-invariant aggregation. This formulation eliminates sequential dependency chains along the variable axis, reducing the dependency depth from $\\mathcal{O}(C)$ to $\\mathcal{O}(1)$ and simplifying stability analysis to two scalar modes. Furthermore, we propose VI 2D Mamba, a unified architecture integrating multi-scale temporal dynamics and spectral representations. Extensive experiments on forecasting, classification, and anomaly detection benchmarks demonstrate that our model achieves state-of-the-art performance with superior structural scalability, validating the theoretical necessity of symmetry-preserving 2D modeling.",
+      "authors": [
+        "Seungwoo Jeong",
+        "Heung-Il Suk"
+      ],
+      "primary_category": "stat.ML",
+      "categories": [
+        "stat.ML",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-03-07T04:10:20+00:00",
+      "link": "https://arxiv.org/pdf/2603.08753v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "canonical architecture for multivariate time series dynamics",
+      "llm_evidence_cn": "多元时间序列动力学的规范架构",
+      "llm_evidence": "多元时间序列动力学的规范架构",
+      "canonical_evidence": "多元时间序列动力学的规范架构",
+      "llm_tldr_en": "Theoretically characterizes permutation-equivariant state space models for multivariate time series.",
+      "llm_tldr_cn": "从理论上表征了用于多元时间序列的置换等变状态空间模型。",
+      "llm_tldr": "从理论上表征了用于多元时间序列的置换等变状态空间模型。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.10713v1",
+      "title": "Probabilistic Verification of Voice Anti-Spoofing Models",
+      "abstract": "Recent advances in generative models have amplified the risk of malicious misuse of speech synthesis technologies, enabling adversaries to impersonate target speakers and access sensitive resources. Although speech deepfake detection has progressed rapidly, most existing countermeasures lack formal robustness guarantees or fail to generalize to unseen generation techniques. We propose PV-VASM, a probabilistic framework for verifying the robustness of voice anti-spoofing models (VASMs). PV-VASM estimates the probability of misclassification under text-to-speech (TTS), voice cloning (VC), and parametric signal transformations. The approach is model-agnostic and enables robustness verification against unseen speech synthesis techniques and input perturbations. We derive a theoretical upper bound on the error probability and validate the method across diverse experimental settings, demonstrating its effectiveness as a practical robustness verification tool.",
+      "authors": [
+        "Evgeny Kushnir",
+        "Alexandr Kozodaev",
+        "Dmitrii Korzh",
+        "Mikhail Pautov",
+        "Oleg Kiriukhin",
+        "Oleg Y. Rogov"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.AI"
+      ],
+      "published": "2026-03-11T12:40:24+00:00",
+      "link": "https://arxiv.org/pdf/2603.10713v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Verifying robustness of voice anti-spoofing models",
+      "llm_evidence_cn": "验证语音防欺骗模型的鲁棒性",
+      "llm_evidence": "验证语音防欺骗模型的鲁棒性",
+      "canonical_evidence": "验证语音防欺骗模型的鲁棒性",
+      "llm_tldr_en": "A probabilistic framework to verify the robustness of speech deepfake detection against unseen attacks.",
+      "llm_tldr_cn": "提出一种概率框架，用于验证语音深度伪造检测模型在未知攻击下的鲁棒性。",
+      "llm_tldr": "提出一种概率框架，用于验证语音深度伪造检测模型在未知攻击下的鲁棒性。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.10725v1",
+      "title": "Towards Robust Speech Deepfake Detection via Human-Inspired Reasoning",
+      "abstract": "The modern generative audio models can be used by an adversary in an unlawful manner, specifically, to impersonate other people to gain access to private information. To mitigate this issue, speech deepfake detection (SDD) methods started to evolve. Unfortunately, current SDD methods generally suffer from the lack of generalization to new audio domains and generators. More than that, they lack interpretability, especially human-like reasoning that would naturally explain the attribution of a given audio to the bona fide or spoof class and provide human-perceptible cues. In this paper, we propose HIR-SDD, a novel SDD framework that combines the strengths of Large Audio Language Models (LALMs) with the chain-of-thought reasoning derived from the novel proposed human-annotated dataset. Experimental evaluation demonstrates both the effectiveness of the proposed method and its ability to provide reasonable justifications for predictions.",
+      "authors": [
+        "Artem Dvirniak",
+        "Evgeny Kushnir",
+        "Dmitrii Tarasov",
+        "Artem Iudin",
+        "Oleg Kiriukhin",
+        "Mikhail Pautov",
+        "Dmitrii Korzh",
+        "Oleg Y. Rogov"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.AI"
+      ],
+      "published": "2026-03-11T12:59:12+00:00",
+      "link": "https://arxiv.org/pdf/2603.10725v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Speech deepfake detection using human-inspired reasoning and audio language models",
+      "llm_evidence_cn": "利用人类启发式推理和音频语言模型进行语音深度伪造检测",
+      "llm_evidence": "利用人类启发式推理和音频语言模型进行语音深度伪造检测",
+      "canonical_evidence": "利用人类启发式推理和音频语言模型进行语音深度伪造检测",
+      "llm_tldr_en": "A framework for robust and interpretable speech deepfake detection using Large Audio Language Models.",
+      "llm_tldr_cn": "一种利用大语言模型进行鲁棒且可解释的语音深度伪造检测框架。",
+      "llm_tldr": "一种利用大语言模型进行鲁棒且可解释的语音深度伪造检测框架。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2603.10725v2",
+      "title": "Towards Robust Speech Deepfake Detection via Human-Inspired Reasoning",
+      "abstract": "The modern generative audio models can be used by an adversary in an unlawful manner, specifically, to impersonate other people to gain access to private information. To mitigate this issue, speech deepfake detection (SDD) methods started to evolve. Unfortunately, current SDD methods generally suffer from the lack of generalization to new audio domains and generators. More than that, they lack interpretability, especially human-like reasoning that would naturally explain the attribution of a given audio to the bona fide or spoof class and provide human-perceptible cues. In this paper, we propose HIR-SDD, a novel SDD framework that combines the strengths of Large Audio Language Models (LALMs) with the chain-of-thought reasoning derived from the novel proposed human-annotated dataset. Experimental evaluation demonstrates both the effectiveness of the proposed method and its ability to provide reasonable justifications for predictions.",
+      "authors": [
+        "Artem Dvirniak",
+        "Evgeny Kushnir",
+        "Dmitrii Tarasov",
+        "Artem Iudin",
+        "Oleg Kiriukhin",
+        "Mikhail Pautov",
+        "Dmitrii Korzh",
+        "Oleg Y. Rogov"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.AI"
+      ],
+      "published": "2026-03-11T12:59:12+00:00",
+      "link": "https://arxiv.org/pdf/2603.10725v2",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Speech deepfake detection using Large Audio Language Models and reasoning",
+      "llm_evidence_cn": "使用大型音频语言模型和推理进行语音深度伪造检测",
+      "llm_evidence": "使用大型音频语言模型和推理进行语音深度伪造检测",
+      "canonical_evidence": "使用大型音频语言模型和推理进行语音深度伪造检测",
+      "llm_tldr_en": "Proposes HIR-SDD, a framework for interpretable and robust speech deepfake detection using audio language models.",
+      "llm_tldr_cn": "提出HIR-SDD框架，利用音频语言模型和思维链推理实现可解释且鲁棒的语音深度伪造检测。",
+      "llm_tldr": "提出HIR-SDD框架，利用音频语言模型和思维链推理实现可解释且鲁棒的语音深度伪造检测。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.06973v1",
+      "title": "T2SGrid: Temporal-to-Spatial Gridification for Video Temporal Grounding",
+      "abstract": "Video Temporal Grounding (VTG) aims to localize the video segment that corresponds to a natural language query, which requires a comprehensive understanding of complex temporal dynamics. Existing Vision-LMMs typically perceive temporal dynamics via positional encoding, text-based timestamps, or visual frame numbering. However, these approaches exhibit notable limitations: assigning each frame a text-based timestamp token introduces additional computational overhead and leads to sparsity in visual attention, positional encoding struggles to capture absolute temporal information, and visual frame numbering often compromises spatial detail. To address these issues, we propose Temporal to Spatial Gridification (T2SGrid), a novel framework that reformulates video temporal understanding as a spatial understanding task. The core idea of T2SGrid is to process video content in clips rather than individual frames. we employ a overlapping sliding windows mechanism to segment the video into temporal clips. Within each window, frames are arranged chronologically in a row-major order into a composite grid image, effectively transforming temporal sequences into structured 2D layouts. The gridification not only encodes temporal information but also enhances local attention within each grid. Furthermore, T2SGrid enables the use of composite text timestamps to establish global temporal awareness. Experiments on standard VTG benchmarks demonstrate that T2SGrid achieves superior performance.",
+      "authors": [
+        "Chaohong Guo",
+        "Yihan He",
+        "Yongwei Nie",
+        "Fei Ma",
+        "Xuemiao Xu",
+        "Chengjiang Long"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-07T01:25:41+00:00",
+      "link": "https://arxiv.org/pdf/2603.06973v1",
+      "tags": [
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "localize video segment corresponding to natural language query",
+      "llm_evidence_cn": "定位与自然语言查询对应的视频片段",
+      "llm_evidence": "定位与自然语言查询对应的视频片段",
+      "canonical_evidence": "定位与自然语言查询对应的视频片段",
+      "llm_tldr_en": "T2SGrid reformulates video temporal grounding to better capture complex temporal dynamics.",
+      "llm_tldr_cn": "T2SGrid通过时空网格化重新定义视频时间定位，以捕捉复杂的动态变化。",
+      "llm_tldr": "T2SGrid通过时空网格化重新定义视频时间定位，以捕捉复杂的动态变化。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.04772v1",
+      "title": "TSEmbed: Unlocking Task Scaling in Universal Multimodal Embeddings",
+      "abstract": "Despite the exceptional reasoning capabilities of Multimodal Large Language Models (MLLMs), their adaptation into universal embedding models is significantly impeded by task conflict. To address this, we propose TSEmbed, a universal multimodal embedding framework that synergizes Mixture-of-Experts (MoE) with Low-Rank Adaptation (LoRA) to explicitly disentangle conflicting task objectives. Moreover, we introduce Expert-Aware Negative Sampling (EANS), a novel strategy that leverages expert routing distributions as an intrinsic proxy for semantic similarity. By dynamically prioritizing informative hard negatives that share expert activation patterns with the query, EANS effectively sharpens the model's discriminative power and refines embedding boundaries. To ensure training stability, we further devise a two-stage learning paradigm that solidifies expert specialization before optimizing representations via EANS. TSEmbed achieves state-of-the-art performance on both the Massive Multimodal Embedding Benchmark (MMEB) and real-world industrial production datasets, laying a foundation for task-level scaling in universal multimodal embeddings.",
+      "authors": [
+        "Yebo Wu",
+        "Feng Liu",
+        "Ziwei Xie",
+        "Zhiyuan Liu",
+        "Changwang Zhang",
+        "Jun Wang",
+        "Li Li"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-03-05T03:43:52+00:00",
+      "link": "https://arxiv.org/pdf/2603.04772v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "universal multimodal embedding framework for discriminative power",
+      "llm_evidence_cn": "用于增强判别能力的通用多模态嵌入框架",
+      "llm_evidence": "用于增强判别能力的通用多模态嵌入框架",
+      "canonical_evidence": "用于增强判别能力的通用多模态嵌入框架",
+      "llm_tldr_en": "Proposes TSEmbed to disentangle conflicting multimodal task objectives using MoE and LoRA.",
+      "llm_tldr_cn": "提出TSEmbed框架，通过混合专家模型和低秩自适应解决多模态嵌入中的任务冲突。",
+      "llm_tldr": "提出TSEmbed框架，通过混合专家模型和低秩自适应解决多模态嵌入中的任务冲突。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.11442v1",
+      "title": "GPT4o-Receipt: A Dataset and Human Study for AI-Generated Document Forensics",
+      "abstract": "Can humans detect AI-generated financial documents better than machines? We present GPT4o-Receipt, a benchmark of 1,235 receipt images pairing GPT-4o-generated receipts with authentic ones from established datasets, evaluated by five state-of-the-art multimodal LLMs and a 30-annotator crowdsourced perceptual study. Our findings reveal a striking paradox: humans are better at seeing AI artifacts, yet worse at detecting AI documents. Human annotators exhibit the largest visual discrimination gap of any evaluator, yet their binary detection F1 falls well below Claude Sonnet 4 and below Gemini 2.5 Flash. This paradox resolves once the mechanism is understood: the dominant forensic signals in AI-generated receipts are arithmetic errors -- invisible to visual inspection but systematically verifiable by LLMs. Humans cannot perceive that a subtotal is incorrect; LLMs verify it in milliseconds. Beyond the human--LLM comparison, our five-model evaluation reveals dramatic performance disparities and calibration differences that render simple accuracy metrics insufficient for detector selection. GPT4o-Receipt, the evaluation framework, and all results are released publicly to support future research in AI document forensics.",
+      "authors": [
+        "Yan Zhang",
+        "Simiao Ren",
+        "Ankit Raj",
+        "En Wei",
+        "Dennis Ng",
+        "Alex Shen",
+        "Jiayue Xu",
+        "Yuxin Zhang",
+        "Evelyn Marotta"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-03-12T02:05:27+00:00",
+      "link": "https://arxiv.org/pdf/2603.11442v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Multimodal LLMs for AI-generated document forensics and detection",
+      "llm_evidence_cn": "用于AI生成文档取证和检测的多模态大模型",
+      "llm_evidence": "用于AI生成文档取证和检测的多模态大模型",
+      "canonical_evidence": "用于AI生成文档取证和检测的多模态大模型",
+      "llm_tldr_en": "Benchmarks multimodal LLMs on detecting AI-generated financial documents versus human perception.",
+      "llm_tldr_cn": "基准测试多模态大模型在检测AI生成财务文档方面的表现及与人类感知的对比。",
+      "llm_tldr": "基准测试多模态大模型在检测AI生成财务文档方面的表现及与人类感知的对比。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.09007v1",
+      "title": "Gender Fairness in Audio Deepfake Detection: Performance and Disparity Analysis",
+      "abstract": "Audio deepfake detection aims to detect real human voices from those generated by Artificial Intelligence (AI) and has emerged as a significant problem in the field of voice biometrics systems. With the ever-improving quality of synthetic voice, the probability of such a voice being exploited for illicit practices like identity thest and impersonation increases. Although significant progress has been made in the field of Audio Deepfake Detection in recent times, the issue of gender bias remains underexplored and in its nascent stage In this paper, we have attempted a thorough analysis of gender dependent performance and fairness in audio deepfake detection models. We have used the ASVspoof 5 dataset and train a ResNet-18 classifier and evaluate detection performance across four different audio features, and compared the performance with baseline AASIST model. Beyond conventional metrics such as Equal Error Rate (EER %), we incorporated five established fairness metrics to quantify gender disparities in the model. Our results show that even when the overall EER difference between genders appears low, fairness-aware evaluation reveals disparities in error distribution that are obscured by aggregate performance measures. These findings demonstrate that reliance on standard metrics is unreliable, whereas fairness metrics provide critical insights into demographic-specific failure modes. This work highlights the importance of fairness-aware evaluation for developing a more equitable, robust, and trustworthy audio deepfake detection system.",
+      "authors": [
+        "Aishwarya Fursule",
+        "Shruti Kshirsagar",
+        "Anderson R. Avila"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.AI"
+      ],
+      "published": "2026-03-09T22:52:12+00:00",
+      "link": "https://arxiv.org/pdf/2603.09007v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Audio deepfake detection and synthetic voice identification",
+      "llm_evidence_cn": "音频深度伪造检测与合成语音识别",
+      "llm_evidence": "音频深度伪造检测与合成语音识别",
+      "canonical_evidence": "音频深度伪造检测与合成语音识别",
+      "llm_tldr_en": "Analyzes gender fairness and performance disparities in state-of-the-art audio deepfake detection models.",
+      "llm_tldr_cn": "分析了音频深度伪造检测模型中的性别公平性和性能差异。",
+      "llm_tldr": "分析了音频深度伪造检测模型中的性别公平性和性能差异。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.05092v1",
+      "title": "Aura: Universal Multi-dimensional Exogenous Integration for Aviation Time Series",
+      "abstract": "Time series forecasting has witnessed an increasing demand across diverse industrial applications, where accurate predictions are pivotal for informed decision-making. Beyond numerical time series data, reliable forecasting in practical scenarios requires integrating diverse exogenous factors. Such exogenous information is often multi-dimensional or even multimodal, introducing heterogeneous interactions that unimodal time series models struggle to capture. In this paper, we delve into an aviation maintenance scenario and identify three distinct types of exogenous factors that influence temporal dynamics through distinct interaction modes. Based on this empirical insight, we propose Aura, a universal framework that explicitly organizes and encodes heterogeneous external information according to its interaction mode with the target time series. Specifically, Aura utilizes a tailored tripartite encoding mechanism to embed heterogeneous features into well-established time series models, ensuring seamless integration of non-sequential context. Extensive experiments on a large-scale, three-year industrial dataset from China Southern Airlines, covering the Boeing 777 and Airbus A320 fleets, demonstrate that Aura consistently achieves state-of-the-art performance across all baselines and exhibits superior adaptability. Our findings highlight Aura's potential as a general-purpose enhancement for aviation safety and reliability.",
+      "authors": [
+        "Jiafeng Lin",
+        "Mengren Zheng",
+        "Simeng Ye",
+        "Yuxuan Wang",
+        "Huan Zhang",
+        "Yuhui Liu",
+        "Zhongyi Pei",
+        "Jianmin Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-03-05T12:05:15+00:00",
+      "link": "https://arxiv.org/pdf/2603.05092v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Integration of multi-dimensional exogenous factors for time series",
+      "llm_evidence_cn": "整合时间序列的多维外部因素",
+      "llm_evidence": "整合时间序列的多维外部因素",
+      "canonical_evidence": "整合时间序列的多维外部因素",
+      "llm_tldr_en": "Proposes Aura to integrate multimodal exogenous factors for improved aviation time series forecasting.",
+      "llm_tldr_cn": "提出Aura框架，整合多模态外部因素以改进航空时间序列预测。",
+      "llm_tldr": "提出Aura框架，整合多模态外部因素以改进航空时间序列预测。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.11778v1",
+      "title": "Trust Oriented Explainable AI for Fake News Detection",
+      "abstract": "This article examines the application of Explainable Artificial Intelligence (XAI) in NLP based fake news detection and compares selected interpretability methods. The work outlines key aspects of disinformation, neural network architectures, and XAI techniques, with a focus on SHAP, LIME, and Integrated Gradients. In the experimental study, classification models were implemented and interpreted using these methods. The results show that XAI enhances model transparency and interpretability while maintaining high detection accuracy. Each method provides distinct explanatory value: SHAP offers detailed local attributions, LIME provides simple and intuitive explanations, and Integrated Gradients performs efficiently with convolutional models. The study also highlights limitations such as computational cost and sensitivity to parameterization. Overall, the findings demonstrate that integrating XAI with NLP is an effective approach to improving the reliability and trustworthiness of fake news detection systems.",
+      "authors": [
+        "Krzysztof Siwek",
+        "Daniel Stankowski",
+        "Maciej Stodolski"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-03-12T10:37:28+00:00",
+      "link": "https://arxiv.org/pdf/2603.11778v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Explainable AI for fake news detection using NLP and interpretability methods",
+      "llm_evidence_cn": "基于NLP和可解释性AI的虚假新闻检测研究",
+      "llm_evidence": "基于NLP和可解释性AI的虚假新闻检测研究",
+      "canonical_evidence": "基于NLP和可解释性AI的虚假新闻检测研究",
+      "llm_tldr_en": "Evaluates XAI methods like SHAP and LIME to improve transparency in fake news detection models.",
+      "llm_tldr_cn": "评估SHAP和LIME等可解释性AI方法，以提高虚假新闻检测模型的透明度。",
+      "llm_tldr": "评估SHAP和LIME等可解释性AI方法，以提高虚假新闻检测模型的透明度。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.09258v1",
+      "title": "Multimodal Graph Representation Learning with Dynamic Information Pathways",
+      "abstract": "Multimodal graphs, where nodes contain heterogeneous features such as images and text, are increasingly common in real-world applications. Effectively learning on such graphs requires both adaptive intra-modal message passing and efficient inter-modal aggregation. However, most existing approaches to multimodal graph learning are typically extended from conventional graph neural networks and rely on static structures or dense attention, which limit flexibility and expressive node embedding learning. In this paper, we propose a novel multimodal graph representation learning framework with Dynamic information Pathways (DiP). By introducing modality-specific pseudo nodes, DiP enables dynamic message routing within each modality via proximity-guided pseudo-node interactions and captures inter-modality dependence through efficient information pathways in a shared state space. This design achieves adaptive, expressive, and sparse message propagation across modalities with linear complexity. We conduct the link prediction and node classification tasks to evaluate performance and carry out full experimental analyses. Extensive experiments across multiple benchmarks demonstrate that DiP consistently outperforms baselines.",
+      "authors": [
+        "Xiaobin Hong",
+        "Mingkai Lin",
+        "Xiaoli Wang",
+        "Chaoqun Wang",
+        "Wenzhong Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-10T06:45:59+00:00",
+      "link": "https://arxiv.org/pdf/2603.09258v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Multimodal graph representation learning for heterogeneous features like images and text",
+      "llm_evidence_cn": "针对图像和文本等异构特征的多模态图表示学习",
+      "llm_evidence": "针对图像和文本等异构特征的多模态图表示学习",
+      "canonical_evidence": "针对图像和文本等异构特征的多模态图表示学习",
+      "llm_tldr_en": "Proposes a dynamic pathway framework for multimodal graph learning to improve inter-modal aggregation.",
+      "llm_tldr_cn": "提出一种动态路径框架，用于多模态图学习，以改进模态间的聚合。",
+      "llm_tldr": "提出一种动态路径框架，用于多模态图学习，以改进模态间的聚合。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.05318v1",
+      "title": "GALACTIC: Global and Local Agnostic Counterfactuals for Time-series Clustering",
+      "abstract": "Time-series clustering is a fundamental tool for pattern discovery, yet existing explainability methods, primarily based on feature attribution or metadata, fail to identify the transitions that move an instance across cluster boundaries. While Counterfactual Explanations (CEs) identify the minimal temporal perturbations required to alter the prediction of a model, they have been mostly confined to supervised settings. This paper introduces GALACTIC, the first unified framework to bridge local and global counterfactual explainability for unsupervised time-series clustering. At instance level (local), GALACTIC generates perturbations via a cluster-aware optimization objective that respects the target and underlying cluster assignments. At cluster level (global), to mitigate cognitive load and enhance interpretability, we formulate a representative CE selection problem. We propose a Minimum Description Length (MDL) objective to extract a non-redundant summary of global explanations that characterize the transitions between clusters. We prove that our MDL objective is supermodular, which allows the corresponding MDL reduction to be framed as a monotone submodular set function. This enables an efficient greedy selection algorithm with provable $(1-1/e)$ approximation guarantees. Extensive experimental evaluation on the UCR Archive demonstrates that GALACTIC produces significantly sparser local CEs and more concise global summaries than state-of-the-art baselines adapted for our problem, offering the first unified approach for interpreting clustered time-series through counterfactuals.",
+      "authors": [
+        "Christos Fragkathoulas",
+        "Eleni Psaroudaki",
+        "Themis Palpanas",
+        "Evaggelia Pitoura"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-03-05T15:59:33+00:00",
+      "link": "https://arxiv.org/pdf/2603.05318v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Explainability for time-series clustering and pattern discovery",
+      "llm_evidence_cn": "时间序列聚类和模式发现的可解释性",
+      "llm_evidence": "时间序列聚类和模式发现的可解释性",
+      "canonical_evidence": "时间序列聚类和模式发现的可解释性",
+      "llm_tldr_en": "Introduces GALACTIC, a framework for local and global counterfactual explainability in time-series clustering.",
+      "llm_tldr_cn": "引入 GALACTIC 框架，为无监督时间序列聚类提供局部和全局反事实解释。",
+      "llm_tldr": "引入 GALACTIC 框架，为无监督时间序列聚类提供局部和全局反事实解释。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.10231v1",
+      "title": "OilSAM2: Memory-Augmented SAM2 for Scalable SAR Oil Spill Detection",
+      "abstract": "Segmenting oil spills from Synthetic Aperture Radar (SAR) imagery remains challenging due to severe appearance variability, scale heterogeneity, and the absence of temporal continuity in real world monitoring scenarios. While foundation models such as Segment Anything (SAM) enable prompt driven segmentation, existing SAM based approaches operate on single images and cannot effectively reuse information across scenes. Memory augmented variants (e.g., SAM2) further assume temporal coherence, making them prone to semantic drift when applied to unordered SAR image collections. We propose OilSAM2, a memory augmented segmentation framework tailored for unordered SAR oil spill monitoring. OilSAM2 introduces a hierarchical feature aware multi scale memory bank that explicitly models texture, structure, and semantic level representations, enabling robust cross image information reuse. To mitigate memory drift, we further propose a structure semantic consistent memory update strategy that selectively refreshes memory based on semantic discrepancy and structural variation.Experiments on two public SAR oil spill datasets demonstrate that OilSAM2 achieves state of the art segmentation performance, delivering stable and accurate results under noisy SAR monitoring scenarios. The source code is available at https://github.com/Chenshuaiyu1120/OILSAM2.",
+      "authors": [
+        "Shuaiyu Chen",
+        "Ming Yin",
+        "Peng Ren",
+        "Chunbo Luo",
+        "Zeyu Fu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-10T21:06:12+00:00",
+      "link": "https://arxiv.org/pdf/2603.10231v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Memory-augmented segmentation for unordered image collections",
+      "llm_evidence_cn": "针对无序图像集的记忆增强分割",
+      "llm_evidence": "针对无序图像集的记忆增强分割",
+      "canonical_evidence": "针对无序图像集的记忆增强分割",
+      "llm_tldr_en": "Adapts SAM2 for oil spill detection in unordered SAR images using a multi-scale memory bank.",
+      "llm_tldr_cn": "针对无序SAR图像，通过多尺度记忆库改进SAM2模型以实现高效的溢油检测分割。",
+      "llm_tldr": "针对无序SAR图像，通过多尺度记忆库改进SAM2模型以实现高效的溢油检测分割。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.07071v2",
+      "title": "VirtueBench: Evaluating Trustworthiness under Uncertainty in Long Video Understanding",
+      "abstract": "Recent Vision-Language Models (VLMs) have made remarkable progress in multimodal understanding tasks, yet their evaluation on long video understanding remains unreliable. Due to limited frame inputs, key frames necessary for answering the question may be missing from the model's input. However, models that truthfully refuse to answer under such uncertainty are marked as incorrect, while those that guess may coincidentally produce the correct answer and thus obtain deceptively higher accuracy, leading to misleading evaluation results and encouraging models to guess rather than respond honestly. To address this issue, we introduce VirtueBench, a benchmark explicitly designed to assess model trustworthiness under uncertainty. VirtueBench constructs multiple frame-sampling levels for each video and provides ground truths that distinguish between answerable and unanswerable cases. Evaluations on 25 open-source and commercial VLMs reveal distinct refusal behaviors across different model families, with refusal accuracy ranging from over 70% in the best models to nearly 0% in the worst. Moreover, most models exhibit a substantial drop in refusal when the prompt does not explicitly require them to do so. These findings highlight the need for developing trustworthy VLMs for multimodal understanding, guided by benchmarks and leaderboards that emphasize reliability and trustworthiness.",
+      "authors": [
+        "Xueqing Yu",
+        "Bohan Li",
+        "Yan Li",
+        "Zhenheng Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-07T07:06:34+00:00",
+      "link": "https://arxiv.org/pdf/2603.07071v2",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Evaluating trustworthiness and uncertainty in multimodal long video understanding",
+      "llm_evidence_cn": "评估多模态长视频理解中的信任度和不确定性",
+      "llm_evidence": "评估多模态长视频理解中的信任度和不确定性",
+      "canonical_evidence": "评估多模态长视频理解中的信任度和不确定性",
+      "llm_tldr_en": "A benchmark to assess Vision-Language Model trustworthiness and honesty in long video understanding.",
+      "llm_tldr_cn": "一个用于评估视觉语言模型在长视频理解中信任度和诚实性的基准。",
+      "llm_tldr": "一个用于评估视觉语言模型在长视频理解中信任度和诚实性的基准。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.10598v1",
+      "title": "Layer Consistency Matters: Elegant Latent Transition Discrepancy for Generalizable Synthetic Image Detection",
+      "abstract": "Recent rapid advancement of generative models has significantly improved the fidelity and accessibility of AI-generated synthetic images. While enabling various innovative applications, the unprecedented realism of these synthetics makes them increasingly indistinguishable from authentic photographs, posing serious security risks, such as media credibility and content manipulation. Although extensive efforts have been dedicated to detecting synthetic images, most existing approaches suffer from poor generalization to unseen data due to their reliance on model-specific artifacts or low-level statistical cues. In this work, we identify a previously unexplored distinction that real images maintain consistent semantic attention and structural coherence in their latent representations, exhibiting more stable feature transitions across network layers, whereas synthetic ones present discernible distinct patterns. Therefore, we propose a novel approach termed latent transition discrepancy (LTD), which captures the inter-layer consistency differences of real and synthetic images. LTD adaptively identifies the most discriminative layers and assesses the transition discrepancies across layers. Benefiting from the proposed inter-layer discriminative modeling, our approach exceeds the base model by 14.35\\% in mean Acc across three datasets containing diverse GANs and DMs. Extensive experiments demonstrate that LTD outperforms recent state-of-the-art methods, achieving superior detection accuracy, generalizability, and robustness. The code is available at https://github.com/yywencs/LTD",
+      "authors": [
+        "Yawen Yang",
+        "Feng Li",
+        "Shuqi Kong",
+        "Yunfeng Diao",
+        "Xinjian Gao",
+        "Zenglin Shi",
+        "Meng Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-11T09:53:06+00:00",
+      "link": "https://arxiv.org/pdf/2603.10598v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "generalizable synthetic image detection for media credibility",
+      "llm_evidence_cn": "用于媒体可信度的通用合成图像检测",
+      "llm_evidence": "用于媒体可信度的通用合成图像检测",
+      "canonical_evidence": "用于媒体可信度的通用合成图像检测",
+      "llm_tldr_en": "Introduces a layer consistency method to improve the generalization of synthetic image detection against manipulation.",
+      "llm_tldr_cn": "引入层一致性方法，提高合成图像检测在应对内容篡改时的泛化能力。",
+      "llm_tldr": "引入层一致性方法，提高合成图像检测在应对内容篡改时的泛化能力。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
