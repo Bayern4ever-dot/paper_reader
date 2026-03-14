@@ -6,79 +6,79 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-03-13
-- 运行时间：2026-03-13 19:27:47 UTC
+- 最新运行日期：2026-03-14
+- 运行时间：2026-03-14 19:17:06 UTC
 - 运行状态：成功
 - 本次总论文数：19
 - 精读区：7
 - 速读区：12
 
 ### 今日简报（AI）
-今日深度研读 19 篇 AI 论文，重点攻克多模态取证与高效时间序列预测两大核心领域。
-满分佳作 ForensicZip 重新定义了视觉取证的 Token 效率，TimeSqueeze 则通过动态补丁技术实现了预测性能的跨越。
-建议优先关注 AI 伪造检测相关成果，以应对日益复杂的文档与语音深度造假挑战。
-- 详情：[/202603/13/README](/202603/13/README)
+今日聚焦音视频生成安全与工业大模型，深度解读 19 篇 AI 前沿进展。
+重点推荐音视频联合水印技术 mAVE 及工业时间序列分析框架 TS-MLLM，揭示多模态模型在垂直领域的巨大潜力。
+建议开发者关注生成式内容的版权溯源，并尝试将大模型推理能力引入工业大数据场景。
+- 详情：[/202603/14/README](/202603/14/README)
 
 ### 精读区论文标签
-1. [ForensicZip: More Tokens are Better but Not Necessary in Forensic Vision-Language Models](/202603/13/2603.12208v1-forensiczip-more-tokens-are-better-but-not-necessary-in-forensic-vision-language-models)  
-   标签：评分：10.0/10、query:mmfnd
-   evidence：用于多媒体取证和伪造检测的多模态大语言模型
-2. [TimeSqueeze: Dynamic Patching for Efficient Time Series Forecasting](/202603/13/2603.11352v1-timesqueeze-dynamic-patching-for-efficient-time-series-forecasting)  
+1. [mAVE: A Watermark for Joint Audio-Visual Generation Models](/202603/14/2603.07090v1-mave-a-watermark-for-joint-audio-visual-generation-models)  
+   标签：评分：9.0/10、query:mmfnd
+   evidence：联合音视频生成与深伪绑定
+2. [TS-MLLM: A Multi-Modal Large Language Model-based Framework for Industrial Time-Series Big Data Analysis](/202603/14/2603.07572v1-ts-mllm-a-multi-modal-large-language-model-based-framework-for-industrial-time-series-big-data-analysis)  
    标签：评分：9.0/10、query:tsds
-   evidence：时序数据的内容感知分割
-3. [Permutation-Equivariant 2D State Space Models: Theory and Canonical Architecture for Multivariate Time Series](/202603/13/2603.08753v1-permutation-equivariant-2d-state-space-models-theory-and-canonical-architecture-for-multivariate-time-series)  
+   evidence：用于时序分析的多模态大语言模型
+3. [EDMFormer: Genre-Specific Self-Supervised Learning for Music Structure Segmentation](/202603/14/2603.08759v1-edmformer-genre-specific-self-supervised-learning-for-music-structure-segmentation)  
    标签：评分：8.0/10、query:tsds
-   evidence：多元时间序列动力学的规范架构
-4. [When Detectors Forget Forensics: Blocking Semantic Shortcuts for Generalizable AI-Generated Image Detection](/202603/13/2603.09242v1-when-detectors-forget-forensics-blocking-semantic-shortcuts-for-generalizable-ai-generated-image-detection)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：AI 生成图像检测与伪造特征追踪
-5. [Probabilistic Verification of Voice Anti-Spoofing Models](/202603/13/2603.10713v1-probabilistic-verification-of-voice-anti-spoofing-models)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：验证语音防欺骗模型的鲁棒性
-6. [Towards Robust Speech Deepfake Detection via Human-Inspired Reasoning](/202603/13/2603.10725v1-towards-robust-speech-deepfake-detection-via-human-inspired-reasoning)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：利用人类启发式推理和音频语言模型进行语音深度伪造检测
-7. [Follow the Saliency: Supervised Saliency for Retrieval-augmented Dense Video Captioning](/202603/13/2603.11460v1-follow-the-saliency-supervised-saliency-for-retrieval-augmented-dense-video-captioning)  
+   evidence：使用自监督音频嵌入的音乐结构分割
+4. [FreqCycle: A Multi-Scale Time-Frequency Analysis Method for Time Series Forecasting](/202603/14/2603.09661v1-freqcycle-a-multi-scale-time-frequency-analysis-method-for-time-series-forecasting)  
    标签：评分：8.0/10、query:tsds
-   evidence：用于视频字幕生成的显著性引导时间分割
+   evidence：时间序列的分段频域模式学习
+5. [MUNIChus: Multilingual News Image Captioning Benchmark](/202603/14/2603.10613v1-munichus-multilingual-news-image-captioning-benchmark)  
+   标签：评分：8.0/10、query:mmfnd
+   evidence：整合文章内容与图像的多模态新闻分析
+6. [Probabilistic Verification of Voice Anti-Spoofing Models](/202603/14/2603.10713v2-probabilistic-verification-of-voice-anti-spoofing-models)  
+   标签：评分：8.0/10、query:mmfnd
+   evidence：语音防欺骗与深度伪造检测
+7. [Fingerprinting Concepts in Data Streams with Supervised and Unsupervised Meta-Information](/202603/14/2603.11094v1-fingerprinting-concepts-in-data-streams-with-supervised-and-unsupervised-meta-information)  
+   标签：评分：8.0/10、query:tsds
+   evidence：检测数据流中的概念漂移和稳定周期
 
 ### 速读区论文标签
-1. [Towards Robust Speech Deepfake Detection via Human-Inspired Reasoning](/202603/13/2603.10725v2-towards-robust-speech-deepfake-detection-via-human-inspired-reasoning)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：使用大型音频语言模型和推理进行语音深度伪造检测
-2. [GPT4o-Receipt: A Dataset and Human Study for AI-Generated Document Forensics](/202603/13/2603.11442v1-gpt4o-receipt-a-dataset-and-human-study-for-ai-generated-document-forensics)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：用于AI生成文档取证和检测的多模态大模型
-3. [Trust Oriented Explainable AI for Fake News Detection](/202603/13/2603.11778v1-trust-oriented-explainable-ai-for-fake-news-detection)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：基于NLP和可解释性AI的虚假新闻检测研究
-4. [T2SGrid: Temporal-to-Spatial Gridification for Video Temporal Grounding](/202603/13/2603.06973v1-t2sgrid-temporal-to-spatial-gridification-for-video-temporal-grounding)  
+1. [Defect Detection in Magnetic Systems Using U-Net and Statistical Measures](/202603/14/2603.07542v1-defect-detection-in-magnetic-systems-using-u-net-and-statistical-measures)  
    标签：评分：7.0/10、query:tsds
-   evidence：定位与自然语言查询对应的视频片段
-5. [Gender Fairness in Audio Deepfake Detection: Performance and Disparity Analysis](/202603/13/2603.09007v1-gender-fairness-in-audio-deepfake-detection-performance-and-disparity-analysis)  
+   evidence：用于缺陷检测的时间分辨测量和语义分割
+2. [Overthinking Causes Hallucination: Tracing Confounder Propagation in Vision Language Models](/202603/14/2603.07619v1-overthinking-causes-hallucination-tracing-confounder-propagation-in-vision-language-models)  
    标签：评分：7.0/10、query:mmfnd
-   evidence：音频深度伪造检测与合成语音识别
-6. [Multimodal Graph Representation Learning with Dynamic Information Pathways](/202603/13/2603.09258v1-multimodal-graph-representation-learning-with-dynamic-information-pathways)  
+   evidence：检测视觉语言模型中的幻觉
+3. [MORE-R1: Guiding LVLM for Multimodal Object-Entity Relation Extraction via Stepwise Reasoning with Reinforcement Learning](/202603/14/2603.09478v1-more-r1-guiding-lvlm-for-multimodal-object-entity-relation-extraction-via-stepwise-reasoning-with-reinforcement-learning)  
    标签：评分：7.0/10、query:mmfnd
-   evidence：针对图像和文本等异构特征的多模态图表示学习
-7. [OilSAM2: Memory-Augmented SAM2 for Scalable SAR Oil Spill Detection](/202603/13/2603.10231v1-oilsam2-memory-augmented-sam2-for-scalable-sar-oil-spill-detection)  
+   evidence：跨模态推理与多模态理解
+4. [UniCom: Unified Multimodal Modeling via Compressed Continuous Semantic Representations](/202603/14/2603.10702v1-unicom-unified-multimodal-modeling-via-compressed-continuous-semantic-representations)  
+   标签：评分：7.0/10、query:mmfnd
+   evidence：统一多模态建模与理解
+5. [Can LLMs Help Localize Fake Words in Partially Fake Speech?](/202603/14/2603.11205v1-can-llms-help-localize-fake-words-in-partially-fake-speech)  
+   标签：评分：7.0/10、query:mmfnd
+   evidence：定位部分伪造语音中的虚假词汇
+6. [Bridging Discrete Marks and Continuous Dynamics: Dual-Path Cross-Interaction for Marked Temporal Point Processes](/202603/14/2603.11462v1-bridging-discrete-marks-and-continuous-dynamics-dual-path-cross-interaction-for-marked-temporal-point-processes)  
    标签：评分：7.0/10、query:tsds
-   evidence：针对无序图像集的记忆增强分割
-8. [Layer Consistency Matters: Elegant Latent Transition Discrepancy for Generalizable Synthetic Image Detection](/202603/13/2603.10598v1-layer-consistency-matters-elegant-latent-transition-discrepancy-for-generalizable-synthetic-image-detection)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：用于媒体可信度的通用合成图像检测
-9. [TSEmbed: Unlocking Task Scaling in Universal Multimodal Embeddings](/202603/13/2603.04772v1-tsembed-unlocking-task-scaling-in-universal-multimodal-embeddings)  
+   evidence：时序数据流中的连续动力学与离散事件建模
+7. [VirtueBench: Evaluating Trustworthiness under Uncertainty in Long Video Understanding](/202603/14/2603.07071v1-virtuebench-evaluating-trustworthiness-under-uncertainty-in-long-video-understanding)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：用于增强判别能力的通用多模态嵌入框架
-10. [Aura: Universal Multi-dimensional Exogenous Integration for Aviation Time Series](/202603/13/2603.05092v1-aura-universal-multi-dimensional-exogenous-integration-for-aviation-time-series)  
+   evidence：评估多模态长视频理解中的可信度
+8. [Toward Multimodal Industrial Fault Analysis: A Single-Speed Chain Conveyor Dataset with Audio and Vibration Signals](/202603/14/2603.07130v1-toward-multimodal-industrial-fault-analysis-a-single-speed-chain-conveyor-dataset-with-audio-and-vibration-signals)  
    标签：评分：6.0/10、query:tsds
-   evidence：整合时间序列的多维外部因素
-11. [GALACTIC: Global and Local Agnostic Counterfactuals for Time-series Clustering](/202603/13/2603.05318v1-galactic-global-and-local-agnostic-counterfactuals-for-time-series-clustering)  
-   标签：评分：6.0/10、query:tsds
-   evidence：时间序列聚类和模式发现的可解释性
-12. [VirtueBench: Evaluating Trustworthiness under Uncertainty in Long Video Understanding](/202603/13/2603.07071v2-virtuebench-evaluating-trustworthiness-under-uncertainty-in-long-video-understanding)  
+   evidence：多模态信号分析与时序数据中的故障检测
+9. [Multi-Modal Decouple and Recouple Network for Robust 3D Object Detection](/202603/14/2603.07486v1-multi-modal-decouple-and-recouple-network-for-robust-3d-object-detection)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：评估多模态长视频理解中的信任度和不确定性
+   evidence：用于鲁棒检测的多模态特征融合与解耦
+10. [Using Multimodal and Language-Agnostic Sentence Embeddings for Abstractive Summarization](/202603/14/2603.08282v1-using-multimodal-and-language-agnostic-sentence-embeddings-for-abstractive-summarization)  
+   标签：评分：6.0/10、query:mmfnd
+   evidence：利用多模态句子嵌入提高事实一致性并减少幻觉
+11. [Can You Hear, Localize, and Segment Continually? An Exemplar-Free Continual Learning Benchmark for Audio-Visual Segmentation](/202603/14/2603.08967v1-can-you-hear-localize-and-segment-continually-an-exemplar-free-continual-learning-benchmark-for-audio-visual-segmentation)  
+   标签：评分：6.0/10、query:mmfnd
+   evidence：音视频分割以及从动态分布中进行跨模态学习
+12. [Beyond Amplitude: Channel State Information Phase-Aware Deep Fusion for Robotic Activity Recognition](/202603/14/2603.09047v1-beyond-amplitude-channel-state-information-phase-aware-deep-fusion-for-robotic-activity-recognition)  
+   标签：评分：6.0/10、query:tsds
+   evidence：用于时序感知和活动识别的深度融合与门控机制
 
 
 <div class="dpr-home-promo-card">

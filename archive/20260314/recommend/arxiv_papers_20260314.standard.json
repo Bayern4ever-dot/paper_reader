@@ -1,0 +1,770 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-14T19:14:56.319829+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 7,
+    "deep_cap": 7,
+    "deep_selected": 7,
+    "quick_candidates": 28,
+    "quick_skim_target": 12,
+    "quick_selected": 12
+  },
+  "deep_dive": [
+    {
+      "id": "2603.07090v1",
+      "title": "mAVE: A Watermark for Joint Audio-Visual Generation Models",
+      "abstract": "As Joint Audio-Visual Generation Models see widespread commercial deployment, embedding watermarks has become essential for protecting vendor copyright and ensuring content provenance. However, existing techniques suffer from an architectural mismatch by treating modalities as decoupled entities, exposing a critical Binding Vulnerability. Adversaries exploit this via Swap Attacks by replacing authentic audio with malicious deepfakes while retaining the watermarked video. Because current detectors rely on independent verification ($Video_{wm}\\vee Audio_{wm}$), they incorrectly authenticate the manipulated content, falsely attributing harmful media to the original vendor and severely damaging their reputation. To address this, we propose mAVE (Manifold Audio-Visual Entanglement), the first watermarking framework natively designed for joint architectures. mAVE cryptographically binds audio and video latents at initialization without fine-tuning, defining a Legitimate Entanglement Manifold via Inverse Transform Sampling. Experiments on state-of-the-art models (LTX-2, MOVA) demonstrate that mAVE guarantees performance-losslessness and provides an exponential security bound against Swap Attacks. Achieving near-perfect binding integrity ($>99\\%$), mAVE offers a robust cryptographic defense for vendor copyright.",
+      "authors": [
+        "Luyang Si",
+        "Leyi Pan",
+        "Lijie Wen"
+      ],
+      "primary_category": "cs.CR",
+      "categories": [
+        "cs.CR",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-03-07T07:59:31+00:00",
+      "link": "https://arxiv.org/pdf/2603.07090v1",
+      "tags": [
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "joint audio-visual generation and deepfake binding",
+      "llm_evidence_cn": "联合音视频生成与深伪绑定",
+      "llm_evidence": "联合音视频生成与深伪绑定",
+      "canonical_evidence": "联合音视频生成与深伪绑定",
+      "llm_tldr_en": "Proposes mAVE watermarking to prevent swap attacks in multimodal deepfakes by binding audio and video.",
+      "llm_tldr_cn": "提出mAVE水印技术，通过绑定音视频防止多模态深度伪造中的替换攻击。",
+      "llm_tldr": "提出mAVE水印技术，通过绑定音视频防止多模态深度伪造中的替换攻击。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.07572v1",
+      "title": "TS-MLLM: A Multi-Modal Large Language Model-based Framework for Industrial Time-Series Big Data Analysis",
+      "abstract": "Accurate analysis of industrial time-series big data is critical for the Prognostics and Health Management (PHM) of industrial equipment. While recent advancements in Large Language Models (LLMs) have shown promise in time-series analysis, existing methods typically focus on single-modality adaptations, failing to exploit the complementary nature of temporal signals, frequency-domain visual representations, and textual knowledge information. In this paper, we propose TS-MLLM, a unified multi-modal large language model framework designed to jointly model temporal signals, frequency-domain images, and textual domain knowledge. Specifically, we first develop an Industrial time-series Patch Modeling branch to capture long-range temporal dynamics. To integrate cross-modal priors, we introduce a Spectrum-aware Vision-Language Model Adaptation (SVLMA) mechanism that enables the model to internalize frequency-domain patterns and semantic context. Furthermore, a Temporal-centric Multi-modal Attention Fusion (TMAF) mechanism is designed to actively retrieve relevant visual and textual cues using temporal features as queries, ensuring deep cross-modal alignment. Extensive experiments on multiple industrial benchmarks demonstrate that TS-MLLM significantly outperforms state-of-the-art methods, particularly in few-shot and complex scenarios. The results validate our framework's superior robustness, efficiency, and generalization capabilities for industrial time-series prediction.",
+      "authors": [
+        "Haiteng Wang",
+        "Yikang Li",
+        "Yunfei Zhu",
+        "Jingheng Yan",
+        "Lei Ren",
+        "Laurence T. Yang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-08T10:14:09+00:00",
+      "link": "https://arxiv.org/pdf/2603.07572v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multi-modal large language model for time-series analysis",
+      "llm_evidence_cn": "用于时序分析的多模态大语言模型",
+      "llm_evidence": "用于时序分析的多模态大语言模型",
+      "canonical_evidence": "用于时序分析的多模态大语言模型",
+      "llm_tldr_en": "A unified MLLM framework for industrial time-series analysis using temporal and visual data.",
+      "llm_tldr_cn": "一种利用时序和视觉数据进行工业时间序列分析的统一多模态大模型框架。",
+      "llm_tldr": "一种利用时序和视觉数据进行工业时间序列分析的统一多模态大模型框架。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.10613v1",
+      "title": "MUNIChus: Multilingual News Image Captioning Benchmark",
+      "abstract": "The goal of news image captioning is to generate captions by integrating news article content with corresponding images, highlighting the relationship between textual context and visual elements. The majority of research on news image captioning focuses on English, primarily because datasets in other languages are scarce. To address this limitation, we create the first multilingual news image captioning benchmark, MUNIChus, comprising 9 languages, including several low-resource languages such as Sinhala and Urdu. We evaluate various state-of-the-art neural news image captioning models on MUNIChus and find that news image captioning remains challenging. We also make MUNIChus publicly available with over 20 models already benchmarked. MUNIChus opens new avenues for further advancements in developing and evaluating multilingual news image captioning models.",
+      "authors": [
+        "Yuji Chen",
+        "Alistair Plum",
+        "Hansi Hettiarachchi",
+        "Diptesh Kanojia",
+        "Saroj Basnet",
+        "Marcos Zampieri",
+        "Tharindu Ranasinghe"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.CV"
+      ],
+      "published": "2026-03-11T10:20:42+00:00",
+      "link": "https://arxiv.org/pdf/2603.10613v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Multimodal news analysis integrating article content and images",
+      "llm_evidence_cn": "整合文章内容与图像的多模态新闻分析",
+      "llm_evidence": "整合文章内容与图像的多模态新闻分析",
+      "canonical_evidence": "整合文章内容与图像的多模态新闻分析",
+      "llm_tldr_en": "Introduces a multilingual benchmark for news image captioning, evaluating state-of-the-art multimodal models.",
+      "llm_tldr_cn": "引入多语言新闻图像字幕基准，评估最先进的多模态模型。",
+      "llm_tldr": "引入多语言新闻图像字幕基准，评估最先进的多模态模型。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.08759v1",
+      "title": "EDMFormer: Genre-Specific Self-Supervised Learning for Music Structure Segmentation",
+      "abstract": "Music structure segmentation is a key task in audio analysis, but existing models perform poorly on Electronic Dance Music (EDM). This problem exists because most approaches rely on lyrical or harmonic similarity, which works well for pop music but not for EDM. EDM structure is instead defined by changes in energy, rhythm, and timbre, with different sections such as buildup, drop, and breakdown. We introduce EDMFormer, a transformer model that combines self-supervised audio embeddings using an EDM-specific dataset and taxonomy. We release this dataset as EDM-98: a group of 98 professionally annotated EDM tracks. EDMFormer improves boundary detection and section labelling compared to existing models, particularly for drops and buildups. The results suggest that combining learned representations with genre-specific data and structural priors is effective for EDM and could be applied to other specialized music genres or broader audio domains.",
+      "authors": [
+        "Sahal Sajeer",
+        "Krish Patel",
+        "Oscar Chung",
+        "Joel Song Bae"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.AI"
+      ],
+      "published": "2026-03-08T15:56:37+00:00",
+      "link": "https://arxiv.org/pdf/2603.08759v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Music structure segmentation using self-supervised audio embeddings",
+      "llm_evidence_cn": "使用自监督音频嵌入的音乐结构分割",
+      "llm_evidence": "使用自监督音频嵌入的音乐结构分割",
+      "canonical_evidence": "使用自监督音频嵌入的音乐结构分割",
+      "llm_tldr_en": "Introduces EDMFormer for segmenting music structures based on energy and rhythm changes in audio.",
+      "llm_tldr_cn": "引入EDMFormer，根据音频中的能量和节奏变化对音乐结构进行分割。",
+      "llm_tldr": "引入EDMFormer，根据音频中的能量和节奏变化对音乐结构进行分割。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.10713v2",
+      "title": "Probabilistic Verification of Voice Anti-Spoofing Models",
+      "abstract": "Recent advances in generative models have amplified the risk of malicious misuse of speech synthesis technologies, enabling adversaries to impersonate target speakers and access sensitive resources. Although speech deepfake detection has progressed rapidly, most existing countermeasures lack formal robustness guarantees or fail to generalize to unseen generation techniques. We propose PV-VASM, a probabilistic framework for verifying the robustness of voice anti-spoofing models (VASMs). PV-VASM estimates the probability of misclassification under text-to-speech (TTS), voice cloning (VC), and parametric signal transformations. The approach is model-agnostic and enables robustness verification against unseen speech synthesis techniques and input perturbations. We derive a theoretical upper bound on the error probability and validate the method across diverse experimental settings, demonstrating its effectiveness as a practical robustness verification tool.",
+      "authors": [
+        "Evgeny Kushnir",
+        "Alexandr Kozodaev",
+        "Dmitrii Korzh",
+        "Mikhail Pautov",
+        "Oleg Kiriukhin",
+        "Oleg Y. Rogov"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.AI"
+      ],
+      "published": "2026-03-11T12:40:24+00:00",
+      "link": "https://arxiv.org/pdf/2603.10713v2",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "voice anti-spoofing and deepfake detection",
+      "llm_evidence_cn": "语音防欺骗与深度伪造检测",
+      "llm_evidence": "语音防欺骗与深度伪造检测",
+      "canonical_evidence": "语音防欺骗与深度伪造检测",
+      "llm_tldr_en": "A probabilistic framework for verifying the robustness of voice anti-spoofing models against deepfakes.",
+      "llm_tldr_cn": "一种用于验证语音防欺骗模型针对深度伪造鲁棒性的概率框架。",
+      "llm_tldr": "一种用于验证语音防欺骗模型针对深度伪造鲁棒性的概率框架。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.09661v1",
+      "title": "FreqCycle: A Multi-Scale Time-Frequency Analysis Method for Time Series Forecasting",
+      "abstract": "Mining time-frequency features is critical for time series forecasting. Existing research has predominantly focused on modeling low-frequency patterns, where most time series energy is concentrated. The overlooking of mid to high frequency continues to limit further performance gains in deep learning models. We propose FreqCycle, a novel framework integrating: (i) a Filter-Enhanced Cycle Forecasting (FECF) module to extract low-frequency features by explicitly learning shared periodic patterns in the time domain, and (ii) a Segmented Frequency-domain Pattern Learning (SFPL) module to enhance mid to high frequency energy proportion via learnable filters and adaptive weighting. Furthermore, time series data often exhibit coupled multi-periodicity, such as intertwined weekly and daily cycles. To address coupled multi-periodicity as well as long lookback window challenges, we extend FreqCycle hierarchically into MFreqCycle, which decouples nested periodic features through cross-scale interactions. Extensive experiments on seven diverse domain benchmarks demonstrate that FreqCycle achieves state-of-the-art accuracy while maintaining faster inference speeds, striking an optimal balance between performance and efficiency.",
+      "authors": [
+        "Boya Zhang",
+        "Shuaijie Yin",
+        "Huiwen Zhu",
+        "Xing He"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-10T13:34:36+00:00",
+      "link": "https://arxiv.org/pdf/2603.09661v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "segmented frequency-domain pattern learning for time series",
+      "llm_evidence_cn": "时间序列的分段频域模式学习",
+      "llm_evidence": "时间序列的分段频域模式学习",
+      "canonical_evidence": "时间序列的分段频域模式学习",
+      "llm_tldr_en": "FreqCycle integrates cycle forecasting and segmented frequency-domain learning for time series analysis.",
+      "llm_tldr_cn": "FreqCycle结合了周期预测和分段频域学习，用于时间序列分析。",
+      "llm_tldr": "FreqCycle结合了周期预测和分段频域学习，用于时间序列分析。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.11094v1",
+      "title": "Fingerprinting Concepts in Data Streams with Supervised and Unsupervised Meta-Information",
+      "abstract": "Streaming sources of data are becoming more common as the ability to collect data in real-time grows. A major concern in dealing with data streams is concept drift, a change in the distribution of data over time, for example, due to changes in environmental conditions. Representing concepts (stationary periods featuring similar behaviour) is a key idea in adapting to concept drift. By testing the similarity of a concept representation to a window of observations, we can detect concept drift to a new or previously seen recurring concept. Concept representations are constructed using meta-information features, values describing aspects of concept behaviour. We find that previously proposed concept representations rely on small numbers of meta-information features. These representations often cannot distinguish concepts, leaving systems vulnerable to concept drift. We propose FiCSUM, a general framework to represent both supervised and unsupervised behaviours of a concept in a fingerprint, a vector of many distinct meta-information features able to uniquely identify more concepts. Our dynamic weighting strategy learns which meta-information features describe concept drift in a given dataset, allowing a diverse set of meta-information features to be used at once. FiCSUM outperforms state-of-the-art methods over a range of 11 real world and synthetic datasets in both accuracy and modeling underlying concept drift.",
+      "authors": [
+        "Ben Halstead",
+        "Yun Sing Koh",
+        "Patricia Riddle",
+        "Mykola Pechenizkiy",
+        "Albert Bifet",
+        "Russel Pears"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-11T07:42:11+00:00",
+      "link": "https://arxiv.org/pdf/2603.11094v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Detecting concept drift and stationary periods in data streams",
+      "llm_evidence_cn": "检测数据流中的概念漂移和稳定周期",
+      "llm_evidence": "检测数据流中的概念漂移和稳定周期",
+      "canonical_evidence": "检测数据流中的概念漂移和稳定周期",
+      "llm_tldr_en": "Uses meta-information to represent concepts and detect distribution changes in real-time data streams.",
+      "llm_tldr_cn": "利用元信息表示概念并检测实时数据流中的分布变化。",
+      "llm_tldr": "利用元信息表示概念并检测实时数据流中的分布变化。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2603.07542v1",
+      "title": "Defect Detection in Magnetic Systems Using U-Net and Statistical Measures",
+      "abstract": "Local material inhomogeneities can strongly influence magnetization dynamics and macroscopic magnetic properties, yet detecting such defects from magnetic imaging data remains challenging when thermal fluctuations and experimental noise obscure static contrast. Here, we investigate defect detection in strongly fluctuating magnetization regimes where signatures of inhomogeneities largely average out in time-resolved measurements. Using finite-temperature micromagnetic simulations with randomly distributed defects and material parameters representative of \\ce{Ni80Fe20}, we compute per-pixel temporal mean, temporal standard deviation, and latent entropy and use them as inputs for U-Net-based semantic segmentation models. We find that the most effective descriptor depends on the noise level and, importantly, that robust detection requires training data that reflect the expected noise statistics. These results provide practical guidance for designing noise-robust defect-detection workflows in magnetic imaging.",
+      "authors": [
+        "Ross Knapman",
+        "Atreya Majumdar",
+        "Nasim Bazazzadeh",
+        "Kübra Kalkan",
+        "Katharina Ollefs",
+        "Oliver Gutfleisch",
+        "Karin Everschor-Sitte"
+      ],
+      "primary_category": "cond-mat.mtrl-sci",
+      "categories": [
+        "cond-mat.mtrl-sci",
+        "physics.ins-det"
+      ],
+      "published": "2026-03-08T09:04:34+00:00",
+      "link": "https://arxiv.org/pdf/2603.07542v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Time-resolved measurements and semantic segmentation for defect detection",
+      "llm_evidence_cn": "用于缺陷检测的时间分辨测量和语义分割",
+      "llm_evidence": "用于缺陷检测的时间分辨测量和语义分割",
+      "canonical_evidence": "用于缺陷检测的时间分辨测量和语义分割",
+      "llm_tldr_en": "This paper uses U-Net and statistical measures for defect detection in time-resolved magnetic imaging data.",
+      "llm_tldr_cn": "本文利用U-Net和统计指标对时间分辨磁成像数据进行缺陷检测。",
+      "llm_tldr": "本文利用U-Net和统计指标对时间分辨磁成像数据进行缺陷检测。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.07071v1",
+      "title": "VirtueBench: Evaluating Trustworthiness under Uncertainty in Long Video Understanding",
+      "abstract": "Recent Vision-Language Models (VLMs) have made remarkable progress in multimodal understanding tasks, yet their evaluation on long video understanding remains unreliable. Due to limited frame inputs, key frames necessary for answering the question may be missing from the model's input. However, models that truthfully refuse to answer under such uncertainty are marked as incorrect, while those that guess may coincidentally produce the correct answer and thus obtain deceptively higher accuracy, leading to misleading evaluation results and encouraging models to guess rather than respond honestly. To address this issue, we introduce VirtueBench, a benchmark explicitly designed to assess model trustworthiness under uncertainty. VirtueBench constructs multiple frame-sampling levels for each video and provides ground truths that distinguish between answerable and unanswerable cases. Evaluations on 25 open-source and commercial VLMs reveal distinct refusal behaviors across different model families, with refusal accuracy ranging from over 70% in the best models to nearly 0% in the worst. Moreover, most models exhibit a substantial drop in refusal when the prompt does not explicitly require them to do so. These findings highlight the need for developing trustworthy VLMs for multimodal understanding, guided by benchmarks and leaderboards that emphasize reliability and trustworthiness.",
+      "authors": [
+        "Xueqing Yu",
+        "Bohan Li",
+        "Yan Li",
+        "Zhenheng Yang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-07T07:06:34+00:00",
+      "link": "https://arxiv.org/pdf/2603.07071v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "evaluating trustworthiness in multimodal long video understanding",
+      "llm_evidence_cn": "评估多模态长视频理解中的可信度",
+      "llm_evidence": "评估多模态长视频理解中的可信度",
+      "canonical_evidence": "评估多模态长视频理解中的可信度",
+      "llm_tldr_en": "A benchmark to evaluate the trustworthiness and uncertainty of vision-language models in video tasks.",
+      "llm_tldr_cn": "一个用于评估视觉语言模型在视频任务中可信度和不确定性的基准。",
+      "llm_tldr": "一个用于评估视觉语言模型在视频任务中可信度和不确定性的基准。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.07619v1",
+      "title": "Overthinking Causes Hallucination: Tracing Confounder Propagation in Vision Language Models",
+      "abstract": "Vision Language models (VLMs) often hallucinate non-existent objects. Detecting hallucination is analogous to detecting deception: a single final statement is insufficient, one must examine the underlying reasoning process. Yet existing detectors rely mostly on final-layer signals. Attention-based methods assume hallucinated tokens exhibit low attention, while entropy-based ones use final-step uncertainty. Our analysis reveals the opposite: hallucinated objects can exhibit peaked attention due to contextual priors; and models often express high confidence because intermediate layers have already converged to an incorrect hypothesis. We show that the key to hallucination detection lies within the model's thought process, not its final output. By probing decoder layers, we uncover a previously overlooked behavior, overthinking: models repeatedly revise object hypotheses across layers before committing to an incorrect answer. Once the model latches onto a confounded hypothesis, it can propagate through subsequent layers, ultimately causing hallucination. To capture this behavior, we introduce the Overthinking Score, a metric to measure how many competing hypotheses the model entertains and how unstable these hypotheses are across layers. This score significantly improves hallucination detection: 78.9% F1 on MSCOCO and 71.58% on AMBER.",
+      "authors": [
+        "Abin Shoby",
+        "Ta Duc Huy",
+        "Tuan Dung Nguyen",
+        "Minh Khoi Ho",
+        "Qi Chen",
+        "Anton van den Hengel",
+        "Phi Le Nguyen",
+        "Johan W. Verjans",
+        "Vu Minh Hieu Phan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-08T13:07:32+00:00",
+      "link": "https://arxiv.org/pdf/2603.07619v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "detecting hallucination in vision language models",
+      "llm_evidence_cn": "检测视觉语言模型中的幻觉",
+      "llm_evidence": "检测视觉语言模型中的幻觉",
+      "canonical_evidence": "检测视觉语言模型中的幻觉",
+      "llm_tldr_en": "Analyzes internal reasoning to detect hallucinations in VLMs, treating it as a form of deception detection.",
+      "llm_tldr_cn": "通过分析内部推理过程来检测视觉语言模型中的幻觉，将其视为一种欺骗检测。",
+      "llm_tldr": "通过分析内部推理过程来检测视觉语言模型中的幻觉，将其视为一种欺骗检测。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.07130v1",
+      "title": "Toward Multimodal Industrial Fault Analysis: A Single-Speed Chain Conveyor Dataset with Audio and Vibration Signals",
+      "abstract": "We introduce a multimodal industrial fault analysis dataset collected from a single-speed chain conveyor (SSCC) system, targeting system-level fault detection in production lines. The dataset consists of multimodal signals, including three audio and four vibration channels. It covers normal operation and four representative fault types under multiple speeds, loads, and both clean and realistic factory-noise conditions reproduced on-site. It is explicitly designed to support channel-wise analysis and multimodal fusion research. We establish standardized evaluation protocols for unsupervised fault detection with normal-only training and supervised fault classification with balanced dataset splits across different operating conditions and fault types. A unified channel-wise kNN baseline is provided to enable fair comparison of representation quality without task-specific training. The dataset offers a practical and extensible benchmark for robust multimodal industrial fault analysis.",
+      "authors": [
+        "Zhang Chen",
+        "Yucong Zhang",
+        "Xiaoxiao Miao",
+        "Ming Li"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "eess.AS"
+      ],
+      "published": "2026-03-07T09:38:52+00:00",
+      "link": "https://arxiv.org/pdf/2603.07130v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multimodal signal analysis and fault detection in time-series data",
+      "llm_evidence_cn": "多模态信号分析与时序数据中的故障检测",
+      "llm_evidence": "多模态信号分析与时序数据中的故障检测",
+      "canonical_evidence": "多模态信号分析与时序数据中的故障检测",
+      "llm_tldr_en": "Introduces a multimodal dataset of audio and vibration signals for industrial fault detection and fusion research.",
+      "llm_tldr_cn": "介绍了一个包含音频和振动信号的多模态工业故障分析数据集，支持多模态融合与检测研究。",
+      "llm_tldr": "介绍了一个包含音频和振动信号的多模态工业故障分析数据集，支持多模态融合与检测研究。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.09478v1",
+      "title": "MORE-R1: Guiding LVLM for Multimodal Object-Entity Relation Extraction via Stepwise Reasoning with Reinforcement Learning",
+      "abstract": "Multimodal Object-Entity Relation Extraction (MORE) is a challenging task in information extraction research. It aims to identify relations between visual objects and textual entities, requiring complex multimodal understanding and cross-modal reasoning abilities. Existing methods, mainly classification-based or generation-based without reasoning, struggle to handle complex extraction scenarios in the MORE task and suffer from limited scalability and intermediate reasoning transparency. To address these challenges, we propose MORE-R1, a novel model that introduces explicit stepwise reasoning with Reinforcement Learning (RL) to enable Large Vision-Language Model (LVLM) to address the MORE task effectively. MORE-R1 integrates a two-stage training process, including an initial cold-start training stage with Supervised Fine-Tuning (SFT) and a subsequent RL stage for reasoning ability optimization. In the initial stage, we design an efficient way to automatically construct a high-quality SFT dataset containing fine-grained stepwise reasoning tailored to the MORE task, enabling the model to learn an effective reasoning paradigm. In the subsequent stage, we employ the Group Relative Policy Optimization (GRPO) RL algorithm with a Progressive Sample-Mixing Strategy to stabilize training and further enhance model's reasoning ability on hard samples. Comprehensive experiments on the MORE benchmark demonstrate that MORE-R1 achieves state-of-the-art performance with significant improvement over baselines.",
+      "authors": [
+        "Xiang Yuan",
+        "Xu Chu",
+        "Xinrong Chen",
+        "Haochen Li",
+        "Zonghong Dai",
+        "Hongcheng Fan",
+        "Xiaoyue Yuan",
+        "Weiping Li",
+        "Tong Mo"
+      ],
+      "primary_category": "cs.MM",
+      "categories": [
+        "cs.MM"
+      ],
+      "published": "2026-03-10T10:30:59+00:00",
+      "link": "https://arxiv.org/pdf/2603.09478v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "cross-modal reasoning and multimodal understanding",
+      "llm_evidence_cn": "跨模态推理与多模态理解",
+      "llm_evidence": "跨模态推理与多模态理解",
+      "canonical_evidence": "跨模态推理与多模态理解",
+      "llm_tldr_en": "Introduces MORE-R1 for multimodal object-entity relation extraction using stepwise reasoning and RL.",
+      "llm_tldr_cn": "引入MORE-R1模型，通过逐步推理和强化学习进行多模态对象实体关系抽取。",
+      "llm_tldr": "引入MORE-R1模型，通过逐步推理和强化学习进行多模态对象实体关系抽取。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.07486v1",
+      "title": "Multi-Modal Decouple and Recouple Network for Robust 3D Object Detection",
+      "abstract": "Multi-modal 3D object detection with bird's eye view (BEV) has achieved desired advances on benchmarks. Nonetheless, the accuracy may drop significantly in the real world due to data corruption such as sensor configurations for LiDAR and scene conditions for camera. One design bottleneck of previous models resides in the tightly coupling of multi-modal BEV features during fusion, which may degrade the overall system performance if one modality or both is corrupted. To mitigate, we propose a Multi-Modal Decouple and Recouple Network for robust 3D object detection under data corruption. Different modalities commonly share some high-level invariant features. We observe that these invariant features across modalities do not always fail simultaneously, because different types of data corruption affect each modality in distinct ways.These invariant features can be recovered across modalities for robust fusion under data corruption.To this end, we explicitly decouple Camera/LiDAR BEV features into modality-invariant and modality-specific parts. It allows invariant features to compensate each other while mitigates the negative impact of a corrupted modality on the other.We then recouple these features into three experts to handle different types of data corruption, respectively, i.e., LiDAR, camera, and both.For each expert, we use modality-invariant features as robust information, while modality-specific features serve as a complement.Finally, we adaptively fuse the three experts to exact robust features for 3D object detection. For validation, we collect a benchmark with a large quantity of data corruption for LiDAR, camera, and both based on nuScenes. Our model is trained on clean nuScenes and tested on all types of data corruption. Our model consistently achieves the best accuracy on both corrupted and clean data compared to recent models.",
+      "authors": [
+        "Rui Ding",
+        "Zhaonian Kuang",
+        "Yuzhe Ji",
+        "Meng Yang",
+        "Xinhu Zheng",
+        "Gang Hua"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-08T06:10:25+00:00",
+      "link": "https://arxiv.org/pdf/2603.07486v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-modal feature fusion and decoupling for robust detection",
+      "llm_evidence_cn": "用于鲁棒检测的多模态特征融合与解耦",
+      "llm_evidence": "用于鲁棒检测的多模态特征融合与解耦",
+      "canonical_evidence": "用于鲁棒检测的多模态特征融合与解耦",
+      "llm_tldr_en": "A network that decouples and recouples multi-modal features to improve 3D object detection robustness.",
+      "llm_tldr_cn": "一种通过解耦和重组多模态特征来提高3D目标检测鲁棒性的网络。",
+      "llm_tldr": "一种通过解耦和重组多模态特征来提高3D目标检测鲁棒性的网络。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.10702v1",
+      "title": "UniCom: Unified Multimodal Modeling via Compressed Continuous Semantic Representations",
+      "abstract": "Current unified multimodal models typically rely on discrete visual tokenizers to bridge the modality gap. However, discretization inevitably discards fine-grained semantic information, leading to suboptimal performance in visual understanding tasks. Conversely, directly modeling continuous semantic representations (e.g., CLIP, SigLIP) poses significant challenges in high-dimensional generative modeling, resulting in slow convergence and training instability. To resolve this dilemma, we introduce UniCom, a unified framework that harmonizes multimodal understanding and generation via compressed continuous representation. We empirically demonstrate that reducing channel dimension is significantly more effective than spatial downsampling for both reconstruction and generation. Accordingly, we design an attention-based semantic compressor to distill dense features into a compact unified representation. Furthermore, we validate that the transfusion architecture surpasses query-based designs in convergence and consistency. Experiments demonstrate that UniCom achieves state-of-the-art generation performance among unified models. Notably, by preserving rich semantic priors, it delivers exceptional controllability in image editing and maintains image consistency even without relying on VAE.",
+      "authors": [
+        "Yaqi Zhao",
+        "Wang Lin",
+        "Zijian Zhang",
+        "Miles Yang",
+        "Jingyuan Chen",
+        "Wentao Zhang",
+        "Zhao Zhong",
+        "Liefeng Bo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-11T12:14:26+00:00",
+      "link": "https://arxiv.org/pdf/2603.10702v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "unified multimodal modeling and understanding",
+      "llm_evidence_cn": "统一多模态建模与理解",
+      "llm_evidence": "统一多模态建模与理解",
+      "canonical_evidence": "统一多模态建模与理解",
+      "llm_tldr_en": "Proposes UniCom, a framework using continuous representations to bridge the gap in multimodal understanding.",
+      "llm_tldr_cn": "提出UniCom框架，利用连续表示来弥合多模态理解中的鸿沟。",
+      "llm_tldr": "提出UniCom框架，利用连续表示来弥合多模态理解中的鸿沟。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.08282v1",
+      "title": "Using Multimodal and Language-Agnostic Sentence Embeddings for Abstractive Summarization",
+      "abstract": "Abstractive summarization aims to generate concise summaries by creating new sentences, allowing for flexible rephrasing. However, this approach can be vulnerable to inaccuracies, particularly `hallucinations' where the model introduces non-existent information. In this paper, we leverage the use of multimodal and multilingual sentence embeddings derived from pretrained models such as LaBSE, SONAR, and BGE-M3, and feed them into a modified BART-based French model. A Named Entity Injection mechanism that appends tokenized named entities to the decoder input is introduced, in order to improve the factual consistency of the generated summary. Our novel framework, SBARThez, is applicable to both text and speech inputs and supports cross-lingual summarization; it shows competitive performance relative to token-level baselines, especially for low-resource languages, while generating more concise and abstract summaries.",
+      "authors": [
+        "Chaimae Chellaf",
+        "Salima Mdhaffar",
+        "Yannick Estève",
+        "Stéphane Huet"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-03-09T11:55:32+00:00",
+      "link": "https://arxiv.org/pdf/2603.08282v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal sentence embeddings to improve factual consistency and reduce hallucinations",
+      "llm_evidence_cn": "利用多模态句子嵌入提高事实一致性并减少幻觉",
+      "llm_evidence": "利用多模态句子嵌入提高事实一致性并减少幻觉",
+      "canonical_evidence": "利用多模态句子嵌入提高事实一致性并减少幻觉",
+      "llm_tldr_en": "Uses multimodal embeddings and entity injection to improve factual consistency in abstractive summarization.",
+      "llm_tldr_cn": "利用多模态嵌入和实体注入技术提高抽象摘要中的事实一致性。",
+      "llm_tldr": "利用多模态嵌入和实体注入技术提高抽象摘要中的事实一致性。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.11205v1",
+      "title": "Can LLMs Help Localize Fake Words in Partially Fake Speech?",
+      "abstract": "Large language models (LLMs), trained on large-scale text, have recently attracted significant attention for their strong performance across many tasks. Motivated by this, we investigate whether a text-trained LLM can help localize fake words in partially fake speech, where only specific words within a speech are edited. We build a speech LLM to perform fake word localization via next token prediction. Experiments and analyses on AV-Deepfake1M and PartialEdit indicates that the model frequently leverages editing-style pattern learned from the training data, particularly word-level polarity substitutions for those two databases we discussed, as cues for localizing fake words. Although such particular patterns provide useful information in an in-domain scenario, how to avoid over-reliance on such particular pattern and improve generalization to unseen editing styles remains an open question.",
+      "authors": [
+        "Lin Zhang",
+        "Thomas Thebaud",
+        "Zexin Cai",
+        "Sanjeev Khudanpur",
+        "Daniel Povey",
+        "Leibny Paola García-Perera",
+        "Matthew Wiesner",
+        "Nicholas Andrews"
+      ],
+      "primary_category": "eess.AS",
+      "categories": [
+        "eess.AS",
+        "cs.SD"
+      ],
+      "published": "2026-03-11T18:21:14+00:00",
+      "link": "https://arxiv.org/pdf/2603.11205v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "localize fake words in partially fake speech",
+      "llm_evidence_cn": "定位部分伪造语音中的虚假词汇",
+      "llm_evidence": "定位部分伪造语音中的虚假词汇",
+      "canonical_evidence": "定位部分伪造语音中的虚假词汇",
+      "llm_tldr_en": "Investigates using LLMs to detect and localize manipulated segments within partially synthetic speech audio.",
+      "llm_tldr_cn": "研究利用大语言模型检测和定位部分合成语音中的篡改片段。",
+      "llm_tldr": "研究利用大语言模型检测和定位部分合成语音中的篡改片段。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.08967v1",
+      "title": "Can You Hear, Localize, and Segment Continually? An Exemplar-Free Continual Learning Benchmark for Audio-Visual Segmentation",
+      "abstract": "Audio-Visual Segmentation (AVS) aims to produce pixel-level masks of sound producing objects in videos, by jointly learning from audio and visual signals. However, real-world environments are inherently dynamic, causing audio and visual distributions to evolve over time, which challenge existing AVS systems that assume static training settings. To address this gap, we introduce the first exemplar-free continual learning benchmark for Audio-Visual Segmentation, comprising four learning protocols across single-source and multi-source AVS datasets. We further propose a strong baseline, ATLAS, which uses audio-guided pre-fusion conditioning to modulate visual feature channels via projected audio context before cross-modal attention. Finally, we mitigate catastrophic forgetting by introducing Low-Rank Anchoring (LRA), which stabilizes adapted weights based on loss sensitivity. Extensive experiments demonstrate competitive performance across diverse continual scenarios, establishing a foundation for lifelong audio-visual perception. Code is available at${}^{*}$\\footnote{Paper under review} - \\hyperlink{https://gitlab.com/viper-purdue/atlas}{https://gitlab.com/viper-purdue/atlas}   \\keywords{Continual Learning \\and Audio-Visual Segmentation \\and Multi-Modal Learning}",
+      "authors": [
+        "Siddeshwar Raghavan",
+        "Gautham Vinod",
+        "Bruce Coburn",
+        "Fengqing Zhu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "eess.AS"
+      ],
+      "published": "2026-03-09T21:58:14+00:00",
+      "link": "https://arxiv.org/pdf/2603.08967v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Audio-visual segmentation and cross-modal learning from dynamic distributions",
+      "llm_evidence_cn": "音视频分割以及从动态分布中进行跨模态学习",
+      "llm_evidence": "音视频分割以及从动态分布中进行跨模态学习",
+      "canonical_evidence": "音视频分割以及从动态分布中进行跨模态学习",
+      "llm_tldr_en": "ATLAS provides a continual learning benchmark for audio-visual segmentation in dynamic environments.",
+      "llm_tldr_cn": "ATLAS为动态环境下的音视频分割提供了持续学习基准。",
+      "llm_tldr": "ATLAS为动态环境下的音视频分割提供了持续学习基准。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.11462v1",
+      "title": "Bridging Discrete Marks and Continuous Dynamics: Dual-Path Cross-Interaction for Marked Temporal Point Processes",
+      "abstract": "Predicting irregularly spaced event sequences with discrete marks poses significant challenges due to the complex, asynchronous dependencies embedded within continuous-time data streams.Existing sequential approaches capture dependencies among event tokens but ignore the continuous evolution between events, while Neural Ordinary Differential Equation (Neural ODE) methods model smooth dynamics yet fail to account for how event types influence future timing.To overcome these limitations, we propose NEXTPP, a dual-channel framework that unifies discrete and continuous representations via Event-granular Neural Evolution with Cross-Interaction for Marked Temporal Point Processes. Specifically, NEXTPP encodes discrete event marks via a self-attention mechanism, simultaneously evolving a latent continuous-time state using a Neural ODE. These parallel streams are then fused through a crossattention module to enable explicit bidirectional interaction between continuous and discrete representations. The fused representations drive the conditional intensity function of the neural Hawkes process, while an iterative thinning sampler is employed to generate future events. Extensive evaluations on five real-world datasets demonstrate that NEXTPP consistently outperforms state-of-the-art models. The source code can be found at https://github.com/AONE-NLP/NEXTPP.",
+      "authors": [
+        "Yuxiang Liu",
+        "Qiao Liu",
+        "Tong Luo",
+        "Yanglei Gan",
+        "Peng He",
+        "Yao LIu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-03-12T02:39:47+00:00",
+      "link": "https://arxiv.org/pdf/2603.11462v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Modeling continuous dynamics and discrete events in temporal data streams",
+      "llm_evidence_cn": "时序数据流中的连续动力学与离散事件建模",
+      "llm_evidence": "时序数据流中的连续动力学与离散事件建模",
+      "canonical_evidence": "时序数据流中的连续动力学与离散事件建模",
+      "llm_tldr_en": "Unifies discrete and continuous representations for predicting event sequences in temporal point processes.",
+      "llm_tldr_cn": "统一离散和连续表示，用于预测时序点过程中的事件序列。",
+      "llm_tldr": "统一离散和连续表示，用于预测时序点过程中的事件序列。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.09047v1",
+      "title": "Beyond Amplitude: Channel State Information Phase-Aware Deep Fusion for Robotic Activity Recognition",
+      "abstract": "Wi-Fi Channel State Information (CSI) has emerged as a promising non-line-of-sight sensing modality for human and robotic activity recognition. However, prior work has predominantly relied on CSI amplitude while underutilizing phase information, particularly in robotic arm activity recognition. In this paper, we present GateFusion-Bidirectional Long Short-Term Memory network (GF-BiLSTM) for WiFi sensing in robotic activity recognition. GF-BiLSTM is a two-stream gated fusion network that encodes amplitude and phase separately and adaptively integrates per-time features through a learned gating mechanism. We systematically evaluate state-of-the-art deep learning models under a Leave-One-Velocity-Out (LOVO) protocol across four input configurations: amplitude only, phase only, amplitude + unwrapped phase, and amplitude + sanitized phase. Experimental results demonstrate that incorporating phase alongside amplitude consistently improves recognition accuracy and cross-speed robustness, with GF-BiLSTM achieving the best performance. To the best of our knowledge, this work provides the first systematic exploration of CSI phase for robotic activity recognition, establishing its critical role in Wi-Fi-based sensing.",
+      "authors": [
+        "Rojin Zandi",
+        "Hojjat Salehinejad",
+        "Milad Siami"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "eess.SP"
+      ],
+      "published": "2026-03-10T00:36:45+00:00",
+      "link": "https://arxiv.org/pdf/2603.09047v1",
+      "tags": [
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Deep fusion and gated mechanisms for time-series sensing and activity recognition",
+      "llm_evidence_cn": "用于时序感知和活动识别的深度融合与门控机制",
+      "llm_evidence": "用于时序感知和活动识别的深度融合与门控机制",
+      "canonical_evidence": "用于时序感知和活动识别的深度融合与门控机制",
+      "llm_tldr_en": "GF-BiLSTM integrates amplitude and phase information for robust Wi-Fi-based robotic activity recognition.",
+      "llm_tldr_cn": "GF-BiLSTM集成了幅度和相位信息，用于鲁棒的基于Wi-Fi的机器人活动识别。",
+      "llm_tldr": "GF-BiLSTM集成了幅度和相位信息，用于鲁棒的基于Wi-Fi的机器人活动识别。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

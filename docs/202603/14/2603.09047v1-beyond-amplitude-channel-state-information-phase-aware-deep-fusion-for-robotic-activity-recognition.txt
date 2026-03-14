@@ -1,0 +1,286 @@
+Title: Beyond Amplitude: Channel State Information Phase-Aware Deep Fusion for Robotic Activity Recognition
+
+URL Source: https://arxiv.org/pdf/2603.09047v1
+
+Published Time: Wed, 11 Mar 2026 00:20:50 GMT
+
+Number of Pages: 5
+
+Markdown Content:
+> Accepted at 2026 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), May 4–8, 2026, Barcelona, Spain
+
+## BEYOND AMPLITUDE: CHANNEL STATE INFORMATION PHASE-AWARE DEEP FUSION FOR ROBOTIC ACTIVITY RECOGNITION 
+
+## Rojin Zandi †, Hojjat Salehinejad ‡⋆, Senior Member, IEEE, and Milad Siami †, Senior Member, IEEE 
+
+> †
+
+## Department of Electrical & Computer Engineering, Northeastern University, Boston, MA, USA 
+
+> ‡
+
+## Kern Center for the Science of Health Care Delivery, Mayo Clinic, Rochester, MN, USA 
+
+> ⋆
+
+## Department of Artificial Intelligence and Informatics, Mayo Clinic, Rochester, MN, USA 
+
+ABSTRACT 
+
+Wi-Fi Channel State Information (CSI) has emerged as a promising non-line-of-sight sensing modality for human and robotic activity recognition. However, prior work has predominantly relied on CSI amplitude while underutilizing phase information, particularly in robotic arm activity recog-nition. In this paper, we present GateFusion-Bidirectional Long Short-Term Memory network (GF-BiLSTM) for WiFi sensing in robotic activity recognition. GF-BiLSTM is a two-stream gated fusion network that encodes amplitude and phase separately and adaptively integrates per-time fea-tures through a learned gating mechanism. We systemat-ically evaluate state-of-the-art deep learning models under a Leave-One-Velocity-Out (LOVO) protocol across four in-put configurations: amplitude only, phase only, amplitude + unwrapped phase, and amplitude + sanitized phase. Exper-imental results demonstrate that incorporating phase along-side amplitude consistently improves recognition accuracy and cross-speed robustness, with GF-BiLSTM achieving the best performance. To the best of our knowledge, this work provides the first systematic exploration of CSI phase for robotic activity recognition, establishing its critical role in Wi-Fi–based sensing. 
+
+Index Terms — Channel state information, phase saniti-zation, robotic activity recognition, WiFi sensing. 
+
+1. INTRODUCTION 
+
+Robotic systems are increasingly deployed across diverse do-mains, making automatic recognition of their activities essen-tial for safe and reliable operation [1]. Conventional solu-tions typically rely on cameras or Light Detection and Rang-ing (LiDAR) systems to monitor robot movements and arm activities, but these sensors require a clear line-of-sight and may raise privacy concerns [2, 3, 4]. This has motivated the exploration of alternative non-visual sensing modalities [5]. 
+
+> This material is based upon work supported in part by the U.S. Office of Naval Research under Grant Award N00014-21-1-2431; and in part by the U.S. National Science Foundation under Grant Award 2208182.
+
+Wi-Fi sensing has recently emerged as a promising ap-proach for human and robotic activity recognition [6, 7, 8]. Channel State Information (CSI) extracted from Wi-Fi sig-nals contains both amplitude and phase components: the am-plitude reflects how much of the transmitted signal reaches the receiver after environmental distortion, while the phase captures fine-grained path differences caused by reflections, scattering, and multipath propagation. Most prior work on Wi-Fi–based activity recognition has focused on CSI ampli-tude while disregarding phase, since raw phase measurements are corrupted by hardware-induced timing and frequency off-sets [9]. Recent studies demonstrate that, once calibrated, CSI phase combined with amplitude can improve human activity recognition accuracy [10]. However, the role of CSI phase in robotic activity recognition remains largely unexplored. This work studies how to incorporate CSI phase infor-mation, including phase only, amplitude only, amplitude + unwrapped phase, and amplitude + sanitized phase, and in-troduces GateFusion-Bidirectional Long Short-Term Memory networks (GF-BiLSTM), a two-stream gated-fusion BiLSTM that encodes amplitude and phase separately before tempo-ral fusion. The impact of these input configurations is eval-uated by training and testing several established deep learn-ing models, including Convolutional Neural Networks (CNN) [11], LSTM [12], BiLSTM [13], Vision Transformer (ViT) [14], and the Bidirectional ViT Concatenated (BiVTC) model [15]. Experiments are conducted on the RoboFiSense bench-mark dataset [15], which contains eight robotic arm actions performed at low, medium, and high velocities. To evalu-ate generalization across different motion speeds, we adopt a Leave-One-Velocity-Out (LOVO) protocol, where models are trained on two velocities and tested on the unseen third. This study contributes a systematic assessment of CSI phase for robotic-arm action recognition, an architecture tai-lored to exploit it, and a rigorous cross-speed evaluation. First, across strong baselines, amplitude+phase consistently outperforms single-modality inputs, establishing phase as a complementary cue rather than a substitute. Second, the proposed GF-BiLSTM achieves the best performance by learning per-stream temporal representations and fusing them 
+
+> arXiv:2603.09047v1 [cs.RO] 10 Mar 2026
+
+Sniffer  Complex CSI  Sanitization Unwrapping Phase 
+
+Extraction 
+
+Amplitude 
+
+Extraction 𝑆 × 𝑇 
+
+BiLSTM Normalization 
+
+Normalization  BiLSTM 
+
+BiLSTM Fusion  Classification Fig. 1 : Complex CSI is split into amplitude and phase. The phase branch performs temporal unwrapping and packet-wise linear sanitization (purple box), then per-time layer normalization; the amplitude branch is normalized identically. Each stream is encoded by a 1-layer BiLSTM, their per-time features are fused by a learned gate (fusion), and a deeper BiLSTM with a final classifier produces action labels.       
+
+> (a) Amplitude heatmap (b) Raw phase heatmap (c) Unwrapped phase heatmap (d) Sanitized phase heatmap
+> (e) Amplitude overlay (f) Raw phase overlay (g) Unwrapped phase overlay (h) Sanitized phase overlay
+
+Fig. 2 : CSI visualization from one sniffer across time and subcarriers. Top row (a–d): heatmaps of amplitude, raw phase, unwrapped phase, and linearly sanitized phase. Bottom row (e–h): corresponding overlay plots, where each curve is a time snapshot across subcarriers. Heatmaps show full temporal evolution, while overlays illustrate frequency response at selected times, highlighting the effect of phase unwrapping and sanitization. 
+
+adaptively at each time step. Third, under the LOVO, GF-BiLSTM markedly improves generalization to unseen ex-ecution speeds, addressing a key robustness gap in Wi-Fi sensing. Taken together, these results provide the first tar-geted evidence that calibrated phase meaningfully boosts accuracy and cross-speed robustness in robotic-arm activity recognition. 
+
+2. METHOD 
+
+This section outlines the end-to-end pipeline from raw Wi-Fi CSI to action labels (Fig. 1). It briefly introduces the data and notation, summarizes the input preprocessing, presents the proposed GF-BiLSTM architecture, and states the training and evaluation setup. 
+
+2.1. Channel State Information Measurements 
+
+Let H ∈ CS×T denote CSI over S subcarriers and T times-tamps, with entries 
+
+hk,t = ak,t ejϕ k,t , (1) where ak,t = |hk,t | is amplitude and ϕk,t = ∠hk,t is phase. Stack these into 
+
+A = ak,t 
+
+ 
+
+> k,t
+
+∈ RS×T , Φ = ϕk,t 
+
+ 
+
+> k,t
+
+∈ RS×T , (2) as presented in Fig. 2. Amplitude primarily reflects attenu-ation, whereas phase captures path-length changes and fine-grained temporal dynamics [16, 17]. A subcarrier-first, time-second layout is used; thus the model’s time-slice vectors are 
+
+at = A:,t ∈ RS and ϕt = Φ:,t ∈ RS .
+
+2.2. Phase Preprocessing 
+
+Generally, the raw phase is corrupted by hardware impair-ments (carrier/sampling offsets, random packet rotations) [9]. A physically meaningful trajectory is obtained by temporal unwrapping followed by packet-wise linear sanitization. 
+
+2.2.1. Temporal Unwrapping 
+
+Phases are wrapped to (−π, π ], as shown in Fig. 2b and 2f. For each subcarrier k, an integer sequence {nk,t }Tt=1 is cho-sen to minimize discontinuities between consecutive times-tamps and ˜ϕk,t = ϕk,t + 2 π n k,t , (3) yielding continuous trajectories; stacking gives ˜Φ ∈ RS×T .
+
+2.2.2. Linear Sanitization 
+
+Residual synchronization creates an approximately linear trend across subcarriers within a packet. For each time index 
+
+t, ˜ϕt = αt k + βt 1 + ϵt, ˜ϕt = ˜Φ:,t ∈ RS , (4) with k = [1 , 2, . . . , S ]⊤, 1 ∈ RS , slope αt, offset βt, and residual ϵt [18]. With X = [ k 1 ] ∈ RS×2 and θt =[αt βt]⊤, least squares gives 
+
+θ⋆t = arg min  
+
+> θ∈R2
+
+∥ ˜ϕt − Xθ∥22 = ( X⊤X)−1X⊤ ˜ϕt, (5) and the sanitized phase 
+
+ˆϕt = ˜ϕt − Xθ⋆t , ˆΦ =  ˆϕt
+
+Tt=1 ∈ RS×T . (6) Unless stated otherwise, the model uses ϕt = ˆΦ:,t ; ablations with unwrapped ˜Φ are also reported. 
+
+2.3. Gate Fusion-BiLSTM 
+
+Let h denote the per-direction hidden width of each LSTM and C the number of classes. Two temporal streams pro-cess amplitude and phase separately and are fused after one feature-extraction layer, followed by deeper temporal model-ing and classification. 
+
+Per-time normalization: Layer normalization across sub-carriers is applied for each stream and time index: 
+
+˜at = LN A(at) = γA ⊙ at − μAt 1
+
+p(σAt )2 + ε + βA, (7) 
+
+˜ϕt = LN P (ϕt) = γP ⊙ ϕt − μPt 1
+
+p(σPt )2 + ε + βP , (8) with learned γA, βA, γP , βP ∈ RS , means μAt = 1 
+
+> S
+
+1⊤at
+
+and μPt = 1 
+
+> S
+
+1⊤ϕt, and variances (σAt )2, (σPt )2 defined anal-ogously. During training only, an optional modality-dropout masks one stream per sample with a small probability, using masks that are constant across time. There is no masking at inference. 
+
+First-level feature extraction: Separate bidirectional LSTMs encode amplitude and phase. Let hA, → 
+
+> t
+
+, cA, → 
+
+> t
+
+∈ Rh
+
+and hA, ← 
+
+> t
+
+, cA, ← 
+
+> t
+
+∈ Rh denote hidden and cell states of the forward and backward amplitude LSTMs at time t (standard LSTM recurrences). The phase stream defines hP, → 
+
+> t
+
+, cP, →
+
+> t
+
+and hP, ← 
+
+> t
+
+, cP, ← 
+
+> t
+
+analogously. Concatenating directions and projecting to width h yields 
+
+uAt = ρ WA[hA, → 
+
+> t
+
+; hA, ← 
+
+> t
+
+] + bA ∈ Rh, (9) 
+
+uPt = ρ WP [hP, → 
+
+> t
+
+; hP, ← 
+
+> t
+
+] + bP  ∈ Rh, (10) where ρ is ReLU, [ · ; · ] denotes concatenation along the feature dimension, and WA, WP ∈ Rh×2h with biases 
+
+bA, bP ∈ Rh.
+
+Fusion: Per-time gated fusion combines the two streams: 
+
+gt = σ Wg [uAt ; uPt ] + bg  ∈ (0 , 1) h, (11) 
+
+zt = gt ⊙ uAt + ( 1 − gt) ⊙ uPt ∈ Rh, (12) where σ is the logistic sigmoid, ⊙ the Hadamard product, 1 ∈
+
+Rh the all-ones vector, and Wg ∈ Rh×2h with bias bg ∈ Rh.
+
+Deeper temporal modeling, pooling, and classification: 
+
+The fused sequence (z1, . . . , zT ) is processed by a deeper bidirectional LSTM with hidden states h→ 
+
+> t
+
+, h← 
+
+> t
+
+∈ Rh and output ht = [ h→ 
+
+> t
+
+; h← 
+
+> t
+
+] ∈ R2h. Temporal average pooling produces ¯h = 1
+
+> T
+
+PTt=1 ht ∈ R2h, followed by a two-layer head 
+
+q = ρ(W1 ¯h+b1) ∈ R2h, ℓ = W2q+b2 ∈ RC , (13) with W1 ∈ R2h×2h, W2 ∈ RC×2h and biases b1, b2. The predicted distribution is p = softmax( ℓ), and training mini-mizes cross-entropy L = − log py for label y ∈ { 1, . . . , C }.
+
+2.4. Data Representation for Other Models 
+
+The training of the other models, used in this paper, proceeds with the phase preprocessing explained in Sec. 2.2, which is shown by the purple box in Fig. 1, plus amplitude extrac-tion. After preprocessing, each CSI measurement consists of an amplitude component A ∈ RS×T and a correspond-ing phase component ϕ. Depending on the task, these can be used individually or combined as multi-channel inputs. In the following experiments, we consider both single-modality and joint representations of amplitude and phase to assess their contribution to robotic activity recognition. 
+
+3. EXPERIMENTS 3.1. Dataset 
+
+We evaluate our approach on the RoboFiSense dataset [15], which records the CSI of a Franka Emika robotic arm per-forming eight distinct activities (Arc, Elbow, Rectangle, Si-lence, SLFW, SLRL, SLUD, Triangle). Each activity is exe-cuted under three velocities: low ( V1), medium ( V2), and high (V3). To assess robustness against motion-speed variations, we adopt the LOVO evaluation protocol: models are trained on two velocity subsets and tested on the remaining unseen velocity. This setup provides a stringent measure of gener-alization, as models must classify activities under execution speeds not observed during training. 
+
+3.2. Input Configurations 
+
+Four CSI representations are evaluated to isolate the role of phase and its preprocessing: 1. Phase only: unwrapped phase without sanitization; de-noted ˜Φ with shape S × T , captures fine timing/path-length cues but retains packet-wise bias and jitter, yielding low SNR when used alone. Table 1 : Accuracy of the models for the leave-one-velocity-out cross-validation study (%). Columns (1)–(4) correspond to the input configurations defined in Section 3.2. Train Test Model 1 2 3 4                                                                           
+
+> V1&V2V3
+> CNN 24.28 60.33 74.84 76.33 ViT 26.85 68.20 73.26 78.26 LSTM 27.17 74.03 80.98 84.24 BiLSTM 31.96 78.26 89.22 91.11 BiVTC 36.09 87.50 92.76 93.85 GF-BiLSTM --93.21 96.11
+> V1&V3V2
+> CNN 20.57 67.93 79.31 81.65 ViT 23.04 72.28 78.80 81.52 LSTM 31.85 74.41 83.87 88.76 BiLSTM 35.81 81.52 90.85 92.93 BiVTC 41.73 86.96 93.15 95.20 GF-BiLSTM --93.78 95.65
+> V2&V3V1
+> CNN 22.96 68.47 78.70 80.59 ViT 25.13 68.48 73.74 79.43 LSTM 25.36 82.70 83.91 85.84 BiLSTM 33.68 80.98 86.96 88.59 BiVTC 35.76 84.89 91.74 94.86 GF-BiLSTM --94.33 95.10
+
+2. Amplitude only: magnitude of CSI; denoted A with shape S × T , provides a stable, high-SNR baseline re-flecting path loss and multipath; inexpensive but dis-cards timing cues. 3. Amplitude+Phase (Unwrapped): two-channel stack 
+
+[ A; ˜Φ ] with shape 2 × S × T , combines amplitude’s stability with phase’s temporal detail while avoiding linear fits; works well with GF-BiLSTM since the gate can down-weight noisy phase windows. 4. Amplitude+Phase (Sanitized): two-channel stack [ A; ˆΦ ]
+
+with shape 2 × S × T , uses per-packet linear trend removal to reduce drift/bias, yielding a small but con-sistent accuracy gain at higher preprocessing cost. All two-channel inputs follow a modality ×subcarrier ×time layout. Table 1 summarizes results under these settings. 
+
+3.3. Training Setup 
+
+The GF-BiLSTM uses one BiLSTM layer per stream (am-plitude/phase) and a post-fusion stack of two BiLSTM layers with hidden width h=128 per direction, followed by temporal averaging and a two-layer MLP head. Optimization employs AdamW (learning rate 1×10 −4, weight decay 2×10 −5) with cross-entropy loss. Regularization includes dropout 0.2 in re-current/linear layers and stream-level modality dropout 0.05 
+
+(training only). Batch size is 8.Baselines (CNN, LSTM, BiLSTM, ViT, BiVTC) are trained under the same data splits and optimizer settings with identical dropout and batch size. For two-channel inputs, the first-layer channel dimension is doubled while keeping the overall capacity comparable. Early stopping on validation performance is applied to all models. 
+
+> Table 2 : Preprocessing time (ms) per sample (mean ±sd over 5 runs).
+
+Preprocessing Method ms/sample ↓ × vs. Amp Amp-only (baseline) 1.64 ± 0.03 1.00 
+
+Phase-only (Unw) 11.29 ±0.11 6.88 Amp+Phase (Unw) 12.52 ±0.07 7.65 Phase-only (San) 76.71 ±0.15 46.78 Amp+Phase (San) 78.41 ±0.27 47.89 
+
+3.4. Performance Results Analysis 
+
+Table 1 reports the classification accuracies of all models un-der the LOVO cross-validation. Phase-only input (Col. 1) is consistently theweakest: even after unwrapping, packet-wise slope/offset and high-frequency jitter leave residual bias and heteroscedastic noise, and without the amplitude, the encoder faces a low-SNR, packet-dependent signal. Amplitude-only (Col. 2) is stronger due to smoother temporal variation. Two-channel inputs (Cols. 3–4) mitigate these issues. Amplitude offers a stable baseline while phase supplies fine timing cues, with sanitized phase (Col. 4) providing a small gain. The proposed GF-BiLSTM attains the best accuracy on all LOVO splits for dual-channel input. Its robustness stems from reliability-aware fusion and training regularization: aper-time fusion gate adapts the contribution of each stream, and a probabilistic stream-level mask occasionally hides one branch during training. This setup normalizes reliance across modalities, teaching the model to down-weight noisy phase windows and fall back on amplitude when needed, while still exploiting phase when informative—yielding consistent cross-speed gains observed in Table 1. 
+
+3.5. Computational Complexity Analysis 
+
+Using a timing micro-benchmark (I/O excluded), amplitude-only preprocessing costs 1.64 ms/sample. Adding phase with temporal unwrapping increases cost to 12.52 ms/sample (∼7.7 ×), while per-packet linear sanitization raises it to 78.41 ms/sample ( ∼47.9 ×). Both pipelines are O(T S ),but sanitization has a much larger constant due to per-packet regressions. End-to-end, the sanitized pipeline takes 82.08 ms/sample, with ∼79 ms ( ≈96%) spent in the two per-sniffer sanitization steps. In this setting, accuracy gains did not justify the overhead; the unwrap-only variant offers a better accuracy–efficiency trade-off. 
+
+4. CONCLUSION 
+
+We systematically studied amplitude and phase representa-tions of Wi-Fi CSI for robotic-arm activity recognition and proposed GF–BiLSTM, a two-stream gated-fusion model. Under the Leave-One-Velocity-Out protocol on RoboFiSense, phase-only was weakest, amplitude-only stronger, and am-plitude+phase the best, with sanitized phase providing a consistent gain. GF–BiLSTM achieved the highest accuracy and cross-speed robustness through reliability-aware fusion and light modality dropout. Unwrapped phase offered a better accuracy–efficiency trade-off than linear sanitization. Future directions include polar inputs and complex-valued networks. 5. REFERENCES 
+
+[1] Mohd Javaid, Abid Haleem, Ravi Pratap Singh, and Rajiv Suman, “Substantial capabilities of robotics in enhancing industry 4.0 implementation,” Cognitive Robotics , vol. 1, pp. 58–75, 2021. [2] Matˇ ej Petrl´ ık, Tom´ aˇ s Krajn´ ık, and Martin Saska, “LiDAR-based stabilization, navigation and localization for uavs operating in dark indoor environments,” in 
+
+2021 International Conference on Unmanned Aircraft Systems (ICUAS) . IEEE, 2021, pp. 243–251. [3] Diogo Santos Ortiz Correa, Diego Fernando Sciotti, Marcos Gomes Prado, Daniel Oliva Sales, Denis Fer-nando Wolf, and Fernando Santos Os´ orio, “Mobile robots navigation in indoor environments using kinect sensor,” in 2012 Second Brazilian Conference on Criti-cal Embedded Systems . IEEE, 2012, pp. 36–41. [4] Jianfei Yang, He Huang, Yunjiao Zhou, Xinyan Chen, Yuecong Xu, Shenghai Yuan, Han Zou, Chris Xiaoxuan Lu, and Lihua Xie, “Mm-fi: Multi-modal non-intrusive 4d human dataset for versatile wireless sensing,” Ad-vances in Neural Information Processing Systems , vol. 36, 2024. [5] Rojin Zandi, Hojjat Salehinejad, Kian Behzad, Elaheh Motamedi, and Milad Siami, “Robot motion prediction by channel state information,” in 2023 IEEE 33rd In-ternational Workshop on Machine Learning for Signal Processing (MLSP) . IEEE, 2023, pp. 1–6. [6] Sai Deepika Regani, Beibei Wang, and K. J. Ray Liu, “Model-driven learning approach for robust wifi-based fall detection,” in ICASSP 2025 - 2025 IEEE Interna-tional Conference on Acoustics, Speech and Signal Pro-cessing (ICASSP) , 2025, pp. 1–5. [7] Qian Gao, Yanling Hao, and Yuanwei Liu, “Autosen: Improving automatic wifi human sensing through cross-modal autoencoder,” in ICASSP 2024 - 2024 IEEE In-ternational Conference on Acoustics, Speech and Signal Processing (ICASSP) , 2024, pp. 8235–8239. [8] Hojjat Salehinejad, Navid Hasanzadeh, Radomir Djogo, and Shahrokh Valaee, “Joint human orientation-activity recognition using wifi signals for human-machine in-teraction,” in ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) . IEEE, 2023, pp. 1–5. [9] Siamak Yousefi, Hirokazu Narui, Sankalp Dayal, Ste-fano Ermon, and Shahrokh Valaee, “A survey on be-havior recognition using wifi channel state information,” 
+
+IEEE Communications Magazine , vol. 55, no. 10, pp. 98–104, 2017. [10] Thai Duy Quy, Chih-Yang Lin, and Timothy K Shih, “Enhanced human activity recognition using wi-fi sens-ing: Leveraging phase and amplitude with attention mechanisms,” Sensors , vol. 25, no. 4, pp. 1038, 2025. [11] Yann LeCun, Leon Bottou, Yoshua Bengio, and Patrick Haffner, “Gradient-based learning applied to document recognition,” Proceedings of the IEEE , vol. 86, no. 11, pp. 2278–2324, 1998. [12] Sepp Hochreiter and J¨ urgen Schmidhuber, “Long short-term memory,” Neural computation , vol. 9, no. 8, pp. 1735–1780, 1997. [13] Mike Schuster and Kuldip K Paliwal, “Bidirectional re-current neural networks,” in Proceedings of IEEE Inter-national Conference on Acoustics, Speech, and Signal Processing . IEEE, 1997, vol. 1, pp. 253–256. [14] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, Jakob Uszkoreit, and Neil Houlsby, “An image is worth 16x16 words: Trans-formers for image recognition at scale,” in International Conference on Learning Representations (ICLR) , 2021. [15] Rojin Zandi, Kian Behzad, Elaheh Motamedi, Hojjat Salehinejad, and Milad Siami, “Robofisense: Attention-based robotic arm activity recognition with wifi sens-ing,” IEEE Journal of Selected Topics in Signal Pro-cessing , vol. 18, no. 3, pp. 396–406, 2024. [16] Wei Wang, Alex X Liu, Muhammad Shahzad, Kang Ling, and Sanglu Lu, “Understanding and modeling of wifi signal based human activity recognition,” in Pro-ceedings of the 21st annual international conference on mobile computing and networking , 2015, pp. 65–76. [17] Rojin Zandi, Kian Behzad, Elaheh Motamedi, Hojjat Salehinejad, and Milad Siami, “Enhancing robotic arm activity recognition with vision transformers and wavelet-transformed channel state information,” in 
+
+2024 IEEE 35th International Symposium on Personal, Indoor and Mobile Radio Communications (PIMRC) .IEEE, 2024, pp. 1–6. [18] Guillermo Diaz, Iker Sobron, I˜ naki Eizmendi, Iratxe Landa, Johana Coyote, and Manuel Velez, “Channel phase processing in wireless networks for human activ-ity recognition,” Internet of Things , vol. 24, pp. 100960, 2023.

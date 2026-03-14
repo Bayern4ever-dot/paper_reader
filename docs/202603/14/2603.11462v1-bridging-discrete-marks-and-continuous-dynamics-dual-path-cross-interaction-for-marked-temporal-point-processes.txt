@@ -1,0 +1,442 @@
+Title: Bridging Discrete Marks and Continuous Dynamics: Dual-Path Cross-Interaction for Marked Temporal Point Processes
+
+URL Source: https://arxiv.org/pdf/2603.11462v1
+
+Published Time: Fri, 13 Mar 2026 00:28:21 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+# Bridging Discrete Marks and Continuous Dynamics: Dual-Path Cross-Interaction for Marked Temporal Point Processes 
+
+Yuxiang Liu, Qiao Liu, Tong Luo, Yanglei Gan, Peng He, and Yao Liu B
+
+University of Electronic Science and Technology of China, Chengdu, Sichuan, China 202321081212@std.uestc.edu.cn, qliu@uestc.edu.cn, tongluo1128@std.uestc.edu.cn, yangleigan@std.uestc.edu.cn, hepenglk@std.uestc.edu.cn, liuyao@uestc.edu.cn 
+
+Abstract. Predicting irregularly spaced event sequences with discrete marks poses significant challenges due to the complex, asynchronous de-pendencies embedded within continuous-time data streams. Existing se-quential approaches capture dependencies among event tokens but ignore the continuous evolution between events, while Neural Ordinary Differ-ential Equation (Neural ODE) methods model smooth dynamics yet fail to account for how event types influence future timing. To overcome these limitations, we propose NEXTPP, a dual-channel framework that uni-fies discrete and continuous representations via Event-granular Neural Evolution with Cross-Interaction for Marked Temporal Point Processes. Specifically, NEXTPP encodes discrete event marks via a self-attention mechanism, simultaneously evolving a latent continuous-time state using a Neural ODE. These parallel streams are then fused through a cross-attention module to enable explicit bidirectional interaction between con-tinuous and discrete representations. The fused representations drive the conditional intensity function of the neural Hawkes process, while an it-erative thinning sampler is employed to generate future events. Extensive evaluations on five real-world datasets demonstrate that NEXTPP con-sistently outperforms state-of-the-art models. The source code can be found at https://github.com/AONE-NLP/NEXTPP. 
+
+Keywords: Marked Temporal Point Processes · Neural Ordinary Dif-ferential Equation · Event Forecasting · Neural Hawkes Processes. 
+
+## 1 Introduction 
+
+Event sequences consist of discretely distributed, irregularly timed occurrences whose intervals encode rich temporal dependencies absent in uniformly sampled time series [5, 23]. Such asynchronous data arise in diverse applications, from information diffusion in social networks [21] and patient monitoring in health-care [25] to user behavior in e-commerce and seismic activity forecasting [7]. Modeling these sequences requires frameworks capable of jointly handling strictly positive inter-event times and categorical “marks” (e.g., event type or location). Temporal point processes (TPPs) [4] provide a unified mathematical founda-tion by defining a non-negative intensity function that governs the instantaneous 
+
+> arXiv:2603.11462v1 [cs.LG] 12 Mar 2026
+
+2 Y. Liu et al. 0 4 8 12       
+
+> T(s)
+> 2.75 3.0 3.5 4.0 4.5 5.0 2.5
+> Mag:
+> 2009-08-30T07:25:17.830Z 2009-08-30T07:25:29.690Z
+> Mainshock at 11.56s
+
+Fig. 1: Seismic timeline for the August 30, 2009 sequence, showing 18 events within 12.3 s. A magnitude 5.2 mainshock at 11.56s marks the transition from foreshocks to aftershocks, illustrating the classic three-phase seismic cycle. event occurrence intensity given past observations. Classical TPPs, such as Pois-son process [14] and self-exciting Hawkes processes [8] leverage fixed, parametric intensity functions and enjoy well-established statistical properties, but their re-strictive assumptions often fail to capture the nonlinear dynamics exhibited by real-world event streams. Marked TPPs (MTPPs) extend the framework by associating each event with a mark, thereby moving from univariate to multivariate modeling. Contempo-rary MTPP methods fall into two distinct categories: Discrete-time models ,typically based on Recurrent Neural Networks (RNNs) or Transformer [5, 34], excel in learning dependencies among event tokens yet disregard the continuous nature of time. Continuous-time models , including Neural Ordinary Differen-tial Equations and latent Stochastic Differential Equations formulations [3, 20], evolve hidden representations smoothly over real time but typically do not in-tegrate observed event marks, thereby missing explicit dependencies between marks and their temporal evolution. Consequently, neither strand fully captures the bidirectional information flow between discrete event marks and their latent continuous-time dynamics, leaving critical gaps in the current schemes. To illustrate, consider the 18 consecutive seismic event sequence occurred in California, USA on August 30, 2009 in Figure 1. Over just 12.3 s, small foreshocks (magnitude 2.5-4.0) occur at irregular intervals that evolve into an M5.2 main-shock at 11.56s, immediately followed by densely clustered aftershocks of vary-ing magnitudes. A discrete-time approach could learn the magnitude progression but would lacks modeling of temporal dependencies, whereas a continuous-time ODE can accurately fit event timestamps but lacks modeling of correlations be-tween different earthquakes. Thus, temporal dependencies between events in the continuous-time dimension are fundamentally coupled with mutual influences among events in the discrete-event dimension—where continuous-time depen-dencies provide dynamic context for discrete event interactions, while discrete event influences in turn guide the evolutionary trajectory of continuous-time dependencies. We require a unified framework to model the interplay between continuous and discrete dynamics. To bridge this gap, we introduce NEXTPP, a dual-channel architecture that integrates Neural Evolution with Cross-Interaction for Marked Temporal Point Process. Specifically, the discrete stream encodes event representation via self-attention, while the continuous stream evolves each latent state via a Neu-Dual-Path Cross-Interaction for Marked Temporal Point Processes 3
+
+ral ODE to capture fine-grained temporal evolution between events. A cross-attention block then fuses the two streams, allowing event marks to influence future timings and temporal context to inform mark generation. This cross-interaction mechanism allows event magnitudes to adjust future timing predic-tions, while temporal context refines mark forecasts. The fused representations drive the conditional intensity function of the neural Hawkes process, while an iterative thinning sampler is employed to generate future events. Our main con-tributions are as follows: 1) We propose an event-granularity-based sequential evolution strategy, which achieves the modeling of complex temporal dependencies in temporal point processes while strictly preserving the global structural consistency of the Hawkes process. 2) We establish the influence of historical events on the current event, enhancing the model’s representational capacity for event evolution via bidirectional semantic alignment between continuous state trajectories and discrete event representations. 3) Extensive experiments on five real-world datasets show that our proposed model attains more precise predictions and superior interpretability com-pared with state-of-the-art methods. 
+
+## 2 Preliminaries and Related Works 
+
+2.1 Marked Temporal Point Processes 
+
+MTPPs are stochastic models that characterize the joint distribution of event times and their associated categorical types (marks). Formally, an event sequence of length L is denoted by S = {(ti, m i)}Li=1 , where the ti ∈ (0 , T ) is the arrival time of i-th event, and mi ∈ { 1, 2, ...M } is its corresponding type. Assuming that the event times are strictly increase monotonically, so the inter-event interval satisfies △ti = ti − ti−1 ∈ R+, with the convention △t1 = t1. Let Ht = {ej =(tj , m j )|tj < t } denote the historical event sequence until time t, the event distribution of the MTPPs is then denoted as the following conditional intensity function: 
+
+λi(t, m ) ≜ λ(t, m |H ti ) = lim 
+
+> △t→0
+
+P(ti ∈ [t, t + △t], m i = m|H ti )
+
+△t . (1) For notational brevity, the explicit dependence on Hti is absorbed into the superscript i in Eq (1). The conditional intensity function characterizes the in-stantaneous rate that the event with a mark m will occur during the time interval 
+
+[t, t + △t] under the given historical event sequence Hti . The generalized condi-tional probability is then expressed as: 
+
+pi(t, m ) = λi(t, m )e− R tti−1 
+
+> PMl=1 λi(s,l )ds
+
+. (2) 4 Y. Liu et al. 
+
+Classical statistical point process models typically rely on parametric inten-sity functions. The Poisson process [14] is the most fundamental independent increment process. Hawkes processes [8] introduce self-excitation: each event transiently boosts future intensity via a decaying kernel, capturing clustering. Self-correcting processes [11] instead impose self-inhibition, with each event suppressing subsequent intensity to maintain balance. These conventional ap-proaches merely model purely excitatory or inhibitory effects, but are incapable of capturing the intricate dependency structures embedded within real-world event streams. Deep learning–based TPP models replace handcrafted intensities with learned representations. Early approaches used RNNs to encode event histories via the iterative hidden-state updates [5, 17], but encountered bottlenecks in capturing long-range dependencies and computational efficiency. Attention-based paradigms for MTPPs were further established to capturing global dependencies in event sequences. The Self-attentive and Transformer Hawkes processes were individu-ally proposed in [29] and [34]. The continuous-time Transformer was established in [27] to summarize the past events. The Transfomer-based variational autoen-coder was employed in [33] to approximate the ground-truth intensity functions. Certainly, a parallel line of works dedicate to address the intractable integral of the conditional intensity that appears in the likelihood of density for MTPPs. The policy-based method of reinforcement learning was utilized in [23] to detour the accumulation of intensity. A intensity-free alternative was proposed in [20] to directly parameterize the probability density function on the observed event sequences. Diffusion medels [10,28] and score matching techniques [16] are widely adopted to circumvent the costly integral in density. 
+
+2.2 Neural Ordinary Differential Equations 
+
+Neural Ordinary Differential Equations (Neural ODEs) cast a neural network f
+
+as the time-varying vector field of an ODE, deriving the state h along the trajec-tory: dh(t)dt = f (h(t), t ; θ), where θ denotes the network parameters. The practical breakthrough came with the adjoint sensitivity method [3], which delivers ex-act gradients at a constant-memory cost, breaking the large-memory deadlock of traditional back-propagation. In the wake of Neural ODEs and their flexible learning algorithm, a growing family of variants have rapidly emerged [6, 13, 22]. More recently, the insights of control theory have been woven into these Neural ODE models, yielding to faster convergence and provable adversarial robust-ness [19]. Departing from discrete-time approximations that struggle to capture fine-grained temporal dynamics for MTPPs, several recent studies conceptual-ize discrete event sequences as continuous dynamics via Neural ODEs. ODE-RNNs [20] define the continuous-time hidden states of RNNs via Neural ODEs to naturally handle the irregular time gaps in MTPPs. Attentive Continuous-time Normalizing Flows was proposed in [2] to learn the complex distribution of events. A stochastic process view is provided in [30] to model the continuous diffusion process between events and instantaneous jumps at event times. Dual-Path Cross-Interaction for Marked Temporal Point Processes 5Event Sequence                           
+
+> Embedding
+> Self -Attention
+> LayerNorm Decoder
+> Projection
+> Encoder
+> t1t2t9t3t4t5t6t7t8
+> t1t9t2t3
+> Neural Evolution
+> From Key
+> Query
+> t10
+> t1t2t9t3t4t5t6t7t8
+> Sequence Representation
+> Latent Space
+> Cross -Attention
+> SA
+> NE From
+> Discrete events ：
+> Continuous
+> representation ：
+> t2t3t10 t4t5t6t7t8t9X-Interaction
+
+Fig. 2: The overall framework NEXTPP. Left(SA): Discrete event sequence pro-cessing through embedding and self-attention layers. Right(NE): Continuous representation via latent space. X-Interaction(CA): Continuous-Discrete Inter-action. 
+
+## 3 Methodology 
+
+3.1 Sequence Representations 
+
+Our NEXTPP pipeline proceeds in three stages: (1) a basic embedding layer mapping events into dense features, (2) a dual parallel Encoder via Self-Attention and Neural ODEs is employed to respectively extract the discrete-time temporal patterns and the continuous-time latent dynamics, (3) a Cross-Attention Fusion module integrates the two streams into a unified sequence representations. The overall architecture of our NEXTPP is illustrated in Figure 2. 
+
+Embedding Layer. The embedding layers are firstly employed to trans-form both event markers and timestamps into dense vectors. Specially, the event marker mi are projected into Yi ∈ RD via an embedding matrix M ∈ R|M |∗ D
+
+[26]. For event times, we apply the position encoding scheme in [34]: 
+
+[Fi]l =
+
+(
+
+cos( ti/10000 l−1 
+
+> D
+
+), if l is odd, 
+
+sin( ti/10000 lD ), if l is even, (3) as in Eq (3), each timestamp ti are encoded into the temporal embedding 
+
+Fi ∈ RD via the trigonometric function with the embedding dimension D, and 
+
+[Fi]l denotes the corresponding l-th component, where l ∈ 1, 2, · · · , D . The final representation of event i is the element-wise sum Ei = Yi + Fi, so the entire sequence is thus compactly expressed as the embedding matrix E ∈ RL∗D .
+
+Neural Evolution. We project each event Ei into the low-dimensional man-ifold via latent space encoder: 
+
+γi = N N enc _γ (Ei); log τi = N N enc _τ (Ei), (4) 6 Y. Liu et al. 
+
+where N N denotes a fully-connected neural network, γi ∈ Rd and log τi ∈ Rd
+
+denote the mean and log -variance of latent distribution. The latent dimension d
+
+satisfies d ≪ D, enabling efficient simulation of the underlying dynamics. Leveraging the reparameterization trick, the initial latent state for each event 
+
+ei can be sampled as: 
+
+z(0)  
+
+> i
+
+= γi + τi ⊙ ϵ, ϵ ∼ N (0, I) (5) then the latent state between a pair of events evolves over time according to the following Neural ODEs: dz
+
+dt = fθ (z, t ) (6) where f is parameterized by a linear network with learnable θ, and the initial la-tent state follows the variational distribution q(z(0)  
+
+> i
+
+|ti, m i). For memory-efficient gradient computation, the continuous dynamic evolution is integrated by a black-box ODE solver with the adjoint sensitivity method. 
+
+z(1)  
+
+> i
+
+= ODESolve( fθ , z(0)  
+
+> i
+
+, [ti, t i+1 ]) (7) Finally, one-layer linear decoder maps the terminal latent state z(1)  
+
+> i
+
+to the the reconstructed embedding Oi.
+
+Oi = N N dec (z(1)  
+
+> i
+
+). (8) 
+
+X-Interaction. To faithfully capture the influence of event history, we pro-cess the event embedding Ei in parallel with the neural evolution. First, a Self-Attention block distills an intermediate representation: 
+
+Ai = LayerNorm( Ei + Self -Attention (Ei)) , (9) which captures the intrinsic dependencies within the sequence. A Cross-Attention module then establishes bidirectional interaction between the discrete and con-tinuous streams, where the reconstructed feature Oi from Neural ODE serves as the Query to attend over the intermediate representation Ai (as Key), en-abling explicit information flow where historical event marks influence temporal dynamics while temporal context refines mark predictions: 
+
+Ci = LayerNorm( Oi + X-Interaction (Oi, Ai)) , (10) where X-Interaction employs Cross-Attention for implementation. Eventually, The resulting Ci serves as the final sequence-level representation of our proposed NEXTPP. 
+
+Intensity Function. Armed with a high-fidelity sequence representation C
+
+of event sequence Hti , we express the conditional intensity of every event mark 
+
+m at time t through the formulation of Hawkes Process: 
+
+λi(t, m ) = Act (αm(t − ti) + W⊤
+
+> m
+
+Ci + bm + βm), (11) Dual-Path Cross-Interaction for Marked Temporal Point Processes 7
+
+where αm, Wm, bm, βm are learnable in intensity network. αm is the triggering kernel governing the intensity decay rate for mark m at time t. Wm and bm
+
+represent the weights and biases corresponding to the historical dependencies. βm
+
+describes the occurrence rate of current event in the absence of triggering events. The activation Act (·) is a Scaled − Sof tplus , defined as Act (·) = γm log(1 + exp( · 
+
+> γm
+
+)) , with a learnable scale γm > 0 to ensures strictly positive intensity values. This design endows the model to flexibly adjust the curvature of the intensity function, faithfully capturing the unique temporal dynamics of each mark m.
+
+3.2 Training 
+
+For NEXTPP training, the loss is mainly consisted of the following three com-plementary objectives. Firstly, we minimize the negative log likelihood to learn the model parameters of intensity function in Eq (11), formulated as: 
+
+LM LE = −ℓ(S)= −
+
+> L
+
+X
+
+> i=1
+
+logλ i(ti, m i) + 
+
+Z tL
+
+> t1
+> M
+
+X
+
+> l=1
+
+λi(s, l )ds (12) Moreover, we infer the joint low-dimensional distribution underlying each event time ti and mark mi via variational inference. Concretely, we minimize the Kullback-Leibler(KL) [1] divergence between variational posterior and the true latent posterior for the entire observed sequence, written as: 
+
+LKL =
+
+> L
+
+X
+
+> i=1
+
+DKL (q(z(0)  
+
+> i
+
+| (ti, m i)) || p(z(0)  
+
+> i
+
+)) . (13) where q(z(0)  
+
+> i
+
+|(ti, m i)) ∼ N (γi, τi) and p(z(0)  
+
+> i
+
+) ∼ N (0, I). Since event times arise from a continuous domain, we add a third loss term encouraging smooth latent space trajectories [9]. we penalize the discrepancy between the evolved representation of the current event z(1)  
+
+> i
+
+driven by z(0) (i) and the static representa-tion of the next observed event z(0) (i+1) , thereby preserving latent space trajectory continuity across the sequence: 
+
+Lcont =
+
+> L−1
+
+X
+
+> i=1
+
+(z(1)  
+
+> i
+
+− z(0) (i+1) )2. (14) Finally, our overall loss function can be expressed as: 
+
+L = LM LE + LKL + Lcont . (15) 
+
+3.3 Thinning Sampler for NEXTPP 
+
+NEXTPP employs iterative thinning sampling [15] to simulate marked event sequences adhering to the conditional intensity in Eq (11). Each candidate event is accepted with probability preserving both temporal and mark dynamics: 8 Y. Liu et al. 
+
+Table 1: Dataset statistics with number of marks (M), event tokens distribution across splits, and sequence length characteristics.                                            
+
+> Dataset MEvent Tokens Sequence Length Train Dev Test Min Mean Max
+> RETWEET 3369731 62823 61154 10 41 97 AMAZON 16 288377 40995 84048 14 44 94 TAXI 10 51854 7404 14820 36 37 38 STACKOVERFLOW 22 90497 25762 26518 41 65 101 EARTHQUAKE 749363 6612 14748 15 16 18
+
+1. Initial a proposal process with the upper bound intensity over all possible marks at each event timestamp t: λ∗ 
+
+> m
+
+= max  
+
+> t∈(ti−1,t i−1+∆T max )
+
+λi(t, m ) + ϵ;2. Generate candidate time interval with the intensity in Step 1 from the ho-mogeneous Poisson process: t∗ 
+
+> m
+
+= λ∗
+
+> m
+
+exp (−λ∗
+
+> m
+
+(t − ti−1)) ;3. Accept ti−1 + t∗ 
+
+> m
+
+as the sampling time ti,m with condition μλ ∗ 
+
+> m
+
+≤ λi(t∗
+
+> m
+
+, m )
+
+if it satisfies t∗ 
+
+> m
+
+< ∆T max , otherwise ti,m = ∞;repeat Step 2-3 to obtain event time ti and mark mi:
+
+ti = min  
+
+> m
+
+ti,m , m i = arg min  
+
+> m
+
+ti,m . (16) Through L samplings iterations, we obtained a new sequence of events. 
+
+## 4 Experiments 
+
+4.1 Experimental Settings 
+
+Datasets We evaluate the model performance on five real-world datasets ( Taxi ,
+
+Amazon , StackOverflow , Earthquake , Retweet ) and follow the pre-processing procedure from [26]. The core information of each dataset is as follows: The Taxi [24] dataset is derived from taxi pickup and drop-off records in New York City, containing sequence data of 2,000 drivers with a total of 10 marks (repre-senting combinations of different boroughs and pickup/drop-off statuses); The Amazon [18] dataset covers user product review records from January 2008 to October 2018, selecting sequences of 5,200 active users (with an average of 70 events per user) and using product categories as 16 marks; The StackOver-flow [12] dataset is from two years of badge award records on this Q&A plat-form, including sequences of 2,200 users and taking 22 badge types as marks; The Earthquake [26] dataset records earthquake events with magnitudes ≥ 2.5 in the United States from 1996 to 2023, which are divided into 7 intervals by magnitude as marks, and the data is sourced from the U.S. Geological Survey 
+
+> 1
+
+; The Retweet [31] dataset contains 5,200 tweet sequences (each sequence in-cludes an original tweet and subsequent retweets), with the follower count levels   
+
+> 1https://earthquake.usgs.gov/earthquakes/search/ Dual-Path Cross-Interaction for Marked Temporal Point Processes 9
+
+Table 2: Results of all model reproductions across five real datasets. The per-formance of our NEXTPP model represents the average of five training runs with different random seeds. Lower scores indicate better performance. The best results are indicated in bold and suboptimal results are underlined.(R = RMSE (↓), E = Error Rate % ( ↓), S.O. = StackOverflow, EQ = Earthquake) 
+
+Method Taxi Amazon S.O. EQ Retweet 
+
+R E R E R E R E R EMHP 0.382 9.53 0.635 75.9 1.388 65.0 4.128 54.9 22.920 55.7 RMTPP 0.374 10.4 0.474 68.1 1.392 56.3 2.097 54.9 26.508 45.8 NHP 0.373 10.0 0.513 68.5 1.431 53.3 2.347 54.7 22.410 39.9 THP 0.370 10.1 0.471 66.6 1.343 53.3 2.160 55.1 24.491 39.9 SAHP 0.334 10.0 0.549 68.9 1.331 56.5 1.864 54.9 21.673 40.6 AttNHP 0.394 14.1 0.652 67.3 1.402 53.7 2.117 54.8 21.748 40.9 IFTPP 0.404 9.38 0.461 65.6 1.572 52.9 2.540 53.1 34.302 39.8 ODETPP 0.359 11.6 0.671 68.5 1.507 54.2 2.396 56.0 19.404 57.6 DLTPP 0.662 14.9 0.485 66.9 1.497 59.5 1.672 63.4 21.892 42.9 NEXTPP 0.323 8.83 0.377 66.5 1.152 52.2 1.542 54.4 19.340 35.5 
+
+of retweeters (small/medium/large) serving as 3 marks.Table 1 summarizes the statistical information of the processed datasets. 
+
+Baselines We evaluate our model by comparing it with state-of-the-art baselines: 
+
+(i) Discrete-time approximation models : classical Multivariate Hawkes Process (MHP) , Recurrent Marked Temporal Point Process (RMTPP) 
+
+[5], Neural Hawkes Process (NHP) [17], Transformer Hawkes Process (THP) [34], and Self-Attentive Hawkes Process (SAHP) [29], Attentive Neural Hawkes Process (AttNHP) [27]; (ii) Continuous-time modeling models : IFTPP [20], ODETPP [26], and DLTPP [32]. 
+
+Evaluation Metrics To comprehensively evaluate NEXTPP, we use three met-rics to evaluate the model’s performance from three aspects: Compute the log-likelihood to evaluate the model’s goodness-of-fit to the overall distribution: 
+
+ℓ(S) = PLi=1 log λi(ti, k i) − R T
+
+> 0
+
+PMl=1 λi(τ, l )dτ . We quantify temporal predic-tion accuracy via: RM SE =
+
+q 1
+
+> n
+
+Pni=1 (ti − ˆti)2. To evaluate the model’s type prediction accuracy, we define the error rate as: ErrorRate = FP +FN TP +TN +FP +FN .
+
+Implementation Details Our method is implemented in Pytorch on a single NVIDIA GeForce RTX 4090 GPU with 24 GB memory. We set the learning rate as 1e-3 via the searching in a set of {1e-4, 5e-4, 1e-3}. We utilized the Adam optimizer and set consistent hyperparameters across most datasets: hidden size 10 Y. Liu et al. 
+
+Table 3: Log-Likelihood Performance Comparison. Reported values are the mean log-likelihood over five independent runs, with the corresponding standard de-viation indicating experimental variability. 
+
+MODEL Log-Likelihood Taxi Amazon Stack Overflow Earthquake Retweet RMTPP 0.219 ±0.033 -2.258 ±0.009 -2.820 ±0.025 -2.313 ±0.272 -5.754 ±1.785 
+
+NHP 0.440 ±0.007 -2.036 ±0.066 -2.440 ±0.103 -2.155 ±0.056 -4.020 ±0.133 
+
+THP 0.217 ±0.034 -2.215 ±0.016 -2.478 ±0.031 -2.353 ±0.040 -4.143 ±0.005 
+
+SAHP -0.295 ±0.266 -2.417 ±0.207 -6.930 ±0.007 -3.136 ±0.610 -4.798 ±0.637 
+
+AttNHP 0.164 ±0.031 -1.364 ±0.195 -2.560 ±0.004 -2.359 ±0.026 -4.128 ±0.002 
+
+NEXTPP 0.586 ±0.026 -1.246 ±0.071 -1.971 ±0.032 -1.828 ±0.034 -3.993 ±0.007 
+
+Table 4: Ablation results on Amazon, StackOverflow and Retweet. 
+
+Settings Amazon StackOverflow Retweet LL( ↑) RMSE( ↓) ErrRt( ↓) LL( ↑) RMSE( ↓) ErrRt( ↓) LL( ↑) RMSE( ↓) ErrRt( ↓)w/o NE -2.178 0.468 66.8% -2.474 1.338 53.3% -4.180 20.541 40.2% w/o CA -1.530 0.438 71.1% -2.657 2.199 56.4% -4.122 20.108 47.3% NE →GRU -2.235 0.481 67.7% -2.369 1.366 53.2% -4.166 21.145 40.7% NE →LSTM -2.263 0.495 68.2% -2.403 1.389 53.3% -4.177 20.795 40.6% NEXTPP -1.246 0.377 66.5% -1.971 1.152 52.2% -3.993 19.340 35.5% 
+
+= 128, time embedding dimension = 16, and dropout rate = 0.1. For the number of layers and training epochs , we tailored them to each dataset: Taxi, Stack-Overflow, and Retweet used 2 layers with 150 epochs; Amazon used 1 layer with 50 epochs; and Earthquake used 4 layers with 150 epochs. 
+
+4.2 Overall Performance 
+
+Our primary results are presented in Table 2, which reports event-type error and temporal RMSE, and Table 3, which presents the log-likelihood of observed event sequences under the learned model. 
+
+– Overall Performance Validation. Across five diverse datasets, NEXTPP achieves the lowest RMSE on every benchmark, reducing next-timestamp er-ror from 0.461 to 0.377 on Amazon and from 1.331 to 1.152 on Stack Over-flow. While NEXTPP also attains the smallest event-type error in three out of five cases (Taxi, Stack Overflow, Retweet). On the two datasets where Dual-Path Cross-Interaction for Marked Temporal Point Processes 11 
+
+classification error is marginally higher, we observe that IFTPP exhibits se-vere performance fluctuations on specific datasets with respect to temporal RMSE. In contrast, NEXTPP maintains consistent performance, demon-strating a robust balance between temporal precision and mark accuracy. 
+
+– Superiority of Continuous-Time Distribution Learning. By leverag-ing Neural ODEs for continuous evolution, NEXTPP consistently surpasses all baselines in log-likelihood, demonstrating a markedly better fit to the empirical event distributions. These gains confirm that modeling the latent trajectory as a smooth, event-driven ODE yields a more accurate density estimation than discrete or intensity-parametric alternatives. 
+
+4.3 Ablation Studies 
+
+We conduct comprehensive ablations to quantify the contribution of each ar-chitectural component in NEXTPP. Specifically, we evaluate: (i) the effect of omitting the Neural Evolution module (w/o NE) and the Cross-Attention mod-ule (w/o CA); and (ii) the impact of replacing our Neural ODE backbone in the Neural Evolution module with two recurrent alternatives, GRU and LSTM. Re-sults are summarized in Table 4, leading to two key findings: (1) Module-Level Contributions. Every component materially improves performance. Excluding Cross-Attention increases the event-type error rate by more than 4% points on average, underscoring its role in integrating context across event streams. Likewise, removing Neural Evolution causes a pronounced degradation in log-likelihood, confirming its importance for learning a faithful distributional rep-resentation. (2) Advantages of Continuous-Time Dynamics. Substituting the ODE solver with GRU or LSTM yields modest rises in error rate but a larger drop in log-likelihood. This contrast reflects the Neural ODE’s ability to model continuous-time trajectories with fine-grained temporal precision, which recurrent architectures approximate only at discrete steps. 
+
+4.4 Event-Granularity Evolution Validation 
+
+To probe NEXTPP’s event-granularity evolution mechanism, we vary the event-to-event modeling granularity by partitioning each sequence into fixed-length chunks of 1/ α events. As illustrated in Figure 3, among several datasets tested, the evolution divided by a single event performs better. The negative log-likelihood is almost monotonically increasing, indicating that coarse updates progressively undermine the model’s capacity to approximate the true event distribution. Si-multaneously, the RMSE curve trends upward, demonstrating lost precision in predicted timestamps when multiple inter-event transitions are merged into one latent step. This pattern indicates that larger chunks group multiple transitions into a single latent update can obscure the temporal dynamic characteristics at the micro level. Under this coarse regime, the model loses sensitivity to rapid changes in event intensity and cannot adapt to varying inter-event intervals, which in turn degrades both its fit to the data and its forecasting precision. In contrast, single-event granularity compels the Neural ODE solver to register 12 Y. Liu et al. 
+
+Fig. 3: Block-wise test results: The sequence is divided into several blocks ac-cording to partition ratio α, with each block evolving in its corresponding latent space, where X indicates one block per event.(Lower scores are better) each inter-event derivative, faithfully reflecting abrupt spikes, gradual decays, and oscillatory patterns intrinsic to the dynamics. By maintaining every event transition as an individual state, NEXTPP captures subtle timing cues that inform both density estimation and label prediction. 
+
+4.5 Effectiveness of X-Interaction 
+
+To demonstrate NEXTPP’s ability to capture the influence of event history, we conduct comparative visualizations between the continuous-discrete interaction and conventional self-attention mechanisms. We visualize the same sequence showcased in Figure 1, and the red vertical rectangle marks the occurrence time of the mainshock at 11.56 seconds, and display the dynamic evolution of heatmaps across several training epochs in Figure 4. Two key observations emerge. First, NEXTPP’s continuous cross-attention rapidly concentrates its weight mass around the true preceding events, effectively tracing the causal im-pact of specific historical timestamps on each the evolved state representation. In contrast, self-attention remains broadly diffused, assigning non-negligible weight to distant or spurious positions and failing to identify the most important content and its impact. Second, as training progresses, NEXTPP’s attention heatmap de-Dual-Path Cross-Interaction for Marked Temporal Point Processes 13    
+
+> (a)
+> (b)
+> Epoch: 0 Epoch: 40 Epoch: 70 Epoch: 130
+
+Fig. 4: Heatmap comparison of the seismic sequences (shown in Figure 1) during model training. (a) The first row shows our Continuous-Discrete Interaction( X-Interaction ); (b) The second row displays the conventional Attention( Self -Attention ). velops clear, task-aligned concentration patterns that both sharpens and extends across variable temporal lags, demonstrating its capacity to adaptively attend to relevant intervals regardless of their distance. This pattern confirms that the cross-attention module endows NEXTPP with precise, history-conditioned fea-ture integration, crucial for intensity function support and timestamp forecasting in marked temporal point processes. 
+
+4.6 Performance under Limited Training Data 
+
+Figure 5 evaluates model performance on the Earthquake and Retweet datasets as the fraction of training events increases from 14% to 56%. Panels (a) and (c) plot average log-likelihood, while (b) and (d) show error rate. Across both tasks, NEXTPP (green) consistently achieves the highest log-likelihood and the lowest error rate at all data scales, demonstrating its ability to learn both accurate densities and precise event predictions. In contrast, Transformer-based models (THP, AttNHP) struggle when data are scarce and their performance plateaus or even slightly degrades as more events become available, likely because their attention heads latch onto spurious dependencies [34]. The Neural Hawkes Pro-cess (NHP) improves modestly with more data but remains outperformed by NEXTPP. These results confirm that NEXTPP’s dual-channel cross-interaction mechanism robustly leverages both discrete and continuous dynamics, yielding superior and steadily improving performance as training volume grows. 14 Y. Liu et al.    
+
+> (a) LL(EQ) (b) ErrRt(EQ) (c) LL(Retweet) (d) ErrRt(Retweet)
+
+Fig. 5: Training curves with varying event counts (Percentage of the total training dataset) for Earthquake and Retweet datasets. Taxi  Earthquake  S.O.   
+
+> (a) τon different datasets (b) Training time(minutes)
+
+Fig. 6: Training Stability and Efficiency. 
+
+4.7 Training Stability and Efficiency 
+
+Figure 6a tracks the evolution of the latent space variance τ over 100 training epochs. τ rapidly decreases from initialization and converges to a narrow range with small cross-run variance, showing the trained Neural ODE parameters θ
+
+produce well-conditioned dynamics fθ that stabilize the latent state space and avoid large corrections during training. Figure 6b compares end-to-end training times on an NVIDIA RTX 4090 GPU between NEXTPP and the prior ODETPP model (both with 100 epochs and a single hidden layer of size 32). NEXTPP takes less than half the computation time, demonstrating its low-dimensional latent representation delivers major efficiency gains without losing stability. 
+
+## 5 Conclusion 
+
+In this work, we present NEXTPP, which successfully bridges the gap between discrete mark modeling and continuous-time dynamics in marked temporal point processes. By embedding event marks via self-attention and evolving latent states through a Neural ODE, then fusing these representations with cross-attention, NEXTPP explicitly captures how past marks influence future timing. Empirical evaluations across five diverse real-world datasets demonstrate that NEXTPP consistently outperforms state-of-the-art baselines in log-likelihood and predic-tion error, while its cross-attention weights offer insights into the bidirectional interplay of marks and timing. Dual-Path Cross-Interaction for Marked Temporal Point Processes 15 
+
+Acknowledgements. This work is supported by National Natural Sci-ence Foundation of China (U22B2061), National Key R&D Program of China (2022YFB4300603), and Natural Science Foundation of Sichuan, China (2024NS-FSC0496). 
+
+Disclosure of Interests. No competing interests exist. 
+
+## References 
+
+1. Blei, D.M., Kucukelbir, A., McAuliffe, J.D.: Variational inference: A review for statisticians. Journal of the American statistical Association 112 (518), 859–877 (2017) 2. Chen, R.T., Amos, B., Nickel, M.: Neural spatio-temporal point processes. arXiv preprint arXiv:2011.04583 (2020) 3. Chen, R.T., Rubanova, Y., Bettencourt, J., Duvenaud, D.K.: Neural ordinary dif-ferential equations. Advances in neural information processing systems 31 (2018) 4. Daley, D.J., Vere-Jones, D.: An introduction to the theory of point processes: volume I: elementary theory and methods. Springer (2003) 5. Du, N., Dai, H., Trivedi, R., Upadhyay, U., Gomez-Rodriguez, M., Song, L.: Re-current marked temporal point processes: Embedding event history to vector. In: Proceedings of the 22nd ACM SIGKDD international conference on knowledge discovery and data mining. pp. 1555–1564 (2016) 6. Dupont, E., Doucet, A., Teh, Y.W.: Augmented neural odes. Advances in neural information processing systems 32 (2019) 7. Fox, E.W., Schoenberg, F.P., Gordon, J.S.: Spatially inhomogeneous background rate estimators and uncertainty quantification for nonparametric hawkes point process models of earthquake occurrences. The Annals of Applied Statistics 10 (3), 1725 (2016) 8. Hawkes, A.G.: Spectra of some self-exciting and mutually exciting point processes. Biometrika 58 (1), 83–90 (1971) 9. Higgins, I., Matthey, L., Pal, A., Burgess, C., Glorot, X., Botvinick, M., Mohamed, S., Lerchner, A.: beta-vae: Learning basic visual concepts with a constrained vari-ational framework. In: International conference on learning representations (2017) 10. Ho, J., Jain, A., Abbeel, P.: Denoising diffusion probabilistic models. Advances in neural information processing systems 33 , 6840–6851 (2020) 11. Isham, V., Westcott, M.: A self-correcting point process. Stochastic processes and their applications 8(3), 335–347 (1979) 12. Jure, L.: Snap datasets: Stanford large network dataset collection. Retrieved De-cember 2021 from http://snap.stanford.edu/data (2014) 13. Kidger, P., Morrill, J., Foster, J., Lyons, T.: Neural controlled differential equations for irregular time series. Advances in Neural Information Processing Systems 33 ,6696–6707 (2020) 14. Kingman, J.F.C.: Poisson processes, vol. 3. Clarendon Press (1992) 15. Lewis, P.W., Shedler, G.S.: Simulation of nonhomogeneous poisson processes by thinning. Naval research logistics quarterly 26 (3), 403–413 (1979) 16. Li, Z., Xu, Y., Zuo, S., Jiang, H., Zhang, C., Zhao, T., Zha, H.: Smurf-thp: score matching-based uncertainty quantification for transformer hawkes process. In: In-ternational Conference on Machine Learning. pp. 20210–20220. PMLR (2023) 17. Mei, H., Eisner, J.M.: The neural hawkes process: A neurally self-modulating multi-variate point process. Advances in neural information processing systems 30 (2017) 16 Y. Liu et al. 18. Ni, J.: Amazon product review dataset. https://nijianmo.github.io/amazon/ (2018) 19. Rodriguez, I.D.J., Ames, A., Yue, Y.: Lyanet: A lyapunov framework for training neural odes. In: International conference on machine learning. pp. 18687–18703. PMLR (2022) 20. Rubanova, Y., Chen, R.T., Duvenaud, D.K.: Latent ordinary differential equations for irregularly-sampled time series. Advances in neural information processing sys-tems 32 (2019) 21. Sharma, K., Zhang, Y., Ferrara, E., Liu, Y.: Identifying coordinated accounts on social media through hidden influence and group behaviours. In: Proceedings of the 27th ACM SIGKDD conference on knowledge discovery & data mining. pp. 1441–1451 (2021) 22. Song, Y., Sohl-Dickstein, J., Kingma, D.P., Kumar, A., Ermon, S., Poole, B.: Score-based generative modeling through stochastic differential equations. arXiv preprint arXiv:2011.13456 (2020) 23. Upadhyay, U., De, A., Gomez Rodriguez, M.: Deep reinforcement learning of marked temporal point processes. Advances in neural information processing sys-tems 31 (2018) 24. Whong, C.: Foiling nyc’s taxi trip data. FOILing NYCs Taxi Trip Data 18 , 14 (2014) 25. Xu, H., Wu, W., Nemati, S., Zha, H.: Patient flow prediction via discriminative learning of mutually-correcting processes. IEEE transactions on Knowledge and Data Engineering 29 (1), 157–171 (2016) 26. Xue, S., Shi, X., Chu, Z., Wang, Y., Hao, H., Zhou, F., JIANG, C., Pan, C., Zhang, J.Y., Wen, Q., et al.: Easytpp: Towards open benchmarking temporal point processes. In: The Twelfth International Conference on Learning Representations (2023) 27. Yang, C., Mei, H., Eisner, J.: Transformer embeddings of irregularly spaced events and their participants. In: Proceedings of the Tenth International Conference on Learning Representations (ICLR) (2022) 28. Yuan, Y., Ding, J., Shao, C., Jin, D., Li, Y.: Spatio-temporal diffusion point pro-cesses. In: Proceedings of the 29th ACM SIGKDD Conference on Knowledge Dis-covery and Data Mining. pp. 3173–3184 (2023) 29. Zhang, Q., Lipani, A., Kirnap, O., Yilmaz, E.: Self-attentive hawkes process. In: International conference on machine learning. pp. 11183–11193. PMLR (2020) 30. Zhang, S., Zhou, C., Liu, Y.A., Zhang, P., Lin, X., Ma, Z.M.: Neural jump-diffusion temporal point processes. In: Forty-first International Conference on Ma-chine Learning (2024) 31. Zhou, K., Zha, H., Song, L.: Learning triggering kernels for multi-dimensional hawkes processes. In: International conference on machine learning. pp. 1301–1309. PMLR (2013) 32. Zhou, W.T., Kang, Z., Tian, L., Zhang, J., Liu, Y.: Non-autoregressive diffusion-based temporal point processes for continuous-time long-term event prediction. Expert Systems with Applications 267 , 126210 (2025) 33. Zhou, Z., Yang, X., Rossi, R., Zhao, H., Yu, R.: Neural point process for learning spatiotemporal event dynamics. In: Learning for Dynamics and Control Confer-ence. pp. 777–789. PMLR (2022) 34. Zuo, S., Jiang, H., Li, Z., Zhao, T., Zha, H.: Transformer hawkes process. In: International conference on machine learning. pp. 11692–11702. PMLR (2020)
