@@ -1,0 +1,475 @@
+Title: MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies
+
+URL Source: https://arxiv.org/pdf/2603.06846v1
+
+Published Time: Tue, 10 Mar 2026 00:14:13 GMT
+
+Number of Pages: 23
+
+Markdown Content:
+# MOTION BITS : V IDEO SEGMENTATION THROUGH 
+
+# MOTION -L EVEL ANALYSIS OF RIGID BODIES 
+
+A P REPRINT 
+
+Howard H. Qian 
+
+Department of Computer Science Rice University 
+
+Kejia Ren 
+
+Department of Computer Science Rice University 
+
+Yu Xiang 
+
+Department of Computer Science University of Texas at Dallas 
+
+Vicente Ordonez 
+
+Department of Computer Science Rice University 
+
+Kaiyu Hang 
+
+Department of Computer Science Rice University 
+
+## ABSTRACT 
+
+Rigid bodies constitute the smallest manipulable elements in the real world, and understanding how they physically interact is fundamental to embodied reasoning and robotic manipulation. Thus, accurate detection, segmentation, and tracking of moving rigid bodies is essential for enabling reasoning modules to interpret and act in diverse environments. However, current segmentation models trained on semantic grouping are limited in their ability to provide meaningful interaction-level cues for completing embodied tasks. To address this gap, we introduce MotionBit, a novel concept that, unlike prior formulations, defines the smallest unit in motion-based segmentation through kinematic spatial twist equivalence, independent of semantics. In this paper, we contribute (1) the MotionBit concept and definition, (2) a hand-labeled benchmark, called MoRiBo, for evaluating moving rigid-body segmentation across robotic manipulation and human-in-the-wild videos, and (3) a learning-free graph-based MotionBits segmentation method that outperforms state-of-the-art embodied perception methods by 37.3% in macro-averaged mIoU on the MoRiBo benchmark. Finally, we demonstrate the effectiveness of MotionBits segmentation for downstream embodied reasoning and manipulation tasks, highlighting its importance as a fundamental primitive for understanding physical interactions. 
+
+## 1 Introduction 
+
+Object segmentation across images and videos is a fundamental task in computer vision [ 1 , 2 ]. Current models excel in segmentation based on human-defined semantics [ 3–6 ], which has proven effective for many high level downstream tasks such as classification, tracking, and visual question answering (VQA). However, as vision systems begin to be deployed in the physical world ( e.g . robotics, VR/AR, video-language models, etc.), they must also be competent for new real-world use cases, where motion-level understanding is imperative [7]. Recent segmentation works, including foundation models [ 2, 6] and methods using motion as cues [ 8 –10 ], segment the world semantically based on human-defined classes ( e.g . desk , keyboard , microwave , etc.) that do not take into account how things physically interact in the real world. For example, segmenting a keyboard does not give us insight to the fact that its keys can be pressed and moved differently relative to the rest of the object. Therefore, while semantics-based segmentation is still important, it is only part of the equation necessary for scene understanding, embodied reasoning, and dexterous manipulation [7, 11, 12]. Physical interactions often occur at the level of rigid bodies, the most basic manipulable elements of our world. These elements can only be identified via motion analysis [ 13 ], which means motion-level perception is essential. This perception of moving rigid bodies can enable embodied systems to execute advanced tasks beyond those of simple pick-and-place or shallow VQA. For example, Fig. 1 shows how moving rigid-body segmentation can be used for 
+
+> arXiv:2603.06846v1 [cs.CV] 6 Mar 2026
+
+MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT MotionBits segmentationStatic segmentation
+
+# Real world physical interactions of glued red and blue blocks
+
+Figure 1: The top row shows a robot physically interacting with a variety of complex composite objects, each constructed from colored blocks that have been glued together. The bottom row highlights the output of a standard semantic segmen-tation model, which incorrectly over-segments the objects. In contrast, the proposed MotionBits segmentation correctly groups composite objects. Example real-world robotic applications requiring accurate MotionBits segmentation are shown in Fig. 6. localization of visually complex objects, and Fig. 6 shows how these masks can be used in real-world downstream manipulation tasks, such as tower stacking. Additionally, these segmentation masks can be used as cues to enhance vision-language models (VLMs) for more detailed reasoning in visually grounded VQA [ 14 ], an increasingly important skill for embodied systems [ 15 –27 ]. Furthermore, with the emerging adoption of smart eyeglasses, motion analysis of physical interactions between rigid bodies captured by egocentric videos can be applied to imitation learning, video game simulation, and heads-up task assistance, to name a few [ 28 –32 ]. Recently, SAPIEN [ 33 ], a rigid-part-based robotics simulator, has become a simulator of choice for embodied AI research, serving as the foundation for many datasets, benchmarks, and frameworks, such as ManiSkill [ 34 ]. This raises a natural question: if the leading robotics simulator models the world in terms of moving rigid bodies, why shouldn’t embodied vision frameworks adopt the same philosophy for segmentation? 
+
+Therefore, we introduce MotionBit, a novel motion-based segmentation concept that, unlike prior works, is formulated through kinematic spatial twist equivalence to capture real-world physical interactions. Tracking these segmentation masks gives insight into how every rigid body in a scene dynamically interacts with one another. In summary, we make the following three main contributions: 1. MotionBit: a new concept defining the smallest unit in motion-based segmentation, where each rigid part exhibiting distinct rigid-body motion is assigned a unique mask, independent of semantics. The mathematical definition of a MotionBit is detailed in Section 3. 2. MoRiBo: a new hand-labeled benchmark for evaluating moving rigid-body segmentation across robotic manipulation and human-in-the-wild videos, which is detailed in Section 4. Videos for each track are sourced from BridgeData V2 [35] and SA-V [2], respectively. 3. A learning-free graph-based method for MotionBits segmentation in dynamic and diverse RGB videos. We evaluate our method’s performance on the proposed MoRiBo benchmark via quantitative and qualitative comparisons to state-of-the-art motion-based segmentation models and video-language models. Furthermore, we showcase applications of our MotionBits segmentation in downstream embodied tasks. 2MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+## 2 Related Works 
+
+Existing semantic and motion-based segmentation methods learn visual cues but fail to capture the underlying rigid-body dynamics and structures needed for complex manipulation tasks. In this section, we review these approaches, alongside embodied vision systems and relevant datasets, to highlight their limitations in providing low-level physical understanding for intelligent interactions. 
+
+2.1 Semantic and Motion-Based Segmentation 
+
+Segmentation models are often trained on large-scale, semantically-defined datasets [ 1–3 , 6, 36 –40 ]. Early approaches focused on classification, detection, and instance segmentation [ 4, 5 , 41 – 43 ], while recent works such as Segment Anything [ 6] and SAM 2 [ 2 ] leverage “data engines” to train generalizable and promptable foundation segmentation models. Despite these advancements, such methods rely entirely on human-defined semantics, which omits motion-level awareness critical for reasoning about physical interactions between objects. In contrast, motion-based approaches utilize temporal and geometric consistency for segmentation. Classical approaches analytically infer structure through association-based motion analysis [ 44 –47 ] or rigid-body transformations [ 48 , 49 ], while more recent learning-based methods estimate rigid motion cues from RGB-D images and point clouds [ 50 – 54 ]. However, these approaches lack kinematic formulations, depend on depth data, or rely on articulation assumptions, ultimately failing to generalize to real-world videos where embodied reasoning occurs. Other works [ 8 – 10 , 55 –58 ]incorporate optical flow or alternative motion primitives to guide segmentation but still leak semantics. This occurs either implicitly through a discrete two-slot attention mechanism in the case of Yang et al . [ 57 ], or explicitly, through appearance-based training data in the case of Dave et al . [ 58 ]. Thus, these motion-based methods overlook rigid-body motion as a fundamental primitive for segmentation in the real world, which limits their capacity to represent physical interactions in dynamic and diverse environments. 
+
+2.2 Vision for Embodied Systems 
+
+Vision is essential for embodied systems and takes many forms, including interactive perception, large multimodal models (LMMs), vision-language-action (VLA) models, and specialized inference techniques. Interactive perception methods guide robot actions to optimize sensory input, and while active perception offers richer visual feedback than passive perception [ 7], these approaches [ 11 , 12 , 59 ] are often tailored to specific physical embodiments, limiting generalization. Demonstration-based datasets have been used to train or fine-tune LMMs and VLA models for scene perception, reasoning, and action planning [ 16 –24 ]. Zhen et al . [ 19 ] and Zhao et al . [ 20 ] propose vision modules which “imagine” future image states via diffusion for task planning. Yet, such “reasoning” is restricted by the granularity of image predictions, lacks awareness of physical object interactions, and is limited to simple pick-and-place tasks without complex manipulation or spatial requirements. Recently, new inference and training techniques have emerged to enhance perceptual reasoning in LMMs [ 15 , 60 ]. Yang et al . [ 14 ] show that overlaying label IDs and segmentation masks on images strengthens visual grounding and perceptual reasoning. However, despite recent progress, prior works similarly observe that existing vision techniques within LMMs and VLA models lack motion-level understanding of physical interactions [61] and have yet to enable dexterous manipulation in complex environments. 
+
+2.3 Embodied Perception Datasets 
+
+Datasets and benchmarks have driven progress in computer vision, and recently, embodied AI. Modern vision systems emerged from large hand-labeled datasets [ 36 – 40 ], which required immense human annotation efforts and enabled models to learn latent feature representations. Similarly, large-scale video datasets advanced video segmentation [ 1–3, 62 – 64 ]. However, each of these efforts use human-defined semantics and do not explicitly model object-level motion, presenting learning hurdles for robots that must understand how objects physically interact with one another. Shao et al . [ 51 ] introduced a rigid-body segmentation dataset but consisted only of synthetic data, two frames per scene, and assumed non-articulated rigid objects falling onto a tabletop, limiting real-world applications where objects have many rigid parts and are physically interacted with throughout an observation. Recent efforts to assemble large-scale embodied datasets [ 15 , 35 , 65 – 67 ] have shown promise in robotic perception applications and often fall under two categories: demonstration data via teleoperation and simulation-based trajectory generators. Yet, many such datasets focus manipulation on only one subject per episode and do not offer a general framework for perceiving and understanding the world through interactions. 3MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT {b }2
+
+# {a }1{s}
+
+# {b }1
+
+# {a }2
+
+## {b }1
+
+# 𝝊 
+
+## {b }2
+
+# 𝝊 
+
+## {a }1
+
+# 𝝊 
+
+## {a }2
+
+# 𝝊 
+
+## {s}𝝊 a
+
+## {s}𝝊 b
+
+Figure 2: Illustration of spatial twist for two rigid objects. Transparent objects represent initial positions, and solid objects represent positions after motion. The translations of body frames are represented by purple linear velocity vectors υ{x}. Although υ{a1}̸ = υ{a2} and υ{b1}̸ = υ{b2}, transforming them to the fixed world frame {s} yields identical linear velocities υx 
+
+> {s}
+
+for frames on the same rigid object x but distinct linear velocities for different rigid objects. Intuitively, the instantaneous motion observed at the world frame will appear identical for body frames on the same rigid object, regardless of their local motions, but will differ across rigid bodies. 
+
+## 3 The MotionBit Definition 
+
+A MotionBit is a new concept grounded in rigid-body kinematics that represents the smallest unit in motion-based segmentation for understanding physical interactions, where each rigid part exhibiting its own rigid-body motion is assigned a unique segmentation mask, independent of semantics. Accordingly, a MotionBit is formulated to densely map pixels or points to the same label ID if they share the same spatial twist across an observation time window. Under rigid-body motion, two body frames, {b1} and {b2}, attached to the same rigid body may have different body twists expressed in their local coordinates but will share the same spatial twist when expressed in an arbitrarily chosen fixed world frame {s} [ 13 ]. Specifically, the instantaneous translation and rotation of an attached body frame {b} can be represented as body twist Vb = [ ωb, υ b]⊺ ∈ R6, where angular velocity ωb and linear velocity υb are represented in the {b} frame. To derive the corresponding spatial twist, Vs = [ ωs, υ s]⊺ ∈ R6, we use the adjoint representation of the transformation matrix Tsb ∈ SE (3) , which defines the configuration of the body frame {b} relative to the fixed world frame {s}. Let 
+
+Tsb be composed of a rotation matrix Rsb ∈ SO (3) and a translation vector psb ∈ R3. The 6 × 6 adjoint matrix [Ad Tsb ]
+
+is thus defined as 
+
+[Ad Tsb ] = 
+
+ Rsb 03×3
+
+[psb ]Rsb Rsb 
+
+
+
+, (1) where [psb ] is the 3 × 3 skew-symmetric matrix representation of psb . We then map the body twist to the spatial frame directly via 
+
+Vs = [Ad Tsb ]Vb. (2) Afterwards, the spatial twist Vs of each body frame is re-expressed about the origin of the fixed world frame {s}, instead of the body frame {b}, to enable kinematic comparison across body motions. When expressing a body’s spatial twist about {s}, the angular velocity ωs remains unchanged. However, the linear velocity must be shifted by −ωs × psb to account for the offset between the origins of {s} and {b}, where psb is the translation vector from {s} to {b} expressed in the {s} frame. For brevity, we hereafter denote this simply as the spatial twist Vs. In this representation, spatial twists of body frames of the same rigid body will be identical. Fig. 2 visualizes the physical interpretation of spatial twist. Extending beyond an instantaneous motion description, a MotionBit enforces temporal consistency of spatial twists. Specifically, two pixels or points, xi and xj , belong to the same MotionBit if their spatial twists remain kinematically 4MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT RGBs Human Robot GT 
+
+Figure 3: Examples from the new MoRiBo benchmark across both tracks, robotic manipulation and human-in-the-wild. Hand-labeled final-frame segmentation masks of moving rigid bodies are provided for every video. equivalent throughout an observation time window T = [ tstart , t end ], defined by 
+
+∥∆Vs(xi, x j , t )∥2 = ∥V s(xi, t ) − V s(xj , t )∥2 = 0 , ∀t ∈ T , (3) where Vs(x, t ) denotes the spatial twist of x at time t and ∆Vs(xi, x j , t ) denotes the difference between two spatial twists at time t. Since a MotionBit must exhibit motion during the observation window, we define this constraint as 
+
+∃ t ∈ T s.t. ∥V s(x, t )∥2̸ = 0 ∀x ∈ M, (4) where points x in MotionBit M also pairwise satisfy Eq. (3). Thus, each MotionBit is composed of a set of points that share an identical non-zero spatial twist trajectory, representing a rigid part in the scene that has exhibited some motion. This is formally defined by Definition 1. 
+
+Definition 1 (MotionBit) . Let X be the set of all observed points and Vs(x∗, t ) denote the spatial twist of a reference point x∗ ∈ X at time t, such that ∥V s(x∗, t )∥2̸ = 0 for some t in the observation time window T . We define the set 
+
+M ⊆ X as 
+
+M = x ∈ X ∥∆Vs(x∗, x, t )∥2 = 0 , ∀t ∈ T ,
+
+which satisfies the constraints in Eqs. (3) and (4) and constitutes one MotionBit .
+
+## 4 The MoRiBo Benchmark 
+
+The new MoRiBo benchmark is the first evaluation framework for real-world moving rigid-body segmentation in RGB videos, providing baselines for low-level physical interaction understanding. It consists of 270 robotic manipulation videos from BridgeData V2 [ 35 ] and 79 human-in-the-wild videos from SA-V [ 2], organized into two tracks to support moving rigid-body segmentation across domains. Videos from BridgeData V2 are captured from a static camera and depict a teleoperated robot arm performing pushing, grasping, and pick-and-place tasks in a lab setting, while videos from SA-V are recorded with minimal camera motion and depict in-the-wild human-object interactions. This setup ensures that motion cues primarily correspond to dynamic rigid bodies, rather than camera ego-motion. Table 1 Table 1: Statistics of the MoRiBo benchmark for evaluating moving rigid-body segmentation. Each video has resolution of 480 ×640 or 640 ×480, and hand-annotated segmentation masks are provided for the last frame of each video. Track #Scenes Frames/Scene Masks/Scene Source Dataset Actions and Motions Robotic Manipulation 270 15 .9 ± 0.7 5.2 ± 1.5 BridgeData V2 [35] Push, Grasp, Pick-&-Place Human-in-the-Wild 79 11 .0 ± 0.0 10 .3 ± 8.6 SA-V [2] Human-Object Interactions 5MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+Algorithm 1 Graph-Based MotionBits Segmentation                                                                 
+
+> Input: RGB video stream, V
+> Output: MotionBits segmentation masks, L
+> 1: Initialize: t←0
+> 2: Initialize empty sets: I ← ∅ ,G ← ∅ ,L ← ∅
+> 3: while Vhas next frame Itdo
+> 4: if I̸ =∅then
+> 5: Pt, Q t←SAMPLE NODES (It,I)▷Section 5.1
+> 6: Vs←ESTIMATE LOCAL TWISTS (Pt, Q t)▷Section 5.1
+> 7: Gt←BUILD TWIST SIM GRAPH (Vs, I t,I,G,L)▷Section 5.1
+> 8: Bt←SOFT LABEL PROPAGATION (Gt)▷Section 5.2
+> 9: Lt←HARD MARKOV CLUSTERING (Bt)▷Section 5.2
+> 10: G ← G ∪ { Gt};L ← L ∪ { Lt}
+> 11: yield Lt
+> 12: end if
+> 13: I ← I ∪ { It}
+> 14: t←t+ 1
+> 15: end while
+> 16: return L
+
+summarizes the MoRiBo benchmark statistics and Fig. 3 provides qualitative examples of moving rigid-body scene annotations. Ground-truth annotations were manually generated using SAM2-assisted labeling, where each rigid part exhibiting independent motion was assigned a unique segmentation mask. Specifically, each entry underwent an intensive process of manual refinements to initial human-in-the-loop SAM2 predictions, which ensured that boundaries are kinematically accurate according to Definition 1. The benchmark provides only ground-truth masks for the last frame of each video and encourages researchers to apply their own rigid-body motion analysis techniques or propagate masks if needed. Since only final-frame masks are provided, a variety of approaches, from learning-free motion clustering frameworks to transformer-based video models, can be fairly compared for their ability to identify rigid parts across an observation time window. Thus, the proposed MoRiBo benchmark is designed purely for evaluation, and segmentation performance is measured using Overlap and Boundary metrics, further detailed in Section 6. Both the benchmark and evaluation code will be publicly released to support further research in motion-centric segmentation and embodied vision. 
+
+## 5 Graph-Based MotionBits Segmentation 
+
+Along with the MotionBit concept and the MoRiBo benchmark, we propose a learning-free graph-based method for MotionBits segmentation, outlined by Algorithm 1 and illustrated by Fig. 4. The input to our method is a video stream, V = {It}Tt=0 , where t ∈ Z≥0 is the discrete time step, T ∈ Z+ is an arbitrary number of total time steps, and It ∈ [0 , 255] H×W ×3 is the RGB image at t. For each frame It at t ≥ 1, our framework yields a MotionBits segmentation mask Lt ∈ ZH×W 
+
+> ≥0
+
+in an online manner using only images {Iτ }tτ =0 ,where the object ID given by L(x,y ) 
+
+> t
+
+corresponds to the pixel (x, y ) in image It. If L(x,y ) 
+
+> t
+
+= 0 , pixel (x, y ) belongs to the background and is not part of a rigid body that exhibited motion up to time step t. Values L(x,y ) 
+
+> t
+
+> 0 indicate pixel 
+
+(x, y ) belongs to a MotionBit with unique ID L(x,y ) 
+
+> t
+
+.
+
+5.1 MotionBits Graph Construction 
+
+Given an RGB video stream V = {It}Tt=0 , our framework constructs a spatial twist similarity graph for each new image frame to model local rigid-body motions. The graph Gt = ( Mt, Et, Wt) is constructed in lines 5-7 of Algorithm 1 and serves as the structural foundation for both soft and hard MotionBits segmentation. Although the MotionBit is defined in SE(3), we choose to implement our moving rigid body segmentation method in SE(2) to prioritize compatibility with RGB videos, which is the most prevalent visual perception channel across robotics and computer vision. A sensitivity analysis is provided at the end of this section to justify the robustness of this decision. At each time step t ≥ 1, we obtain forward and backward optical flow fields, Ft−1→t, F t→t−1 ∈ RH×W ×2, between frames It−1 and It via an off-the-shelf optical flow model [ 68 ]. In SAMPLE NODES (·), a uniformly sampled √n × √n
+
+6MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+grid of n total points across the image plane produces matched point sets 
+
+Pt = {p(i,j )}, Qt = {q(i,j ) = p(i,j ) + Ft→t−1(p(i,j ))}, (5) where points in Pt lie in the current frame It and define graph nodes m(i,j ) ∈ M t, and points in Qt correspond to the points in Pt tracked backward to It−1. By using Pt as nodes and reverse motions for graph construction, we ensure all regions are covered in the image space of It.For each grid point (i, j ), its k-nearest neighbors is defined as the set N(i,j ). ESTIMATE LOCAL TWISTS (·) then estimates the local spatial twist by solving for the rigid-body motion between p(i,j ) and its corresponding backwards projected point q(i,j ). By using N ∗ 
+
+> (i,j )
+
+= N(i,j ) ∪ { (i, j )}, the rigid-body motion that transforms PN ∗ 
+
+> (i,j )
+
+to QN ∗ 
+
+> (i,j )
+
+is defined by 
+
+QN ∗ 
+
+> (i,j )
+
+= RP N ∗ 
+
+> (i,j )
+
++ t, (6) where PN ∗ 
+
+> (i,j )
+
+is the set of points N ∗ 
+
+> (i,j )
+
+⊂ Pt, QN ∗ 
+
+> (i,j )
+
+is the corresponding set of points in Qt, R is a rotation matrix, and t is the translation vector. Using modified RANSAC with weighted Kabsch estimation, we compute the local rotation angle ω and represent the resulting body twist as Vb(i, j ) = [ ω, v x, v y ].The origin of the image coordinate system is selected to be the fixed world frame {s}, and transforming each body twist into this shared frame yields the spatial twist Vs(i, j ), which characterizes each node during graph construction. All features are computed with respect to the selected fixed world frame for consistency and simplified computation. Then, in line 7 of Algorithm 1, BUILD TWIST SIM GRAPH (·) constructs a similarity graph Gt, where each node 
+
+m(i,j ) ∈ M t corresponds to a grid location (i, j ) ∈ Pt with spatial twist Vs(i, j ). Similarity edges Et and corresponding weights Wt are defined using a Gaussian kernel over the Mahalanobis distance [ 69 ], denoted by Mdist( ·). For each node (i, j ), we compute a covariance matrix ΣN ∗ 
+
+> (i,j )
+
+over its neighborhood spatial twists {V s(a, b )}(a,b )∈N ∗ 
+
+> (i,j )
+
+and define pairwise similarities between (i, j ) and all (a, b ) ∈ N (i,j ) via 
+
+Mdist(( i, j ), (a, b )) = 
+
+q
+
+(∆ Vs)⊤Σ−1 
+
+> N∗
+> (i,j )
+
+(∆ Vs), (7) 
+
+W(i,j ),(a,b ) 
+
+> t
+
+= exp  − 12 Mdist(( i, j ), (a, b )) 2 . (8) To maintain temporal consistency, prior segmentation masks Lτ <t ∈ L and graphs Gτ <t ∈ G are integrated to modify graph Gt by adding and subtracting edges from Et. Each previous mask Lτ is projected forward to time t using the forward flows Fτ →τ +1 ...F t−1→t. First, edges are added if two nodes belong to the same projected MotionBit for all 
+
+τ < t , with edge weight equal to the greatest W(i,j ),(a,b ) 
+
+> τ
+
+from projected graphs Gτ <t . Edges are then removed if two nodes are separated across any τ ≤ t. The new graph Gt therefore encodes spatial twist similarity in a manner temporally consistent with the observed motions of the scene. It should be noted that our method assumes a primarily static camera, where motion at the scale of optical flow noise can be reasonably accounted for via the locally adaptive Mahalanobis kernel. We leave full SE(3) camera compensation to future work. 
+
+5.1.1 SE(2) Model Justification. 
+
+We quantitatively validate the robustness of the chosen SE(2) motion model in Eq. (6) through a sensitivity analysis designed to measure its invariance to spatial perturbations of an observed object. We define the sensitivity matrix Ψ
+
+as the concatenation of the spatial partial derivatives of the image interaction matrix L [ 70 ], where each derivative is projected by an unconstrained SE(3) spatial twist, VSE (3) . By using Ψ, we can predict the projected spatial twist difference δVSE (2) between two points on the same moving rigid body separated by a 3D displacement δp. This Input: RGB 
+
+> video stream 2) Local spatial
+> twist estimation 3) Construct spatial
+> twist similarity graph 1) Uniform node sample Optical flow +5) Hard Markov
+> clustering + SAM2
+> prompting 4) Soft label
+> propagation
+
+Figure 4: Our learning-free graph-based method for online MotionBits segmentation. 7MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+quantifies the extent to which the SE(2) model deviates from the true SE(3) motion as the distance between tracked points varies. 
+
+δVSE (2) ≈
+
+ ∂L
+
+∂X VSE (3) 
+
+∂L
+
+∂Y VSE (3) 
+
+∂L
+
+∂Z VSE (3) 
+
+
+
+δp = Ψ δp. (9) To quantify SE(2) deviation with respect to corresponding SE(3) motion, we perform a Monte Carlo simulation consisting of 100,000 trials. For each trial, we generate a rigid object under unconstrained 3D motion by randomly sampling SE(3) spatial twists and uniformly sampling the direction of the 3D displacement vector δp between two tracked points. We then simulate the full perspective projection of these points to measure the empirical kinematic variation. First, for a typical robotic workspace, we consider a rigid object positioned within X, Y ∈ [±2m] and Z = 1 .5m 
+
+in the camera frame. Because our method densely samples points in the image plane, we evaluate the SE(2) model with a point separation of ∥δp∥ = 2cm . Given these SE(3) parameters, we obtain a relative difference of δVrel SE (2) =0.897% ± 0.525% between the observed SE(2) spatial twists of the two points. Furthermore, for in-the-wild scenarios, we consider a rigid object at X, Y ∈ [±6m] , Z = 6m , with a larger point separation of ∥δp∥ = 8cm . These parameters yield a relative difference of δVrel SE (2) = 0 .752% ± 0.455% .Since an average kinematic error below 1% is heavily eclipsed by standard optical flow noise and camera jitter, the loss in theoretical precision is negligible. Therefore, these empirical bounds justify reducing the 6-DoF SE(3) problem to an SE(2) motion model, enabling applications across diverse RGB videos. 
+
+5.2 Soft and Hard MotionBits Segmentation 
+
+In lines 8-9 of Algorithm 1, we perform MotionBits segmentation on the defined similarity graph Gt = ( Mt, Et, Wt)
+
+by introducing controlled nonlinearities through a two-stage process. Drawing inspiration from Zhou et al . [ 71 ], soft label propagation first diffuses local affinities into a smooth global embedding. After which, hard Markov clustering discretizes this representation into coherent MotionBit segments. For the rest of this section, subscript t, denoting the current time step, will be dropped for readability. For graph G = (M, E, W) with n = |M| nodes and nonnegative affinity matrix W ∈ [0 , 1] n×n,SOFT LABEL PROPAGATION (·) first selects a small uniformly spaced set of seed nodes S ⊂ M and assigns each seed a unique class label among {1, . . . , C }. The seed labeling is encoded by one-hot matrix Y ∈ { 0, 1}n×C , where 
+
+Yi,c =
+
+1, if node i ∈ S and has label c
+
+0, otherwise. (10) Using the initial seeding matrix Y and the affinity matrix W, we diffuse local spatial twist similarities into a smooth, globally consistent embedding. Intuitively, the diffusion behaves as if we pour a unique color of paint on each seed node and allow the colors to flow and blend naturally according to the graph structure, resulting in softly color-coded MotionBits that capture coherent motion regions. Formally, let D = diag( P 
+
+> j
+
+Wij ) be the degree matrix and A = D−1W be the row-stochastic transition matrix of a random walk on G. Then, starting from B(0) = Y , we begin diffusing the “paint” initialized at each seed node, encoded through Y , by iterating 
+
+B(r+1) = AB (r). (11) GTQwenVLSAMIVOursGTQwenVLSAMIVOurs
+
+Figure 5: Qualitative comparison of moving rigid-body segmentation on the two-track MoRiBo benchmark between Qwen2.5-VL (QwenVL) [25], Segment Any Motion in Videos (SAMIV) [8] and our method. 8MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+Table 2: Quantitative results on the MoRiBo benchmark (%). Our method surpasses alternatives across both the Robotic Manipulation and Human-in-the-Wild tracks.                                                                                                           
+
+> Overlap Boundary Method PRF1mIoU PRF1
+> Robotic Manipulation  VideoLLaMa [26] 47.2 9.2 8.6 7.4 43.8 8.4 7.7 InternVideo [27] 49.5 17.7 15.0 13.9 44.2 14.2 13.8 QwenVL [25] 19.1 28.7 24.6 21.5 17.7 25.1 21.9 SAMIV [8] 69.5 31.0 27.0 24.3 61.6 27.2 25.8 OCLR Flow [9] 52.5 16.9 24.4 10.2 23.0 14.3 17.8 OCLR TTA [9] 60.1 19.7 28.5 12.1 32.6 11.5 16.1
+> Ours 45.6 62.7 59.9 52.6 40.2 53.7 52.0
+> Human -in-the-Wild  VideoLLaMa [26] 48.9 12.8 9.1 8.5 44.5 10.9 8.6 InternVideo [27] 44.3 14.8 10.7 8.4 40.0 11.6 9.8 QwenVL [25] 18.3 25.2 16.2 13.4 16.8 23.3 16.7 SAMIV [8] 51.5 18.1 13.1 11.2 42.6 14.4 11.4 OCLR Flow [9] 42.0 11.9 16.3 7.4 19.9 12.6 13.2 OCLR TTA [9] 48.8 13.6 19.8 9.9 26.0 10.0 13.2
+> Ours 49.2 53.5 52.4 46.7 45.9 49.7 47.4
+
+Periodically, we “pour more paint” onto the seed nodes by re-enforcing initial seed constraints every r∗ iterations via 
+
+B(r) ← B(r) + Y. (12) After R iterations, we obtain the soft label embedding B(R) ∈ Rn×C 
+
+> ≥0
+
+.HARD MARKOV CLUSTERING (·) then discretizes this representation into MotionBits segmentation. We begin by row-wise ℓ2-normalization of the soft label embedding, denoted as ˆB. Then, we form a symmetric similarity matrix representation of our graph G via inner products 
+
+X = ˆB ˆB⊤ ∈ Rn×n. (13) Unit self-loops and column-normalization are applied to X to obtain a column stochastic matrix ˆX. The Markov clustering algorithm on matrix ˆX is then used to cluster nodes of graph G. Intuitively, Markov clustering simulates random walks within a graph with the idea that, over time, these walks will cross over nodes with stronger connections more often than those with weaker connections. Markov clustering is well documented, and the technical details will be omitted in this paper. Once node clusters are extracted via Markov clustering, Segment Anything Model 2 [ 2] is prompted for refined boundaries, and the MotionBits segmentation mask Lt is yielded. 
+
+## 6 Experiments 
+
+In this section, we use the MoRiBo benchmark to quantitatively (Table 2) and qualitatively (Fig. 5) compare our pro-posed method against state-of-the-art embodied intelligence and motion segmentation baselines in moving rigid-body segmentation. Acknowledging that these methods were not specifically designed for moving rigid-body segmenta-tion, we further provide qualitative demonstrations in downstream applications where current vision systems fail to provide essential cues for embodied reasoning and dexterous manipulation, highlighting the necessity for MotionBits segmentation in complex real-world environments. 
+
+6.1 Experiment Setup 
+
+We compare our method against baselines by evaluating performance on the MoRiBo benchmark, introduced in Section 4. Baselines fall under two major categories: (1) video-language models, which include VideoLLaMA3-7B [ 26 ], Qwen2.5-VL-32B [ 25 ], and InternVideo2.5-8B [ 27 ], and (2) motion segmentation methods, which include Segment Any Motion in Videos (SAMIV) [ 8 ], OCLR Flow (flow only) [ 9 ], and OCLR TTA (flow with test-time adaptation) [9]. Because the evaluated VLMs do not natively produce pixel-wise multi-object segmentation masks, we employ YOLOE-L [ 72 ], a SOTA promptable open-vocabulary segmentation model, to translate textual VLM responses to segmentation masks. Each VLM is prompted with: 
+
+> “What rigid bodies or parts have moved in the video? Describe each in detail. ”
+
+The prompt is accompanied with output format specifications to ensure compatibility with the YOLOE model. 9MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT QwenVL:                                                         
+
+> “1)Roboticarm
+> 2)Hexagonalblocks”
+> QwenVL:“1)Blue
+> roboticarm3)Red
+> block4)Blueblock5)
+> Redblock6)Blueblock
+> 7)Redblock8)Red
+> block9)Blueblock”
+> AutonomousphysicalinteractionsRGBvideo
+> VQA:“Whatrigidbodiesorpartshave
+> movedinthevideo?”
+> Input:VideoInput:Video+
+> MotionBitsSoM
+> Task:“Stacktheobjectsintoatower.”
+> SAM:GraspFailureSAM:StackFailure
+> SAMSAMIVOursGT
+> Ours:Success
+
+Figure 6: Application examples of MotionBits for downstream tasks in a tabletop scene where a robot autonomously interacts with complex, composite objects. QwenVL [ 25 ] fails to produce an accurate response in the VQA task. However, using our MotionBits segmentation as overlaid marks [ 14 ] improves VQA response accuracy. Comparing object segmentation among SAMIV [ 8 ], SAM [ 6], and our MotionBits method shows that incorporating rigid-body motions as segmentation cues gives more accurate object-level insight. For the tower stacking task, over-segmentation of the composite objects by SAM [ 6] generates robot actions that result in grasp and stack failures. In contrast, our method’s MotionBits segmentation enables successful grasping and stacking. For each video, the final-frame segmentation mask produced by each method is evaluated against the manually annotated ground-truth mask using Hungarian matching. Performance metrics include precision (P), recall (R), and F1 score computed under both Overlap and Boundary criteria. The Overlap criterion additionally includes mean intersection-over-union (mIoU). All metrics are macro-averaged so that each instance is weighted equally, regardless of its pixel area. 
+
+6.2 Evaluation Results and Discussion 
+
+In Table 2, we demonstrate our method’s superior performance on the MoRiBo benchmark against SOTA video-language models and motion segmentation methods. We consistently outperform baselines in both tracks across all major metrics in Overlap F1, Overlap mIoU and Boundary F1. On average, our method outperforms all baselines by 37.3% mIoU and outperforms the two best performing baselines (Qwen2.5-VL and Segment Any Motion in Videos) by 32.1% mIoU, across both tracks. Additionally, we qualitatively compare our method’s segmentation masks with Qwen2.5-VL and Segment Any Motion in Videos in Fig. 5. These experiments show that baseline vision methods lack perception grounded in physical interactions. While their perception modules encode semantic information, they neglect motion-level cues that reveal the underlying structure of object classes, which is especially critical in out-of-distribution scenarios. In the following subsection, we demonstrate why MotionBit perception is necessary for guiding embodied reasoning and manipulation in novel, unseen environments. 
+
+6.3 MotionBits Downstream Applications 
+
+Recently, VLMs have been increasingly employed to fine-tune VLA models, enabling them to function as embodied reasoning modules in robots. While these models provide strong semantic scene understanding, effective real-world manipulation requires precise reasoning about the geometry and dynamics of complex, unseen objects. In Fig. 6, red and blue blocks are glued together to form composite objects and placed on a tabletop. Then, an RGB video is taken of a robot autonomously interacting with the cluttered scene. 10 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+Table 3: Results of the tower stacking task guided by object segmentation masks. Method # Stacked Objs SR Description of Failures SAM [6] 4 0 / 10 Grasp & Stack Failures SAMIV [8] 0 0 / 10 No Segmentation QwenVL [25] 2 0 / 10 Poor/No Segmentation    
+
+> Ours 37 6 / 10 Cluttered Grasp Failures
+
+When prompted to identify the rigid objects in the video that were physically interacted with, QwenVL exhibits a fundamental failure in leveraging motion cues for accurate scene reasoning. Additionally, existing segmentation models fail to accurately segment the objects due to heavy bias toward semantic cues. Static segmentation model, SAM, over-segments these objects, and motion-based segmentation model, SAMIV, under-segments. In contrast, our MotionBits segmentation method accurately segments the objects using motion cues from physical interactions. Finally, by overlaying our segmentation masks as visual marks on the RGB video input, we provide a visually grounded prompt [14] and substantially improve the VLM’s ability to identify and reason about the objects. In addition to the VQA task, we evaluate the utility of MotionBits segmentation in downstream robotic manipulation tasks. For this evaluation, the same composite objects were compactly arranged on the tabletop, and the robot was tasked with stacking them into a tower using predicted segmentation masks for action planning. The evaluation protocol is detailed in Supp. B. Quantitatively, Table 3 shows that baseline methods (SAM, SAMIV, and QwenVL) fail to provide reliable manipulation cues, whereas our MotionBits segmentations consistently yield the robust object localization required for task completion. Qualitatively, Fig. 6 illustrates how SAM’s over-segmentation leads to infeasible grasps and unstable placements. In contrast, our MotionBits segmentation masks, despite minor imperfections, significantly outperform baselines in stack height and success rate. These results demonstrate that motion-level segmentation from physical interactions effectively recovers underlying object geometries, enabling precise robot action planning for manipulating visually complex and unseen objects. 
+
+## 7 Conclusion 
+
+Understanding how rigid bodies interact is fundamental to embodied reasoning and robotic manipulation. However, most embodied systems remain limited by their vision modules due to reliance on semantic cues and neglect of real-world dynamics. In this work, we introduced a new concept defining the smallest unit in motion-based segmentation through kinematic spatial twist equivalence, enabling understanding of physical interactions. Our main contributions are threefold: (1) MotionBit: a segmentation unit where each rigid part exhibiting its own rigid-body motion is assigned its own mask, regardless of semantics, (2) MoRiBo: a hand-labeled benchmark for moving rigid-body segmentation across robotic manipulation and human-in-the-wild domains, and (3) a learning-free graph-based MotionBits segmentation method that achieves 37.3% higher macro-averaged mIoU over state-of-the-art embodied perception methods. Beyond evaluation on the MoRiBo benchmark, we show that MotionBits segmentation masks provide actionable cues for embodied reasoning, enabling robots to interpret their environment and manipulate complex objects. 11 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+## References 
+
+[1] Ning Xu, Linjie Yang, Yuchen Fan, Dingcheng Yue, Yuchen Liang, Jianchao Yang, and Thomas Huang. Youtube-vos: A large-scale video object segmentation benchmark. arXiv preprint arXiv:1809.03327 , 2018. [2] Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Ronghang Hu, Chaitanya Ryali, Tengyu Ma, Haitham Khedr, Roman Rädle, Chloe Rolland, Laura Gustafson, Eric Mintun, Junting Pan, Kalyan Vasudev Alwala, Nicolas Carion, Chao-Yuan Wu, Ross Girshick, Piotr Dollár, and Christoph Feichtenhofer. Sam 2: Segment anything in images and videos. arXiv preprint arXiv:2408.00714 , 2024. [3] Ning Xu, Linjie Yang, Yuchen Fan, Jianchao Yang, Dingcheng Yue, Yuchen Liang, Brian Price, Scott Cohen, and Thomas Huang. Youtube-vos: Sequence-to-sequence video object segmentation. In European Conference on Computer Vision (ECCV) , 2018. [4] Kaiming He, Georgia Gkioxari, Piotr Dollár, and Ross Girshick. Mask r-cnn. In International Conference on Computer Vision (ICCV) , 2017. [5] Joseph Redmon, Santosh Divvala, Ross Girshick, and Ali Farhadi. You only look once: Unified, real-time object detection. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2016. [6] Alexander Kirillov, Eric Mintun, Nikhila Ravi, Hanzi Mao, Chloé Rolland, Laura Gustafson, Tete Xiao, Spencer Whitehead, Alexander C. Berg, Wan-Yen Lo, Piotr Dollár, and Ross B. Girshick. Segment anything. International Conference on Computer Vision (ICCV) , 2023. [7] Jeannette Bohg, Karol Hausman, Bharath Sankaran, Oliver Brock, Danica Kragic, Stefan Schaal, and Gaurav S. Sukhatme. Interactive perception: Leveraging action in perception and perception in action. IEEE Transactions on Robotics (T-RO) , 33(6):1273–1291, 2017. [8] Nan Huang, Wenzhao Zheng, Chenfeng Xu, Kurt Keutzer, Shanghang Zhang, Angjoo Kanazawa, and Qianqian Wang. Segment any motion in videos. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) ,2025. [9] Junyu Xie, Weidi Xie, and Andrew Zisserman. Segmenting moving objects via an object-centric layered representation. In Advances in Neural Information Processing Systems (NeurIPS) , 2022. [10] Christopher Xie, Yu Xiang, Zaid Harchaoui, and Dieter Fox. Object discovery in videos as foreground motion clustering. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2019. [11] Howard H. Qian, Yangxiao Lu, Kejia Ren, Gaotian Wang, Ninad Khargonkar, Yu Xiang, and Kaiyu Hang. Riseg: Robot interactive object segmentation via body frame-invariant features. In IEEE International Conference on Robotics and Automation (ICRA) , 2024. [12] Howard H. Qian, Yiting Chen, Gaotian Wang, Podshara Chanrungmaneekul, and Kaiyu Hang. rt-riseg: Real-time model-free robot interactive segmentation for active instance-level object understanding. In IEEE International Conference on Intelligent Robots and Systems (IROS) , 2025. [13] Kevin M Lynch and Frank C Park. Modern Robotics . Cambridge University Press, 2017. [14] Jianwei Yang, Hao Zhang, Feng Li, Xueyan Zou, Chunyuan Li, and Jianfeng Gao. Set-of-mark prompting unleashes extraordinary visual grounding in gpt-4v. arXiv preprint arXiv:2310.11441 , 2023. [15] Chan Hee Song, Valts Blukis, Jonathan Tremblay, Stephen Tyree, Yu Su, and Stan Birchfield. Robospatial: Teaching spatial understanding to 2d and 3d vision-language models for robotics. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2025. [16] Physical Intelligence, Kevin Black, Noah Brown, James Darpinian, Karan Dhabalia, Danny Driess, Adnan Esmail, Michael Equi, Chelsea Finn, Niccolo Fusai, et al. π0.5: a vision-language-action model with open-world generalization. arXiv preprint arXiv:2504.16054 , 2025. [17] Yiguo Fan, Pengxiang Ding, Shuanghao Bai, Xinyang Tong, Yuyang Zhu, Hongchao Lu, Fengqi Dai, Wei Zhao, Yang Liu, Siteng Huang, et al. Long-vla: Unleashing long-horizon capability of vision language action model for robot manipulation. In Conference on Robot Learning (CoRL) , 2025. [18] Gemini Robotics Team, Saminda Abeyruwan, Joshua Ainslie, Jean-Baptiste Alayrac, Montserrat Gonzalez Arenas, Travis Armstrong, Ashwin Balakrishna, Robert Baruch, Maria Bauza, Michiel Blokzijl, et al. Gemini robotics: Bringing ai into the physical world. arXiv preprint arXiv:2503.20020 , 2025. [19] Haoyu Zhen, Xiaowen Qiu, Peihao Chen, Jincheng Yang, Xin Yan, Yilun Du, Yining Hong, and Chuang Gan. 3d-vla: a 3d vision-language-action generative world model. In International Conference on Machine Learning (ICML) , 2024. 12 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+[20] Qingqing Zhao, Yao Lu, Moo Jin Kim, Zipeng Fu, Zhuoyang Zhang, Yecheng Wu, Zhaoshuo Li, Qianli Ma, Song Han, Chelsea Finn, et al. Cot-vla: Visual chain-of-thought reasoning for vision-language-action models. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2025. [21] Huang Huang, Fangchen Liu, Letian Fu, Tingfan Wu, Mustafa Mukadam, Jitendra Malik, Ken Goldberg, and Pieter Abbeel. Otter: A vision-language-action model with text-aware visual feature extraction. arXiv preprint arXiv:2503.03734 , 2025. [22] Moo Jin Kim, Karl Pertsch, Siddharth Karamcheti, Ted Xiao, Ashwin Balakrishna, Suraj Nair, Rafael Rafailov, Ethan Foster, Grace Lam, Pannag Sanketi, Quan Vuong, Thomas Kollar, Benjamin Burchfiel, Russ Tedrake, Dorsa Sadigh, Sergey Levine, Percy Liang, and Chelsea Finn. Openvla: An open-source vision-language-action model. 
+
+arXiv preprint arXiv:2406.09246 , 2024. [23] Danny Driess, Fei Xia, Mehdi SM Sajjadi, Corey Lynch, Aakanksha Chowdhery, Ayzaan Wahid, Jonathan Tompson, Quan Vuong, Tianhe Yu, Wenlong Huang, et al. Palm-e: An embodied multimodal language model. In 
+
+International Conference on Machine Learning (ICML) , 2023. [24] Suneel Belkhale and Dorsa Sadigh. Minivla: A better vla with a smaller footprint, 2024. [25] Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai Dang, Peng Wang, Shijie Wang, Jun Tang, Humen Zhong, Yuanzhi Zhu, Mingkun Yang, Zhaohai Li, Jianqiang Wan, Pengfei Wang, Wei Ding, Zheren Fu, Yiheng Xu, Jiabo Ye, Xi Zhang, Tianbao Xie, Zesen Cheng, Hang Zhang, Zhibo Yang, Haiyang Xu, and Junyang Lin. Qwen2.5-vl technical report. arXiv preprint arXiv:2502.13923 , 2025. [26] Boqiang Zhang, Kehan Li, Zesen Cheng, Zhiqiang Hu, Yuqian Yuan, Guanzheng Chen, Sicong Leng, Yuming Jiang, Hang Zhang, Xin Li, Peng Jin, Wenqi Zhang, Fan Wang, Lidong Bing, and Deli Zhao. Videollama 3: Frontier multimodal foundation models for image and video understanding. arXiv preprint arXiv:2501.13106 ,2025. [27] Yi Wang, Xinhao Li, Ziang Yan, Yinan He, Jiashuo Yu, Xiangyu Zeng, Chenting Wang, Changlian Ma, Haian Huang, Jianfei Gao, Min Dou, Kai Chen, Wenhai Wang, Yu Qiao, Yali Wang, and Limin Wang. Internvideo2.5: Empowering video mllms with long and rich context modeling. arXiv preprint arXiv:2501.12386 , 2025. [28] Vincent Liu, Ademi Adeniji, Haotian Zhan, Raunaq Bhirangi, Pieter Abbeel, and Lerrel Pinto. Egozero: Robot learning from smart glasses. arXiv preprint arXiv:2505.20290 , 2025. [29] Hanzhi Chen, Boyang Sun, Anran Zhang, Marc Pollefeys, and Stefan Leutenegger. Vidbot: Learning generalizable 3d actions from in-the-wild 2d human videos for zero-shot robotic manipulation. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2025. [30] Tomoya Yoshida, Shuhei Kurita, Taichi Nishimura, and Shinsuke Mori. Developing vision-language-action model from egocentric videos. arXiv preprint arXiv:2509.21986 , 2025. [31] Tomoya Yoshida, Shuhei Kurita, Taichi Nishimura, and Shinsuke Mori. Generating 6dof object manipulation trajectories from action description in egocentric vision. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2025. [32] Simar Kareer, Dhruv Patel, Ryan Punamiya, Pranay Mathur, Shuo Cheng, Chen Wang, Judy Hoffman, and Danfei Xu. Egomimic: Scaling imitation learning via egocentric video. In IEEE International Conference on Robotics and Automation (ICRA) , 2025. [33] Fanbo Xiang, Yuzhe Qin, Kaichun Mo, Yikuan Xia, Hao Zhu, Fangchen Liu, Minghua Liu, Hanxiao Jiang, Yifu Yuan, He Wang, et al. Sapien: A simulated part-based interactive environment. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2020. [34] Tongzhou Mu, Zhan Ling, Fanbo Xiang, Derek Cathera Yang, Xuanlin Li, Stone Tao, Zhiao Huang, Zhiwei Jia, and Hao Su. Maniskill: Generalizable manipulation skill benchmark with large-scale demonstrations. In Advances in Neural Information Processing Systems (NeurIPS) , 2021. [35] Homer Rich Walke, Kevin Black, Tony Z Zhao, Quan Vuong, Chongyi Zheng, Philippe Hansen-Estruch, An-dre Wang He, Vivek Myers, Moo Jin Kim, Max Du, et al. Bridgedata v2: A dataset for robot learning at scale. In 
+
+Conference on Robot Learning (CoRL) , 2023. [36] Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li, and Li Fei-Fei. Imagenet: A large-scale hierarchical image database. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2009. [37] Mark Everingham, Luc Van Gool, Christopher K. I. Williams, John Winn, and Andrew Zisserman. The pascal visual object classes (voc) challenge. International Journal of Computer Vision (IJCV) , 2010. [38] Tsung-Yi Lin, Michael Maire, Serge J. Belongie, James Hays, Pietro Perona, Deva Ramanan, Piotr Dollár, and C. Lawrence Zitnick. Microsoft coco: Common objects in context. In European Conference on Computer Vision (ECCV) , 2014. 13 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+[39] Marius Cordts, Mohamed Omran, Sebastian Ramos, Timo Rehfeld, Markus Enzweiler, Rodrigo Benenson, Uwe Franke, Stefan Roth, and Bernt Schiele. The cityscapes dataset for semantic urban scene understanding. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2016. [40] Rıza Alp Güler, Natalia Neverova, and Iasonas Kokkinos. Densepose: Dense human pose estimation in the wild. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2018. [41] Jonathan Long, Evan Shelhamer, and Trevor Darrell. Fully convolutional networks for semantic segmentation. In 
+
+IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2015. [42] Liang-Chieh Chen, George Papandreou, Iasonas Kokkinos, Kevin Murphy, and Alan L Yuille. Deeplab: Semantic image segmentation with deep convolutional nets, atrous convolution, and fully connected crfs. IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI) , 40(4):834–848, 2017. [43] Yu Xiang, Christopher Xie, Arsalan Mousavian, and Dieter Fox. Learning rgb-d feature embeddings for unseen object instance segmentation. In Conference on Robot Learning (CoRL) , 2020. [44] John YA Wang and Edward H Adelson. Representing moving images with layers. IEEE Transactions on Image Processing (TIP) , 3(5):625–638, 1994. [45] Trevor Darrell and Alexander Pentland. Robust estimation of a multi-layered motion representation. In Proceedings of the IEEE Workshop on Visual Motion , 1991. [46] Thomas Brox and Jitendra Malik. Object segmentation by long term analysis of point trajectories. In European Conference on Computer Vision (ECCV) , 2010. [47] Margret Keuper, Bjoern Andres, and Thomas Brox. Motion trajectory segmentation via minimum cost multicuts. In International Conference on Computer Vision (ICCV) , 2015. [48] Gilad Adiv. Determining three-dimensional motion and structure from optical flow generated by several moving objects. IEEE Transactions on Pattern Analysis and Machine Intelligence (TPAMI) , PAMI-7(4):384–401, 1985. [49] S. Peleg and H. Rom. Motion based segmentation. In International Conference on Pattern Recognition (ICPR) ,1990. [50] Zachary Teed and Jia Deng. Raft-3d: Scene flow using rigid-motion embeddings. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2021. [51] Lin Shao, Parth Shah, Vikranth Dwaracherla, and Jeannette Bohg. Motion-based object segmentation based on dense rgb-d scene flow. IEEE Robotics and Automation Letters (RA-L) , 3(4):3797–3804, 2018. [52] Jun-Jee Chao, Qingyuan Jiang, and Volkan Isler. Part segmentation and motion estimation for articulated objects with dynamic 3d gaussians. arXiv preprint arXiv:2506.22718 , 2025. [53] Jia-Xing Zhong, Ta-Ying Cheng, Yuhang He, Kai Lu, Kaichen Zhou, Andrew Markham, and Niki Trigoni. Multi-body se (3) equivariance for unsupervised rigid segmentation and motion estimation. Advances in Neural Information Processing Systems (NeurIPS) , 2023. [54] Jiahui Huang, He Wang, Tolga Birdal, Minhyuk Sung, Federica Arrigoni, Shi-Min Hu, and Leonidas J Guibas. Multibodysync: Multi-body segmentation and motion estimation via 3d scan synchronization. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2021. [55] Anurag Ranjan, Varun Jampani, Lukas Balles, Kihwan Kim, Deqing Sun, Jonas Wulff, and Michael J. Black. Competitive collaboration: Joint unsupervised learning of depth, camera motion, optical flow and motion segmentation. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2019. [56] Sundaram Muthu, Ruwan Tennakoon, Tharindu Rathnayake, Reza Hoseinnezhad, David Suter, and Alireza Bab-Hadiashar. Motion segmentation of rgb-d sequences: Combining semantic and motion information using statistical inference. IEEE Transactions on Image Processing (TIP) , 29:5557–5570, 2020. [57] Charig Yang, Hala Lamdouar, Erika Lu, Andrew Zisserman, and Weidi Xie. Self-supervised video object segmentation by motion grouping. In International Conference on Computer Vision (ICCV) , 2021. [58] Achal Dave, Pavel Tokmakov, and Deva Ramanan. Towards segmenting anything that moves. In International Conference on Computer Vision (ICCV) , 2019. [59] Yangxiao Lu, Ninad Khargonkar, Zesheng Xu, Charles Averill, Kamalesh Palanisamy, Kaiyu Hang, Yunhui Guo, Nicholas Ruozzi, and Yu Xiang. Self-supervised unseen object instance segmentation via long-term robot interaction. In Robotics: Science and Systems (RSS) , 2023. [60] Hao Wang, Limeng Qiao, Zequn Jie, Zhijian Huang, Chengjian Feng, Qingfang Zheng, Lin Ma, Xiangyuan Lan, and Xiaodan Liang. X-sam: From segment anything to any segmentation. arXiv preprint arXiv:2508.04655 , 2025. 14 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+[61] Mennatullah Siam. Pixfoundation 2.0: Do video multi-modal llms use motion in visual grounding? arXiv preprint arXiv:2509.02807 , 2025. [62] F. Galasso, N.S. Nagaraja, T.J. Cardenas, T. Brox, and B.Schiele. A unified video segmentation benchmark: Annotation, metrics and analysis. In International Conference on Computer Vision (ICCV) , 2013. [63] F. Perazzi, J. Pont-Tuset, B. McWilliams, L. Van Gool, M. Gross, and A. Sorkine-Hornung. A benchmark dataset and evaluation methodology for video object segmentation. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2016. [64] Fuxin Li, Taeyoung Kim, Ahmad Humayun, David Tsai, and James M. Rehg. Video segmentation by tracking many figure-ground segments. In International Conference on Computer Vision (ICCV) , 2013. [65] Quan Vuong, Sergey Levine, Homer Rich Walke, Karl Pertsch, Anikait Singh, Ria Doshi, Charles Xu, Jianlan Luo, Liam Tan, Dhruv Shah, et al. Open x-embodiment: Robotic learning datasets and rt-x models. In Conference on Robot Learning (CoRL) , 2023. [66] Zhao Dong, Ka Chen, Zhaoyang Lv, Hong-Xing Yu, Yunzhi Zhang, Cheng Zhang, Yufeng Zhu, Stephen Tian, Zhengqin Li, Geordie Moffatt, et al. Digital twin catalog: A large-scale photorealistic 3d object digital twin dataset. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2025. [67] Yao Mu, Tianxing Chen, Zanxin Chen, Shijia Peng, Zhiqian Lan, Zeyu Gao, Zhixuan Liang, Qiaojun Yu, Yude Zou, Mingkun Xu, et al. Robotwin: Dual-arm robot benchmark with generative digital twins. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2025. [68] Qiaole Dong and Yanwei Fu. Memflow: Optical flow estimation and prediction with memory. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR) , 2024. [69] Robert H Riffenburgh. Statistics in Medicine . Academic press, 2012. [70] François Chaumette and Seth Hutchinson. Visual servo control. i. basic approaches. IEEE Robotics and Automation Magazine , 13(4):82–90, 2006. [71] Dengyong Zhou, Olivier Bousquet, Thomas Lal, Jason Weston, and Bernhard Schölkopf. Learning with local and global consistency. Advances in Neural Information Processing Systems (NeurIPS) , 2003. [72] Ao Wang, Lihao Liu, Hui Chen, Zijia Lin, Jungong Han, and Guiguang Ding. Yoloe: Real-time seeing anything. In International Conference on Computer Vision (ICCV) , 2025. 15 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+# Supplementary Materials 
+
+## A Implementation Details 
+
+In Section 5, we introduced our learning-free graph-based MotionBits segmentation method. In this section, we provide the specific parameter values used in our implementation. All parameters were derived empirically for standard videos with resolutions of 480 × 640 or 640 × 480 . Additionally, all matrix operations are computed using CUDA kernels for accelerated execution, and all experiments were conducted on a system equipped with a single NVIDIA RTX 4090 GPU. 
+
+MotionBits Graph Construction For constructing the spatial twist similarity graph described in Section 5.1, we uniformly sample a grid of √n × √n nodes over the image. Through experimentation, we found that a grid of 100 × 100 
+
+(n = 10 ,000 nodes) provides a strong balance between motion coverage and execution speed. When computing local spatial twists, we set k = 5 to define each node’s k-nearest neighbors. 
+
+Soft and Hard MotionBits Segmentation In Section 5.2, we create a global motion embedding by using the spatial twist similarity graph to iteratively diffuse “paint” through selected seed nodes. We empirically identified a seed count of C = n ∗ 0.04 (i.e. , C = 400 for n = 10 ,000 ) as optimal for capturing meaningful motion regions without oversaturating the final embedding. Note that the granularity of MotionBits segmentation is directly affected by the parameters n and C. If the grid resolution is too coarse, small motion regions may be treated as noise or skipped during local spatial twist estimation due to insufficient node coverage. A motion region may also be missed during soft label propagation if its nodes form a disconnected component and no seed is selected within that component. Increasing n
+
+mitigates these issues but proportionally increases computation time. For the iterative process, we perform R = 100 
+
+iterations of paint diffusion and inject additional paint every r∗ = 5 iterations. After completing soft label propagation, we discretize the global motion embedding into hard MotionBits segmentation using Markov clustering. This algorithm has two primary parameters, inflation and expansion, which we set to 1.15 and 2, respectively. 
+
+## B Tower Stacking Evaluation Protocol 
+
+To evaluate the efficacy of MotionBits in real-world downstream robotic manipulation tasks, we conducted a tower stacking experiment using the five glued composite objects shown in Fig. 6. A fixed RGB camera is positioned approximately 75cm above the tabletop at a 60-degree tilt relative to the vertical axis. Each trial begins with a random robotic interaction (e.g. a push primitive) to generate motion cues. The resulting video is processed by the evaluated 
+
+Figure S7: Iterative soft label propagation visualized (Section 5.2 and line 8 of Algorithm 1). First, a set of seed nodes 
+
+S is uniformly selected from the set of graph nodes M, and each seed node s ∈ S is assigned a different “colored paint”. Then, by continuously pouring the assigned color of paint onto each seed node and allowing the paints to flow and blend naturally according to the structure of graph G, we capture spatial twist motion regions through a color-coded soft MotionBits segmentation mask. 16 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT [“Cat”,        
+
+> “feather toy”] [“Cat”] [“Cat”]
+> [“robot arm”] [“robot arm”]
+> [“robot gripper”,
+> “robot arm”]
+> “What
+> objects
+> have
+> moved...?”
+> “What rigid
+> objects
+> have
+> moved...?”
+> “What rigid
+> bodies or
+> parts have
+> moved...?”
+> RGBs GT
+
+Figure S8: Examples of Qwen2.5VL-32B [ 25 ] responses to different prompts. The prompt that empirically yielded the most accurate moving rigid-body segmentation results (highlighted) was used to evaluate VLMs on the MoRiBo benchmark, reflected in Section 6.1. method to produce object segmentation masks, which inform a greedy stacking controller. This controller identifies the centroid and principal axes of the largest mask, determined by pixel area, to calculate the grasp point and orientation. This process is repeated until all identified objects are stacked or trial termination occurs. A trial is considered a success only if all five objects are successfully stacked into a stable tower. Any grasp or stack failure terminates the trial immediately. We conducted ten trials per method to ensure statistical significance. 
+
+## C Additional Visualizations 
+
+Soft MotionBits Segmentation We present additional visualizations of the soft label propagation process used to diffuse local motion affinities into a smooth global embedding (Fig. S7). Intuitively, differently colored “paints” flow naturally through the structure of the spatial twist similarity graph, which softly color-codes distinct MotionBit regions. 
+
+VLM Prompt Variations We also provide comparisons between VLM prompt variations, from which we selected the best for our evaluations (Fig. S8). 
+
+Additional MotionBits Downstream Applications Moreover, we provide two additional downstream examples beyond those shown in Fig. 6, demonstrating how our MotionBits segmentation supports embodied manipulation. In Fig. S9, when a person interacts with the cabinet drawer, our method accurately segments the door and the two-part drawer slider as distinct MotionBits. This segmentation provides interaction-level cues that enable a robot to reason about and manipulate the cabinet. Similarly, in Fig. S10, when a person interacts with the water bottle handle, our method accurately segments the moving handle, enabling a robot to manipulate it in an analogous manner. 
+
+Extended Qualitative Segmentation Comparisons Furthermore, we provide extended qualitative comparisons between our method and baselines for moving rigid-body segmentation on the MoRiBo benchmark (Fig. S11 and Fig. S12). These comparisons further showcase that existing embodied vision modules lack interaction-level perception, which is essential for downstream embodied tasks. 
+
+Extended MoRiBo Benchmark Examples We also provide additional examples from both the Robotic Manipulation (Fig. S13) and Human-in-the-Wild (Fig. S14) tracks of the MoRiBo benchmark, highlighting the diverse scenarios it offers for evaluating both current and future methods. 17 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT RGBs  Ours  Do wnstr eam 
+
+Figure S9: Additional example of MotionBits segmentation applied to the downstream task of opening a cabinet drawer. When a person interacts with the drawer, our method accurately segments the relevant MotionBits, including the drawer door and the two components of the drawer slider. This segmentation provides interaction-level cues that enable an embodied system to reason about and manipulate the cabinet. 18 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT RGBs Ours Downstream
+
+Figure S10: Additional example of MotionBits segmentation applied to the downstream task of manipulating the water bottle handle. When a person manipulates the water bottle handle, our method accurately segments the handle as a MotionBit, which provides interaction-level cues that enable a robot to manipulate the handle in a similar manner. 19 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT In ternV ideo Qw enVL SAMIV Ours GT OCLR T TA VideoLLaMa 
+
+Figure S11: Extended qualitative comparisons of moving rigid-body segmentation on the Robotic Manipulation track of the MoRiBo benchmark between VideoLLaMa [ 26 ], InternVideo [ 27 ], QwenVL [ 25 ], SAMIV [ 8 ], OCLR TTA [ 9 ]and our method. These results demonstrate that existing perception methods lack fundamental motion-level grounding, which is essential for embodied systems to reason about and interact with real-world environments. Our method is able to effectively identify moving rigid bodies within a scene. 20 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT In ternV ideo Qw enVL SAMIV Ours GT OCLR T TA VideoLLaMa 
+
+Figure S12: Extended qualitative comparisons of moving rigid-body segmentation on the Human-in-the-Wild track of the MoRiBo benchmark between VideoLLaMa [ 26 ], InternVideo [ 27 ], QwenVL [ 25 ], SAMIV [ 8], OCLR TTA [ 9 ] and our method. These results demonstrate that existing perception methods lack fundamental motion-level grounding, which is essential for embodied systems to reason about and interact with real-world environments. Our method is able to effectively identify moving rigid bodies within a scene. 21 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+Figure S13: More examples from the Robotic Manipulation track of the proposed MoRiBo benchmark (Section 4). 22 MotionBits: Video Segmentation through Motion-Level Analysis of Rigid Bodies A P REPRINT 
+
+Figure S14: More examples from the Human-in-the-Wild track of the proposed MoRiBo benchmark (Section 4). 23
