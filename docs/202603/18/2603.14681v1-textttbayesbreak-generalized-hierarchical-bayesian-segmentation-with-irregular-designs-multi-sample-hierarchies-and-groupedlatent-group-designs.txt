@@ -1,0 +1,4005 @@
+Title: \texttt{BayesBreak}: Generalized Hierarchical Bayesian Segmentation with Irregular Designs, Multi-Sample Hierarchies, and Grouped/Latent-Group Designs
+
+URL Source: https://arxiv.org/pdf/2603.14681v1
+
+Published Time: Tue, 17 Mar 2026 06:05:34 GMT
+
+Number of Pages: 59
+
+Markdown Content:
+# BayesBreak : Generalized Hierarchical Bayesian Segmentation with Irregular Designs, Multi-Sample Hierarchies, and Grouped/Latent-Group Designs 
+
+Omid Shams Solari 11sAIm Labs Bayesian change-point and segmentation models provide uncertainty-aware piecewise-constant representations of ordered data, but exact inference is often tied to narrow likelihood classes, single-sequence settings, or index-uniform designs. We present 
+
+BayesBreak , a modular offline Bayesian segmentation framework built around a simple separation: each candidate block contributes a marginal likelihood and any required moment numerators, and a global dynamic program combines those block scores into posterior quantities over segment counts, boundary locations, and latent signals. For weighted exponential-family likelihoods with conjugate priors, block evidences and posterior moments are available in closed form from cumulative sufficient statistics, yielding exact sum-product inference for P (y | k), P (k | y), boundary marginals, and Bayes regression curves. We also distinguish these quantities from the joint MAP segmentation, which is recovered by a separate max-sum backtracking recursion. The framework extends naturally to design-aware partition priors for irregularly spaced observations, to exact pooling across replicates with shared boundaries, and to a latent-template mixture for unknown group membership with rigorous EM updates. For non-conjugate GLM blocks, the same DP layer can be reused with deterministic local approximations such as Laplace, variational, EP, Pólya–Gamma, or low-dimensional quadrature block routines; we provide posterior-odds stability bounds showing how uniform block-level log-evidence error propagates through the segmentation DP. At prediction time, BayesBreak supports posterior-predictive scoring for new sequences or set-valued units under exported segmentations or Bayes curves. The current manuscript is supported by a synthetic validation suite that checks posterior recovery, calibration, approximation trade-offs, and runtime behavior; the modular construction is intended to make subsequent real-data benchmarking straightforward. 
+
+Keywords: Bayesian segmentation; change-point detection; dynamic programming; product partitions; hierarchical models. 
+
+Author emails: omid.solari@saimai.com 
+
+1
+
+> arXiv:2603.14681v1 [cs.LG] 16 Mar 2026
+
+# Contents 
+
+1 Introduction 4
+
+1.1 Related work and literature review . . . . . . . . . . . . . . . . . . . . . . . 5
+
+2 Problem formulation and inferential targets 7
+
+2.1 Single-sequence segmentation and Bayes regression . . . . . . . . . . . . . . 72.2 Multi-sequence structure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 82.3 Computational scope . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 9
+
+3 Notation and symbols 94 Problem setup and Bayesian segmentation model 11 
+
+4.1 Warm-up: the equispaced Gaussian BPCR view . . . . . . . . . . . . . . . . 11 4.2 General segmentation model . . . . . . . . . . . . . . . . . . . . . . . . . . . 11 
+
+5 Exponential–family conjugate single–segment evidence and moments 12 6 Dynamic programming: evidence, boundaries, and moments 13 
+
+6.1 Forward/backward recursions . . . . . . . . . . . . . . . . . . . . . . . . . . 14 6.2 Incorporating segment-factorized boundary priors . . . . . . . . . . . . . . . 14 6.3 Posteriors over k, boundary marginals, and joint MAP segmentations . . . . 15 6.4 Segment-level and regression-curve posterior moments . . . . . . . . . . . . . 15 6.5 End-to-end BayesBreak inference routine . . . . . . . . . . . . . . . . . . . . 18 6.6 Computational complexity and numerical stability . . . . . . . . . . . . . . . 20 
+
+7 Irregular designs and length-aware priors 20 8 Replicates and multi-subject pooling (shared boundaries) 21 9 Groups with known membership 22 10 Latent groups and an EM algorithm 22 11 Family-specific derivations 24 
+
+11.1 Gaussian with known variance (heteroscedastic via weights) . . . . . . . . . 25 11.2 Poisson with exposure . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 25 11.3 Binomial with Beta prior . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 26 11.4 Beta-distributed observations with fixed precision . . . . . . . . . . . . . . . 27 11.5 Posterior-predictive formulas for common conjugate families (optional) . . . 28 
+
+12 Non-conjugate GLMs: block evidence, theory, and approximations 28 
+
+12.1 Model and notation for GLM blocks . . . . . . . . . . . . . . . . . . . . . . . 29 12.2 Existence and uniqueness of block modes . . . . . . . . . . . . . . . . . . . . 29 12.3 Laplace approximation for single-block evidence . . . . . . . . . . . . . . . . 29 12.4 Variational lower bounds for GLM blocks . . . . . . . . . . . . . . . . . . . . 31 12.5 Expectation propagation (EP) for GLM blocks . . . . . . . . . . . . . . . . . 32 212.6 Pólya–Gamma augmentation (logistic and negative-binomial) . . . . . . . . . 33 12.7 Propagation of block approximation error through the DP . . . . . . . . . . 34 
+
+13 Prediction: group likelihoods and MAP/Bayes signal evaluation 35 
+
+13.1 Prediction inputs: pointwise vs multivariate/set-valued observations . . . . . 35 13.2 Posterior-predictive scoring for a fixed segment under EF conjugacy . . . . . 36 13.3 Group likelihoods for pointwise observations (Case A) . . . . . . . . . . . . . 37 13.4 Group likelihoods for multivariate/set-valued observations (Case B) . . . . . 37 13.5 Vector-valued responses (Case C): factorized and multivariate EF scoring . . 38 13.6 From group likelihoods to posterior group membership probabilities . . . . . 38 13.7 MAP signal evaluation given group membership . . . . . . . . . . . . . . . . 39 13.8 Algorithms for prediction . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 39 13.9 Complexity . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 40 
+
+14 Algorithms, complexity, and numerical considerations 40 
+
+14.1 Block-evidence precomputation via prefix sums . . . . . . . . . . . . . . . . 40 14.2 Log-space dynamic programming . . . . . . . . . . . . . . . . . . . . . . . . 41 14.3 MAP segmentation and backtracking . . . . . . . . . . . . . . . . . . . . . . 42 14.4 Pooling across sequences and groups . . . . . . . . . . . . . . . . . . . . . . 43 14.5 Latent-group EM implementation notes . . . . . . . . . . . . . . . . . . . . . 43 14.6 Complexity summary and stability . . . . . . . . . . . . . . . . . . . . . . . 43 
+
+15 Experiments and results 44 
+
+15.1 Metrics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 44 15.2 Single-sequence Gaussian illustration . . . . . . . . . . . . . . . . . . . . . . 44 15.3 Likelihood-family showcase . . . . . . . . . . . . . . . . . . . . . . . . . . . . 46 15.4 Quantitative summary across families . . . . . . . . . . . . . . . . . . . . . . 47 15.5 Calibration of boundary posterior probabilities . . . . . . . . . . . . . . . . . 47 15.6 Latent-group pooling . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 48 15.7 Non-conjugate approximation trade-offs . . . . . . . . . . . . . . . . . . . . . 49 15.8 Runtime scaling . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 50 
+
+16 Conclusion 51 A Supplementary derivations and theoretical extensions 51 
+
+A.1 Conjugate exponential families: detailed block evidence derivation . . . . . . 51 A.2 Factorizing partition priors as renewal processes . . . . . . . . . . . . . . . . 52 A.3 Posterior boundary and segment-membership marginals . . . . . . . . . . . . 53 A.4 Hazard prior boundary cases . . . . . . . . . . . . . . . . . . . . . . . . . . . 54 A.5 Latent groups: identifiability and label switching . . . . . . . . . . . . . . . . 54 A.6 Annotated literature review . . . . . . . . . . . . . . . . . . . . . . . . . . . 55 31 Introduction 
+
+Piecewise-constant segmentation—also called multiple change-point inference—is a core problem in statistics, signal processing, econometrics, computational biology, and machine learning. In its simplest form, one observes an ordered sequence y1, . . . , y n (optionally at locations x1 < · · · < x n) and seeks to infer the number of regimes, the boundary locations, and the segment-specific parameters governing the observations inside each regime. The appeal of Bayesian formulations is well known: they quantify uncertainty over boundary locations and segment counts, they support principled model comparison through marginal likelihoods, and they naturally propagate uncertainty to downstream tasks such as denoising, regression-curve estimation, and prediction (Barry & Hartigan, 1992, 1993; Fearnhead, 2006; Hutter, 2007). For offline segmentation, exact Bayesian inference is possible whenever single-segment pa-rameters can be integrated out and the partition prior factorizes appropriately. In that case, one can precompute block evidences for all candidate segments and then perform dynamic programming (DP) over contiguous partitions to obtain posterior quantities in polynomial time (Fearnhead, 2006; Hutter, 2007). This observation makes piecewise-constant Bayesian regression unusually modular: once blockwise marginal likelihoods are available, the same global DP machinery delivers evidences, posterior boundary probabilities, Bayes regression curves, and joint MAP segmentations. Despite this favorable structure, the literature remains fragmented. Exact offline Bayesian methods are often presented for a small number of likelihood/prior pairs, typically in single- se-quence settings, and usually on index-uniform grids. Hierarchical or multi-sequence extensions are either specialized to particular data types, based on approximate sampling schemes, or focused on synchrony assumptions that are difficult to combine with a reusable block-evidence interface (Carlin et al., 1992; Fearnhead & Liu, 2011; Fan & Mackey, 2017; Quinlan et al., 2024). At the same time, many modern applications require more than boundary recovery: they need predictive scores for new sequences, group-level pooling, and transparent uncertainty summaries that can be exported to downstream decision pipelines. This paper develops BayesBreak , a unified framework for offline Bayesian segmentation that separates local block modeling from global partition inference . The framework is exact whenever block evidences are available in closed form and remains usable when they are replaced by controlled deterministic approximations. The central design principle is simple: if a candidate segment (i, j ] can be summarized by sufficient statistics and assigned a block score A(0)  
+
+> ij
+
+together with any required moment numerators, then the same DP machinery can be reused across observation models, design priors, and several structured extensions. 
+
+Contributions. The main contributions are as follows. 
+
+• A reusable exponential-family block interface. For exposure-aware or precision-aware exponential-family models with conjugate priors, we derive closed-form block evidences and posterior moments from cumulative sufficient statistics. This recovers familiar Gaussian, Poisson, and Beta–Binomial formulas as special cases, and isolates all model-specific work inside a block routine. 4• Exact offline Bayesian inference with coherent posterior summaries. We derive forward/backward DP recursions for marginal evidences, posterior segment-count prob-abilities, boundary marginals, and Bayes regression curves. We also distinguish these sum-product quantities from the joint MAP segmentation, which is recovered by a sep-arate max-sum/backtracking recursion rather than by maximizing boundary marginals independently. 
+
+• Irregular designs via design-aware partition priors. Irregular spacing is handled at the partition-prior level through segment-length factors g(xtq − xtq−1 ). We make explicit that physical spacing and exposure weighting are conceptually distinct: irregular designs do not, by themselves, force likelihood weights, but segment-length priors provide a principled way to encode design geometry. 
+
+• Exact pooling for shared-boundary replicates and known groups. When multiple sequences share boundaries but retain sequence-specific segment parameters, subject-level block evidences multiply and the pooled posterior remains exactly tractable under the same DP recursions. The same construction applies groupwise when memberships are known. 
+
+• A latent-group template mixture with exact EM updates. For unknown group membership, we develop a mixture model in which each group carries a latent template segmentation . Responsibilities are updated in the E-step, while the M-step solves an exact responsibility-weighted max-sum DP to update each group template. This yields a rigorous alternating optimization scheme without claiming exact Bayesian model averaging over latent-group segmentations. 
+
+• Approximate non-conjugate block routines with stability guarantees. For non-conjugate GLM blocks we describe Laplace, variational, EP, Pólya–Gamma, and one-dimensional quadrature approximations. We then show how uniform block-level log-evidence errors propagate through the DP to perturb global evidence and posterior odds in a controlled way. 
+
+• A prediction layer for fitted segmenters. We formalize posterior-predictive scoring for new pointwise sequences, set-valued units, and vector-valued responses, distinguishing between conditional prediction under an exported segmentation and more expensive resegmentation-based scoring. 
+
+## 1.1 Related work and literature review 
+
+Frequentist offline segmentation. Classical segmentation algorithms optimize additive cost functions over contiguous partitions. Segment-neighborhood and optimal-partitioning recur-sions provide exact solutions for a fixed number of segments or a fixed penalty (Auger & Lawrence, 1989; Jackson et al., 2005). Later work reduced practical cost through pruning, most notably in pruned dynamic programming and PELT (Rigaill, 2010; Killick et al., 2012). Convex relaxations such as total variation denoising and the fused lasso trade exact com-binatorial optimization for scalable regularized estimation, with multisequence extensions such as the group fused lasso encouraging shared boundaries across signals (Rudin et al., 1992; Tibshirani et al., 2005; Bleakley & Vert, 2011). Multiscale methods, including SMUCE 5and wild binary segmentation, emphasize detection guarantees and confidence statements across scales rather than full posterior modeling (Frick et al., 2014; Fryzlewicz, 2014). These methods are indispensable baselines, but they do not natively return posterior probabilities over partitions or segment parameters. 
+
+Bayesian offline segmentation and product partitions. The product-partition formulation of Barry & Hartigan (1992, 1993) is one of the most important starting points for Bayesian change-point analysis. The key idea is that if partition probabilities factorize over segments and segment parameters can be marginalized, then posterior inference can be reduced to operations on block scores. Fearnhead (2006) gave an exact and efficient DP-based treatment for a broad class of offline changepoint models, while Hutter (2007) showed how Bayesian averaging over partitions yields regression curves, boundary probabilities, and evidence-based model selection in the piecewise-constant setting. Work by Fearnhead & Liu (2011) and Ruggieri & Lawrence (2014) demonstrated how far the DP viewpoint can be pushed when one adds dependence across segments or richer within-segment regressions. 
+
+Bayesian online and approximate methods. When streaming updates are required, Bayesian online changepoint detection provides a filtering- style alternative to exact offline posterior computation (Adams & MacKay, 2007). When exact marginalization is unavailable, reversible-jump MCMC and related sampling methods remain central Bayesian tools (Green, 1995; Denison et al., 1998). BayesBreak is aimed squarely at the offline regime: we prioritize reusable block marginalization and exact DP whenever the model permits it, and use deterministic local approximations only when the block integral itself lacks a closed form. 
+
+Multi-sequence and structured Bayesian segmentation. Many applications exhibit boundary sharing or boundary dependence across related sequences. Hierarchical Bayesian changepoint models appear in early work by Carlin et al. (1992), while more recent multisequence methods such as BASIC exploit cross-sequence co-occurrence of changepoints through hierarchical priors (Fan & Mackey, 2017). Joint random partition models provide a broader Bayesian nonparametric framework for borrowing information across multiple ordered processes (Quinlan et al., 2024). Related product-partition literature also studies covariate-aware random partitions and generalized cohesion functions, which are conceptually close to the design-aware partition priors used here (Müller et al., 2011; Park & Dunson, 2010). 
+
+Positioning of BayesBreak. BayesBreak is not intended to replace the full Bayesian richness of every model above. Rather, it occupies a modular middle ground: it retains exact offline DP for the core single-sequence and shared-boundary pooled settings, broadens the menu of admissible block models, clarifies how to incorporate irregular designs through the prior rather than through ad hoc weighting, and exports a prediction interface that is usually missing from segmentation papers. For latent groups, we are deliberately conservative: instead of claiming exact Bayesian inference over a mixture of segmentations, we formulate a template-mixture extension whose EM updates are exact for the stated objective. 
+
+Annotated review. A compact annotated literature review, organized by methodological theme and relation to BayesBreak, is provided in Appendix A.6. 6Paper organization. Section 2 formalizes the inferential targets. Section 3 introduces notation, and Section 4 states the Bayesian segmentation model and the class of partition priors consid-ered. Section 5 derives block evidences for conjugate exponential-family models. Section 6 develops exact DP inference, including boundary marginals, Bayes regression curves, and the distinction between sum-product posterior summaries and max-sum MAP segmentations. Section 14 collects implementation details and numerical considerations. Section 7 studies design-aware priors, while Sections 8 and 9 treat shared-boundary pooling and known groups. Section 10 develops the latent-group template mixture. Section 11 gives closed-form block formulas for common conjugate families, and Section 12 collects non-conjugate approximations and stability results. Section 13 formalizes prediction for new data. Section 15 presents the available empirical validation and, equally importantly, records the experiments still needed before submission. We conclude in Section 16. 
+
+# 2 Problem formulation and inferential targets 
+
+BayesBreak addresses offline Bayesian segmentation of ordered data. Throughout, the fundamental unknown is a contiguous partition of the index set {1, . . . , n } together with a segment parameter attached to each block. This section states the objects of interest in a model-agnostic way; Section 3 introduces the detailed notation used later. 
+
+## 2.1 Single-sequence segmentation and Bayes regression 
+
+We observe ordered pairs {(xi, y i)}ni=1 with strictly increasing design points x1 < · · · < x n.The design may be irregular. When the observation model includes known exposures, trial counts, or precision weights, we also allow deterministic nonnegative quantities wi; unless explicitly stated otherwise, point-observation models use wi ≡ 1.A segmentation into k contiguous blocks is represented by a boundary vector 
+
+0 = t0 < t 1 < · · · < t k−1 < t k = n, (1) where block q ∈ { 1, . . . , k } is the index set 
+
+Iq(t) := {tq−1 + 1 , . . . , t q}. (2) The corresponding segment parameter is denoted θq ∈ Θ. Conditionally on (k, t, θ 1: k),observations factorize across blocks: 
+
+p(y1: n | k, t, θ 1: k) =  
+
+> k∏
+> q=1
+> ∏
+> i∈Iq(t)
+
+p(yi | θq, w i), (3) where p(yi | θq, w i) is interpreted according to the chosen family. For example, wi may encode exposure in Poisson models, trial count in Binomial models, or known precision in Gaussian models. Irregular spacing by itself does not force a non-unit wi; design geometry can instead enter through the partition prior. 7For any candidate block (i, j ] with 0 ≤ i < j ≤ n, the key primitive is the integrated single-block evidence 
+
+L(i, j ) := p(yi+1: j ) =  
+
+> ∫j∏
+> t=i+1
+
+p(yt | θ, w t) p(θ) dθ, (4) where p(θ) is the segment prior. When L(i, j ) is available in closed form, the entire offline posterior can be computed exactly by dynamic programming. When it is only approximated, BayesBreak isolates the approximation at the block level and reuses the same global DP. The inferential targets are: (i) the marginal evidence at fixed segment count, 
+
+p(y1: n | k) = ∑
+
+> t∈T k
+
+p(t | k)
+
+> k∏
+> q=1
+
+L(tq−1, t q), (5) where Tk is the set of all admissible k-segment boundary vectors; (ii) the posterior over segment counts and boundaries, p(k, t | y1: n), together with marginals such as p(k | y1: n), p(tp = h | y1: n, k ), and posterior probabilities that index h is a boundary; (iii) posterior summaries of the latent piecewise-constant signal. Writing θi for the parameter of the random segment containing observation i, we are interested in quantities such as 
+
+p(θi | y1: n), E[m(θi) | y1: n], (6) where m(θ) denotes the observation-scale mean parameter. These yield Bayes regression curves and uncertainty bands; (iv) point estimators for downstream use. BayesBreak distinguishes joint MAP segmentations ̂
+
+tMAP (k) ∈ arg max 
+
+> t∈T k
+
+p(t | y1: n, k ), (7) from marginal boundary summaries such as arg max h p(tp = h | y1: n, k ). These are not generally the same object and should not be conflated. 
+
+## 2.2 Multi-sequence structure 
+
+Many applications provide multiple related sequences observed on a common ordered grid or on a common set of candidate boundary locations. Let sequence s ∈ { 1, . . . , S } be denoted by y(s)1: n. BayesBreak treats three progressively richer settings. 
+
+Shared-boundary replicates. All sequences share a common segmentation t, but each sequence has its own within-block parameters θ(s)1: k. Conditional on t, the sequences are independent: 
+
+p({y(s)}Ss=1 | t, {θ(s)}) =  
+
+> S∏
+> s=1
+> k∏
+> q=1
+> ∏
+> i∈Iq(t)
+
+p(
+
+y(s) 
+
+> i
+
+| θ(s) 
+
+> q
+
+, w (s)
+
+> i
+> )
+
+. (8) Integrating out the subject-specific segment parameters yields pooled block evidences obtained by multiplying subject-level block evidences. 8Known groups. Sequences are partitioned into known groups g ∈ { 1, . . . , G }. Each group has its own segmentation, while sequences within a group share that segmentation and retain their own segment parameters. 
+
+Latent groups. Group labels are unknown. In the fully Bayesian formulation one would average over both assignments and group-specific segmentations. In this report we instead adopt a more tractable and rigorously analyzable template-mixture formulation: each group is associated with a single latent boundary template, and EM alternates between soft assignments and exact responsibility-weighted max-sum DP updates of those templates. 
+
+## 2.3 Computational scope 
+
+For fixed kmax , the core BayesBreak workflow consists of: (a) precomputing all block evidences and required moment numerators; (b) running sum-product DP recursions for evidences and posterior marginals; and (c) optionally running a max-sum/backtracking recursion for a joint MAP segmentation. When block evaluation is constant time after prefix-sum preprocessing, this yields O(n2) block precomputation and O(kmax n2) DP time. These worst-case costs make the exact method most natural for moderate sequence lengths (hundreds to low thousands), where exact posterior quantities are still computationally feasible and often worth the cost. 
+
+# 3 Notation and symbols 
+
+This section fixes notation used throughout the paper. We use lower-case Roman letters for indices, reserve t = ( t0, . . . , t k) for boundary vectors, and adopt the half-open block notation 
+
+(i, j ] := {i + 1 , . . . , j } for 0 ≤ i < j ≤ n.
+
+Conjugate-prior normalization convention. For exponential-family blocks we use the following convention for the conjugate prior normalizer. For hyperparameters (α, β ),
+
+p(θ | α, β ) = Z(α, β ) exp {η(θ)⊤α − βA (θ)}, Z(α, β )−1 =
+
+> ∫
+
+exp {η(θ)⊤α − βA (θ)} dθ. (9) With this convention, block evidences take the ratio form Z(α0, β 0)/Z (α0 + Sij , β 0 + Wij ).
+
+Symbol Meaning 
+
+n Number of observations on the ordered design. 
+
+xi Design point / location of observation yi.
+
+yi Observation at location xi (single-sequence case). 
+
+wi Deterministic exposure, trial-count, or precision weight when re-quired by the observation model. Unless otherwise stated, point-observation models use wi ≡ 1.9k; kmax Number of segments; maximum segment count considered by the DP. 
+
+t = ( t0, . . . , t k) Boundary vector, with 0 = t0 < t 1 < · · · < t k = n.
+
+Iq(t) Index set of segment q: {tq−1 + 1 , . . . , t q}.
+
+(i, j ] Candidate block {i + 1 , . . . , j }.
+
+T (y), η(θ), A(θ),
+
+h(y, w )
+
+Sufficient statistic, natural parameter map, log-partition function, and base measure for the chosen exponential-family block model. 
+
+m(θ) Observation-scale mean parameter induced by θ, i.e. m(θ) = E[Y |
+
+θ].
+
+(α, β ) Conjugate hyperparameters with normalizer Z(α, β ) defined in equation 9. 
+
+(α0, β 0) Prior hyperparameters before observing block data. 
+
+Sij Block sufficient-statistic sum ∑jt=i+1 wtT (yt).
+
+Wij Block exposure/weight sum ∑jt=i+1 wt.
+
+Hij Block base-measure sum ∑jt=i+1 log h(yt, w t).
+
+A(0)  
+
+> ij
+
+Block evidence on (i, j ].
+
+A(r) 
+
+> ij
+
+Block moment numerator A(0)  
+
+> ij
+
+E[m(θ)r | yi+1: j ].
+
+Lk,j Prefix evidence for y1: j with exactly k segments. 
+
+Rk,i Suffix evidence for yi+1: n with exactly k segments. 
+
+Ck Normalizer of p(t | k) under a segment-factorized partition prior. 
+
+p(k | y) Posterior over segment counts. 
+
+p(tp = h | y, k ) Marginal posterior of the pth boundary given k.̂
+
+tMAP (k) Joint MAP segmentation given k, obtained by max-sum DP and backtracking. ̂
+
+μ(r) 
+
+> q
+
+Posterior moment of the segment-q mean parameter conditional on a chosen segmentation. ̂
+
+f Bayes  
+
+> t
+
+Bayes regression curve at index t (posterior mean of the latent piecewise-constant signal). 
+
+s ∈ { 1, . . . , S } Sequence / subject index in multi-sequence settings. 
+
+g ∈ { 1, . . . , G } Group index. 
+
+rsg Soft assignment (responsibility) of sequence s to group g in the latent-group template mixture. 
+
+Mg Fitted group-specific model exported for prediction. 
+
+ℓg Log predictive score of new data under group g.
+
+πg Prior group weight used for prediction or in the latent-group mix-ture. 
+
+Remarks. Two distinctions are important and recur throughout the paper. First, design irregularity and likelihood weighting are not the same thing: irregular spacing is usually encoded through the partition prior, whereas wi belongs inside the likelihood only when the observation model itself supplies exposures or known precisions. Second, boundary marginals 
+
+10 and the joint MAP segmentation are different summaries of the posterior. BayesBreak computes both, but they should not be conflated. 
+
+# 4 Problem setup and Bayesian segmentation model 
+
+## 4.1 Warm-up: the equispaced Gaussian BPCR view 
+
+To motivate the BayesBreak construction, recall the equispaced Gaussian model studied by Hutter (2007). When xi = i, wi ≡ 1, and 
+
+yt | μq ∼ N (μq, σ 2), μq ∼ N (ν, ρ 2), t ∈ Iq(t),
+
+one can integrate out the segment mean on every candidate block and precompute a triangular array of block evidences. All posterior quantities of interest then reduce to sums or maxima over products of those block evidences, which can be computed by DP. 
+
+## 4.2 General segmentation model 
+
+For the general BayesBreak model, conditional on a block-specific parameter θ, observations inside a block follow an exponential-family likelihood of the form 
+
+p(y | θ) = h(y) exp {η(θ)⊤T (y) − A(θ)}. (10) When the observation model carries known exposure or precision information, we write the weighted version in Section 5. For a candidate block (i, j ], BayesBreak stores aggregated summaries 
+
+Sij =
+
+> j∑
+> t=i+1
+
+wtT (yt), Wij =
+
+> j∑
+> t=i+1
+
+wt, Hij =
+
+> j∑
+> t=i+1
+
+log h(yt, w t),
+
+and uses these to evaluate A(0)  
+
+> ij
+
+and the moment numerators A(r) 
+
+> ij
+
+.
+
+Partition prior. We place a prior p(k) on the number of segments and, conditional on k, a prior on boundary vectors t. Two cases are especially important. 
+
+• Index-uniform prior. For regularly spaced or index-based segmentation, one may use 
+
+p(t | k) = (n−1
+
+> k−1
+> )−1
+
+, uniform over all ordered (k − 1) -subsets of {1, . . . , n − 1}.
+
+• Design-aware prior. For irregular designs, let ∆xq = xtq − xtq−1 be the physical length of segment q. We consider priors of the form 
+
+p(t | k) ∝
+
+> k∏
+> q=1
+
+g(∆ xq), (11) where g is a nonnegative cohesion function. This is a contiguous product-partition prior and is a natural way to encode physical spacing, minimum-length constraints, or renewal-style hazard assumptions. 11 The normalizing constant hidden in equation 11 is 
+
+Ck := ∑ 
+
+> 0= t0<t 1<··· <t k=nk∏
+> q=1
+
+g(
+
+xtq − xtq−1
+
+> )
+
+, (12) so that p(t | k) = C−1 
+
+> k
+> ∏
+> q
+
+g(∆ xq). In the index-uniform case, g ≡ 1 and Ck = (n−1
+
+> k−1
+> )
+
+.
+
+Hazard interpretation. When g(m) ∝ (1 − ρ)m−1 on an index-uniform grid, the implied segment-length prior is the geometric distribution associated with a constant boundary hazard 
+
+ρ ∈ (0 , 1) . More generally, one can view g as the unnormalized length law of a renewal process on the ordered design. This viewpoint is useful for designing physically meaningful priors without changing the DP machinery. 
+
+Assumption 4.1 (Factorizing partition prior) . For each k ∈ { 1, . . . , k max }, the conditional prior on the boundary vector factorizes as in equation 11 for some nonnegative g with finite normalizer Ck in equation 12. 
+
+Assumption 4.1 is the key structural condition enabling exact dynamic programming. It is broad enough to cover index-uniform priors, renewal-style length priors, minimum-length truncations, and other design-aware cohesion functions that remain multiplicative over seg-ments. 
+
+# 5 Exponential–family conjugate single–segment evidence and moments 
+
+Recall the generic EF–conjugate specification (Diaconis & Ylvisaker, 1979; Bernardo & Smith, 1994). Conditional on a (possibly low-dimensional) parameter θ, observations yt in a block 
+
+(i, j ] are independent with density 
+
+p(yt | θ) = exp {wt[T (yt)⊤η(θ) − A(θ)] + log h(yt, w t)}, (13) where wt ≥ 0 are exposure weights and h collects base measures. The conjugate prior for θ is 
+
+p(θ | α, β ) = Z(α, β ) exp {η(θ)⊤α − βA (θ)},
+
+with normalizing constant Z(α, β ) defined by equation 9. For a block (i, j ] define the cumulative sums 
+
+Sij := 
+
+> j∑
+> t=i+1
+
+wt T (yt), Wij := 
+
+> j∑
+> t=i+1
+
+wt, Hij := 
+
+> j∑
+> t=i+1
+
+log h(yt, w t).
+
+Theorem 5.1 (EF–conjugate block integration) . Fix a block (i, j ] and a conjugate prior 
+
+p(θ | α0, β 0). Under the weighted EF model equation 13, the integrated single–segment evidence 
+
+12 and the rth moment integral of the observation-scale EF mean m(θ) := E[Y | θ] are 
+
+A(0)  
+
+> ij
+
+=
+
+∫ [ j∏
+
+> t=i+1
+
+p(yt | θ)
+
+]
+
+p(θ | α0, β 0) dθ 
+
+= exp {Hij } Z(α0, β 0)
+
+Z(α0 + Sij , β 0 + Wij ), (14) 
+
+A(r) 
+
+> ij
+
+=
+
+∫ [ j∏
+
+> t=i+1
+
+p(yt | θ)
+
+]
+
+p(θ | α0, β 0) m(θ)r dθ 
+
+= A(0)  
+
+> ij
+
+E[
+
+m(θ)r ∣∣∣ α0 + Sij , β 0 + Wij 
+
+]
+
+, r = 1 , 2, . . . . (15) 
+
+Proof. Step 1: factorize the block likelihood. By independence and equation 13, 
+
+> j
+
+∏
+
+> t=i+1
+
+p(yt | θ) = exp 
+
+{ j∑
+
+> t=i+1
+
+wt[T (yt)⊤η(θ) − A(θ)] + 
+
+> j
+
+∑
+
+> t=i+1
+
+log h(yt, w t)
+
+}
+
+.
+
+Collecting block sums gives 
+
+> j
+
+∏
+
+> t=i+1
+
+p(yt | θ) = exp {Hij + η(θ)⊤Sij − Wij A(θ)}.
+
+Step 2: multiply by the conjugate prior and identify the posterior kernel. Multiply by 
+
+p(θ | α0, β 0):
+
+[ j∏
+
+> t=i+1
+
+p(yt | θ)
+
+]
+
+p(θ | α0, β 0) = exp {Hij } Z(α0, β 0) exp {η(θ)⊤(α0 + Sij ) − (β0 + Wij )A(θ)}.
+
+Step 3: integrate by using the normalizer definition. By the definition equation 9, 
+
+∫
+
+exp {η(θ)⊤(α0 + Sij ) − (β0 + Wij )A(θ)} dθ = Z(α0 + Sij , β 0 + Wij )−1.
+
+Therefore, 
+
+A(0)  
+
+> ij
+
+= exp {Hij } Z(α0, β 0) Z(α0 + Sij , β 0 + Wij )−1,
+
+which is equation 14. 
+
+Step 4: moment integrals. For r ≥ 1, the integrand defining A(r) 
+
+> ij
+
+equals the integrand of A(0)  
+
+> ij
+
+times m(θ)r. Dividing by A(0)  
+
+> ij
+
+therefore yields the expectation of m(θ)r under the posterior p(θ | α0 + Sij , β 0 + Wij ), giving equation 15. 
+
+# 6 Dynamic programming: evidence, boundaries, and mo-ments 
+
+For k ∈ { 0, . . . , k max } and j ∈ { 0, . . . , n }, let Lkj denote the evidence of the prefix y1: j under a segmentation into k segments (after integrating out segment parameters), and let Rki denote the evidence of the suffix yi+1: n under k segments. We adopt the conventions 
+
+L0,0 = 1 , L0,j = 0 ( j > 0) , R0,n = 1 , R0,i = 0 ( i < n ).
+
+13 6.1 Forward/backward recursions 
+
+Given single-block evidences A(0)  
+
+> ij
+
+, the forward and backward recursions are 
+
+Lk+1 ,j =
+
+> j−1
+
+∑
+
+> h=k
+
+Lk,h A(0)  
+
+> hj
+
+, Rk+1 ,i =
+
+> n−k
+
+∑
+
+> h=i+1
+
+A(0)  
+
+> ih
+
+Rk,h , (16) for k ≥ 0, 1 ≤ j ≤ n, and 0 ≤ i ≤ n − 1, where sums are restricted to valid indices. 
+
+Implementation. Algorithm 1 presents the core forward/backward recursions in a numerically stable log-space form. The routine takes as input a triangular array of block log-evidences 
+
+log Lij (from Section 5 or Sections 11–12) and returns the forward messages, backward messages, and segment-count posteriors needed for boundary and moment extraction. 
+
+Algorithm 1: Generic DP for EF segmentation (prefix/suffix form) 
+
+Input: Block evidences ˜A(0)  
+
+> ij
+
+for 0 ≤ i < j ≤ n; kmax ; Ck (default Ck = (n−1
+
+> k−1
+
+)
+
+) 
+
+> 1
+
+Initialize ˜L0,0 = 1 , ˜L0,j> 0 = 0 ; ˜R0,n = 1 , ˜R0,i<n = 0 ; 
+
+> 2
+
+for k = 0 to kmax − 1 do  
+
+> 3
+
+for j = 1 to n do  
+
+> 4
+
+˜Lk+1 ,j ← ∑j−1 
+
+> h=k
+
+˜Lk,h ˜A(0)  
+
+> hj
+
+; 
+
+> 5
+
+for i = 0 to n − 1 do  
+
+> 6
+
+˜Rk+1 ,i ← ∑n−kh=i+1 ˜A(0)  
+
+> ih
+
+˜Rk,h ; 
+
+> 7
+
+Compute P (k | y) ∝ p(k) ˜Lkn /C k (cf. equation 19) and choose ̂ k; 
+
+> 8
+
+for p = 1 to ̂ k − 1 do  
+
+> 9
+
+For h ∈ { p, . . . , n − (̂k − p)} set P (tp = h | y, ̂ k) ← ˜Lp,h ˜R̂k−p,h / ˜L̂ kn ;
+
+> 10
+
+̂ tp ← arg max h P (tp = h | y, ̂ k);
+
+Output: { ˜Lkj }, { ˜Rki }, P (k | y),̂ k,̂ t
+
+## 6.2 Incorporating segment-factorized boundary priors 
+
+Suppose the boundary prior given k factorizes over segment lengths as in equation 11: 
+
+p(t | k) = 1
+
+Ckk∏
+
+> q=1
+
+g(xtq − xtq−1 ), Ck := ∑ 
+
+> t: 0= t0<··· <t k=nk
+
+∏
+
+> q=1
+
+g(xtq − xtq−1 ).
+
+Then we can absorb g into block evidences by defining 
+
+˜A(0)  
+
+> ij
+
+:= A(0)  
+
+> ij
+
+g(xj − xi), ˜A(r) 
+
+> ij
+
+:= A(r) 
+
+> ij
+
+g(xj − xi). (17) Running the DP equation 16 with ˜A(0)  
+
+> ij
+
+computes ˜Lkn , the unnormalized evidence sum over all segmentations weighted by g. The normalizer Ck can be computed by the same DP with 
+
+A(0)  
+
+> ij
+
+≡ 1:
+
+Ck = ∑
+
+> tk
+
+∏
+
+> q=1
+
+g(xtq − xtq−1 ) = L(g) 
+
+> kn
+
+, where L(g) 
+
+> k+1 ,j
+
+=
+
+> j−1
+
+∑
+
+> h=k
+
+L(g) 
+
+> k,h
+
+g(xj − xh), L (g)0,0 = 1 . (18) 14 In the index-uniform case g ≡ 1, equation 18 reduces to Ck = (n−1
+
+> k−1
+> )
+
+.
+
+## 6.3 Posteriors over k, boundary marginals, and joint MAP segmentations 
+
+Let p(k) be a prior on segment count. Under index-uniform p(t | k) we have Ck = (n−1
+
+> k−1
+> )
+
+and 
+
+P (y | k) = Lkn 
+
+Ck
+
+, P (k | y) ∝ p(k) Lkn 
+
+Ck
+
+.
+
+For general segment-factorized p(t | k), replace L by ˜L and Ck by equation 18. In all cases we can write compactly 
+
+P (k | y) ∝ p(k)
+
+> ˜
+
+Lkn 
+
+Ck
+
+, k = 1 , . . . , k max . (19) Let ̂ k = arg max k P (k | y) denote the MAP segment count. Conditional on k, the marginal posterior for the pth boundary tp is 
+
+P (tp = h | y, k ) = 
+
+> ˜
+
+Lp,h ˜Rk−p,h 
+
+> ˜
+
+Lkn 
+
+, h ∈ { p, . . . , n − (k − p)}, (20) where ( ˜L, ˜R) are computed from ˜A(0) as in equation 16. (When g ≡ 1, tildes can be dropped.) A useful diagnostic is the marginal boundary mode 
+
+> ˜
+
+t marg  
+
+> p
+
+(k) ∈ arg max  
+
+> h
+
+P (tp = h | y, k ).
+
+However, maximizing the marginals independently need not yield an ordered boundary vector and, in general, does not recover the joint MAP segmentation. The latter is the solution of ̂
+
+t MAP (k) ∈ arg max  
+
+> 0= t0<··· <t k=n
+> 
+> k∑
+> q=1
+
+log ˜A(0) 
+
+> tq−1tq
+> 
+
+, (21) with the convention that any k-specific prior terms such as log p(k) − log Ck are added only when selecting among different values of k. Equation equation 21 is solved exactly by a max-sum DP with backpointers (Section 14). In the sequel, whenever we report an exported MAP segmentation , we mean the joint optimizer ̂ t MAP := ̂ t MAP (̂k) rather than a vector of marginal boundary modes. 
+
+## 6.4 Segment-level and regression-curve posterior moments 
+
+For segment-wise posterior moments attached to a fixed segmentation t = ( t0, . . . , t k), let segment q ∈ { 1, . . . , k } correspond to block (i, j ] = ( tq−1, t q]. Then 
+
+μ(r) 
+
+> q
+
+(t) = 
+
+> ˜
+
+A(r)
+
+> ij
+> ˜
+
+A(0) 
+
+> ij
+
+= A(r)
+
+> ij
+
+A(0) 
+
+> ij
+
+, r = 1 , 2, . . . , (22) 15 where the final equality holds because the prior factor g(xj − xi) cancels. In particular, for an exported joint MAP segmentation ̂ t MAP , the segment summaries are obtained by setting 
+
+t =̂ t MAP in equation 22. To compute the Bayes regression curve within a fixed k (typically k =̂ k), define, for each block (i, j ] and moment order r,
+
+F (r) 
+
+> ij
+
+(k) := 1
+
+> ˜
+
+Lkn k∑
+
+> m=1
+> ˜
+
+Lm−1,i ˜A(r) 
+
+> ij ˜
+
+Rk−m,j .
+
+Then the rth posterior moment of the latent mean at index t given k is ̂
+
+μ′(r) 
+
+> t
+
+:= E[( μ′
+
+> t
+
+)r | y, k ] = ∑
+
+> i<t ≤j
+
+F (r) 
+
+> ij
+
+(k), t = 1 , . . . , n. (23) In particular, ̂ μ′ 
+
+> t
+
+:= ̂ μ′(1)  
+
+> t
+
+is the Bayes regression curve and V[μ′ 
+
+> t
+
+| y, k ] = ̂ μ′(2)  
+
+> t
+
+− (̂ μ′(1)  
+
+> t
+
+)2.
+
+Theorem 6.1 (Correctness of the DP) . Under the EF–conjugate single–segment model of Section 5 (and under any segment-factorized boundary prior absorbed via equation 17), the recursions equation 16 compute exact marginal evidences for all prefixes/suffixes: ˜Lkj and ˜Rki 
+
+are exact evidence sums over all k-segmentations of the corresponding prefix/suffix. Moreover: 1. The posterior P (k | y) given by equation 19 is exact. 2. The boundary marginal P (tp = h | y, k ) given by equation 20 is exact. 3. For any fixed k, the joint MAP segmentation equation 21 is obtained exactly by the max-sum recursion and backtracking routine of Section 14. 4. The segment-wise moments equation 22 and regression-curve moments equation 23 are exact posterior moments conditional on k.Proof. We present the proof for general ˜A(0)  
+
+> ij
+
+; the untilded case is the specialization g ≡ 1.
+
+Step 1: interpret ˜Lkj . Fix k ≥ 1 and j ≥ 1. Consider all segmentations of the prefix y1: j
+
+into k segments, i.e. all boundary vectors (t0, . . . , t k) with t0 = 0 and tk = j. For any such segmentation, segment parameters are independent a priori and observations are independent across segments given the segmentation. Integrating out segment parameters yields a product of block evidences: 
+
+p(y1: j | t, k ) = 
+
+> k∏
+> q=1
+> ˜
+
+A(0)  
+
+> tq−1,t q
+
+.
+
+Summing over all segmentations gives 
+
+> ˜
+
+Lkj = ∑  
+
+> t:tk=jk∏
+> q=1
+> ˜
+
+A(0)  
+
+> tq−1,t q
+
+.
+
+Thus ˜Lkj is exactly the marginal evidence sum for the prefix under k segments. 16 Step 2: derive the forward recursion. Any segmentation of y1: j into k+1 segments has a last boundary at some h ∈ { k, . . . , j − 1}. Conditioning on this last boundary splits the segmentation into: (i) a k-segmentation of y1: h and (ii) the final block (h, j ]. By the factorization above, the evidence contribution for a fixed h equals ˜Lkh ˜A(0)  
+
+> hj
+
+. Summing over all admissible h yields 
+
+> ˜
+
+Lk+1 ,j =
+
+> j−1∑
+> h=k
+> ˜
+
+Lkh ˜A(0)  
+
+> hj
+
+,
+
+which is the left recursion in equation 16. 
+
+Step 3: derive the backward recursion. The same argument applies to suffixes by conditioning on the first boundary after i, yielding 
+
+> ˜
+
+Rk+1 ,i =
+
+> n−k∑
+> h=i+1
+> ˜
+
+A(0)  
+
+> ih ˜
+
+Rkh ,
+
+the right recursion in equation 16. 
+
+Step 4: posterior over k. For any fixed k, the data likelihood marginalized over segmentations is ˜Lkn . If p(t | k) includes a normalizer Ck (as in equation 11), then P (y | k) = ˜Lkn /C k by definition of Ck as the sum of prior weights across all segmentations. Bayes’ rule with prior 
+
+p(k) yields equation 19. 
+
+Step 5: boundary posteriors. Fix k and boundary index p ∈ { 1, . . . , k − 1}. Conditioning on tp = h splits the sequence into: (i) a prefix y1: h with p segments and (ii) a suffix yh+1: n
+
+with k − p segments. By independence across the split and by the definition of ˜L, ˜R, the total evidence of all segmentations consistent with tp = h equals ˜Lp,h ˜Rk−p,h . Normalizing by the total evidence ˜Lkn yields equation 20. 
+
+Step 6: moment formulas. For a fixed block (i, j ], Theorem 5.1 gives A(r) 
+
+> ij
+
+= A(0)  
+
+> ij
+
+E[m(θ)r |
+
+(i, j ]] . Since the segmentation prior factor g(xj − xi) cancels in the ratio, equation 22 holds. The regression-curve moment formula equation 23 follows by averaging over all segmentations and grouping contributions by the block (i, j ] that contains index t.
+
+Theorem 6.2 (Time and space complexity) . Assume single-block evidences A(0)  
+
+> ij
+
+are available for all 0 ≤ i < j ≤ n. Then computing Lkj and Rki for k = 0 , . . . , k max via equation 16 requires O(kmax n2) arithmetic operations. Storing all A(0)  
+
+> ij
+
+requires O(n2) memory, and storing the DP arrays requires O(kmax n).Proof. For each fixed k, the forward recursion computes Lk+1 ,j for j = 1 , . . . , n , and each 
+
+Lk+1 ,j sums at most j − k terms. Thus the forward work per k is ∑nj=1 O(j) = O(n2). The backward recursion is analogous. Repeating for k = 0 , . . . , k max − 1 gives O(kmax n2) time. Memory follows by counting array sizes. 17 6.5 End-to-end BayesBreak inference routine 
+
+Collecting the ingredients from Sections 5 and 6—block-evidence precomputation, exact sum-product DP over partitions, and max-sum backtracking for exported segmentations—yields an end-to-end routine suitable for direct implementation. Algorithm 2 summarizes this workflow in a modular way: the only model-specific input is a function that evaluates (or approximates) block evidences log Lij and, when needed, block moment numerators. 18 Algorithm 2: BayesBreak (y, x, w, model , hyper , k max , p (k), g )
+
+Input: Observations y1: n at locations x1: n (optional); observation-model weights/exposures w1: n (default determined by the chosen likelihood, often 
+
+wi ≡ 1); model family model ∈ { Gaussian , Poisson , Binomial , BetaObs , . . . };hyperparameters hyper ; maximum segment count kmax ; prior p(k); length factor g(·)
+
+(default g ≡ 1). 
+
+Output: Posterior P (k | y); MAP segment count ̂ k; boundary marginals P (tp | y, ̂ k);exported joint MAP segmentation ̂ t MAP ; segment-level moments; Bayes regression curve; (optional) evidence P (y). 
+
+> 1
+
+1. Precompute block evidences and moments ; 
+
+> 2
+
+for 0 ≤ i < j ≤ n do  
+
+> 3
+
+Compute block summaries (Sij , W ij , H ij ) using prefix sums (or running sums);  
+
+> 4
+
+Call a family-specific routine to obtain A(0)  
+
+> ij
+
+, A (1)  
+
+> ij
+
+, A (2)  
+
+> ij
+
+; 
+
+> 5
+
+Set ˜A(r) 
+
+> ij
+
+← A(r) 
+
+> ij
+
+g(xj − xi) for r ∈ { 0, 1, 2} (cf. equation 17);  
+
+> 6
+
+Compute Ck if g̸ ≡ 1 using equation 18 (DP with A(0)  
+
+> ij
+
+≡ 1);  
+
+> 7
+
+2. Run the sum-product dynamic program ; 
+
+> 8
+
+Compute ˜Lkj , ˜Rki via equation 16 for k = 0 , . . . , k max using ˜A(0)  
+
+> ij
+
+; 
+
+> 9
+
+Compute P (k | y) ∝ p(k) ˜Lkn /C k via equation 19; set ̂ k ← arg max k P (k | y); 
+
+> 10
+
+3. Boundary marginals ; 
+
+> 11
+
+for p = 1 to ̂ k − 1 do  
+
+> 12
+
+For all h ∈ { p, . . . , n − (̂ k − p)}, set P (tp = h | y, ̂ k) ← ˜Lp,h ˜R̂k−p,h / ˜L̂ kn (cf. equation 20);  
+
+> 13
+
+4. Export a joint MAP segmentation ; 
+
+> 14
+
+Run the max-sum/backpointer recursion of Section 14 using log ˜A(0)  
+
+> ij
+
+and the chosen count ̂
+
+k; 
+
+> 15
+
+Backtrack to obtain ̂ t MAP = (0 = ̂ t MAP 0 < · · · <̂ t MAP ̂ 
+
+> k
+
+= n); 
+
+> 16
+
+5. Segment-level posterior moments on the exported segmentation ; 
+
+> 17
+
+for q = 1 to ̂ k do  
+
+> 18
+
+Let (i, j ] ← (̂t MAP  
+
+> q−1
+
+,̂ t MAP  
+
+> q
+
+]; 
+
+> 19
+
+For r ∈ { 1, 2} set ̂ μ(r) 
+
+> q
+
+← ˜A(r) 
+
+> ij
+
+/ ˜A(0)  
+
+> ij
+
+(cf. equation 22);  
+
+> 20
+
+6. Bayes regression curve within ̂ k; 
+
+> 21
+
+Using ˜L, ˜R, ˜A(r) and equation 23, compute ̂ μ′ 
+
+> i
+
+and V[μ′ 
+
+> i
+
+| y, ̂ k] for i = 1 , . . . , n ; 
+
+> 22
+
+7. Optional: pooling/groups ; 
+
+> 23
+
+If multiple subjects or groups are present, pool block evidences (Theorem 8.1) and/or run the latent-template EM routine of Section 10, then repeat Steps 2–6. 19 6.6 Computational complexity and numerical stability 
+
+BayesBreak separates computation into a local stage (building the block-evidence array) and a global stage (running DP over partitions). For conjugate exponential-family models, block evidences can be evaluated in O(1) amortized time per block once cumulative sufficient-statistic arrays are constructed, yielding O(n2) total preprocessing. The DP recursions over (k, t ) states are O(kmax n2) in the worst case for explicit segment-count posteriors; in many regimes, pruning and/or marginalization of k can reduce the effective complexity, but BayesBreak’s design prioritizes exactness and transparency of posterior quantities. All forward/backward computations are performed in log-space with stable logsumexp operations, and practitioners should cache cumulative summaries (e.g., prefix sums of sufficient statistics) to avoid redundant work. When storing the full forward table is memory-prohibitive, one may checkpoint layers or recompute forward messages on demand during backward passes, trading memory for additional passes through the DP. 
+
+# 7 Irregular designs and length-aware priors 
+
+Irregularly spaced designs enter BayesBreak in two logically distinct places. First, the observation model itself may contain likelihood weights or exposures wt, for example Poisson exposures, known Gaussian precisions, or Binomial trial counts. These are part of the sampling model and should be supplied only when substantively justified by the data- generating process. Second, the geometry of the design points x1 < · · · < x n can enter through a partition prior 
+
+that depends on physical segment lengths xj − xi. In most irregular-grid applications, this second mechanism is the default one: irregular spacing by itself does not imply that the likelihood should be reweighted. Accordingly, a clean default is to leave the observation model unchanged (often wt ≡ 1) and encode design geometry through the segment-factorized prior 
+
+p(t | k) ∝
+
+> k∏
+> q=1
+
+g(xtq − xtq−1 ),
+
+with g chosen to reflect prior beliefs about physical segment lengths. This is particularly natural in genomics, spatial statistics, and event-time data, where the scientifically meaningful notion of “distance” is not the index increment tq − tq−1 but the physical length of the segment. 
+
+Proposition 7.1 (Homogeneous Poisson-process prior: regular-grid index-uniform as a special case) . Partition the continuous interval (x0, x n) into the n inter-point intervals (xi−1, x i] of lengths ∆xi := xi − xi−1. Consider a homogeneous Poisson process of rate λ on (x0, x n) and condition on the event that exactly k − 1 events occur and that no two events fall in the same inter-point interval. Then the induced discrete prior on the selected set of (k − 1) boundary 
+
+intervals is proportional to the product of their lengths, ∏ 
+
+> ℓ∈I
+
+∆xℓ. In particular, on a regular grid (all ∆xℓ equal), the induced discrete prior is index-uniform. Proof. For a homogeneous Poisson process, counts in disjoint intervals are independent and 
+
+#{events in (xi−1, x i]} ∼ Pois (λ∆xi). Conditioning on the event that exactly one event occurs 20 in each selected interval ℓ ∈ I and zero events occur in other intervals yields conditional probability proportional to 
+
+> ∏
+> ℓ∈I
+
+(λ∆xℓ)e−λ∆xℓ
+
+> ∏
+> ℓ / ∈I
+
+e−λ∆xℓ ∝ ∏
+
+> ℓ∈I
+
+∆xℓ,
+
+since the global factor e−λ ∑  
+
+> ℓ∆xℓ
+
+cancels. If ∆xℓ are all equal, all (k − 1) -subsets I have equal probability, giving index-uniformity. 
+
+Proposition 7.2 (Coarse-to-fine consistency of inherited partitions) . Let xm < ˜x < x m+1 
+
+be a refinement of the design grid obtained by inserting a pseudo-index between two existing design points but without adding a new observation. Assume the pseudo-index contributes no likelihood term and that block evidences are computed from the original observations only. Then every coarse-grid segmentation t has a lifted fine-grid segmentation ˜t that places no boundary at the pseudo-index and satisfies 
+
+> ∏
+> q
+
+A(0)  
+
+> tq−1tq
+
+= ∏
+
+> q
+> ˜
+
+A(0) ˜tq−1 ˜tq
+
+for the likelihood contribution of the inherited partition. If, in addition, the partition prior is a function of physical segment lengths xtq − xtq−1 , then the prior weight of this inherited partition is unchanged as well. Proof. Because no new observation is added, each coarse block (tq−1, t q] contains exactly the same data as its lifted fine-grid counterpart ( ˜tq−1, ˜tq]. Their sufficient statistics and hence their likelihood contributions coincide. If the prior depends only on physical segment lengths, then the lifted block has the same endpoints in the physical domain and therefore the same prior factor. 
+
+Remark 7.3 (Why full refinement invariance is generally false) . The proposition above is deliberately weaker than a posterior invariance claim. Once the refined grid is allowed to place 
+
+new boundaries at the inserted pseudo-index, the admissible partition space changes, so the posterior distribution over segmentations and the normalization constants Ck generally change as well. Thus grid refinement preserves the score of every inherited partition, but it need not preserve the full posterior unless one explicitly constrains the refined model to exclude new boundary locations. 
+
+# 8 Replicates and multi-subject pooling (shared boundaries) 
+
+Suppose we observe S independent subjects, each with its own observations {(x(s) 
+
+> i
+
+, y (s) 
+
+> i
+
+)}
+
+and exposure weights w(s) 
+
+> i
+
+, but we wish to model them as sharing a common segmentation (boundary locations) while allowing subject-specific segment parameters. For simplicity of exposition, assume a common index grid i = 1 , . . . , n (e.g., after alignment/union of grids); subject s may have missing observations, handled by setting w(s) 
+
+> i
+
+= 0 at missing indices. Let (i, j ] denote a block and write subject-specific block sums as (S(s) 
+
+> ij
+
+, W (s) 
+
+> ij
+
+, H (s) 
+
+> ij
+
+) with subject-specific prior hyperparameters (α(s)0 , β (s)0 ).21 Theorem 8.1 (Exact pooling of block evidences) . Under conditional independence across subjects given shared boundaries and subject-specific segment parameters, the pooled block evidence for (i, j ] factorizes as 
+
+A(0)  
+
+> ij, pool
+
+=
+
+> S∏
+> s=1
+
+exp {H(s) 
+
+> ij
+
+} Z(α(s)0 , β (s)0 )
+
+Z(α(s)0 + S(s) 
+
+> ij
+
+, β (s)0 + W (s) 
+
+> ij
+
+).
+
+Equivalently, log A(0)  
+
+> ij, pool
+
+= ∑ 
+
+> s
+
+log A(0) 
+
+> ij,s
+
+. Running the DP recursions equation 16–equation 23 with A(0)  
+
+> ij
+
+replaced by A(0)  
+
+> ij, pool
+
+yields the exact joint posterior over shared boundaries and all subject-specific segment parameters. Proof. Step 1: subject-wise block evidences. For each subject s, Theorem 5.1 yields the subject-specific block evidence A(0)  
+
+> ij,s
+
+computed from (S(s) 
+
+> ij
+
+, W (s) 
+
+> ij
+
+, H (s) 
+
+> ij
+
+).
+
+Step 2: independence implies product pooling. Conditional on shared boundaries, subjects are independent and have independent segment parameters. Therefore, the joint likelihood (with segment parameters integrated out) for the block is the product of the subject-wise block evidences: A(0)  
+
+> ij, pool
+
+= ∏ 
+
+> s
+
+A(0) 
+
+> ij,s
+
+, giving the stated form. 
+
+Step 3: DP correctness under pooled evidences. The DP in Section 6 depends only on the block evidence matrix. Replacing A(0)  
+
+> ij
+
+by A(0)  
+
+> ij, pool
+
+therefore computes the exact posterior for the pooled model. 
+
+# 9 Groups with known membership 
+
+In some applications subjects can be partitioned into groups g = 1 , . . . , G (e.g. experimental conditions), and we may wish to allow each group to have its own segmentation while still pooling within groups. When group memberships are known, BayesBreak handles this case by applying the pooled DP of Section 8 independently within each group. Concretely, for group g with subject index set Sg, we pool per-subject block evidences 
+
+{A(0) 
+
+> ij,s
+
+}s∈S g into a group-specific pooled evidence A(0)  
+
+> ij,g
+
+using Theorem 8.1, then run the DP recursions equation 16–equation 23 with A(0)  
+
+> ij
+
+= A(0) 
+
+> ij,g
+
+. This yields group-specific Pg(k | y),boundary posteriors Pg(tp | y, k ), and segment/regression-curve moments. 
+
+# 10 Latent groups and an EM algorithm 
+
+For unknown group membership we use a latent template-mixture model. Each latent group carries a single segmentation template that is shared across the subjects assigned to that group, while subject- specific segment parameters are still integrated out inside each block evidence. This is the cleanest setting in which EM updates remain exact and interpretable. Let τg = ( kg, t (g)) denote the template of group g, where 1 ≤ kg ≤ kmax and 0 = t(g)0 < · · · <
+
+22 t(g) 
+
+> kg
+
+= n. Conditional on membership in group g, subject s has marginal likelihood 
+
+p(
+
+y(s) | τg
+
+> )
+
+= p(kg)
+
+Ckg
+
+> kg
+> ∏
+> q=1
+> ˜
+
+A(0 ,s )
+
+> t(g)
+> q−1t(g)
+> q
+
+, (24) where ˜A(0 ,s ) 
+
+> ij
+
+= A(0 ,s ) 
+
+> ij
+
+g(xj − xi) is the subject-specific block evidence with any length factor already absorbed. The group mixture weights are πg > 0 with ∑ 
+
+> g
+
+πg = 1 .Introduce latent indicators zsg ∈ { 0, 1} with ∑ 
+
+> g
+
+zsg = 1 . The complete-data log-likelihood is 
+
+log p(y, z | π, τ ) = 
+
+> S∑
+> s=1
+> G∑
+> g=1
+
+zsg 
+
+> [
+
+log πg + log p(y(s) | τg)]
+
+.
+
+Let rsg := E[zsg | y, π, τ ] denote the usual responsibilities. 
+
+E-step. Given current (π, τ ),
+
+rsg = πg p(y(s) | τg) 
+
+> ∑Gg′=1
+
+πg′ p(y(s) | τg′ ). (25) 
+
+M-step for mixing weights. For fixed responsibilities, 
+
+πg ← 1
+
+S
+
+> S∑
+> s=1
+
+rsg .
+
+M-step for group templates. For fixed r, the τg-dependent part of the EM auxiliary function is 
+
+Qg(τg) = 
+
+> S∑
+> s=1
+
+rsg log p(y(s) | τg) = log p(kg) − log Ckg +
+
+> kg
+> ∑
+> q=1
+
+B(g)
+
+> t(g)
+> q−1t(g)
+> q
+
+,
+
+where the responsibility-weighted block score is 
+
+B(g) 
+
+> ij
+
+:= log g(xj − xi) + 
+
+> S∑
+> s=1
+
+rsg log A(0 ,s ) 
+
+> ij
+
+. (26) Hence, for each group g, maximizing Qg(τg) is exactly the same max-sum segmentation problem as in Section 14, except that the block score is replaced by B(g) 
+
+> ij
+
+and the count-specific offset log p(k) − log Ck is added when selecting kg. In other words, the M-step is an exact responsibility-weighted backtracking DP. 
+
+Theorem 10.1 (Monotone EM updates for the template mixture) . For the latent template-mixture model defined by equation 24, the EM iteration consisting of (i) the exact responsibility update equation 25, (ii) the closed-form mixing-weight update, and (iii) the exact max-sum DP update of each template via equation 26 does not decrease the observed-data log-likelihood 
+
+ℓ(π, τ ) = 
+
+> S∑
+> s=1
+
+log  
+
+> (G∑
+> g=1
+
+πgp(y(s) | τg)
+
+> )
+
+.
+
+Any fixed point of these updates is a coordinatewise maximizer of the EM auxiliary function. 
+
+23 Proof. The E-step computes the exact posterior responsibilities and therefore maximizes the standard EM lower bound with respect to r for fixed (π, τ ). The mixing-weight update maximizes the same lower bound over the simplex because the relevant term is ∑ 
+
+> s,g
+
+rsg log πg.For each group g, the template update maximizes Qg(τg) exactly because equation 26 reduces the problem to an additive max-sum segmentation objective solved by dynamic programming. Hence each block of the EM update maximizes the auxiliary function with the others held fixed, so the observed-data log-likelihood is monotone by the standard EM argument. 
+
+Implementation. Algorithm 3 emphasizes the separation between (i) exact responsibility updates that use current group templates and (ii) exact template updates obtained from responsibility-weighted block scores. Because the template space is discrete while the mixture weights are continuous, multiple local optima are possible; in practice one should use several random or clustering-based initializations. 
+
+Algorithm 3: Latent-template EM for grouped segmentation 
+
+Input: Per-subject block evidences {A(0 ,s ) 
+
+> ij
+
+}Ss=1 ; number of groups G; kmax ; prior p(k);length factor g 
+
+> 1
+
+Initialize mixture weights {πg}Gg=1 and template segmentations {τg = ( kg, t (g))}Gg=1 ; 
+
+> 2
+
+repeat  
+
+> 3
+
+E-step: ; 
+
+> 4
+
+for s = 1 to S do  
+
+> 5
+
+for g = 1 to G do  
+
+> 6
+
+Evaluate p(y(s) | τg) from equation 24;  
+
+> 7
+
+rsg ← πg p(y(s) | τg); 
+
+> 8
+
+Normalize rs1, . . . , r sG to sum to 1;  
+
+> 9
+
+M-step: ; 
+
+> 10
+
+πg ← S−1 ∑ 
+
+> s
+
+rsg for each g; 
+
+> 11
+
+for g = 1 to G do  
+
+> 12
+
+Form weighted block scores B(g) 
+
+> ij
+
+via equation 26;  
+
+> 13
+
+Run max-sum DP/backtracking over k ∈ { 1, . . . , k max } using score matrix B(g)
+
+and offset log p(k) − log Ck; 
+
+> 14
+
+Update τg = ( kg, t (g)) to the maximizing template;  
+
+> 15
+
+until until convergence of the observed-data log-likelihood ;
+
+Output: {πg}, {τg}, and responsibilities {rsg }
+
+# 11 Family-specific derivations 
+
+We now instantiate equation 14–equation 15 for three closed-form conjugate families (Gaus-sian, Poisson, and Binomial) and one low-dimensional quadrature example for (0 , 1) -valued responses. In each case we give (i) the segment model and prior, (ii) posterior hyperparame-ters, (iii) the block evidence A(0)  
+
+> ij
+
+, and (iv) first two posterior moments of the segment-level mean parameter. Implementation routines are provided immediately after each derivation (Algorithms 4–7). 24 11.1 Gaussian with known variance (heteroscedastic via weights) 
+
+Assume 
+
+yt | μ ∼ N (
+
+μ, σ 2/w t
+
+)
+
+, μ ∼ N (ν, ρ 2),
+
+with known σ2 and positive weights wt (e.g. inverse known variances or exposure). For a block (i, j ], define 
+
+nij := j − i, Wij := 
+
+> j
+
+∑
+
+> t=i+1
+
+wt, S ij := 
+
+> j
+
+∑
+
+> t=i+1
+
+wtyt,Q ij := 
+
+> j
+
+∑
+
+> t=i+1
+
+wt(yt − ν)2, κij := ρ2Wij + σ2.
+
+Then 
+
+μ | (i, j ] ∼ N 
+
+( ρ2Sij + σ2νκij 
+
+, σ2ρ2
+
+κij 
+
+)
+
+.
+
+The integrated block evidence is 
+
+A(0)  
+
+> ij
+
+=
+
+∫ [ j∏
+
+> t=i+1
+
+N (yt | μ, σ 2/w t)
+
+]
+
+N (μ | ν, ρ 2) dμ 
+
+= (2 πσ 2)−nij /2
+
+( j∏
+
+> t=i+1
+
+w1/2
+
+> t
+
+)( 
+
+1 + ρ2 
+
+> σ2
+
+Wij 
+
+)−1/2
+
+exp 
+
+− Qij 
+
+2σ2 +
+
+(
+
+Sij − νW ij 
+
+)2
+
+2(
+
+σ2Wij + σ4/ρ 2
+
+) .
+
+Consequently, 
+
+A(1)  
+
+> ij
+
+= A(0)  
+
+> ij
+
+E[μ | (i, j ]] , A(2)  
+
+> ij
+
+= A(0) 
+
+> ij
+
+(
+
+V[μ | (i, j ]] + E[μ | (i, j ]] 2
+
+)
+
+.
+
+Implementation. Algorithm 4 gives a numerically stable implementation of the Gaussian block log-evidence and posterior moments using cumulative weighted sums. The routine is written so that the DP layer consumes only log Lij and does not depend on Gaussian-specific algebra. 
+
+Algorithm 4: GaussianBlock (y, w, i, j, ν, ρ 2, σ 2)
+
+Input: Block indices (i, j ]; observations yi+1: j ; weights wi+1: j 
+
+> 1
+
+n ← j − i; W ← ∑jt=i+1 wt; S ← ∑jt=i+1 wtyt; Q ← ∑jt=i+1 wt(yt − ν)2; 
+
+> 2
+
+κ ← ρ2W + σ2; 
+
+> 3
+
+log A0 ← − 12 n log(2 π) − 12
+
+∑jt=i+1 log( σ2/w t) − Q 
+
+> 2σ2
+
++ (S−νW )2  
+
+> 2( σ2W+σ4/ρ 2)
+
+− 12 log (
+
+1 + ρ2 
+
+> σ2
+
+W )
+
+; 
+
+> 4
+
+A0 ← exp(log A0) ; 
+
+> 5
+
+μmean ← (ρ2S + σ2ν)/κ ; μvar ← σ2ρ2/κ ;
+
+Output: A0, μmean , μvar 
+
+## 11.2 Poisson with exposure 
+
+Assume a blockwise constant rate λ with exposure weights wt > 0:
+
+yt | λ ∼ Pois( λw t), λ ∼ Gamma( a0, b 0) (shape–rate) .
+
+25 For a block (i, j ], define 
+
+Cij := 
+
+> j
+
+∑
+
+> t=i+1
+
+yt, Wij := 
+
+> j
+
+∑
+
+> t=i+1
+
+wt, Hij := 
+
+> j
+
+∑
+
+> t=i+1
+
+[
+
+yt log wt − log( yt!) 
+
+]
+
+.
+
+Then 
+
+λ | (i, j ] ∼ Gamma( a0 + Cij , b 0 + Wij ),
+
+so 
+
+E[λ | (i, j ]] = a0 + Cij 
+
+b0 + Wij 
+
+, V[λ | (i, j ]] = a0 + Cij 
+
+(b0 + Wij )2 .
+
+The integrated block evidence is 
+
+A(0)  
+
+> ij
+
+= exp {Hij } ba0 
+
+> 0
+
+Γ( a0 + Cij )Γ( a0) ( b0 + Wij )a0+Cij .
+
+Moments satisfy the usual relation 
+
+A(1)  
+
+> ij
+
+= A(0)  
+
+> ij
+
+E[λ | (i, j ]] , A(2)  
+
+> ij
+
+= A(0) 
+
+> ij
+
+(
+
+V[λ | (i, j ]] + E[λ | (i, j ]] 2
+
+)
+
+.
+
+Implementation. Algorithm 5 summarizes the Poisson-with-exposure block evidence com-putation (and associated posterior summaries) in a form that matches the BayesBreak block-evidence interface. 
+
+Algorithm 5: PoissonBlock (y, w, i, j, a 0, b 0)
+
+Input: Block (i, j ]; counts yi+1: j ; exposures wi+1: j 
+
+> 1
+
+C ← ∑jt=i+1 yt; W ← ∑jt=i+1 wt; 
+
+> 2
+
+log A0 ←
+
+∑jt=i+1 yt log wt −∑jt=i+1 log (yt!)+ a0 log b0 + log Γ( a0 +C)−log Γ( a0)−(a0 +C) log (b0 +W ); 
+
+> 3
+
+A0 ← exp(log A0) ; 
+
+> 4
+
+λmean ← (a0 + C)/(b0 + W ); λvar ← (a0 + C)/(b0 + W )2;
+
+Output: A0, λmean , λvar 
+
+## 11.3 Binomial with Beta prior 
+
+Assume blockwise constant success probability p with heterogeneous trial counts mt:
+
+yt | p ∼ Binom( mt, p ), p ∼ Beta( a0, b 0).
+
+For a block (i, j ], define 
+
+Cij := 
+
+> j
+
+∑
+
+> t=i+1
+
+yt, Mij := 
+
+> j
+
+∑
+
+> t=i+1
+
+mt, Hij := 
+
+> j
+
+∑
+
+> t=i+1
+
+log 
+
+(mt
+
+yt
+
+)
+
+.
+
+Then p | (i, j ] ∼ Beta( a0 + Cij , b 0 + Mij − Cij ), so 
+
+E[p | (i, j ]] = a0 + Cij 
+
+a0 + b0 + Mij 
+
+, V[p | (i, j ]] = (a0 + Cij )( b0 + Mij − Cij )(a0 + b0 + Mij )2(a0 + b0 + Mij + 1) .
+
+26 The block evidence is 
+
+A(0)  
+
+> ij
+
+= exp {Hij }B(a0 + Cij , b 0 + Mij − Cij )
+
+B(a0, b 0) .
+
+Again, 
+
+A(1)  
+
+> ij
+
+= A(0)  
+
+> ij
+
+E[p | (i, j ]] , A(2)  
+
+> ij
+
+= A(0) 
+
+> ij
+> (
+
+V[p | (i, j ]] + E[p | (i, j ]] 2
+
+> )
+
+.
+
+Implementation. Algorithm 6 provides pseudocode for Binomial/Bernoulli block evidence evaluation under Beta conjugacy, along with posterior mean/variance computations used for segment-wise moments and MAP/Bayes curve summaries. 
+
+Algorithm 6: BinomialBlock (y, m, i, j, a 0, b 0)
+
+Input: Block (i, j ]; successes yi+1: j ; trials mi+1: j 
+
+> 1
+
+C ← ∑jt=i+1 yt; M ← ∑jt=i+1 mt; 
+
+> 2
+
+log A0 ← ∑jt=i+1 log (mt
+
+> yt
+> )
+
++ log B(a0 + C, b 0 + M − C) − log B(a0, b 0); 
+
+> 3
+
+A0 ← exp(log A0) ; 
+
+> 4
+
+pmean ← (a0 + C)/(a0 + b0 + M ); 
+
+> 5
+
+pvar ← (a0+C)( b0+M −C)(a0+b0+M )2(a0+b0+M +1) ;
+
+Output: A0, pmean , pvar 
+
+## 11.4 Beta-distributed observations with fixed precision 
+
+Assume yt ∈ (0 , 1) with latent mean μ constant within a block and fixed precision ϕ > 0:
+
+yt | μ ∼ Beta( ϕμ, ϕ (1 − μ)) , μ ∼ Beta( a0, b 0).
+
+Conjugacy in μ is not available, but all integrals are one-dimensional and can be computed accurately by quadrature. For a block (i, j ] define 
+
+ℓij (μ) := 
+
+> j∑
+> t=i+1
+
+log BetaPDF (
+
+yt | ϕμ, ϕ (1 − μ))
+
+, log π(μ) := log BetaPDF( μ | a0, b 0).
+
+Then for r = 0 , 1, 2,
+
+A(r) 
+
+> ij
+
+= 
+
+> ∫10
+
+μ r exp {
+
+ℓij (μ) + log π(μ)}
+
+dμ. 
+
+In practice, approximate via Gauss–Legendre (or similar) quadrature with nodes {μg} and weights {wg}:
+
+A(r) 
+
+> ij
+
+≈
+
+> G∑
+> g=1
+
+wg μ rg exp {
+
+ℓij (μg) + log π(μg)}
+
+.
+
+Implementation. Algorithm 7 implements this one-dimensional quadrature routine. It is useful for continuous proportions and other (0 , 1) -valued signals, but it should be viewed as a deterministic non-conjugate block integral rather than as a conjugate closed form. 27 Algorithm 7: BetaObsBlock (y, i, j, ϕ, a 0, b 0, {μg, w g}Gg=1 )
+
+Input: Block (i, j ]; observations yi+1: j ∈ (0 , 1) ; precision ϕ; Beta prior (a0, b 0); quadrature nodes {μg, w g} 
+
+> 1
+
+S0 ← 0, S1 ← 0, S2 ← 0; 
+
+> 2
+
+for g = 1 to G do  
+
+> 3
+
+log ℓg ← ∑jt=i+1 log BetaPDF (
+
+yt | ϕμ g, ϕ (1 − μg))
+
+; 
+
+> 4
+
+log πg ← log BetaPDF( μg | a0, b 0); 
+
+> 5
+
+vg ← exp(log ℓg + log πg); 
+
+> 6
+
+S0 ← S0 + wgvg; S1 ← S1 + wgvgμg; S2 ← S2 + wgvgμ2
+
+> g
+
+; 
+
+> 7
+
+A0 ← S0; μmean ← S1/S 0; μvar ← S2/S 0 − (μmean )2;
+
+Output: A0, μmean , μvar 
+
+## 11.5 Posterior-predictive formulas for common conjugate families (op-tional) 
+
+For groups that export segment-level conjugate posteriors, the segment posterior-predictive equation 32 reduces to standard closed forms: 
+
+Gaussian (known variance). If a segment posterior is μ | train ∼ N (νB , ρ 2 
+
+> B
+
+) and y |
+
+μ ∼ N (μ, σ 2/w ), then the posterior-predictive for a new point is Gaussian: y | train ∼N (νB , ρ 2 
+
+> B
+
++ σ2/w ). For multiple new points in the segment, use the corresponding multivariate normal with shared latent mean (or equivalently integrate via a 1D Gaussian integral). 
+
+Poisson–Gamma. If λ | train ∼ Gamma (aB , b B ) and y | λ ∼ Pois (λw ), then the posterior predictive is negative binomial in y with parameters determined by (aB , b B , w ); for multiple points, aggregate counts and exposures and apply equation 32. 
+
+Binomial–Beta. If p | train ∼ Beta (aB , b B ) and y | p ∼ Binom (m, p ), then the posterior predictive is Beta-Binomial: 
+
+p(y | m, train ) = 
+
+> (
+
+my 
+
+> )
+
+B(aB + y, b B + m − y)
+
+B(aB , b B ) .
+
+# 12 Non-conjugate GLMs: block evidence, theory, and ap-proximations 
+
+In many applications the single-segment parameterization is not conjugate to the observation model—for example, log-normal priors for positive means, heavy-tailed shrinkage priors, or logistic/negative-binomial links with structural offsets. This section develops a plug-in toolkit for computing approximate block evidences A(0)  
+
+> ij
+
+and moments A(r) 
+
+> ij
+
+when conjugacy is unavailable, while keeping the dynamic-programming layer of Section 6 unchanged. 28 We focus on one-dimensional (or low-dimensional) canonical GLMs, where for a block (i, j ]
+
+we must approximate integrals of the form 
+
+A(0)  
+
+> ij
+
+=  
+
+> ∫[j∏
+> t=i+1
+
+p(yt | θ)
+
+> ]
+
+p(θ) dθ, A(r) 
+
+> ij
+
+=  
+
+> ∫[j∏
+> t=i+1
+
+p(yt | θ)
+
+> ]
+
+p(θ) m(θ)r dθ, 
+
+with m(θ) := E[Y | θ]. We describe four complementary approaches: (i) first-order Laplace approximation; (ii) variational lower bounds (Jaakkola–Jordan (Jaakkola & Jordan, 2000) type for logistic regression and mean-field for more general GLMs); (iii) expectation propaga-tion (EP); and (iv) Pólya–Gamma augmentation for logistic and negative-binomial blocks. Throughout we retain weights wt and cumulative statistics (Sij , W ij , H ij ).
+
+## 12.1 Model and notation for GLM blocks 
+
+Consider a one-parameter canonical GLM on a block (i, j ]:
+
+log p(yt | θ) = wt
+
+> {
+
+ytθ − b(θ)}
+
++ log h(yt, w t),
+
+where b is the cumulant function and h collects base measures (including any wt-dependent terms). The block log-likelihood is 
+
+ℓij (θ) := 
+
+> j∑
+> t=i+1
+
+wt{ytθ − b(θ)} + Hij , Hij := 
+
+> j∑
+> t=i+1
+
+log h(yt, w t).
+
+Let π(θ) = p(θ) be an arbitrary prior (not necessarily conjugate), and write Ψij (θ) := 
+
+ℓij (θ) + log π(θ) for the block log-posterior. Derivatives are 
+
+ℓ′ 
+
+> ij
+
+(θ) = Sij − Wij b′(θ), ℓ′′  
+
+> ij
+
+(θ) = −Wij b′′ (θ),
+
+and 
+
+Ψ′ 
+
+> ij
+
+(θ) = ℓ′ 
+
+> ij
+
+(θ) + (log π)′(θ), Ψ′′  
+
+> ij
+
+(θ) = ℓ′′  
+
+> ij
+
+(θ) + (log π)′′ (θ).
+
+## 12.2 Existence and uniqueness of block modes 
+
+Lemma 12.1 (Strict log-concavity and uniqueness) . Suppose b′′ (θ) > 0 for all θ (canonical GLM) and the prior is log-concave: (log π)′′ (θ) ≤ 0. If Wij > 0, then Ψ′′  
+
+> ij
+
+(θ) < 0 for all θ, so 
+
+Ψij is strictly concave and admits a unique maximizer ˆθij .Proof. Since Wij > 0 and b′′ (θ) > 0, we have −Wij b′′ (θ) < 0. Adding ( log π)′′ (θ) ≤ 0 yields 
+
+Ψ′′  
+
+> ij
+
+(θ) < 0 for all θ, so Ψij is strictly concave and has a unique maximizer. 
+
+## 12.3 Laplace approximation for single-block evidence 
+
+Theorem 12.2 (First-order Laplace approximation) . Assume: (A1) Ψij is three times continuously differentiable on a neighborhood of its unique interior maximizer ˆθij ;
+
+29 (A2) H⋆ij := −Ψ′′  
+
+> ij
+
+(ˆθij ) > 0 and H⋆ij ≍ Wij as Wij → ∞ ;(A3) |Ψ(3)  
+
+> ij
+
+(θ)| ≤ CW ij on a neighborhood of ˆθij for a constant C independent of (i, j );(A4) the contribution of the integral outside that neighborhood is negligible relative to the local quadratic contribution. Then the block evidence admits the first-order Laplace expansion 
+
+A(0)  
+
+> ij
+
+= exp {Ψij (ˆθij )} 
+
+> (
+
+2πH⋆ij 
+
+> )1/2[
+
+1 + O(W −1 
+
+> ij
+
+)
+
+> ]
+
+, (27) 
+
+and therefore 
+
+log A(0)  
+
+> ij
+
+= Ψ ij (ˆθij ) + 12 log(2 π) − 12 log H⋆ij + O(W −1 
+
+> ij
+
+). (28) 
+
+Moreover, for any twice continuously differentiable g with bounded derivatives near ˆθij ,
+
+A(g)
+
+> ij
+
+A(0) 
+
+> ij
+
+= g(ˆθij ) + O(W −1 
+
+> ij
+
+), (29) 
+
+where A(g) 
+
+> ij
+
+:= ∫ eΨij (θ)g(θ) dθ .Proof. Write u = √
+
+H⋆ij (θ − ˆθij ). A third-order Taylor expansion of Ψij around ˆθij gives 
+
+Ψij (θ) = Ψ ij (ˆθij ) − 12 u2 + Rij (u), |Rij (u)| ≤ C′|u|3/
+
+> √
+
+Wij 
+
+on the local neighborhood, using Assumptions (A2)–(A3). Integrating the leading quadratic term yields the Gaussian factor (2 π/H ⋆ij )1/2, while the remainder contributes a relative O(W −1 
+
+> ij
+
+)
+
+correction by the standard Laplace method; Assumption (A4) controls the tails and establishes equation 27–equation 28. Applying the same expansion to the numerator A(g) 
+
+> ij
+
+and using a second-order Taylor expansion of g around ˆθij yields equation 29. We intentionally state only the first-order ratio result: any explicit second-order correction depends jointly on derivatives of g and of Ψij and is not captured by a universal g′′ /(2 H⋆ij ) term. 
+
+Efficient Newton updates using block summaries. For canonical GLMs, 
+
+Ψ′ 
+
+> ij
+
+(θ) = Sij − Wij b′(θ) + (log π)′(θ), Ψ′′  
+
+> ij
+
+(θ) = −Wij b′′ (θ) + (log π)′′ (θ),
+
+so Newton iteration is 
+
+θ(m+1) ← θ(m) − Sij − Wij b′(θ(m)) + (log π)′(θ(m))
+
+− Wij b′′ (θ(m)) + (log π)′′ (θ(m)) ,
+
+with cost independent of block length once Sij , W ij are available. 30 Implementation. Algorithm 8 implements the Laplace block-evidence approximation using a Newton or quasi-Newton solver for the block mode and the corresponding Hessian correction. The approximation is local but often highly accurate in moderate-to-large blocks. 
+
+Algorithm 8: GLMBlock_Laplace (y, w, i, j, b, prior )
+
+Input: yi+1: j , weights wi+1: j ; cumulant b(θ); prior π(θ) 
+
+> 1
+
+Compute S ← ∑jt=i+1 wtyt; W ← ∑jt=i+1 wt; H ← ∑jt=i+1 log h(yt, w t); 
+
+> 2
+
+Define Ψ( θ) = H + Sθ − W b (θ) + log π(θ) and its derivatives;  
+
+> 3
+
+Initialize θ(0) (e.g., solve b′(θ) = S/W or use prior mean);  
+
+> 4
+
+for m = 0 , 1, . . . until convergence do  
+
+> 5
+
+g ← S − W b ′(θ(m)) + (log π)′(θ(m)); 
+
+> 6
+
+h ← − W b ′′ (θ(m)) + (log π)′′ (θ(m)); 
+
+> 7
+
+if |g|/|h| < ε newton then  
+
+> 8
+
+break  
+
+> 9
+
+θ(m+1) ← θ(m) − g/h ; 
+
+> 10
+
+ˆθ ← θ(m); H⋆ ← − Ψ′′ (ˆθ); 
+
+> 11
+
+log ̂ A(0)  
+
+> ij
+
+← Ψ( ˆθ) + 12 log(2 π) − 12 log H⋆;
+
+Output: ̂ A(0)  
+
+> ij
+
+and (optional) moments via equation 29 
+
+## 12.4 Variational lower bounds for GLM blocks 
+
+When a deterministic lower bound is desirable, introduce a variational distribution q(θ) and apply Jensen: 
+
+log A(0)  
+
+> ij
+
+= log 
+
+> ∫
+
+q(θ) eΨij (θ)
+
+q(θ) dθ ≥
+
+> ∫
+
+q(θ) Ψ ij (θ) dθ + H[q] := Lij (q).
+
+Jaakkola–Jordan bound for logistic blocks. For Bernoulli/logistic likelihoods, a standard quadratic bound yields a tractable Gaussian variational posterior. One convenient form (for sigmoid σ) is: 
+
+log σ(θ) ≥ θ
+
+2 − λ(ξ)( θ2 − ξ2) − c(ξ), λ(ξ) = tanh( ξ/ 2) 4ξ ,
+
+with variational parameter ξ > 0. This yields a quadratic surrogate in θ, so the optimal Gaussian q(θ) and ξ admit closed-form coordinate updates. 
+
+Proposition 12.3 (Monotone improvement of variational block bounds) . Coordinate-ascent updates on variational parameters (e.g. ξ for logistic blocks) and on a Gaussian q(θ) increase 
+
+Lij (q) until a stationary point; the resulting A(0)  
+
+> ij
+
+:= exp {L ij (q)} is a certified lower bound on 
+
+A(0)  
+
+> ij
+
+.Proof. Each coordinate update is an exact maximization of Lij (q) with respect to a subset of variables holding others fixed. Therefore Lij (q) is non-decreasing under the updates. Because Lij is a Jensen lower bound on log A(0)  
+
+> ij
+
+, exponentiating yields a valid evidence lower bound. 31 Implementation. Algorithm 9 provides pseudocode for computing the Jaakkola–Jordan (JJ) variational lower bound and its associated fixed-point updates at the block level. 
+
+Algorithm 9: LogisticBlock_JJ (y, m, w, i, j, prior ) (variational lower bound) 
+
+Input: Binomial counts yt ∼ Binom( mt, p ), logit link; prior π(θ) 
+
+> 1
+
+Initialize ξ and a Gaussian q(θ) = N (μq, σ 2 
+
+> q
+
+); 
+
+> 2
+
+repeat  
+
+> 3
+
+Update the quadratic bound parameter ξ ← √
+
+Eq[θ2]; 
+
+> 4
+
+Update Gaussian q(θ) by maximizing the block ELBO Lij (q) (closed-form for quadratic surrogate);  
+
+> 5
+
+until converged ; 
+
+> 6
+
+Return A(0)  
+
+> ij
+
+= exp {L ij (q)} and moments from q.
+
+## 12.5 Expectation propagation (EP) for GLM blocks 
+
+Expectation propagation (EP) (Minka, 2001) provides a flexible deterministic approximation to the block posterior and block evidence by iteratively refining local site approximations and matching moments. EP approximates each likelihood term p(yt | θ) by a Gaussian site 
+
+˜tt(θ) ∝ exp {− 12 atθ2 + btθ} so that moments match those of the tilted distribution. After convergence, the approximate posterior is Gaussian and yields an approximate evidence 
+
+˜A(0)  
+
+> ij
+
+= ∫ π(θ) ∏ ˜tt(θ) dθ . EP is neither a bound nor guaranteed to converge, but is often accurate in canonical GLMs. 
+
+Implementation. Algorithm 10 summarizes an expectation-propagation (EP) routine for approximating the GLM block evidence, highlighting the cavity/site updates and moment matching. 
+
+Algorithm 10: GLMBlock_EP (y, w, i, j, prior )
+
+Input: Canonical GLM; prior π(θ) 
+
+> 1
+
+Initialize site parameters {at, b t}jt=i+1 ; approximate posterior ˜p(θ) ∝ π(θ) ∏ ˜tt(θ); 
+
+> 2
+
+repeat  
+
+> 3
+
+for t = i + 1 to j do  
+
+> 4
+
+Form cavity ˜p\t(θ) ∝ ˜p(θ)/˜tt(θ); 
+
+> 5
+
+Form tilted ptilt (θ) ∝ ˜p\t(θ) p(yt | θ); 
+
+> 6
+
+Moment-match ptilt and update site ˜tt(θ); 
+
+> 7
+
+until moments stable ; 
+
+> 8
+
+Return approximate evidence ˜A(0)  
+
+> ij
+
+= ∫ ˜p(θ) dθ and moments from ˜p.32 12.6 Pólya–Gamma augmentation (logistic and negative-binomial) 
+
+Theorem 12.4 (Conditional conjugacy via Pólya–Gamma) . For binomial logistic blocks with counts mt and successes yt, introduce latent ωt ∼ PG( mt, 0) and define κt = yt − mt 
+
+> 2
+
+. Then 
+
+(eθ)yt
+
+(1 + eθ)mt = 2 −mt eκtθ 
+
+> ∫∞
+> 0
+
+e−ωtθ2/2 p(ωt) dω t.
+
+Conditionally on ωi+1: j , the block likelihood is quadratic in θ:
+
+log p(yi+1: j | θ, ω ) = −12 θ2
+
+> j∑
+> t=i+1
+
+wtωt + θ
+
+> j∑
+> t=i+1
+
+wtκt + const .
+
+With a Gaussian prior π(θ) = N (ν, ρ 2), the conditional posterior p(θ | y, ω ) is Gaussian. A mean-field approximation q(θ)q(ω) yields a tractable variational lower bound with closed-form coordinate updates. Proof. Step 1: apply the Pólya–Gamma identity. The stated identity is the defining Pólya–Gamma augmentation (see Polson et al. (2013)): it expresses the binomial-logistic term as a Gaussian scale mixture in θ.
+
+Step 2: condition on ω and collect quadratic terms. Given ωt, each term contributes 
+
+κtθ − 12 ωtθ2 (up to constants). Summing over t and including weights wt yields the quadratic form in the theorem statement. 
+
+Step 3: combine with a Gaussian prior. Multiplying the quadratic likelihood in θ by a Gaussian prior produces a Gaussian posterior because Gaussian priors are conjugate to quadratic (Gaussian) likelihoods. 
+
+Step 4: variational mean-field. Under a mean-field factorization q(θ)q(ω), coordinate-ascent updates follow from standard variational calculus: q(θ) is Gaussian with parameters depending on Eq[ωt], and q(ωt) is Pólya–Gamma with parameter depending on Eq[θ2]. This yields a tractable lower bound and updates. 
+
+Implementation. Algorithm 11 gives a Pólya–Gamma variational Bayes (PG-VB) routine for logistic (and related) blocks, which yields a tractable surrogate block evidence by alternating between Gaussian updates and latent-variable expectations. 
+
+Algorithm 11: GLMBlock_PG_VB (y, m, w, i, j, ν, ρ 2) (Gaussian prior, PG mean-field) 
+
+Input: Binomial/logistic block; Gaussian prior N (ν, ρ 2) 
+
+> 1
+
+Initialize q(ωt) and q(θ) = N (μ, σ 2); 
+
+> 2
+
+repeat  
+
+> 3
+
+σ−2 ← ρ−2 + ∑jt=i+1 wtEq[ωt]; 
+
+> 4
+
+μ ← σ2 (
+
+ρ−2ν + ∑jt=i+1 wt
+
+> (
+
+yt − mt
+
+> 2
+> ))
+
+; 
+
+> 5
+
+foreach t do  
+
+> 6
+
+Update q(ωt) using current Eq[θ2] (closed-form for mean of PG);  
+
+> 7
+
+until ELBO converged ; 
+
+> 8
+
+Return a lower bound A(0)  
+
+> ij
+
+and approximate moments from q(θ).33 Using approximate block evidences in BayesBreak. Once any block-evidence approximation is available (Laplace, JJ, EP, PG-VB, or another surrogate), BayesBreak uses it exactly as in the conjugate case: build a triangular array of approximate block log-evidences and run the same DP recursions. Algorithm 12 provides a generic recipe for constructing this array in a model-agnostic way, emphasizing reuse of block-local optimizers and cached sufficient-statistic summaries. 
+
+Algorithm 12: Precompute block evidences for non-conjugate GLMs 
+
+Input: {(xt, y t, w t)}nt=1 , method ∈ { Laplace, JJ, PG–VB, EP } 
+
+> 1
+
+for i = 0 to n − 1 do  
+
+> 2
+
+Initialize running summaries (as needed);  
+
+> 3
+
+for j = i + 1 to n do  
+
+> 4
+
+Update block summaries for (i, j ]; 
+
+> 5
+
+Call chosen block routine to compute ̂ A(0)  
+
+> ij
+
+(and optional moments);  
+
+> 6
+
+Run DP (Algorithm 1) with resulting block evidences. 
+
+## 12.7 Propagation of block approximation error through the DP 
+
+Proposition 12.5 (Log-evidence and posterior-odds stability) . Let ̂ A(0)  
+
+> ij
+
+be approximate block evidences with log-errors δij := log ̂ A(0)  
+
+> ij
+
+− log A(0)  
+
+> ij
+
+bounded by |δij | ≤ ε. Then for every DP state (k, j ),
+
+e−kε Lkj ≤̂ Lkj ≤ ekε Lkj , e−kε Rkj ≤̂ Rkj ≤ ekε Rkj .
+
+Consequently: 1. For any k, k ′, the posterior odds for the segment count satisfy 
+
+> ∣∣∣∣∣
+
+log ̂ P (k | y)̂
+
+P (k′ | y) − log P (k | y)
+
+P (k′ | y) 
+
+> ∣∣∣∣∣
+
+≤ (k + k′)ε. (30) 
+
+2. For any fixed k and any two candidate locations h, h ′ of boundary tp,
+
+> ∣∣∣∣∣
+
+log ̂ P (tp = h | y, k )̂
+
+P (tp = h′ | y, k ) − log P (tp = h | y, k )
+
+P (tp = h′ | y, k ) 
+
+> ∣∣∣∣∣
+
+≤ 2kε. (31) 
+
+Thus uniform blockwise log-evidence control yields uniform control of global posterior odds .Turning these odds bounds into absolute probability error bounds requires an additional margin assumption and is therefore left implicit. Proof. Any term contributing to Lkj is a product of exactly k block evidences. Hence the corresponding approximate term differs by a multiplicative factor in [e−kε , e kε ]. Summing over all paths yields the same sandwich bound for ̂ Lkj , and the suffix bound is identical. Equation equation 30 follows immediately because P (k | y) is proportional to p(k)Lkn /C k
+
+and the prior and normalization constants are unchanged. For boundary odds, note that 
+
+P (tp = h | y, k ) ∝ Lp,h Rk−p,h . The numerator for each candidate location involves k block factors in total, so each candidate-specific weight is perturbed by at most e±kε ; comparing two candidates therefore yields the factor e±2kε and hence equation 31. 34 13 Prediction: group likelihoods and MAP/Bayes signal evaluation 
+
+Having developed training-time posterior inference for partitions and segment parameters (Sections 6–12), we now turn to prediction for new (X, y ) data. The prediction layer consumes only posterior summaries (e.g., boundary posteriors, segment-parameter posteriors, and group evidences) and is therefore agnostic to whether block evidences were computed in closed form (Section 11) or via approximation (Section 12). This section describes an application-agnostic prediction layer built on top of the training-time BayesBreak machinery. We assume we have already trained (or otherwise obtained) a collection of G group-specific BayesBreak models {M g}Gg=1 , where each Mg comprises: (i) a fitted segmentation posterior (e.g. Pg(k | y) and boundary posteriors), (ii) an exported MAP segmentation ̂ t(g) with segment-level posterior hyperparameters, and (iii) optionally a Bayesian curve representation (e.g. posterior mean/variance at design points). Prediction supports two primary tasks: 
+
+(P1) Group membership likelihoods/posteriors. Given new inputs (X, y ), compute for each group g an out-of-sample posterior-predictive likelihood p(new | M g) (or its log), and convert these into posterior group membership probabilities P (g | new ) under a prior πg.
+
+(P2) Signal prediction given group. Given query design points X and a specified (or inferred) group label g, return: (i) MAP piecewise-constant signal values ̂ f MAP  
+
+> g
+
+(X) including the corresponding breakpoints and segment levels, and/or (ii) Bayesian curve values ̂ f Bayes  
+
+> g
+
+(X)
+
+with uncertainty summaries when available. Crucially, we distinguish single point observations (xi, y i) from multivariate / set-valued observations where each unit contains multiple internal pairs (xur , y ur ), i.e. Xu and yu are vectors. We also separately address vector-valued responses yi ∈ Rd observed at each design point. 
+
+## 13.1 Prediction inputs: pointwise vs multivariate/set-valued observa-tions 
+
+Case A (pointwise observations). We observe a single ordered sequence 
+
+Dnew pt := {(xnew  
+
+> i
+
+, y new  
+
+> i
+
+, w new  
+
+> i
+
+)}mi=1 , xnew  
+
+> 1
+
+< · · · < x new  
+
+> m
+
+,
+
+with optional exposure weights wnew  
+
+> i
+
+(default wnew  
+
+> i
+
+= 1 or the inter-point gaps). 
+
+Case B (multivariate/set-valued observations). We observe U units (e.g. “fragments”, “win-dows”, or generic composite observations), each with an interval support and multiple internal pairs: 
+
+Dnew mv := 
+
+> {(
+
+[au, b u], {(xur , y ur , w ur )}Ru
+
+> r=1
+> )}Uu=1
+
+, au < x ur ≤ bu.
+
+35 Here Xu = ( xu1, . . . , x uR u ) and yu = ( yu1, . . . , y uR u ) are multivariate (set-valued) per-unit inputs. Prediction must score each unit by integrating or aggregating over its internal observations, and optionally return unit-level group responsibilities. 
+
+Case C (vector-valued response at each design point). At each design point we observe a vector response yi ∈ Rd (or mixed discrete/continuous components). We consider two standard constructions: (i) factorized EF across dimensions, or (ii) a multivariate EF with a joint log-partition A(θ) and conjugate prior (when available). The factorized case is implementation-friendly and preserves the DP structure with minimal changes. 
+
+## 13.2 Posterior-predictive scoring for a fixed segment under EF conjugacy 
+
+For group membership inference, we require out-of-sample likelihoods. The most computation-ally efficient and interpretable approach is to score new data against the exported group curve (MAP segmentation or Bayesian curve). We first derive segment-level posterior-predictive likelihoods under EF conjugacy; these become building blocks for both Case A and Case B. Fix a group g and consider a segment (or block) B of its exported MAP segmentation. Let the posterior for the segment parameter θ after training be the conjugate posterior 
+
+p(θ | α(g) 
+
+> B
+
+, β (g) 
+
+> B
+
+) ∝ exp {η(θ)⊤α(g) 
+
+> B
+
+− β(g) 
+
+> B
+
+A(θ)},
+
+where (α(g) 
+
+> B
+
+, β (g) 
+
+> B
+
+) are the training-updated hyperparameters for that segment. Now let Ynew 
+
+> B
+
+denote the collection of new observations whose design points fall into this segment. 
+
+Proposition 13.1 (EF posterior-predictive likelihood within a fixed segment) . Assume the weighted EF likelihood and conjugate prior conventions of §5 and §3, and let (Snew  
+
+> B
+
+, W new  
+
+> B
+
+, H new  
+
+> B
+
+)
+
+denote the EF block summaries of the new data restricted to segment B:
+
+Snew  
+
+> B
+
+:= ∑
+
+> i∈B
+
+wnew  
+
+> i
+
+T (ynew  
+
+> i
+
+), W new  
+
+> B
+
+:= ∑
+
+> i∈B
+
+wnew  
+
+> i
+
+, Hnew  
+
+> B
+
+:= ∑
+
+> i∈B
+
+log h(ynew  
+
+> i
+
+, w new  
+
+> i
+
+).
+
+Then the posterior-predictive likelihood of the new data in segment B under group g is 
+
+p(Ynew  
+
+> B
+
+| M g) = exp {Hnew  
+
+> B
+
+} Z(α(g) 
+
+> B
+
+, β (g) 
+
+> B
+
+)
+
+Z(α(g) 
+
+> B
+
++ Snew  
+
+> B
+
+, β (g) 
+
+> B
+
++ W new  
+
+> B
+
+). (32) 
+
+Proof. The proof is identical to the single-block evidence derivation (Theorem 5.1) after replacing the prior hyperparameters (α0, β 0) by the segment posterior hyperparameters 
+
+(α(g) 
+
+> B
+
+, β (g) 
+
+> B
+
+) learned from training data. 
+
+Interpretation. Equation equation 32 integrates out the segment parameter θ under the 
+
+posterior induced by training, yielding a strictly Bayesian out-of-sample likelihood for new observations assigned to that segment. It is therefore suitable for group scoring and group posterior computation. 36 13.3 Group likelihoods for pointwise observations (Case A) 
+
+MAP-segmentation-based scoring. Let ̂ t(g) denote the exported MAP boundaries for group g
+
+on the relevant domain. Assign each new design point xnew  
+
+> i
+
+to its containing MAP segment 
+
+B = B(i; g) and compute segment-wise block summaries (Snew  
+
+> B
+
+, W new  
+
+> B
+
+, H new  
+
+> B
+
+). The group log-likelihood is then: 
+
+ℓMAP  
+
+> g
+
+(Dnew pt ) := log p(Dnew pt | M g) = ∑ 
+
+> B∈̂t(g)
+
+log p(Ynew  
+
+> B
+
+| M g), (33) where each segment term uses equation 32. This yields O(m) evaluation time once segment membership is determined. 
+
+Bayesian-curve-based scoring (optional). If Mg exports a Bayesian curve representation that provides a local posterior over the mean parameter at each design point (or each small bin), then one can score each point under its local posterior predictive and sum over points. This can improve robustness near uncertain boundaries at additional computational cost. 
+
+Resegmentation scoring (optional, flexible). An alternative definition of group likelihood is to rerun the DP on the new data under group-specific hyperparameters (treating the new dataset as another draw from group g’s prior). This yields an evidence P (Dnew pt | g) that does not condition on the trained MAP boundaries. This option is useful when groups differ primarily in hyperparameters rather than in the learned curve geometry, but is computationally O(kmax m2)
+
+per group. 
+
+## 13.4 Group likelihoods for multivariate/set-valued observations (Case B) 
+
+In Case B, each unit u contains multiple internal observations {(xur , y ur )}Ru
+
+> r=1
+
+. Two output granularities are typically desired: (i) unit-level group likelihoods and group responsibilities, and (ii) a global group likelihood for the entire new dataset (product over units). 
+
+Unit-level predictive likelihood under a fixed group. Fix a group g. Partition the unit’s internal design points by the MAP segments of group g. For each segment B, compute the block summaries (Snew  
+
+> u,B
+
+, W new  
+
+> u,B
+
+, H new  
+
+> u,B
+
+) restricted to those internal points. Then define the unit likelihood as: 
+
+ℓug := log p(unit u | M g) = ∑ 
+
+> B∈̂t(g)
+
+log p(Ynew  
+
+> u,B
+
+| M g), (34) where Ynew  
+
+> u,B
+
+is the subset of unit u’s internal observations that fall into segment B and each segment term uses equation 32 with summaries for that subset. 
+
+Dataset likelihood and independence assumption. Assuming conditional independence of units given group membership, the dataset likelihood under group g is: 
+
+ℓMV  
+
+> g
+
+(Dnew mv ) = 
+
+> U∑
+> u=1
+
+ℓug .
+
+37 This is the direct multivariate generalization of equation 33 and corresponds to the earlier “fragment-level” intuition, but is fully application-agnostic. 
+
+## 13.5 Vector-valued responses (Case C): factorized and multivariate EF scoring 
+
+Suppose each observation is yi = ( yi1, . . . , y id ).
+
+Factorized EF across dimensions (recommended default). Assume conditional independence across dimensions given segment parameters: 
+
+p(yi | θ) = 
+
+> d∏
+> ℓ=1
+
+pℓ(yiℓ | θℓ), p(θ) = 
+
+> d∏
+> ℓ=1
+
+pℓ(θℓ).
+
+Then all block evidences and posterior-predictive terms factorize over ℓ, so log-likelihoods are sums over dimensions: 
+
+ℓg(y) = 
+
+> d∑
+> ℓ=1
+
+ℓg,ℓ (y·ℓ),
+
+where each ℓg,ℓ is computed by equation 33 or equation 34 for dimension ℓ. Computationally, this costs O(d) per observation (or per unit). 
+
+Multivariate EF (when available). If (yi) admit a multivariate EF with conjugate prior on a joint parameter θ ∈ Rp, then the same ratio-of-normalizers structure applies with vector-valued sufficient statistics. BayesBreak’s DP layer remains unchanged; only the definition of Sij and 
+
+Z(α, β ) changes. 
+
+## 13.6 From group likelihoods to posterior group membership probabilities 
+
+Single-dataset membership (one group per dataset). If the new dataset is assumed to come from a single (unknown) group g, define: 
+
+ℓg := log p(new | M g), P (g | new ) = πg exp( ℓg) 
+
+> ∑Gg′=1
+
+πg′ exp( ℓg′ ).
+
+This yields a group membership likelihood vector (the ℓg) and a group membership posterior vector (the P (g | new )), matching the requested prediction behavior in an application-agnostic way. 
+
+Unit-wise membership (one group per unit). If each multivariate unit u is assumed to originate from one group, then define unit-wise responsibilities: 
+
+rug := P (g | unit u) = πg exp( ℓug ) 
+
+> ∑Gg′=1
+
+πg′ exp( ℓug ′ ), (35) where ℓug is given by equation 34. This is precisely the out-of-sample analog of the E-step responsibilities in the latent-group model (Section 10). 38 13.7 MAP signal evaluation given group membership 
+
+Given a group label g and query design points X⋆ = {x⋆
+
+> 1
+
+, . . . , x ⋆M }, BayesBreak returns either: (i) MAP piecewise-constant predictions or (ii) Bayesian curve predictions .
+
+MAP piecewise-constant predictions. Let ̂ t(g) be the exported MAP boundaries and let each MAP segment B provide the posterior mean of the mean parameter: ̂
+
+μ(g) 
+
+> B
+
+:= E[m(θ) | α(g) 
+
+> B
+
+, β (g) 
+
+> B
+
+].
+
+Then the MAP signal at a query point x⋆ is: ̂
+
+f MAP  
+
+> g
+
+(x⋆) = ̂ μ(g)
+
+> B(x⋆;g)
+
+,
+
+where B(x⋆; g) denotes the MAP segment containing x⋆.
+
+Bayesian curve predictions. If the DP-derived Bayes regression curve is exported on a grid, return ̂ f Bayes  
+
+> g
+
+(x⋆) by evaluating on the nearest grid point (or by piecewise-constant interpolation within each grid interval). When pointwise posterior variances are available, also return credible bands. 
+
+## 13.8 Algorithms for prediction 
+
+Algorithm 13: PredictGroup ({M g}Gg=1 , Dnew , π )
+
+Input: Trained group models {M g}; new data Dnew (Case A or Case B); group prior weights π (default uniform) 
+
+Output: Log-likelihoods {ℓg} and posterior membership probabilities {P (g | new )}; if Case B, also unit responsibilities {rug } 
+
+> 1
+
+for g = 1 to G do  
+
+> 2
+
+if Case A (pointwise) then  
+
+> 3
+
+Assign each (xnew  
+
+> i
+
+, y new  
+
+> i
+
+) to a MAP segment B(i; g) under ̂ t(g); 
+
+> 4
+
+Accumulate segment summaries (Snew  
+
+> B
+
+, W new  
+
+> B
+
+, H new  
+
+> B
+
+); 
+
+> 5
+
+Compute ℓg ← ∑
+
+> B
+> [
+
+Hnew  
+
+> B
+
++ log Z(α(g) 
+
+> B
+
+, β (g) 
+
+> B
+
+) − log Z(α(g) 
+
+> B
+
++ Snew  
+
+> B
+
+, β (g) 
+
+> B
+
++ W new  
+
+> B
+
+)
+
+> ]
+
+; 
+
+> 6
+
+else 
+
+// Case B (multivariate/set-valued units)  
+
+> 7
+
+for u = 1 to U do  
+
+> 8
+
+Partition unit u internal pairs by MAP segments of group g; compute per-segment summaries;  
+
+> 9
+
+Compute ℓug via equation 34 using equation 32;  
+
+> 10
+
+ℓg ← ∑Uu=1 ℓug ; 
+
+> 11
+
+Compute P (g | new ) ∝ πg exp( ℓg) and normalize over g; 
+
+> 12
+
+if Case B then  
+
+> 13
+
+Compute unit responsibilities rug ∝ πg exp( ℓug ) and normalize over g for each u (cf. equation 35); 39 Algorithm 14: PredictMAPSignal (Mg, X ⋆, mode )
+
+Input: A group model Mg with exported MAP segmentation ̂ t(g) and/or Bayes curve; query points X⋆ = {x⋆
+
+> 1
+
+, . . . , x ⋆M }; mode ∈ { MAP , Bayes }
+
+Output: Predicted signal values at X⋆ (and optionally uncertainty)  
+
+> 1
+
+if mode =MAP then  
+
+> 2
+
+foreach x⋆ in X⋆ do  
+
+> 3
+
+Find containing MAP segment B(x⋆; g) (binary search on breakpoint coordinates);  
+
+> 4
+
+Return ̂ f MAP  
+
+> g
+
+(x⋆) = ̂ μ(g)
+
+> B(x⋆;g)
+
+; 
+
+> 5
+
+else  
+
+> 6
+
+Evaluate/interpolate the exported Bayes regression curve at X⋆; optionally return posterior variances; 
+
+## 13.9 Complexity 
+
+For Case A, prediction under a fixed group is O(m) after segment assignment ( O(m log k)
+
+worst case via binary search; often O(m) with a streaming pointer). For Case B, it is O(∑ 
+
+> u
+
+Ru)
+
+per group, plus segment assignment for internal points. Vector-valued responses add a factor of d in the factorized EF construction. Importantly, prediction does not require rerunning the DP unless the optional resegmentation scoring mode is enabled. 
+
+# 14 Algorithms, complexity, and numerical considerations 
+
+Section 6 derives the exact dynamic program (DP) that sits at the core of BayesBreak. The present section complements that development with implementation-ready pseudocode and a collection of numerical-stability considerations. The primary purpose is pragmatic: to make explicit what must be computed, stored, and normalized in order to reproduce the theoretical quantities (evidences, boundary posteriors, Bayes curves) without relying on undocumented conventions. 
+
+## 14.1 Block-evidence precomputation via prefix sums 
+
+For conjugate exponential-family blocks, Theorem 5.1 shows that the single block evidence and moments can be expressed as functions of aggregated sufficient statistics. This enables an exact O(n2) precomputation of all candidate blocks (i, j ) with 1 ≤ i ≤ j ≤ n.In practice, it is numerically preferable to store log block evidences, 
+
+ℓ(0)  
+
+> ij
+
+:= log ˜A(0)  
+
+> ij
+
+, (36) and similarly for any moment numerators required for the Bayes regression curve. Algorithm 15 expresses the precomputation at an abstract level, with a single call to a BlockRoutine that implements the family-specific closed forms given in Section 11. 40 Algorithm 15: PrecomputeBlocks (y, x, w, BlockRoutine )
+
+Input: Ordered observations {(xi, y i, w i)}ni=1 (with wi ≡ 1 if unweighted); family-specific routine BlockRoutine implementing Theorem 5.1. 
+
+Output: Matrices of log-block evidences ℓ(0)  
+
+> ij
+
+= log ˜A(0)  
+
+> ij
+
+and (optional) moment numerators ℓ(r) 
+
+> ij
+
+= log ˜A(r) 
+
+> ij
+
+for r ∈ { 1, 2, . . . }. 
+
+> 1
+
+1. Prefix summaries ; 
+
+> 2
+
+Compute prefix cumulative sufficient statistics and weights required by BlockRoutine ; for example, for a scalar response EF one typically stores Wj := ∑jt=1 wt,
+
+Sj := ∑jt=1 wt T (yt), and any additional family-specific terms (e.g., Qj := ∑jt=1 wty2 
+
+> t
+
+for Gaussian).  
+
+> 3
+
+2. Enumerate blocks ; 
+
+> 4
+
+for i ← 1 to n do  
+
+> 5
+
+for j ← i to n do  
+
+> 6
+
+Extract block summaries for yi:j from prefixes (constant time); BlockRoutine 
+
+returns log A(0)  
+
+> ij
+
+and any moment numerators log A(r) 
+
+> ij
+
+; Add any length factor 
+
+log g(xj − xi−1) and hazard constants as in equation 17; Store ℓ(0)  
+
+> ij
+
+← log ˜A(0)  
+
+> ij
+
+and, if needed, ℓ(r) 
+
+> ij
+
+← log ˜A(r) 
+
+> ij
+
+.
+
+Memory notes. Storing all ℓ(0)  
+
+> ij
+
+uses Θ( n2) memory. When n is large but kmax is moderate, one can reduce the memory footprint by streaming blocks in the inner DP loop (computing 
+
+ℓ(0)  
+
+> ij
+
+on the fly from prefix statistics), at cost of recomputing some block summaries. The DP theory remains unchanged. 
+
+## 14.2 Log-space dynamic programming 
+
+The forward/backward DP in Section 6 sums products of block evidences. To avoid under-flow/overflow, implementations should work in log space and use a stable logsumexp primitive. Algorithm 16 presents a log-space version of the recursions in equation 16–equation 19. 41 Algorithm 16: DPLog (ℓ(0)  
+
+> ij
+
+, k max , log p(k), log Ck)
+
+Input: Log block evidences ℓ(0)  
+
+> ij
+
+= log ˜A(0)  
+
+> ij
+
+for all 1 ≤ i ≤ j ≤ n; maximum segments kmax ;log prior on k, log p(k); log normalizers log Ck (with log Ck ≡ 0 if g ≡ 1). 
+
+Output: Forward messages log ˜Lk,j , backward messages log ˜Rk,i , log evidence per k, and normalized posterior p(k | y). 
+
+> 1
+
+1. Initialize ; 
+
+> 2
+
+Set log ˜L0,0 ← 0 and log ˜L0,j ← −∞ for j ≥ 1; set log ˜R0,n ← 0 and log ˜R0,i ← −∞ for 
+
+i ≤ n − 1. 
+
+> 3
+
+2. Forward recursion ; 
+
+> 4
+
+for k ← 1 to kmax do  
+
+> 5
+
+for j ← 1 to n do  
+
+> 6
+
+log ˜Lk,j ← logsumexp h∈{ k−1,...,j −1}
+
+> (
+
+log ˜Lk−1,h + ℓ(0) 
+
+> h+1 ,j
+> )
+
+; 
+
+> 7
+
+3. Backward recursion ; 
+
+> 8
+
+for k ← 1 to kmax do  
+
+> 9
+
+for t ← 0 to n − 1 do  
+
+> 10
+
+i ← n − 1 − t; 
+
+> 11
+
+log ˜Rk,i ← logsumexp h∈{ i+1 ,...,n −k+1 }
+
+> (
+
+ℓ(0)  
+
+> i+1 ,h
+
++ log ˜Rk−1,h 
+
+> )
+
+; 
+
+> 12
+
+4. Evidence and posterior over k; 
+
+> 13
+
+For each k ∈ { 1, . . . , k max } set log p(y | k) ← log ˜Lk,n − log Ck; compute unnormalized log posterior scores log πk ← log p(k) + log p(y | k); set 
+
+p(k | y) ← exp {log πk − logsumexp k′ (log πk′ )}.
+
+Boundary marginals and Bayes curves. Once log ˜L and log ˜R are available, the boundary marginal in equation 20 can be computed stably by subtracting the common normalizer 
+
+log ˜Lk,n . Similarly, Bayes regression moments (Theorem 6.1, Step 6; cf. equation 23) can be computed by replacing ℓ(0)  
+
+> ij
+
+with the corresponding log moment numerators and reusing the same log-space DP bookkeeping. 
+
+## 14.3 MAP segmentation and backtracking 
+
+The DP used for evidences can be augmented to recover a MAP segmentation in O(kmax n2)
+
+time. During the forward recursion, one stores, for each (k, j ), the maximizing split point 
+
+h⋆(k, j ) ∈ arg max 
+
+> h∈{ k−1,...,j −1}
+> {
+
+log ˜Lk−1,h + ℓ(0) 
+
+> h+1 ,j
+> }
+
+, (37) and then backtracks from (̂k, n ) to recover the boundary vector ̂ b = ( ̂ b0, . . . , ̂ b̂ k). Algorithm 17 makes this explicit. 42 Algorithm 17: MAPBacktrack (h⋆,̂ k)
+
+Input: Backpointers h⋆(k, j ) as in equation 37; chosen segment count ̂ k.
+
+Output: MAP boundary vector ̂ b0 = 0 <̂ b1 < · · · <̂ b̂ k = n. 
+
+> 1
+
+Set ̂ b̂ k ← n and q ←̂ k. while q ≥ 1 do  
+
+> 2̂
+
+bq−1 ← h⋆(q, ̂ bq); 
+
+> 3
+
+q ← q − 1; 
+
+> 4
+
+Return ̂ b.
+
+## 14.4 Pooling across sequences and groups 
+
+For replicated or multi-subject data with shared boundaries (Section 8), Theorem 8.1 implies that subject-level block evidences multiply. In log space, pooling is therefore a simple sum: 
+
+ℓ(0 ,pooled ) 
+
+> ij
+
+=
+
+> S∑
+> s=1
+
+ℓ(0 ,s ) 
+
+> ij
+
+. (38) The same applies to known groups, with the sum taken over subjects in a group. The resulting pooled matrices can be passed unchanged to Algorithm 16. 
+
+## 14.5 Latent-group EM implementation notes 
+
+Section 10 formulates latent groups as a template mixture : each group has one exported segmentation template, while subject-specific segment parameters have already been integrated out in subject-level block evidences. From an implementation perspective, the M-step for each group is therefore a standard max-sum BayesBreak backtracking run with a responsibility-weighted score matrix. If rsg denotes the responsibility of subject s for group g, then the effective block score is 
+
+B(g) 
+
+> ij
+
+= log g(xj − xi) + 
+
+> S∑
+> s=1
+
+rsg ℓ(0 ,s ) 
+
+> ij
+
+, (39) where ℓ(0 ,s ) 
+
+> ij
+
+= log A(0 ,s ) 
+
+> ij
+
+is the subject-level log-block evidence. Running the max-sum DP over this score matrix for each k and then adding the count-specific offset log p(k) − log Ck yields the exact template update for group g. The monotonicity guarantee in Theorem 10.1 applies precisely because these E- and M-step updates are exact for the stated template-mixture objective. 
+
+## 14.6 Complexity summary and stability 
+
+For conjugate families with constant-time block evaluation from prefix summaries, Algo-rithm 15 costs Θ( n2) time. The DP in Algorithm 16 costs Θ( kmax n2) time. Memory can be 
+
+Θ( kmax n) if one stores only two consecutive k-layers of log ˜L and log ˜R (streaming in k), but boundary posteriors and Bayes curves typically require additional storage or recomputation. Finally, we emphasize two numerical practices that are essential in realistic data sets: (i) always store evidences and DP messages in log space and normalize via logsumexp ; (ii) 43 standardize/center sufficient statistics when possible (e.g., for Gaussian blocks) to reduce catastrophic cancellation in moment computations. These practices do not affect correctness, but they materially improve stability when n is in the hundreds or thousands. 
+
+# 15 Experiments and results 
+
+This section reports the empirical validation that is directly supported by the archived project. The bundled artifacts consist of a synthetic test suite covering single-sequence recovery, likelihood-family portability, calibration of boundary posteriors, latent-group behavior, non-conjugate block approximations, and runtime scaling. We therefore focus on what can be substantiated from those artifacts and avoid claiming unreproduced real-data benchmarks or baseline comparisons that are not present in the project archive. 
+
+## 15.1 Metrics 
+
+Evaluation objective Metric Boundary recovery Precision / Recall / F1 at tolerance τ
+
+Signal recovery MSE between estimated and true latent signal Posterior calibration Calibration curve / ECE for p(bi = 1 | y)
+
+Model fit quality − log p(y) (marginal evidence) or predictive NLL Runtime Wall-clock time vs. n and kmax     
+
+> Table 2 Metrics used in the synthetic experiments. When ground-truth boundaries are available, boundary-level metrics use a small tolerance window (here τ= 2 indices) so that near-misses are not counted as complete failures.
+
+The resulting evaluation protocol is deliberately mixed: some diagnostics target point es-timation (boundary F1, boundary-location MAE, latent-signal MSE), while others target uncertainty quality (calibration curves for marginal boundary probabilities and evidence-based model selection through P (k | y)). This is appropriate for BayesBreak because the method is intended to return both an exported segmentation and posterior summaries around that segmentation. 
+
+## 15.2 Single-sequence Gaussian illustration 
+
+We begin with a Gaussian sequence containing two true changepoints. Figure 1 shows two complementary outputs: the marginal posterior probability that each interior index is a boundary, and the exported joint MAP segmentation together with segment-level posterior intervals. The two dominant posterior spikes align with the true changepoints, while a smaller shoulder of posterior mass just before the first jump reflects local ambiguity caused by a short transitional run of noisy observations. That ambiguity is visible again in the bottom panel, where the exported fit inserts a short intermediate segment before settling into the large middle plateau. 44 Figure 1 Single-sequence Gaussian example. Top: marginal posterior probability that each interior index i ∈ { 1, . . . , n − 1} is a changepoint, with dashed vertical lines marking the true changepoints. Bottom: observed data, true latent mean, exported joint MAP segmentation, and 90% segment-level posterior intervals. 
+
+Quantity Value Displayed segmentation ̂ kMAP 4Posterior mean E[k | y] 4.742 MAP segment count arg max k P (k | y) 4
+
+log p(y) -18.031 
+
+Table 3 Posterior summary for the single-sequence Gaussian example in Figure 1. The table separates the displayed exported segmentation from posterior summaries of the segment count. 
+
+Table 3 makes an important methodological point explicit: the displayed segmentation and the posterior over the segment count are related but not identical objects. In the archived example, the exported joint MAP segmentation uses four segments, while the posterior mean 
+
+E[k | y] is larger, indicating residual posterior mass on more highly segmented configurations. This is precisely why the paper distinguishes sum-product posterior summaries from max-sum exported segmentations. 45 15.3 Likelihood-family showcase 
+
+BayesBreak is designed so that the global DP layer does not depend on the observation model once block evidences are available. Figure 2 visualizes this portability across three conjugate families (Gaussian, Poisson, Binomial) and one low-dimensional quadrature example for (0 , 1) -valued responses. Across all four panels, the fitted piecewise-constant signal tracks the true latent parameter closely and preserves the correct qualitative segmentation pattern. 
+
+Figure 2 Likelihood-family showcase. The first three panels use closed-form conjugate block integrals (Gaussian, Poisson, and Binomial), while the final panel uses the one-dimensional Beta-response quadrature routine. In each case the fitted BayesBreak signal is close to the true piecewise-constant latent parameter. 
+
+46 15.4 Quantitative summary across families 
+
+Table 4 aggregates the small synthetic benchmark packaged with the archive. The main takeaway is not that one family universally dominates another, but that the same DP backend remains usable across very different block models. The Poisson setting is visibly the most challenging among the archived examples: it exhibits the weakest boundary F1 and the largest reconstruction error, which is consistent with the higher count variability shown in Figure 2. By contrast, the Beta-response quadrature example achieves the strongest boundary recovery in this small benchmark. Family n k⋆ ˆk F1@ τ MAE MSE − log p(y)/n 
+
+Gaussian 120 3 4 0.795 0.00 0.0038 0.191 Poisson 120 3 6 0.591 0.02 0.4100 2.162 Binomial 120 3 4 0.784 0.00 0.0006 2.108 Beta-response (quadrature) 120 3 3 0.912 0.00 0.0002 2.620  
+
+> Table 4 Available synthetic summary across the bundled family-specific examples. The final row corresponds to the Beta-response quadrature example rather than to a conjugate closed-form model.
+
+Because the table reflects one archived benchmark configuration rather than a large Monte Carlo study, the numbers should be read as a sanity check on portability and relative difficulty, not as a definitive cross-family ranking. 
+
+## 15.5 Calibration of boundary posterior probabilities 
+
+A central advantage of the Bayesian formulation is that it returns marginal posterior prob-abilities for boundary events. Figure 3 checks whether those probabilities are calibrated under repeated Gaussian simulations. The reliability curve tracks the diagonal reasonably closely overall, with an empirical calibration error reported in the figure of approximately 
+
+ECE = 0 .016 . The mid-probability bins are somewhat noisy, but the ordering of confidence levels is sensible: bins assigned larger posterior boundary probability correspond to larger empirical boundary frequency. 47 Figure 3 Calibration of marginal boundary posterior probabilities under synthetic Gaussian data. The dashed diagonal denotes perfect calibration; the orange curve is the empirical frequency within bins of predicted probability. 
+
+This experiment is valuable because segmentation methods are often judged only by recovered changepoints. For BayesBreak, well-behaved posterior probabilities are equally important: they control downstream thresholding, boundary ranking, and any decision rule that is sensitive to the strength of evidence rather than just to the best segmentation. 
+
+## 15.6 Latent-group pooling 
+
+Figure 4 evaluates the latent-template mixture on synthetic sequences drawn from two groups with different changepoint patterns. The left panel shows near-separable responsibilities, indicating that the EM fit recovers the group structure cleanly in this example. The right panel reports the group-specific boundary marginals induced by the fitted templates; the two groups place their posterior mass at different locations, matching the intended generative structure. 48 Figure 4 Latent-group pooling on synthetic Gaussian sequences. Left: posterior responsibilities for each sequence and latent group (sequences sorted for display). Right: group-specific marginal boundary probabilities under the fitted latent templates. 
+
+The original draft also included a third panel intended to display group-specific Bayes curves. That archived export is numerically unstable and produces nonphysical values, so it has been removed from the paper rather than left in as a misleading diagnostic. 
+
+## 15.7 Non-conjugate approximation trade-offs 
+
+For non-conjugate likelihoods, BayesBreak relies on approximate block evidences while reusing the same DP layer. Table 5 compares several such approximations in a bundled logistic-normal synthetic example, using numerical quadrature as a reference. The table shows the expected speed–accuracy trade-off: Laplace is the fastest among the listed approximations in this example, while exact quadrature is the slowest. At the same time, block-level approximation error is not perfectly monotone with segmentation quality, because the DP aggregates many local scores nonlinearly. This is precisely why the stability result in Section 12 is phrased in terms of posterior odds rather than in terms of a simplistic one-number guarantee on final segmentation error. Method max |∆ log A0| time (s) F1@ τ ˆk
+
+quadrature 0.000 0.211 0.500 7laplace 4.081 0.067 0.500 7jj 56.596 0.144 0.667 5ep 17.654 0.102 0.500 7pg_vb 56.596 0.147 0.667 5 
+
+> Table 5 Approximation trade-offs for a non-conjugate Bernoulli/logistic block model. Quadrature is used as the local reference block integral; the remaining methods trade block-level fidelity against computational cost.
+
+49 15.8 Runtime scaling 
+
+Finally, Figure 5 and Table 6 report runtime behavior for the Gaussian implementation. As expected, runtime increases with both series length n and the maximum allowed segment count 
+
+kmax . The growth is smooth and predictable over the archived range n ∈ { 50 , 100 , 200 , 400 }
+
+and kmax ∈ { 10 , 20 }, which is consistent with the O(kmax n2) worst-case complexity of the exact DP while also reflecting practical constant-factor effects from the implementation.     
+
+> Figure 5 Runtime scaling for the Gaussian implementation as a function of series length nfor two values of kmax . Points are empirical means over repeated runs; error bars denote one standard deviation.
+
+n kmax mean (s) std (s) 50 20 0.0668 0.0080 100 20 0.1421 0.0085 200 20 0.3334 0.0126 400 20 0.6466 0.0025     
+
+> Table 6 Numerical runtime values corresponding to Figure 5. The bundled table reports the
+> kmax = 20 configuration.
+
+What is still needed before external submission. The empirical archive is strong enough to validate the internal logic of the method, but a submission-ready experimental section should still add at least three components: a real-data benchmark, comparisons against strong frequentist and Bayesian baselines, and ablations for prior choices such as p(k) and the length factor g. Those results are not present in the uploaded project, so they are not claimed here. 50 16 Conclusion 
+
+BayesBreak is organized around a simple but powerful decomposition: local block integrals capture all model-specific work, while a global dynamic program handles posterior inference over contiguous partitions. That decomposition yields exact offline Bayesian segmentation whenever block evidences are available in closed form, and it remains useful when those block evidences are replaced by controlled deterministic approximations. Within that framework we obtained exact posterior quantities for segment counts, boundary marginals, and Bayes regression curves; clarified the necessary distinction between those posterior summaries and an exported joint MAP segmentation; showed how irregular designs are most naturally handled through design-aware partition priors; and preserved exactness for pooled shared-boundary analyses across replicates. For unknown groups, we advocated a deliberately precise latent-template mixture rather than an overstated “fully Bayesian” grouped segmentation claim. In that formulation the EM updates are rigorous: responsibilities are exact for the current templates, and each template update is an exact responsibility-weighted max-sum segmentation problem. For non-conjugate blocks, we also made clear what can and cannot be guaranteed. The DP layer survives unchanged, but approximation theory is most naturally stated in terms of block-evidence accuracy and induced posterior-odds stability, not in terms of universal end-to-end segmentation guarantees. Empirically, the archived project supports a coherent synthetic validation suite showing posterior boundary recovery, family portability, calibration behavior, latent-group separation, local approximation trade-offs, and runtime scaling. That suite is enough to verify that the mathematical interface developed in the paper is internally consistent and practically usable. The remaining step toward a fully submission-ready empirical story is broader external benchmarking on real data and against stronger baselines. The value of the present paper is that those additions can now be made without changing the inferential core: once a new block model is specified, the rest of the BayesBreak machinery is already in place. 
+
+# A Supplementary derivations and theoretical extensions 
+
+This appendix collects derivations and complementary results that support the main develop-ment without altering the inferential scope. The emphasis is on (i) making key steps in the conjugate-exponential-family integration fully explicit, (ii) clarifying the probabilistic structure of factorizing partition priors, and (iii) recording a few boundary cases and identifiability remarks that are useful in practice. 
+
+## A.1 Conjugate exponential families: detailed block evidence derivation 
+
+Section 5 states the closed form of the integrated segment evidence A(0)  
+
+> ij
+
+= p(y(i,j ] | hyper )
+
+for exponential-family likelihoods with a conjugate prior, and gives expressions for posterior moments needed by the Bayes regression curve. For completeness, we now provide a step-by-step derivation. 51 Setup. Fix a segment (block) (i, j ] and write its aggregated sufficient statistics Tij = 
+
+> ∑jt=i+1
+
+wtT (yt) and aggregated exposure Wij = ∑jt=i+1 wt. Let η ∈ Rd denote the natural parameter and A(η) its cumulant function. Assume the conditional likelihood factors as 
+
+p(
+
+y(i,j ] | η)
+
+=
+
+> j∏
+> t=i+1
+
+exp {
+
+wt ⟨η, T (yt)⟩ − wtA(η)}
+
+h(yt)wt = exp {
+
+⟨η, T ij ⟩ − Wij A(η)}
+
+Hij ,
+
+(40) where Hij := ∏jt=i+1 h(yt)wt collects the base-measure terms. The standard Diaconis–Ylvisaker conjugate prior takes the form 
+
+p(η | τ, ν ) = exp {
+
+⟨η, τ ⟩ − νA (η) − log Z(τ, ν )}
+
+, (41) where (τ, ν ) are hyperparameters and Z(τ, ν ) is the normalizer. 
+
+Evidence integral. Multiplying equation 40 and equation 41 yields 
+
+p(
+
+y(i,j ] | η)
+
+p(η | τ, ν ) = Hij exp 
+
+> {
+
+⟨η, τ + Tij ⟩ − (ν + Wij )A(η) − log Z(τ, ν )
+
+> }
+
+. (42) Integrating over η therefore gives 
+
+A(0)  
+
+> ij
+
+=
+
+> ∫
+
+p(
+
+y(i,j ] | η)
+
+p(η | τ, ν ) dη (43) 
+
+= Hij e− log Z(τ,ν )
+
+> ∫
+
+exp {
+
+⟨η, τ + Tij ⟩ − (ν + Wij )A(η)}
+
+dη (44) 
+
+= Hij 
+
+Z(
+
+τ + Tij , ν + Wij 
+
+> )
+
+Z(τ, ν ) . (45) This is the same expression as in Theorem 5.1, written at the level of a fixed block. 
+
+Posterior distribution and moments. Bayes’ rule shows that the posterior remains in the conjugate family: 
+
+p(η | y(i,j ], τ, ν ) ∝ exp {
+
+⟨η, τ + Tij ⟩ − (ν + Wij )A(η)}
+
+= p(
+
+η | τ + Tij , ν + Wij 
+
+> )
+
+. (46) All posterior moments required by BayesBreak can be obtained by differentiating log Z(τ, ν ).In particular, when A(η) is the cumulant generating function, ∇τ log Z(τ, ν ) yields the prior mean of the expectation parameter, and higher derivatives yield higher cumulants. The block-specific moment numerators A(1)  
+
+> ij
+
+, A (2)  
+
+> ij
+
+used in Section 5 are obtained by multiplying these posterior moments by the evidence A(0)  
+
+> ij
+
+.
+
+## A.2 Factorizing partition priors as renewal processes 
+
+Assumption 4.1 states that, conditional on the segment count k, the boundary vector t =(t0, . . . , t k) has a density proportional to a product of segment-length factors. This class coincides with renewal-process models on the discrete index set, and admits a hidden-Markov interpretation that helps motivate the DP recursion. 52 Definition A.1 (Renewal-process segmentation prior) . Fix k ≥ 1. Let L1, . . . , L k be positive integer-valued segment lengths with unnormalized mass function φ(ℓ) ∝ g(
+
+xi+ℓ − xi
+
+> )
+
+for all admissible starts i. A renewal segmentation draws lengths (Lq)kq=1 and sets boundaries 
+
+tq := ∑qr=1 Lr with the constraint tk = n.
+
+Proposition A.2 (Equivalence of renewal and factorized boundary priors) . Under Defini-tion A.1, the induced distribution on t = ( t0, . . . , t k) satisfies p(t | k) ∝ ∏kq=1 g(xtq − xtq−1 ).Conversely, any prior of the form equation 11 can be realized as a renewal segmentation prior with appropriate unnormalized length mass φ.Proof. For a fixed boundary vector t, the corresponding length sequence is uniquely determined as Lq = tq − tq−1. The renewal construction assigns to that sequence mass proportional to  
+
+> ∏kq=1
+
+φ(Lq). By definition of φ, this is proportional to ∏ 
+
+> q
+
+g(xtq − xtq−1 ), which proves the first claim. For the converse, take φ(ℓ) := g(xi+ℓ − xi) (for any admissible start i) as an unnormalized length mass; then the renewal prior reproduces equation 11 up to the shared normalizer Ck.
+
+Remark A.3 (Hidden-Markov interpretation) . A renewal segmentation can be represented as an HMM whose latent state tracks the “age” within the current segment (or, equivalently, the last boundary location). The forward recursion in Section 6 (cf. Theorem 6.1, Steps 1–2) coincides with the standard forward algorithm after integrating out segment parameters into block evidences. We do not rely on this viewpoint for correctness, but it provides useful intuition for numerical implementations and for extensions (e.g., adding covariate-dependent hazards). 
+
+## A.3 Posterior boundary and segment-membership marginals 
+
+Theorem 6.1 gives closed forms for boundary marginals and for the segment-membership probability p(
+
+t ∈ (i, j ], segment (i, j ] | y, k )
+
+. We spell out the algebra that leads to these expressions. 
+
+Proposition A.4 (Boundary marginals from prefix/suffix evidences) . Fix k ≥ 1 and suppose Assumption 4.1 holds. Let ˜Lr,j and ˜Rr,j be the prefix and suffix evidences defined in equation 16. Then for any t ∈ { 1, . . . , n − 1},
+
+p(t is a boundary | y, k ) = 
+
+> k−1∑
+> r=1
+> ˜
+
+Lr,t ˜Rk−r,t 
+
+> ˜
+
+Lk,n 
+
+. (47) 
+
+Proof. By definition, t is a boundary at position r iff tr = t. For fixed r, summing the joint posterior over all boundary vectors with tr = t yields 
+
+p(tr = t | y, k ) ∝ ∑ 
+
+> 0<t 1<··· <t k−1<n tr=tk∏
+> q=1
+> ˜
+
+A(0)  
+
+> tq−1,t q
+
+. (48) The constraint tr = t splits the product into a prefix part (segments 1:r ending at t) and a suffix part (segments r + 1 :k starting at t). Summing over all admissible prefixes gives ˜Lr,t by 53 definition of the DP; summing over all admissible suffixes gives ˜Rk−r,t . Normalizing by the total evidence ˜Lk,n yields equation 47. Finally, p(t is a boundary | y, k ) = ∑k−1 
+
+> r=1
+
+p(tr = t | y, k ),giving the result. 
+
+## A.4 Hazard prior boundary cases 
+
+The length-aware prior family includes hazard-process priors as a special case. It is sometimes useful to understand the limiting behavior as the hazard vanishes or becomes certain. 
+
+Proposition A.5 (Degenerate hazard limits) . Consider the index-uniform design xt = t
+
+and a constant hazard ρ ∈ (0 , 1) that induces a geometric length prior g(ℓ) = ρ(1 − ρ)ℓ−1 on segment lengths (up to the constraint that the last segment ends at n). Then: (i) As ρ ↓ 0, the prior concentrates on k = 1 (a single segment) and p(t | k) becomes irrelevant. (ii) As ρ ↑ 1, the prior concentrates on k = n with unit-length segments, i.e., tq = q for all 
+
+q.Proof. For the geometric prior, P(L = 1) = ρ and P(L > 1) = (1 − ρ). As ρ ↓ 0, P(L > 1) → 1
+
+so the probability that a new segment starts at any interior index vanishes, which forces a single segment spanning {1, . . . , n }. As ρ ↑ 1, P(L = 1) → 1 and therefore all segments have length one almost surely, giving tq = q.
+
+## A.5 Latent groups: identifiability and label switching 
+
+In the latent-group extension (Section 10), the group labels are arbitrary. When the prior on segmentations and within-group hyperparameters is exchangeable across groups, posterior inference is invariant under permutations of the group labels. This is the familiar label switching phenomenon. 
+
+Proposition A.6 (Permutation invariance) . Assume a G-group latent model with an ex-changeable prior over group-specific parameters and segmentations. For every permutation σ
+
+of {1, . . . , G },
+
+p(
+
+(t(g), ψ g)Gg=1 
+
+> )
+
+= p(
+
+(t(σ(g)) , ψ σ(g))Gg=1 
+
+> )
+
+.
+
+Then the joint posterior over (t(g), ψ g)Gg=1 and group assignments z1: S satisfies the same invariance. In particular, any MAP assignment is non-unique up to label permutation. Proof. The likelihood factors by subjects given assignments and group-specific parameters, and the prior is invariant by assumption. Therefore the unnormalized posterior is invariant under simultaneous permutation of group labels in both parameters and assignments. Normalizing preserves invariance. 
+
+Remark A.7. Permutation invariance does not prevent accurate segmentation or clustering; it only implies that the label names carry no meaning. For reporting, one may impose an ordering constraint (e.g., by evidence, segment count, or a canonical parameter summary) or 
+
+54 post-process posterior samples to align labels. The EM algorithm in Section 10 can converge to any one of the symmetric modes. 
+
+## A.6 Annotated literature review 
+
+Table 7 records the papers most directly relevant to the present manuscript. The goal is not to be exhaustive over the entire changepoint literature, but to make explicit which threads BayesBreak builds on and where the present contribution sits relative to them.  
+
+> Table 7 Annotated literature review.
+
+Theme Representative papers Annotation relative to BayesBreak Foundational product parti-tions Barry & Hartigan (1992, 1993) Introduced the product-partition view of Bayesian changepoint analysis. Bayes-Break adopts exactly this segment-factorization principle, but repackages it around a reusable block-evidence inter-face that is intended to work across mul-tiple observation families and prediction tasks. Exact offline DP Fearnhead (2006); Hutter (2007) These are the closest conceptual ances-tors of the exact offline core. Fearnhead (2006) emphasizes exact posterior recur-sion for changepoints, while Hutter (2007) highlights Bayesian curve summaries and evidence-based model comparison. Bayes-Break systematizes both inside a single modular framework and makes the dis-tinction between sum-product summaries and joint MAP segmentations explicit. Segment depen-dence and richer local models Fearnhead & Liu (2011); Ruggieri & Lawrence (2014) These papers show how offline Bayesian segmentation can be enriched beyond i.i.d. block means, for example by allowing de-pendence across neighboring segments or by fitting piecewise polynomial regression. They motivate the claim that the real bot-tleneck is the local block integral, not the DP itself. 55 Theme Representative papers Annotation relative to BayesBreak Frequentist ex-act partitioning Auger & Lawrence (1989); Jackson et al. (2005); Killick et al. (2012) These methods are critical baselines for optimization-based segmentation. They solve related partitioning problems effi-ciently but do not natively provide poste-rior probabilities over boundary locations or segment counts. BayesBreak differs mainly in inferential target rather than in the use of dynamic programming per se. Penalized and multiscale seg-mentation Tibshirani et al. (2005); Bleakley & Vert (2011); Frick et al. (2014); Fry-zlewicz (2014) These approaches offer strong algorith-mic or confidence guarantees, especially in large-scale or multisequence settings. They are natural comparators for future empirical work, but they optimize penal-ized objectives or detection rules rather than the posterior quantities emphasized here. Online and trans-dimensional Bayes Adams & MacKay (2007); Green (1995); Denison et al. (1998) These references represent two alterna-tive Bayesian regimes: streaming detec-tion and fully flexible posterior simulation over model dimension. BayesBreak in-stead targets exact offline inference when block marginalization is feasible, and de-terministic approximations when only the block integral is intractable. Multi-sequence and hierarchical Bayes Carlin et al. (1992); Fan & Mackey (2017); Quinlan et al. (2024) These papers study information sharing across related sequences. BayesBreak’s exact shared-boundary pooling belongs to this lineage, while the latent-template mixture can be viewed as a conservative, algorithmically transparent alternative to more ambitious joint hierarchical models. Covariate-aware and general-ized random partitions Müller et al. (2011); Park & Dunson (2010) This literature broadens the notion of co-hesion or prior similarity between obser-vations. It is the closest conceptual prece-dent for the design-aware segment-length priors used here, although BayesBreak specializes to contiguous ordered parti-tions rather than arbitrary clustering. 56 Theme Representative papers Annotation relative to BayesBreak Deterministic ap-proximations for non-conjugate blocks Jaakkola & Jordan (2000); Minka (2001); Polson et al. (2013) These references justify the approxima-tion toolkit in Section 12. The present paper does not claim novel approxima-tion schemes; its contribution is to show how such local block surrogates can be inserted into the same segmentation DP and how their errors propagate to global posterior odds. 57 References 
+
+Ryan Prescott Adams and David J. C. MacKay. Bayesian online changepoint detection, 2007. arXiv:0710.3742. I. E. Auger and C. E. Lawrence. Algorithms for the optimal partitioning of data on an interval. 
+
+Journal of Statistical Computation and Simulation , 31(1-2):1–23, 1989. Daniel Barry and J. A. Hartigan. Product partition models for change point problems. Annals of Statistics , 20(1):260–279, 1992. Daniel Barry and J. A. Hartigan. A Bayesian analysis for change point problems. Journal of the American Statistical Association , 88(421):309–319, 1993. José M. Bernardo and Adrian F. M. Smith. Bayesian Theory . Wiley, 1994. Kevin Bleakley and Jean-Philippe Vert. The group fused lasso for multiple changepoint detection. 
+
+Annals of Applied Statistics , 5(2A):734–759, 2011. Bradley P. Carlin, Alan E. Gelfand, and Adrian F. M. Smith. Hierarchical Bayesian analysis of changepoint problems. Journal of the Royal Statistical Society: Series C (Applied Statistics) , 41 (2):389–405, 1992. David G. T. Denison, Bani K. Mallick, and Adrian F. M. Smith. A Bayesian approach to changepoint problems. Journal of the American Statistical Association , 93(441):585–597, 1998. Persi Diaconis and Donald Ylvisaker. Conjugate priors for exponential families. Annals of Statistics ,7(2):269–281, 1979. Zhou Fan and Lester Mackey. Empirical bayesian analysis of simultaneous changepoints in multiple data sequences. The Annals of Applied Statistics , 11(4):2200–2221, 2017. doi: 10.1214/17-AOAS1075. Paul Fearnhead. Exact and efficient Bayesian inference for multiple changepoint problems. Statistics and Computing , 16(2):203–213, 2006. Paul Fearnhead and Zhen Liu. Efficient bayesian analysis of multiple changepoint models with dependence across segments. Statistics and Computing , 21(2):217–229, 2011. doi: 10.1007/ s11222-009-9163-6. Klaus Frick, Axel Munk, and Hannes Sieling. Multiscale change-point inference. Annals of Statistics ,42(4):1484–1513, 2014. Piotr Fryzlewicz. Wild binary segmentation for multiple change-point detection. Annals of Statistics ,42(6):2243–2281, 2014. Peter J. Green. Reversible jump markov chain monte carlo computation and Bayesian model determination. Biometrika , 82(4):711–732, 1995. Marcus Hutter. Bayesian piecewise constant regression. Bayesian Analysis , 2(4):635–664, 2007. doi: 10.1214/07-BA225. Tommi S. Jaakkola and Michael I. Jordan. Bayesian parameter estimation via variational methods. 
+
+Statistics and Computing , 10(1):25–37, 2000. 
+
+58 B. Jackson, J. D. Scargle, D. Barnes, S. Arabhi, A. Alt, P. Gioumousis, E. Gwin, P. Sangtrakulcharoen, L. Tan, and T. T. Tsai. An algorithm for optimal partitioning of data on an interval. IEEE Signal Processing Letters , 12(2):105–108, 2005. Rebecca Killick, Paul Fearnhead, and Idris A. Eckley. Optimal detection of changepoints with a linear computational cost. Journal of the American Statistical Association , 107(500):1590–1598, 2012. Thomas P. Minka. Expectation propagation for approximate bayesian inference. In Proceedings of the 17th Conference on Uncertainty in Artificial Intelligence (UAI) , 2001. Peter Müller, Fernando A. Quintana, and Gary L. Rosner. A product partition model with regression on covariates. Journal of Computational and Graphical Statistics , 20(1):260–278, 2011. doi: 10.1198/jcgs.2011.09066. Ju-Hyun Park and David B. Dunson. Bayesian generalized product partition model. Statistica Sinica , 20(3):1203–1226, 2010. Nicholas G. Polson, James G. Scott, and Jesse Windle. Bayesian inference for logistic models using Pólya–gamma latent variables. Journal of the American Statistical Association , 108(504): 1339–1349, 2013. José J. Quinlan, Garritt L. Page, and Luis M. Castro. Joint random partition models for multivariate change point analysis. Bayesian Analysis , 19(1):21–48, 2024. doi: 10.1214/22-BA1344. Guillem Rigaill. Pruned dynamic programming algorithm to recover the best segmentations with 1d changepoint models. Journal de la Société Française de Statistique , 151(4):88–114, 2010. Leonid I. Rudin, Stanley Osher, and Emad Fatemi. Nonlinear total variation based noise removal algorithms. Physica D: Nonlinear Phenomena , 60(1-4):259–268, 1992. Eric Ruggieri and Charles E. Lawrence. The bayesian change point and variable selection algorithm: Application to the δ18 o proxy record of the plio-pleistocene. Journal of Computational and Graphical Statistics , 23(1):87–110, 2014. doi: 10.1080/10618600.2012.707852. Robert Tibshirani, Michael Saunders, Saharon Rosset, Ji Zhu, and Keith Knight. Sparsity and smoothness via the fused lasso. Journal of the Royal Statistical Society: Series B , 67(1):91–108, 2005. 
+
+59

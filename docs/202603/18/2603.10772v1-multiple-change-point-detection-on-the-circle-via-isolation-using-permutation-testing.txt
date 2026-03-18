@@ -1,0 +1,842 @@
+Title: Multiple change-point detection on the circle via isolation using permutation testing
+
+URL Source: https://arxiv.org/pdf/2603.10772v1
+
+Published Time: Thu, 12 Mar 2026 01:01:30 GMT
+
+Number of Pages: 22
+
+Markdown Content:
+# MULTIPLE CHANGE -POINT DETECTION ON THE CIRCLE VIA ISOLATION USING PERMUTATION TESTING 
+
+A P REPRINT 
+
+Sophia Loizidou 
+
+Department of Mathematics University of Luxembourg 
+
+sophia.loizidou@uni.lu 
+
+Andreas Anastasiou 
+
+Department of Mathematics and Statistics University of Cyprus 
+
+anastasiou.andreas@ucy.ac.cy 
+
+Christophe Ley 
+
+Department of Mathematics University of Luxembourg 
+
+christophe.ley@uni.lu 
+
+March 12, 2026 
+
+## ABSTRACT 
+
+In this paper we propose a new method for multiple change-point detection for piecewise-constant circular signals, a setting that, despite its importance in many scientific domains, remains compara-tively under-explored. The proposed method, Permutation-based Circular Isolate-Detect, denoted PCID, uses an appropriately chosen contrast function and permutation testing to detect change-points in an offline manner, for the data sequence under consideration. Prior to detection, PCID isolates the change-points. The contrast function used is derived under the assumption of von Mises distribution for the noise, but we show that the method is robust and performs well for other distributions as well. Simulations are used to showcase the usability of the method in different signal and noise structures, including serially correlated noise. In order to exhibit the practical relevance of the method in real-world applications, PCID is applied to three real-world datasets, namely flare, acrophase and wave data. 
+
+Keywords Change-point detection · Circular data · Directional statistics · Permutation testing 
+
+## 1 Introduction 
+
+Change-point detection, or data segmentation, refers to the task of identifying sudden changes in a dataset where one or more of its characteristics change over time. This problem has drawn considerable attention over the years because of its significance in time series analysis and its broad range of application areas. Among other fields, change-point detection has been employed in neuroscience [Kovács et al., 2023], finance [Cho and Fryzlewicz, 2012, Anastasiou and Loizidou, 2025], genomics [Cao and Biao Wu, 2015, Jia and Shi, 2021], seismic data [Piana Agostinetti and Sgattoni, 2021, Touati et al., 2015, Ma et al., 2025] and astronomy [Lombard, 1991, Lombard et al., 1990, Dilillo et al., 2024]. Change-point detection on the real line has attracted a lot of interest. Many papers focus on the problem of detecting changes in the mean of the underlying signal, which is also the scenario considered in this paper, albeit on a different manifold (further explanation can be found in Section 2). The methods can mainly be split into two categories, depending on whether the change-points are detected all at once or one by one. The former category includes optimization based methods with some penalization function to avoid overfitting. The latter category involves the use of contrast functions, which are applied at each step of the algorithm in order to choose the most probable location of the change-point. We focus on the second category, to which the method proposed in this paper belongs. We will only mention some methods here, and refer the interested reader to Truong et al. [2020], Cho and Kirch [2024] for comprehensive overviews and more detailed explanations. A method that has received a lot of attention is Binary Segmentation [Vostrikova, 1981]. It iteratively searches the data for a single change-point, splitting the sequence at each detected location. Because it only searches for one change-point per interval, it can have suboptimal accuracy when multiple changes occur within the same segment, motivating numerous variants of the method. Fryzlewicz [2014] and Fryzlewicz [2020] proposed Wild Binary Segmentation (WBS) and WBS2, respectively, which calculate the value of the contrast function on a large number of randomly drawn intervals that are either drawn once at the beginning (WBS) or every time a detection 
+
+> arXiv:2603.10772v1 [stat.ME] 11 Mar 2026
+
+Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+occurs (WBS2). Baranowski et al. [2019] introduced the Narrowest Over Threshold (NOT) algorithm, which chooses the narrowest interval for which the value of the chosen contrast function exceeds a pre-defined threshold, achieving isolation of change-points with high probability, and Kovács et al. [2023] proposed Seeded Binary Segmentation (SeedBS) which uses a deterministic construction of search intervals which can be pre-computed. Isolate-Detect (ID) [Anastasiou and Fryzlewicz, 2022] achieves isolation of the change-points in a deterministic way before detecting them, while DAIS [Anastasiou and Loizidou, 2025] does so in a data-adaptive way. As will be explained later in the Introduction, the isolation aspect of the algorithms is important as it offers various advantages. A powerful statistical tool that has been used in change-point detection is permutation testing. It is a versatile technique that is used in many areas of statistics, including hypothesis testing [Ernst, 2004, Ge et al., 2003], linear correlation and regression [Huh and Jhun, 2001, Long et al., 2009] and analysis of variance [Jung et al., 2007, Reiss et al., 2010], to name a few. For a comprehensive historical development of permutation methods in statistics, see Berry et al. [2014]. Antoch and Hušková [2001] used permutation testing to get an approximation to the critical values for various tests which are suitable for at most one change-point in the mean or variance. Hušková and Slab `y [2001] extended such results to multiple changes in the mean and focused on test statistics generated by a kernel function. Zeileis and Hothorn [2013] embedded permutation testing into various tests for structural changes and Horváth and Hušková [2005] employed permutations for U-statistics. An interesting category of data which can be analysed using change-point detection methods are angular data. Methods on the real line are not appropriate for such data, as they do not respect their 2π-periodic nature. For example, considering data defined on [0 , 2π), two consecutive points with observed values at 0 and 6.2 radians are just 2π − 6.2 ≈ 0.08 
+
+radians apart. This can only be recognised by algorithms that understand this periodicity of data points taking values on the unit circle. Angular data occur naturally in many applications, including animal movement [Stephens, 1969, Ghosh et al., 1999], wind directions [Gugliani et al., 2018], health monitoring [Hawkins and Lombard, 2017, Lombard et al., 2017, Lacomba et al., 2025] and trajectory [Lombard, 1986]. A more comprehensive summary of applications can be found in Ley and Verdebout [2017, 2018]. It is important to note that we consider circular time-dependent data that involve angles measured during a time period, meaning that the time variable is taken to be linear. Data for which the time itself is viewed as a circular variable [Gill and Hangartner, 2010] are not considered in this work. Change-point detection on the circle has not been studied as extensively as on the real line. In what follows we will only mention some methods; for a more comprehensive overview we refer the reader to Potgieter et al. [2022]. Grabovsky and Horváth [2001] considers a single change in the mean of the von Mises distribution, whose density is given in (3) , and builds a contrast function based on the log-likelihood ratio. Test statistics are proposed for both known and unknown concentration parameters and they are compared with thresholds obtained from simulations. Considering the same problem of detecting a change in the mean of the von Mises distribution, Sengupta and Kumar Laha [2008] developed a Bayesian change-point detection method. Hawkins and Lombard [2015] employed dynamic programming to calculate the location of multiple change-points using maximum likelihood estimation and the Akaike information criterion as penalization function. Some non-parametric methods have also been proposed in the literature. Lombard [1986] studied non-parametric tests for multiple change-point detection while Csörg˝ o and Horváth [1996] considered rank-based tests for a single change-point. Grabovsky and Horváth [2001] proposed a CUSUM method for a single change-point in the distribution, which is studied for the von Mises as well as other distributions of the observed data. A more general scenario of random objects with periodic behaviour is considered in Xu et al. [2025]. All aforementioned methods deal with offline change-point detection, meaning that all data are available prior to further analysis. For completeness, we also mention some methods that focus on analysing data that arrive sequentially in real time, called sequential (or online) detection methods. Gadsden and Kanji [1981] developed sequential probability ratio tests for changes in the mean direction for data that are assumed to follow the von Mises distribution. Under the same assumption, Lombard et al. [2017] proposed sequential CUSUM schemes for detecting changes in the mean direction and concentration, while Lombard and Maxwell [2012] proposed sequential CUSUMs to detect a possible change from a uniform distribution on the circle to a non-uniform distribution. In this paper we propose an algorithm for offline multiple change-point detection for data on the circle, which we call Permutation-based Circular Isolate-Detect (PCID). The novelty of the proposed methodology does not come from the specific scenario we are considering, but from the method’s broad applicability. Firstly, PCID is the first proposed algorithm on the circle that attempts to isolate the change-points before detecting them. Isolating change-points is an important aspect of the algorithm because it offers various advantages. As highlighted in Anastasiou and Fryzlewicz [2022], change-point detection becomes easier when there is at most one change-point in the interval under consideration. The estimation accuracy is enhanced by preventing intervals with multiple change-points, allowing the detection of frequent change-points with possibly low-magnitude changes. Moreover, it allows our algorithm to be adapted to higher-order polynomial signals by using the appropriate contrast function (for a discussion on the importance of 2Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+isolation we refer the reader to Section 3). Secondly, our method uses permutation testing as a decision rule. This means that PCID does not depend on the (asymptotic) distribution of the contrast function used, so our algorithm can be used to detect any type of change as long as an appropriate contrast function is calculated. Thirdly, even though our paper focuses on the problem of detecting multiple changes in the mean of the von Mises distribution (see Section 2), through simulations we show that our algorithm is robust to the underlying distribution of the data under consideration (for more details see Section 5.2.2). PCID extends the ID algorithm proposed by Anastasiou and Fryzlewicz [2022] to circular data. As already mentioned, ID first attempts to isolate the change-points, before detecting them using an appropriately chosen contrast function. In order to achieve isolation, the ID algorithm scans the data sequence in slowly expanding subintervals of {1, . . . , T }
+
+which are created in a deterministic way, by keeping one of the end-points fixed (at 1 or T ) and expanding at each step by an expansion parameter λT . This way, the jth right- and left-expanding intervals are given by Rj = [1 , min {jλ T , T }]
+
+and Lj = [max {1, T − jλ T + 1 }, T ], respectively, for j ∈ { 1, . . . , K max } with Kmax = ⌈T /λ T ⌉. The algorithm searches for change-points in each one of the intervals in the ordered set SLR = {R1, L 1, R 2, L 2, . . . , R Kmax , L Kmax },using an appropriately chosen contrast function. As the expansions are performed in a systematic way, which eliminates any randomness in the creation of the intervals, the ID methodology guarantees that every change-point will be isolated in at least one interval, as long as λT is smaller than the smallest distance between two consecutive change-points. PCID uses the same strategy as ID, leveraging a contrast function that is suitable for circular data, which we derive in Section 2. The maximum value of the contrast function for each subinterval is recorded and the algorithm decides if the value obtained is large enough to signify a change-point, using permutation testing. More details about the algorithm and the permutations performed can be found in Section 3. The outline of the paper is as follows. In Section 2, the appropriate contrast function is calculated. The algorithm is explained in Section 3 and a toy example is also given. A variant of the algorithm in case of long signals is provided in Section 4, followed by a discussion on parameter selection. Simulation results are presented in Section 5, concerning independent noise structures, more specifically von Mises distribution in Section 5.2.1 and wrapped Cauchy and wrapped Normal distributions in Section 5.2.2, as well as serially correlated noise in Section 5.3. Three real-data examples are analysed in Section 6. The first two examples, which deal with flare and acrophase data, have been analysed before in the literature. The third dataset concerns wave data and to the best of our knowledge this work is the first to analyse it for change-points. Section 7 concludes the paper. The Appendix contains some further simulation results concerning the choice of the expansion parameter. 
+
+## 2 Derivation of the contrast function 
+
+In this section, we derive the contrast function which is used for the detection of change-points. Our aim is to obtain an expression that is maximised at the same point as the logarithm of the likelihood ratio for all possible single change-point locations within the interval [s, e ), for 1 ≤ s < e ≤ T . We work under the model 
+
+Θt = ft + ϵt mod 2 π, t ∈ { 1, . . . , T }, (1) where Θt ∈ [0 , 2π) is the observed data sequence, ft ∈ [0 , 2π) is the unobserved true underlying signal and the independent and identically distributed ϵt ∈ [0 , 2π) is the noise. The scenario we are interested in is piecewise-constant signals, meaning that for j ∈ { 1, . . . , N }, ft satisfies 
+
+ft = μj for t = rj−1 + 1 , . . . , r j ,frj̸ = frj +1 ,
+
+where 1 ≤ r1 < . . . < r N < T denote the locations of the N change-points and we set r0 = 0 . The hypothesis we are testing is 
+
+H0 : ft = ft+1 , ∀t ∈ { 1, . . . , T − 1},HA : ∃ r1, . . . , r N ∈ { 1, . . . , T − 1} such that fri̸ = fri+1 ∀i ∈ { 1, . . . , N }. (2) Denoting by vM (μ, κ ) the von Mises distribution with location parameter μ ∈ [0 , 2π) and concentration parameter 
+
+κ ≥ 0, we assume that ϵt, t = 1 , 2, . . . , T are independent and identically distributed from the vM (0 , κ ). The density of the von Mises distribution is given by 
+
+f (θ; μ, κ ) = 12πI 0(κ) exp ( κ cos( θ − μ)) (3) where 
+
+Ip(κ) = 
+
+Z 2π
+
+> 0
+
+cos( pθ )eκ cos( θ−μ)dθ (4) 3Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+is the modified Bessel function of the first kind and order p. The concentration parameter κ controls the variability of the noise and can be understood as the inverse of the variance. Larger values of κ provide more concentrated data around the mean, μ, while κ = 0 reduces (3) to the uniform distribution on the circle. In this paper we assume that κ is unknown and constant over time. Note that, using this assumption on ϵt, it is straightforward to show that 
+
+Θt ∼ vM (ft, κ ) for t = 1 , . . . , T .The likelihood function of the von Mises distribution vM (μ, κ ) for Θs, ..., Θe can be derived as 
+
+L(Θ s, . . . , Θe; μ, κ ) = 
+
+ 12πI 0(κ)
+
+e−s+1 
+
+exp κ
+
+> e
+
+X
+
+> i=s
+
+cos(Θ i − μ)
+
+!
+
+and the maximum likelihood estimator (MLE) of the parameter μ can be calculated to be [Mardia and Jupp, 2000, (5.3.2)] 
+
+ˆμs,e = atan 2
+
+> e
+
+X
+
+> i=s
+
+sin(Θ i),
+
+> e
+
+X
+
+> i=s
+
+cos(Θ i)
+
+!
+
+,
+
+where atan 2( x, y ) = 
+
+
+
+arctan 
+
+ xy
+
+
+
+if y > 0arctan 
+
+ xy
+
+
+
++ π if y < 0 
+
+> π
+> 2
+
+sign (x) if y = 0 , x ̸ = 0 0 if y = 0 , x = 0 
+
+.
+
+The MLE thus, corresponds to the circular sample mean. The log-likelihood ratio statistic of the model under consideration is given by LR = 2 log 
+
+ sup μ L(Θ s, . . . , Θb; μ) sup μ L(Θ b+1 , . . . , Θe; μ)sup μ L(Θ s, . . . , Θe; μ)
+
+
+
+= 2 κ
+
+> b
+
+X
+
+> i=s
+
+cos(Θ i − ˆμs,b ) + 
+
+> e
+
+X
+
+> i=b+1
+
+cos(Θ i − ˆμb+1 ,e ) −
+
+> e
+
+X
+
+> i=s
+
+cos(Θ i − ˆμs,e )
+
+!
+
+,
+
+where b is the possible change-point location. From the definition of the mean resultant length ¯Rs,e on the interval [s, e )
+
+[Mardia and Jupp, 2000, (2.2.2)], it holds that 
+
+¯Rs,e cos(ˆ μs,e ) = 1
+
+e − s + 1 
+
+> e
+
+X
+
+> i=s
+
+cos(Θ i), ¯Rs,e sin(ˆ μs,e ) = 1
+
+e − s + 1 
+
+> e
+
+X
+
+> i=s
+
+sin(Θ i),
+
+so, using trigonometric identities we can write 
+
+LR = 2 κ (b − s + 1) ¯Rs,b + ( e − b) ¯Rb+1 ,e − (e − s + 1) ¯Rs,e .
+
+Since the concentration parameter κ is assumed to be constant, the multiplicative factor 2κ can be ignored. Using the fact that 
+
+¯Rs,e = 1
+
+e − s + 1 
+
+vuut eX
+
+> i=s
+
+cos(Θ i)
+
+!2
+
++
+
+> e
+
+X
+
+> i=s
+
+sin(Θ i)
+
+!2
+
+, (5) the final form of our contrast function can be written as 
+
+˜Cbs,e (Θ) := 
+
+vuut bX
+
+> i=s
+
+cos(Θ i)
+
+!2
+
++
+
+> b
+
+X
+
+> i=s
+
+sin(Θ i)
+
+!2
+
++
+
+vuut eX
+
+> i=b+1
+
+cos(Θ i)
+
+!2
+
++
+
+> e
+
+X
+
+> i=b+1
+
+sin(Θ i)
+
+!2
+
+−
+
+vuut eX
+
+> i=s
+
+cos(Θ i)
+
+!2
+
++
+
+> e
+
+X
+
+> i=s
+
+sin(Θ i)
+
+!2
+
+. (6) As mentioned in the Introduction, Ghosh et al. [1999] worked under the same assumption of the von Mises distribution and developed tests for detecting a single change in the mean. The contrast function used in the case of known concentration parameter κ is the same as (6) . However, in the case of unknown κ, a different contrast function was derived. As already mentioned, in our paper we assume that κ is unknown but constant over time, and its exact value is of no interest to us as we use permutation testing. 4Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+## 3 Methodology 
+
+In this section we will explain in detail our algorithm PCID and present a toy example at the very end. We remind the notation N and r1, . . . , r N for the number and locations of the true change-points, and denote by ˆN , ˆr1, . . . , ˆrN their estimates. As already mentioned in the Introduction, the isolation aspect of the algorithm is achieved by leveraging the expansions used in Anastasiou and Fryzlewicz [2022]. The idea of the methodology is to consider gradually larger, overlapping intervals, with one end-point being fixed and the other shifted. This is done in a deterministic way, by expanding the length of the interval under consideration by an expansion parameter λT ∈ N \ { 0} at each iteration (for more details on the choice of λT see Section 4.2). The expansions are performed interchangeably, by iteratively expanding once from the left and once from the right at each step. We consider the interval [s, e ], for 1 ≤ s < e ≤ T . The left end-point of the right-expanding interval is kept fixed, at point s. Similarly, the right end-point of the left-expanding interval is fixed at point e. Since the expansions occur in such a way that the number of points in the interval is a multiple of λT , the end-points of the intervals under consideration are given by 
+
+crj = min {s + jλ T − 1, e }, cℓj = max {e − jλ T + 1 , s },
+
+for j = 1 , . . . , K max  
+
+> s,e
+
+where crj , cℓj are the end-points of the right- and left-expanding intervals, respectively, and 
+
+Kmax  
+
+> s,e
+
+= ⌈ e−s+1  
+
+> λT
+
+⌉. The intervals are collected in the ordered set 
+
+Is,e = {Rs,e [1] , L s,e [1] , R s,e [2] , L s,e [2] , . . . , R s,e [Kmax  
+
+> s,e
+
+], L s,e [Kmax  
+
+> s,e
+
+]} (7) where A[j] denotes the jth element of set A and 
+
+Rs,e = {[s, c r
+
+> 1
+
+], [s, c r
+
+> 2
+
+], . . . , [s, c rKmax  
+
+> s,e
+
+]}, Ls,e = {[cℓ
+
+> 1
+
+, e ], [cℓ
+
+> 2
+
+, e ], . . . , [cℓKmax  
+
+> s,e
+
+, e ]}.
+
+The set Is,e contains the intervals in the order in which they will be checked by PCID for possible change-points. Such deterministic expansions of the intervals under consideration guarantee isolation of each of the change-points in at least one interval, as long as the value of the expansion parameter, λT , is smaller than the minimum distance between two consecutive change-points. In such cases, our algorithm has the opportunity to detect the change-point while it is isolated. In order to highlight the importance of the isolation of change-points, we consider a noiseless signal, ft, of length 
+
+T = 300 . As shown in Figure 1(a), the signal under consideration has 3 change-points at locations r1 = 100 , r 2 =150 , r 3 = 200 and values between the change-points 2, 1, 3, 2. The changes described are, in a sense, opposite, and thus contrast functions have difficulty detecting them. In order to exhibit the role of isolation, in Figure 1(b) we plot a heatmap of the values that (6) attains when evaluated on ft when b is fixed to 150, which is the location of the second change-point. We consider all possible combinations of s, e taking values in {1, . . . , 150 } and {151 , . . . , 300 },respectively. The contrast function achieves the largest value when s = 101 , e = 200 , which is the largest interval in which r2 is isolated. This example shows that the value of the contrast function increases when the change-point is isolated, and it is proportional to the length of that interval. The conclusion is in line with the explanation provided by Anastasiou and Loizidou [2025] which states that the value of contrast functions increases as the length of the interval, in which the change-point is isolated, increases. It is also worth noting that, as explained in Anastasiou and Loizidou [2025], the maximal value is attained when the change-point lays in the midpoint of the interval under consideration, which happens to be the case here. In the following paragraphs we will describe how the PCID methodology, presented in Algorithm 1, detects change-points using permutation testing, as explained in Algorithm 2. PCID will check, one by one, the intervals in Is,e ,in the order in which they appear in (7) . Without loss of generality we denote the interval under consideration as 
+
+[s1, e 1] ∈ Is,e . The largest value of the contrast function, denoted by 
+
+˜Cobs = max 
+
+> b∈{ s1,...,e 1−1}
+
+˜Cbs1,e 1 (Θ), (8) is recorded, and permutation testing is employed to decide if this value is extreme enough to signify the existence of a change-point, as explained in the next paragraph. If no change-point is detected, the process as just described is repeated for the next interval [s2, e 2] ∈ Is,e . If a change-point is detected, its estimated location ˜b is chosen to be the value where the contrast function is maximized, meaning that ˜b = argmax b∈{ s1,...,e 1−1} ˜Cbs1,e 1 (Θ). In this case the algorithm restarts using only data included in [s, ˜b] or [˜b + 1 , e ] depending on whether the detection occurred in a left-or right-expanding interval ( [s1, e 1] ∈ Ls,e or [s1, e 1] ∈ Rs,e ), respectively. 5Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 02460 100 200 300        
+
+> Time ftse
+> 151 170 190 210 230 250 270 290
+> 120 40 60 80 100 120 140
+> 010 20 30 40
+
+(a) (b) Figure 1: (a) Noiseless signal, ft, of length T = 300 with change-points at locations 100 , 150 , 200 . (b) Heatmap of the value of the contrast function evaluated on ft for b = 150 and all possible combinations of s = 1 , . . . , 150 ,
+
+e = 151 , . . . , 300 .The permutation testing procedure, as explained in Algorithm 2, tests the hypothesis 
+
+H0; p : ft = ft+1 , ∀{ s, . . . , e − 1},HA; p : ∃ r ∈ { s, . . . , e − 1} such that fr̸ = fr + 1 (9) for an interval [s, e ]. Algorithm 2 resamples the interval under consideration without replacement (so the data points inside the interval are shuffled) at most B times and these permuted intervals are denoted as Pi(Θ; s, e ), for i = 1 , . . . , B .For each i, the maximum value attained by the contrast function on the permuted data, written 
+
+˜Cp;i = max 
+
+> b∈{ s,...,e −1}
+
+n ˜Cbs,e (Pi(Θ; s, e )) 
+
+o
+
+is recorded. For the chosen significance level αT , we say that a change-point exists in [s, e ] if the number of ˜Cp;i that are greater than ˜Cobs , as defined in (8) , does not exceed the cut-off cB,α T := B × αT . For this reason, in order to reduce the computational complexity of our algorithm permutations are performed up to the point that |{ i : ˜Cp;i > ˜Cobs }| = cB,α T ,where |A| denotes the cardinality of the set A. The algorithm does not perform any permutations of the data sequence 
+
+Θs, . . . , Θe if the number of possible permutations (e − s + 1)! is less than B.We now provide a toy example of how the algorithm works in practice, which is also illustrated in Figure 2. We consider a sequence of length T = 105 with two change-points, at positions r1 = 23 and r2 = 81 , and values of 
+
+ft between these change-points of 0, 2, 0. We set ϵt ∼ vM (0 , 2) and the values of the parameters are chosen as 
+
+λT = 10 , αT = 0 .001 and B = 1000 for the sake of illustration. As a first step, the algorithm checks whether the interval [1 , 10] contains any change-points, by performing permutation testing. As there are no change-points, in Phase 1 PCID considers the intervals [96 , 105] , [1 , 20] , [86 , 105] and [1 , 30] , in this order. A change-point is detected at location ˆr1 = 23 , so the algorithm restarts on [24 , 105] . As [96 , 105] and [86 , 105] have already been checked, in Phase 2 PCID looks for change-points in [24 , 33] , [24 , 43] , [24 , 53] and [76 , 105] . The last interval indicates the existence of a change-point at location ˆr2 = 81 , and the process is restarted on [24 , 81] . Since in Phase 2 the intervals [24 , 33] , [24 , 43] , [24 , 53] have already been considered, in Phase 3 PCID only searches for change-points in 
+
+[72 , 81] , [62 , 81] , [52 , 81] , [24 , 63] , [42 , 81] , [24 , 73] , [32 , 81] , [24 , 81] , specifically with that order. No change-points are detected and thus, the algorithm concludes. 
+
+## 4 Practicalities 
+
+4.1 Considerations for long signals 
+
+In this subsection we introduce a modification of the algorithm as described in Section 3, in order to tackle the case of rather long signals. Since PCID is based on permutation testing, the computational complexity can increase dramatically when the length of the subinterval under consideration is, even moderately, large. In order to avoid this issue, when the length of the data sequence exceeds w, the sequence is split into disjoint intervals of length at most w. More specifically, for a sequence of length T , the PCID algorithm is applied on kw = ⌈T /w ⌉ disjoint intervals of the form 
+
+Ji = [ ai, b i] = [ w · (i − 1) + 1 , min {w · i, T }], for i ∈ { 1, . . . , k w}.
+
+6Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+Algorithm 1 PCID( Θ, s, e, λ T , B, α T )
+
+1: if e − s < 1 then 
+
+2: STOP 
+
+3: else 
+
+4: for j ∈ { 1, . . . , K max  
+
+> s,e
+
+} do 
+
+5: if no change-point has been detected then 
+
+6: b2j−1 = argmax b∈{ s,...,c rj −1}{ ˜Cbs,c rj (Θ)}
+
+7: if Permutation_test( Θ, s, c rj , B, α T , ˜Cb2j−1
+
+> s,c rj
+
+(Θ)) = TRUE then 
+
+8: Add b2j−1 to the set of estimated change-points 
+
+9: PCID( Θ, s, b 2j−1, λ T , B, α T )
+
+10: else 
+
+11: b2j = argmax b∈{ cℓj ,...,e −1}{ ˜Cbcℓj ,e (Θ)}
+
+12: if Permutation_test( Θ, c ℓj , e, B, α T , ˜Cb2j 
+
+> cℓj,e
+
+(Θ)) = TRUE then 
+
+13: Add b2j to the set of estimated change-points 
+
+14: PCID( Θ, b 2j + 1 , e, λ T , B, α T )
+
+15: end if 
+
+16: end if 
+
+17: else 
+
+18: STOP 
+
+19: end if 
+
+20: end for 
+
+21: end if Algorithm 2 Permutation_test( Θ, s, e, B, α T , ˜Cobs )
+
+1: if (e − s + 1)! < B then 
+
+2: return FALSE 
+
+3: else 
+
+4: Set j = 0 , i = 1 
+
+5: Set cB,α T = B × αT
+
+6: while i ≤ B and j < c B,α T do 
+
+7: Pi(Θ; s, e ) = Permute( Θs, . . . , Θe)
+
+8: if ˜Cobs > max b∈{ s,...,e −1} ˜Cbs,e (Pi(Θ; s, e )) then 
+
+9: j = j + 1 
+
+10: end if 
+
+11: i = i + 1 
+
+12: end while 
+
+13: if j < c B,α T then 
+
+14: Θs, . . . , Θe contains a change-point 
+
+15: return TRUE 
+
+16: else 
+
+17: return FALSE 
+
+18: end if 
+
+19: end if 
+
+7Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT Time          
+
+> Iteration Interval
+> 020 40 60 80 100
+> r1= 23 r2= 81
+
+Phase 1           
+
+> 1[1 ,10]
+> 2[96 ,105]
+> 3[1 ,20]
+> 4[86 ,105]
+> 5[1 ,30]
+
+Phase 2 6 [24 , 33]       
+
+> 7[24 ,43]
+> 8[24 ,53]
+> 9[76 ,105]
+
+Phase 3                  
+
+> 10 [72 ,81]
+> 11 [62 ,81]
+> 12 [52 ,81]
+> 13 [24 ,63]
+> 14 [42 ,81]
+> 15 [24 ,73]
+> 16 [32 ,81]
+> 17 [24 ,81]
+> Detection No detection
+
+Figure 2: Sequence of length T = 105 with two change-points at r1 = 23 and r2 = 81 . The intervals are checked in the order they appear, from the bottom to the top. Blue intervals indicate that detection of a change-point has occurred. After detecting all change-points and in order to ensure that no change-points are left undetected close to the right end-point of interval J1, left and right end-points of Ji for i ∈ { 2, . . . , k w − 1} and the left end-point of Jkw , we also we carry permutation testing on the intervals given by 
+
+[max {ˆri; ˆNi 1{ ˆNi>0} + 1 , b i − ⌊ w/ 2⌋} , min {ˆri+1;1 1{ ˆNi+1 >0}, b i + ⌊w/ 2⌋} ], for i ∈ { 1, . . . , k w − 1},
+
+where we denote by ˆNi and ai ≤ ˆri;1 < . . . < ˆri; ˆNi < b i the number and locations of the detected change-points in 
+
+Ji. In other words, on the one hand, if no change-points have been detected in Ji or Ji+1 , we apply Algorithm 2 on the interval [bi − ⌊ w/ 2⌋, b i + ⌊w/ 2⌋] which has length 2⌊w/ 2⌋ + 1 . On the other hand, if any change-points have been detected, we choose the largest possible interval of length at most w + 1 in which no detected change-points are included. Considering the choice of w, choosing a small value for w defeats the purpose of the variant, as even small data sequences will be split into smaller ones. However, too large values might not lead to a considerable reduction of computational complexity, as large intervals are still permuted. Simulations have shown that a value that is manageable computationally, and provides a considerable computational edge, is w = 500 , which we use in practice. In order to exhibit the reduction of the computational cost using this variant of our algorithm, we present some simulation results in Table 1. The signals used for the simulations are the following: (S1) sequence of length T = 1000 with no change-points. (S2) sequence of length T = 1000 with 4 change-points at locations 200 , 400 , 600 , 800 and values between change-points 0, 3, 0, 3, 0, 3.We consider model (1) when ϵt ∼ vM (0 , κ ), with κ = 2 for Signal (S1) and κ = 4 Signal (S2). We report the frequency of ˆN − N as a measure of accuracy of the number of detected change-points; we remind the reader that N and ˆN are the numbers of true and estimated change-points, respectively. We also report the Adjusted Rand Index (ARI), ideally close to 1, and the scaled Hausdorff distance dH , ideally close to 0, as measures of accuracy of the location of the detected change-points. For more details on these measures, we refer the reader to Section 5.1. We denote the algorithm using the variant as just described by PCID W, where ‘W’ stands for ‘Window’. We set B = 1000 and αT = 0 .001 
+
+for both PCID and PCID W, while the biggest window to be considered in PCID W is set to w = 500 . The results in Table 1 indicate that the proposed variant of the algorithm decreases the computational complexity. This is especially evident when no change-points are present, since in such cases the intervals on which permutation tests are performed become very large. Given the chosen value of w = 500 and the length of the signals, the largest interval for PCID W is of length 500 while for PCID it is 1000. As will be explained in Section 4.2, the choice of parameters B = 1000 and 
+
+αT = 0 .001 corresponds to around 5% significance level of the algorithm for data sequences of length T = 500 . Both Signals (S1) and (S2) have length T = 1000 , thus, the overestimation of around 10% of change-points that is observed in the table can be understood. This can be avoided by increasing the value of B and decreasing the value of αT to allow for a lower significance level, for example taking B = 10 , 000 and αT = 0 .0001 . More details on the choice of the parameters are given in Section 4.2. 8Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+Table 1: Distribution of ˆN − N over 100 simulated data sequences of the Signals (S1) and (S2) with ϵt ∼ vM (0 , κ ).The average ARI, dH and computational times are also given. 
+
+ˆN − N
+
+Signal κ Algorithm ≤ − 3 -2 -1 0 1 2 ≥ 3 dH ARI Time (s) (S1) 2 PCID W - - - 89 4 7 0 - - 18.0 PCID - - - 86 1 13 0 - - 37.0 (S2) 4 PCID W 0 0 0 91 7 1 1 0.007 0.995 17.6 PCID 0 0 0 87 8 4 1 0.014 0.994 21.3 
+
+4.2 Parameter selection 
+
+In this subsection, we provide information on the choice of the expansion parameter, λT , the number of permutations performed, B, and the significance level for the permutation tests defined in (9), αT .The choice of the value of λT is not straightforward. In cases of signals with no change-points, since no detections occur and the algorithm does not restart on smaller intervals, large values of λT imply that less intervals are searched for change-points, while smaller values will force the algorithm to check more intervals. For example, λT means checking the double amount of intervals compared to 2λT , with half of them being all those checked for 2λT , due to the nature of the expansions as described in Section 3. In cases of signals with change-points, larger values of λT might be problematic, as one of the biggest advantages of our algorithm, isolation of the change-points, might not be possible, due to λT being possibly greater than the minimum distance between consecutive change-points. In Appendix A we present some simulation results for the average computational time of PCID for three data sequences; we vary the number of change-points and the distance between them. The results are presented for λT ∈ { 2, 3, 4, 5, 10 , 20 , 30 , 40 , 50 } and support our explanation for the role of λT in the computational complexity of the algorithm. In practice, both for the synthetic as well as the real-world data results, we use λT = 5 , which is not too computationally expensive even for long signals, thanks to the variant described in Section 4.1. The number of permutations performed, B, plays an important role in the computational time of the method. Larger values of B improve the accuracy and stability of the estimated p-value of the hypothesis test given in (9) in each repetition of the permutation test and also allow for smaller values of αT , making the algorithm more conservative in detecting change-points. However, this comes at the cost of higher computational time. The value of B is set such that the product B × αT is an integer. The reason for this is to have an integer-valued cut-off cB,α T = B × αT .An alternative would be to consider ⌈B × αT ⌉, but this would imply that different values of αT provide the same significance level for test (9) , for example, B = 1000 and αT = 0 .001 or αT = 10 −10 . For the reasons explained, the value of B is set to B = 10 d, where d is the number of decimals of αT .The role of the parameter αT is to control the significance level of the permutation tests performed within the PCID algorithm, under the null hypothesis of no change-points. However, our real goal is to control the Type I error of the whole algorithm, as described in (2) and denoted by γ, and not the one of each permutation testing procedure separately. Due to the nature of the algorithm, the exact number of permutation tests performed cannot be calculated in advance. For this reason, we ran a large-scale simulation study in order to calculate the Monte Carlo estimate of γ for our method, which we denote by ˆγ. In Table 2, we present the values of ˆγ over 1000 simulations for different values of αT and signals of length T = 50 , 100 , 150 , . . . , 500 without any change-points, since we wish to obtain the rejection frequency under the null hypothesis (2) . Due to the variant of Section 4.1 and the choice of w = 500 , we only calculate the values up to T = 500 . In the case that T > w and the data sequence is split into kw = ⌈T /w ⌉ disjoint intervals, we account for multiple hypothesis testing by employing the Šidák correction [Šidák, 1967], meaning that we set the Type I error for each of the disjoint intervals to be 
+
+γi := 1 − (1 − γ)1/k w (10) for i ∈ { 1, . . . , k w}. For a given γ, the value of αT is chosen as the value from Table 2 that corresponds to the closest 
+
+ˆγ according to the length of the sequence rounded to the nearest multiple of 50. In the case that the PCID W variant is employed, a different value of αT is chosen for each interval, based on the values of γi and the length of each interval. In order to reduce the number of permutations performed, if the value chosen using Table 2 is αT < 0.001 , PCID will set αT = 0 .001 and B = 1000 . The user can choose to override this setting in case the calculation needs to be done with a very small significance level, keeping in mind that the calculation will be much slower. 9Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+Table 2: Monte Carlo estimates of the Type I error of PCID, ˆγ, calculated over 1000 simulations for different values of 
+
+αT and data sequences of length T = 50 , 100 , 150 , . . . , 500 with no change-points. We set λT = 5 , B = 10 , 000 and indicate in bold the values of ˆγ closest to 0.01 and 0.05. 
+
+T αT ˆγ T αT ˆγ
+
+50 0.01 0.083 100 0.01 0.149 0.009 0.078 0.005 0.083 0.008 0.066 0.004 0.069 0.007 0.058 0.003 0.051 0.006 0.046 0.002 0.037 0.005 0.041 0.001 0.011 
+
+0.004 0.035 0.0005 0.005 0.003 0.029 0.0001 0.001 
+
+0.002 0.008 - -0.001 0.006 - -0.0005 0.002 - -0.0001 0.000 - -150 0.005 0.097 200 0.005 0.131 
+
+0.003 0.055 0.002 0.057 
+
+0.002 0.032 0.001 0.037 0.001 0.017 0.0005 0.017 
+
+0.0005 0.010 0.0003 0.013 
+
+0.0001 0.003 0.0002 0.004 - - 0.0001 0.003 250 
+
+0.002 0.056 
+
+300 0.002 0.070 0.001 0.034 0.001 0.041 
+
+0.0005 0.019 0.0005 0.021 0.0004 0.014 0.0004 0.017 0.0003 0.012 0.0003 0.013 
+
+0.0002 0.010 0.0002 0.009 
+
+0.0001 0.002 0.0001 0.003 350 0.002 0.068 400 0.002 0.076 
+
+0.001 0.044 0.001 0.045 
+
+0.0005 0.019 0.0005 0.025 0.0004 0.018 0.0004 0.021 0.0003 0.013 0.0003 0.013 0.0002 0.008 0.0002 0.006 0.0001 0.007 0.0001 0.003 450 0.002 0.081 500 0.002 0.096 
+
+0.001 0.048 0.001 0.057 
+
+0.0005 0.020 0.0005 0.031 0.0004 0.025 0.0004 0.028 0.0003 0.013 0.0003 0.020 
+
+0.0002 0.009 0.0002 0.009 
+
+0.0001 0.005 0.0001 0.002 10 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+## 5 Simulations 
+
+5.1 Framework 
+
+In this section we investigate the performance of PCID for various signal and noise structures. It is noteworthy that, to the best of our knowledge, there are no implemented algorithms for multiple change-point detection on the circle, thus we do not compare the performance of PCID with competitors and hence do not describe any competitors. In the case of large signals, and in order to reduce the computational complexity of our algorithm, we employ the PCID W variant with w = 500 , as described in Section 4.1. The parameters of PCID are set to the values proposed in Section 4.2. More specifically, λT = 5 and αT is chosen from Table 2. The smallest value of αT we use is 0.001 and we set B = 1000 .We report the results for targeted Type I error of the test described in (2) taking values γ = 0 .01 and 0.05 . The code for the simulations is available at https://github.com/Sophia-Loizidou/PCID .In our results we report the frequency of ˆN − N as a measure of accuracy of the number of detected change-points. As a measure of accuracy of their location, we report the Adjusted Rand Index (ARI) of the estimated segmentation against the true one [Hubert and Arabie, 1985]. We also report the scaled Hausdorff distance, defined as 
+
+dH = n−1 
+
+> s
+
+max 
+
+n
+
+max  
+
+> j
+
+min  
+
+> k
+
+|rj − ˆrk| , max  
+
+> k
+
+min  
+
+> j
+
+|rj − ˆrk|
+
+o
+
+where ns is the length of the largest segment between successive change-points, rj are the true change-points and ˆrj
+
+their estimates. A good performing method should achieve ARI close to 1 and dH close to 0. Finally, we also report the average computational time. The piecewise-constant signals fT used in the simulations are the following: (S3) sequence of length T = 200 with no change-points. (S4) sequence of length T = 100 with 1 change-point at location 50 and values between change-points 0 and π.(S5) sequence of length T = 200 with 2 change-points at locations 50 and 100 with values between change-points equal to 0, π and 1.(S6) sequence of length T = 210 with 6 change-points at locations 30 , 60 , 90 , 120 , 150 , and 180 with values between change-points equal to 0, 1, 2, 3, 4, 5, and 6.(S7) sequence of length T = 150 with 3 change-points at locations 60 , 100 , and 130 with values between change-points equal to 1.5, 3.3, 5.2, and 1.5.(S8) sequence of length T = 600 with 3 change-points at locations 150 , 300 , and 500 with values between change-points equal to 1, 4, 2, and 5.These piecewise-constant signals will be combined with various noises. In Section 5.2 we consider the situations where the independent noise ϵt follows the von Mises distribution, ϵt ∼ vM (0 , κ ) (Section 5.2.1), under which the contrast function is constructed, as well as other circular distributions, namely the wrapped Cauchy, ϵt ∼ wC (0 , ρ ) and wrapped Normal distributions, ϵt ∼ wN (0 , β ) (Section 5.2.2). Section 5.3 contains settings with dependent noise ϵt. Different values of the concentration parameters κ, ρ and β are considered for Signals (S4) - (S8). Signal (S3) contains no change-points, thus we only consider one value for the concentration parameter. Some visualizations are given in Figures 3 and 4. The plotted data sequences follow model (1) when ϵt ∼ vM (0 , κ )
+
+for various values of κ, as provided in the caption of each plot. The reader should keep in mind that the data have 2π
+
+periodicity when looking at the plots. When the true mean of the data is close to 0 or 2π, due to the added noise, the changes can appear as change in the variance. However, as the point 0 can be chosen to be any point on the circle, a different choice of its location can change the way the plot looks. It is worth noting that the change-points are not visible, yet the algorithm is able to accurately detect them (see Section 5.2). 
+
+5.2 Independent noise structure 5.2.1 von Mises 
+
+In this subsection we consider model (1) when ϵt ∼ vM (0 , κ ), for κ ∈ { 8, 4, 2, 1}. Our contrast function is constructed under the assumption that the data are von Mises distributed, so PCID is best suited for this type of noise. In order to generate data we use the function rvonmises () from the R package circular [Agostinelli and Lund, 2025]. The results can be found in Table 3. As expected, setting γ = 0 .01 makes the algorithm less prone to overestimation of change-points as compared to γ = 0 .05 . When κ = 1 , setting γ = 0 .01 results in PCID failing to detect some 11 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 024625 50 75 100     
+
+> Time Observed signal 0246050 100 150 200
+> Time Observed signal
+
+(a) (b) Figure 3: Plots of data sequences that follow model (1) with ϵt ∼ vM (0 , κ ) for κ = 1 with underlying signals (a) (S4) and (b) (S5). 02460 50 100 150    
+
+> Time Observed signal 02460200 400 600
+> Time Observed signal
+
+(a) (b) Figure 4: Plots of data sequences that follow model (1) with ϵt ∼ vM (0 , κ ) for (a) κ = 2 and (b) κ = 1 with underlying signals (a) (S7) and (b) (S8). change-points, as the increased variance of the noise can mask the changes. This is especially evident for Signals (S6) and (S7) whose magnitude of change at the change-points is smaller than the rest of the signals. In such cases, the variance when κ = 1 is larger than the magnitude of change, thus we observe under-detection of change-points even for 
+
+γ = 0 .05 . The simulation results also indicate that larger values of γ can sometimes lead to higher computational times. This can be explained by the fact that the algorithm needs to perform more permutations before deciding that there is no change-point (if, indeed, this is the case) in the interval under consideration (as cB,α T is larger). Decreasing the concentration parameter also results in higher average computational times. This is due to the fact that the algorithm struggles to identify the change-points (because of higher variability in the noise) and requires permutation testing to be done on more, hence larger intervals. 
+
+5.2.2 Different noise structures 
+
+We now consider different noise structures. More specifically, we consider the wrapped Cauchy distribution, with probability density function given by 
+
+fwC (θ; μ, ρ ) = 12π
+
+1 − ρ2
+
+1 + ρ2 − 2ρ cos( θ − μ)
+
+with concentration parameter ρ ∈ (0 , 1) , and the wrapped Normal distribution with probability density function 
+
+fwN (θ; μ, β ) = 12π 1 + 2 
+
+> ∞
+
+X
+
+> p=1
+
+βp2
+
+cos p(θ − μ)
+
+!
+
+12 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+Table 3: Distribution of ˆN − N over 100 simulated data sequences of the Signals (S3) - (S8) using the targeted Type I error mentioned, with ϵt ∼ vM (0 , κ ). The average ARI, dH and computational times are also given, when they are informative. 
+
+ˆN − N
+
+Signal Targeted γ κ ≤ − 3 -2 -1 0 1 2 ≥ 3 dH ARI Time (s) (S3) 0.01 2 - - - 99 1 0 0 - - 2.81 0.05 2 - - - 94 4 2 0 - - 1.80 (S4) 0.01 8 - - 0 97 3 0 0 0.010 0.995 0.97 4 - - 0 96 4 0 0 0.013 0.993 0.94 2 - - 0 98 2 0 0 0.012 0.982 1.02 1 - - 1 99 0 0 0 0.024 0.920 1.74 0.05 8 - - 0 93 7 0 0 0.014 0.988 1.13 4 - - 0 91 9 0 0 0.028 0.982 1.12 2 - - 0 94 6 0 0 0.022 0.978 1.1 1 - - 0 98 1 1 0 0.025 0.923 1.67 (S5) 0.01 8 - 0 0 97 3 0 0 0.010 0.995 0.97 4 - 0 0 98 2 0 0 0.003 0.998 1.70 2 - 0 0 98 2 0 0 0.007 0.989 1.94 1 - 0 1 99 0 0 0 0.022 0.941 3.09 0.05 8 - 0 0 96 4 0 0 0.003 0.998 2.22 4 - 0 0 96 4 0 0 0.005 0.994 2.11 2 - 0 0 94 6 0 0 0.015 0.983 1.96 1 - 0 1 95 4 0 0 0.028 0.938 2.95 (S6) 0.01 8 0 0 0 100 0 0 0 0.002 1.000 2.84 4 0 0 0 97 3 0 0 0.003 0.992 2.93 2 0 0 0 98 2 0 0 0.011 0.964 3.93 1 13 33 33 21 0 0 0 0.149 0.687 5.84 0.05 8 0 0 0 99 1 0 0 0.001 0.999 2.70 4 0 0 0 95 5 0 0 0.004 0.991 2.72 2 0 0 0 93 6 1 0 0.013 0.961 3.62 1 4 23 41 31 1 0 0 0.115 0.740 5.66 (S7) 0.01 8 0 0 0 98 2 0 0 0.001 0.998 1.51 4 0 0 0 94 6 0 0 0.006 0.991 1.73 2 0 0 0 96 4 0 0 0.015 0.972 2.22 1 0 7 37 52 4 0 0 0.122 0.796 4.44 0.05 8 0 0 0 92 8 0 0 0.010 0.994 1.76 4 0 0 0 92 8 0 0 0.011 0.987 1.64 2 0 0 0 93 7 0 0 0.018 0.968 2.24 1 0 1 26 69 4 0 0 0.081 0.84 4.10 (S8) 0.01 8 0 0 0 93 7 0 0 0.004 0.998 10.9 4 0 0 0 88 11 1 0 0.009 0.993 10.9 2 0 0 0 89 7 4 0 0.012 0.990 11.1 1 0 0 0 94 5 1 0 0.013 0.978 14.5 0.05 8 0 0 0 92 8 0 0 0.004 0.998 11.9 4 0 0 0 87 11 2 0 0.010 0.993 10.9 2 0 0 0 88 8 4 0 0.012 0.990 11.3 1 0 0 0 92 6 2 0 0.015 0.977 13.8 13 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+with concentration parameter β ∈ [0 , 1] . In order to consider noise comparable with the von Mises distribution of Section 5.2.1, we set the values of ρ and β such that the circular variances are equal to that of the von Mises setting. The circular variance is given by V = 1 − R, where R is the population version of the mean resultant length as in (5). It holds that 
+
+VvM = 1 − I1(κ)
+
+I0(κ) , V wC = 1 − ρ, V wN = 1 − β, 
+
+where I0(κ), I 1(κ) are given by (4) and VvM , V wC , V wN denote the circular variance for the von Mises, wrapped Cauchy and wrapped Normal distributions, respectively. Numerical evaluation of the Bessel functions for κ ∈ { 8, 4, 2, 1}
+
+yields corresponding values ρ, β ∈ { 0.94 , 0.86 , 0.70 , 0.45 }, respectively. In order to generate data we use the functions 
+
+rwrappedcauchy () and rwrappednormal () from the R package circular [Agostinelli and Lund, 2025]. In Table 4 we present the results of model (1) for ϵt ∼ wC (0 , ρ ), while in Table 5 we consider ϵt ∼ wN (0 , β ). These data sequences do not follow the assumption under which our procedure is built. However, as can be seen from the results, PCID performs well even in such scenarios. This indicates that PCID seems robust under deviations from the von Mises distribution, upon which the contrast function was built. 
+
+5.3 Serially correlated data 
+
+In this subsection we relax the assumption of independence of ϵt. In order to deal with such data, a common technique is to subsample the data sequence under consideration. More specifically, the sequence Θ1, Θ2, . . . , ΘN is split into 
+
+ν ∈ N subsequences, denoted by Yi;t for i ∈ { 1, 2, . . . , ν } and t ∈ { 1, . . . , M i} where Mi = ⌊ T −iν ⌋, by choosing every νth observation, meaning that 
+
+{Yi;t}Mi 
+
+> t=1
+
+= {Θi, Θi+ν , . . . , Θi+Miν }.
+
+PCID is applied to each of the Yi;t, resulting in ν sequences of possible change-points. A majority voting rule is applied to decide if the detected change-points in each of the subsequences should be regarded as change-points in the original one. For η ∈ { 1, . . . , ν }, if at least η sequences detect a change-point in the same position (or in a neighbourhood around it, say ±δ), we consider it to be a change-point. If the change-point has been detected at the jth location of Yi;t,its location in the original data sequence is (j − 1) ν + i.In Table 6 we present the simulation results for Signals (S3) and (S4), when ϵt follows an autoregressive process with 
+
+p = 1 (AR(1)) with autoregressive coefficient ϕ ∈ { 0.3, 0.5, 0.7}, given by ϵt = ϕϵ t−1 + ϵ′
+
+> t
+
+. In order to respect the 
+
+2π periodic nature of circular data, the innovations, ϵ′
+
+> t
+
+, are set to follow the von Mises distribution with concentration parameter κ = 1 .7. The usual choice for the innovations on the real line is ϵ′ 
+
+> t
+
+∼ N (0 , 1) , which, when wrapped around the circle, has circular variance V = 1 − e− 12 = 0 .4 [Mardia and Jupp, 2000, (3.5.63)]. For our choice of κ, it holds that VvM = 0 .4, where VvM denotes the circular variance of the von Mises distribution, meaning that we chose κ such that the circular variances, V and VVM coincide. In our simulations we used ν = 5 , η = 3 and δ = 2 .
+
+## 6 Real data 
+
+In this section we illustrate the practical relevance of PCID by applying it on three real world datasets. In Section 6.1 we consider flare data, in Section 6.2 acrophase data and in Section 6.3 wave data. While the first two examples have already been analysed for possible change-points in the literature [Lombard, 1986, Lombard et al., 2017], we are, to the best of our knowledge, the first to apply a change-point detection method on the third dataset. Through these case studies we demonstrate the tangible impact of our method, besides its methodological advances as laid out in the Introduction. 
+
+6.1 Flare data 
+
+We firstly analyse data that were firstly considered in Lombard [1986]. The data come from a test system for illumination flares of the type commonly deployed in rescue operations. Each flare is fixed to a projectile that is fired from a point O
+
+in a fixed direction, and begins burning at some point P along its trajectory. The quantity of interest is the colatitude 
+
+θ of the vector OP , whose dispersion characterizes the stability of the flare-projectile system. The dataset contains the colatitudes recorded for 60 consecutive launches of these assemblies and is plotted in Figure 5. For visualization purposes we plot the data on the [−π, π ) scale. In our analysis we set γ = 0 .01 , for which B = 1000 and αT = 0 .002 are used. The expansion parameter is set to 
+
+λT = 5 , as described in Section 4.2. The change-points identified by PCID are at times 12 and 42. These values coincide with the change-points detected by Lombard [1986]. The estimated signal is plotted in Figure 5. 14 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+Table 4: Distribution of ˆN − N over 100 simulated data sequences of the Signals (S3) - (S8) using the targeted Type I error mentioned, with ϵt ∼ wC (0 , ρ ). The average ARI, dH and computational times are also given, when they are informative. 
+
+ˆN − N
+
+Signal Targeted γ ρ ≤ − 3 -2 -1 0 1 2 ≥ 3 dH ARI Time (s) (S3) 0.01 0.86 - - - 95 2 3 0 - - 1.58 0.05 0.86 - - - 98 2 0 0 - - 0.83 (S4) 0.01 0.94 - - 0 100 0 0 0 0.001 0.999 0.83 0.86 - - 0 99 1 0 0 0.006 0.991 0.84 0.70 - - 0 100 0 0 0 0.005 0.979 0.92 0.45 - - 2 95 3 0 0 0.032 0.914 1.47 0.05 0.94 - - 0 100 0 0 0 0.001 0.999 0.98 0.86 - - 0 98 2 0 0 0.007 0.991 0.98 0.70 - - 0 95 5 0 0 0.023 0.975 0.98 0.45 - - 0 93 6 1 0 0.035 0.919 1.45 (S5) 0.01 0.94 - 0 0 99 0 1 0 0.005 0.998 1.63 0.86 - 0 0 98 1 1 0 0.009 0.992 1.65 0.70 - 0 0 98 2 0 0 0.010 0.986 1.95 0.45 - 1 0 98 1 0 0 0.019 0.943 2.74 0.05 0.94 - 0 0 97 2 1 0 0.006 0.990 1.84 0.86 - 0 0 95 3 2 0 0.022 0.987 1.81 0.70 - 0 0 90 7 3 0 0.027 0.977 2.06 0.45 - 0 0 96 3 1 0 0.025 0.947 2.81 (S6) 0.01 0.94 0 0 0 100 0 0 0 0.002 0.995 2.72 0.86 0 0 0 97 3 0 0 0.005 0.987 2.95 0.70 0 0 0 98 2 0 0 0.011 0.958 3.70 0.45 14 26 38 22 0 0 0 0.137 0.711 5.83 0.05 0.94 0 0 0 98 2 0 0 0.004 0.994 2.69 0.86 0 0 0 97 3 0 0 0.007 0.983 2.95 0.70 0 0 0 97 3 0 0 0.012 0.961 3.56 0.45 6 16 39 38 1 0 0 0.112 0.766 5.69 (S7) 0.01 0.94 0 0 0 100 0 0 0 0.001 0.996 1.42 0.86 0 0 0 99 1 0 0 0.007 0.991 1.51 0.70 0 0 0 98 2 0 0 0.015 0.962 1.88 0.45 1 14 26 58 1 0 0 0.144 0.780 3.38 0.05 0.94 0 0 0 94 6 0 0 0.005 0.992 1.54 0.86 0 0 0 94 5 1 0 0.016 0.986 1.58 0.70 0 0 0 96 4 0 0 0.017 0.961 1.94 0.45 0 1 26 68 4 0 1 0.090 0.846 3.30 (S8) 0.01 0.94 0 0 0 92 7 1 0 0.007 0.994 10.7 0.86 0 0 0 96 2 2 0 0.007 0.995 10.8 0.70 0 0 0 95 3 2 0 0.00928 0.990 12.2 0.45 0 0 0 97 1 2 0 0.010 0.974 12.4 0.05 0.94 0 0 0 93 5 2 0 0.007 0.995 10.9 0.86 0 0 0 93 3 3 1 0.005 0.993 11.0 0.70 0 0 0 94 3 3 0 0.007 0.989 11.8 0.45 0 0 0 91 8 1 0 0.015 0.967 13.4 15 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+Table 5: Distribution of ˆN − N over 100 simulated data sequences of the Signals (S3) - (S8) using the targeted Type I error mentioned, with ϵt ∼ wN (0 , β ). The average ARI, dH and computational times are also given, when they are informative. 
+
+ˆN − N
+
+Signal Targeted γ β ≤ − 3 -2 -1 0 1 2 ≥ 3 dH ARI Time (s) (S3) 0.01 0.86 - - - 97 3 0 0 - - 0.67 0.05 0.86 - - - 96 1 3 0 - - 1.35 (S4) 0.01 0.94 - - 0 99 1 0 0 0.005 0.999 0.751 0.86 - - 0 100 0 0 0 0.001 1.00 0.756 0.70 - - 0 100 0 0 0 0.001 0.996 0.769 0.45 - - 0 97 3 0 0 0.020 0.951 1.25 0.05 0.94 - - 0 93 6 1 0 0.018 0.987 0.858 0.86 - - 0 97 3 0 0 0.009 0.994 0.853 0.70 - - 0 93 6 1 0 0.026 0.983 0.887 0.45 - - 0 97 3 0 0 0.025 0.945 1.27 (S5) 0.01 0.94 - 0 0 96 3 1 0 0.006 0.993 1.61 0.86 - 0 0 95 5 0 0 0.014 0.991 1.65 0.70 - 0 0 97 3 0 0 0.009 0.986 1.84 0.45 - 0 0 98 2 0 0 0.015 0.957 2.60 0.05 0.94 - 0 0 90 6 4 0 0 0.0207 0.981 1.82 0.86 - 0 0 97 2 1 0 0.0099 0.993 1.77 0.70 - 0 0 95 5 0 0 0.0147 0.986 1.94 0.45 - 0 0 94 6 0 0 0.0313 0.942 2.64 (S6) 0.01 0.94 0 0 0 97 3 0 0 0.002 0.998 2.67 0.86 0 0 0 97 3 0 0 0.003 0.992 2.78 0.70 0 0 0 97 3 0 0 0.011 0.963 4.04 0.45 14 30 37 19 0 0 0 0.132 0.702 7.23 0.05 0.94 0 0 0 95 3 2 0 0.002 0.998 2.72 0.86 0 0 0 96 3 1 0 0.005 0.991 2.77 0.70 0 0 0 94 6 0 0 0.013 0.961 3.56 0.45 12 18 28 40 2 0 0 0.106 0.744 6.10 (S7) 0.01 0.94 0 0 0 97 3 0 0 0.006 0.996 1.41 0.86 0 0 0 97 3 0 0 0.005 0.992 1.49 0.70 0 0 0 97 3 0 0 0.012 0.971 1.81 0.45 1 8 34 56 1 0 0 0.130 0.799 3.31 0.05 0.94 0 0 0 94 3 3 0 0.011 0.992 1.55 0.86 0 0 0 95 5 0 0 0.005 0.993 1.57 0.70 0 0 97 2 1 0 0 0.011 0.970 1.82 0.45 0 3 26 65 5 1 0 0.091 0.822 3.50 (S8) 0.01 0.94 0 0 0 95 4 1 0 0.003 0.997 12.8 0.86 0 0 0 92 5 3 0 0.006 0.995 13.4 0.70 0 0 0 96 3 0 1 0.003 0.994 14.3 0.45 0 0 0 94 5 1 0 0.012 0.975 14.4 0.05 0.94 0 0 0 90 7 2 1 0.008 0.992 11.3 0.86 0 0 0 90 9 1 0 0.008 0.996 14.2 0.70 0 0 0 94 5 1 0 0.007 0.991 14.6 0.45 0 0 0 92 8 0 0 0.014 0.975 16.7 16 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+Table 6: Distribution of ˆN − N over 100 simulated data sequences of the Signals (S3), (S4) using the targeted Type I error mentioned, with ϵt following AR(1) process with autoregressive coefficient ϕ. The average ARI, dH and computational times are also given, when they are informative. 
+
+ˆN − N
+
+Signal Targeted Type I error ϕ -1 0 1 2 ≥ 3 dH ARI Time (s) (S3) 0.05 0.3 - 99 1 0 0 - - 0.130 0.5 - 100 0 0 0 - - 0.136 0.7 - 91 8 1 0 - - 0.172 (S4) 0.05 0.3 2 98 0 0 0 0.024 0.925 0.184 0.5 18 82 0 0 0 0.109 0.750 0.179 0.7 63 37 0 0 0 0.329 0.318 0.134 −3 −2 −1 012310 20 30 40 50 60 
+
+> Time Observed signal
+
+Figure 5: Plot of the flare data with the estimated signal from PCID in red. 
+
+6.2 Acrophase data 
+
+We now analyse data that are also considered in Lombard et al. [2017]. The scope of Lombard et al. [2017] is online change-point detection, thus we do not compare our results with their detected change-points. Acrophase is the time at which the maximum systolic blood pressure is reached on a given day. Monitoring such data for changes in the time that the maximum is achieved in different days can provide an early warning sign of a possible medical condition before it becomes clinically obvious. The data was collected from a patient suffering from episodes of clinical depression. The dataset contains 306 observations and is plotted in Figure 6. For visualization purposes we plot the data on the [−π, π )
+
+scale. In our analysis we set γ = 0 .01 , for which B = 1000 and αT = 0 .001 are used, and λT = 5 . Our algorithm detected 9 change-points at times 59 , 72 , 87 , 103 , 111 , 127 , 248 , 261 , 269 . The estimated signal from PCID are plotted in Figure 6. 
+
+6.3 Wave data 
+
+We now consider a dataset containing wave directions, recorded in the period 15/02/2010 – 16/03/2010 by the buoy of Ancona, located in the Adriatic Sea at about 30 km from the coast. The data consists of 1326 observations of half-hourly wave directions. The data sequence is plotted in Figure 7. For visualization purposes we plot the data on the 
+
+[−π, π ) scale. One could mistakenly conclude that there is a big variability between observations, especially around 
+
+t = 400 − 600 . However, due to periodicity, the values close to −π and π are in fact close to each other. This dataset was also analysed by Lagona et al. [2015] and Loizidou et al. [2025], but not for the purpose of change-point detection. The data sequence has length T = 1326 , thus, in order to reduce the computational complexity of our algorithm, we employ the PCID W variant with w = 500 , as described in Section 4.1. This implies that the sequence is split into 3 disjoint intervals and, since we set γ = 0 .01 , γi = 0 .003 is used for i = 1 , 2, 3, where γi is defined in (10) . For all intervals under consideration, the parameter values used are B = 1000 , αT = 0 .001 and λT = 5 . PCID detects 68 change-points. The estimated signal is plotted in Figure 7. We also carried out a more conservative analysis of the data, 17 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT −3 −2 −1 01230 100 200 300 
+
+> Time Observed signal
+
+Figure 6: Plot of the acrophase data with the estimated signal from PCID in red. −3 −2 −1 01230 500 1000 
+
+> Time Observed signal
+
+Figure 7: Plot of the wave data with the estimated signal from PCID in red. by forcing the algorithm to use B = 10 , 000 and the appropriate values from Table 2 for each disjoint interval. With this analysis we obtained 63 change-points, so the results are very similar. 
+
+## 7 Possible extensions/discussion 
+
+In this paper we have proposed a new change-point detection algorithm for changes in the mean of circular data, denoted PCID. The algorithm first isolates each change-point and then detects it using permutation testing. As highlighted in Sections 1 and 3, the isolation aspect of the method is very important as detection becomes easier when a single change-point is present in the interval under consideration. For the detection of change-points, a contrast function is employed, which is constructed under the assumption that the noise, ϵt of model (1) , follows the von Mises distribution. Through simulations we show that the algorithm can also be applied to data sequences that do not satisfy this distributional assumption. The performance of the algorithm is also investigated for serially correlated noise structures. A different, not very explored area of change-point detection, concerns multidimensional manifolds involving angles, such as the torus or cylinder, which are the Cartesian product of circles ( [0 , 2π)2) and the Cartesian product between a circle and a real-valued variable ( [0 , 2π) × R), respectively. The wave dataset considered in Section 6.3 is part of a bigger dataset which also involves wind directions and wave height [Loizidou et al., 2025]. Toroidal data can arise when considering wave and wind directions, while wave direction and height make up a cylindrical dataset. A natural direction for future research would be to extend PCID to toroidal or cylindrical data. 18 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+Table 7: Distribution of ˆN −N over 100 simulated data sequences of the Signals (S9), (S10) and (S11) for ϵt ∼ vM (0 , 4) .The average ARI, dH and computational times are also given, when they are informative. 
+
+ˆN − N
+
+Signal λT ≤ − 3 -2 -1 0 1 2 ≥ 3 dH ARI Time (s) (S9) 2 - - - 88 5 6 1 - - 16.8 3 - - - 90 4 5 1 - - 12.6 4 - - - 91 5 3 1 - - 9.06 5 - - - 93 3 4 0 - - 8.29 10 - - - 96 2 2 0 - - 3.50 20 - - - 97 2 1 0 - - 1.86 30 - - - 98 1 1 0 - - 1.46 40 - - - 98 1 1 0 - - 1.24 50 - - - 97 2 1 0 - - 1.04 (S10) 2 - 0 0 85 15 0 0 0.006 0.996 12.2 3 - 0 0 90 10 0 0 0.004 0.997 9.71 4 - 0 0 90 10 0 0 0.003 0.998 12.7 5 - 0 0 97 3 0 0 0.002 0.999 8.97 10 - 0 0 94 6 0 0 0.002 0.998 9.42 20 - 0 0 95 5 0 0 0.002 0.999 9.32 30 - 0 0 97 3 0 0 0.002 0.999 9.27 40 - 0 0 99 1 0 0 0.001 0.999 13.2 50 - 0 0 99 1 0 0 0.001 0.999 16.7 (S11) 2 0 1 2 93 4 0 0 0.013 0.971 3.17 3 0 1 1 97 1 0 0 0.010 0.973 2.80 4 0 0 2 96 2 0 0 0.011 0.974 2.71 5 0 0 3 95 2 0 0 0.011 0.974 2.36 10 0 0 2 96 2 0 0 0.010 0.977 2.71 20 0 1 0 98 1 0 0 0.008 0.977 2.60 30 100 0 0 0 0 0 0 0.824 0.030 1.03 40 100 0 0 0 0 0 0 0.703 0.102 1.32 50 100 0 0 0 0 0 0 0.891 0.004 0.60 
+
+## A Simulations for different expansion parameters 
+
+In this section we present some simulation results for different choices of the expansion parameter, λT . More specifically we consider λT ∈ { 2, 3, 4, 5, 10 , 20 , 30 , 40 , 50 }. The signals used are the following (S9) sequence of length T = 500 with no change-points. (S10) sequence of length T = 500 with 9 change-points at locations 50 , 100 , . . . , 450 and values between change-points 0, 1.5, 0, . . . , 0, 1.5.(S11) sequence of length T = 100 with 9 change-points at locations 10 , 20 , . . . , 90 and values between change-points 
+
+0, 2, 0, . . . , 0, 2.For Signals (S9) and (S10), we use αT = 0 .001 , while for Signal (S11) we use αT = 0 .003 . For all three signals we set B = 1000 and ϵt ∼ vM (0 , 4) . The values chosen for αT and B are in line with Section 4.2. We work under the same framework as described in Section 5.1. Table 7 indicates that in cases of no change-points as in Signal (S9), the average computational time decreases as λT increases. When change-points are present, the conclusions are different. The simulation results concerning Signal (S10) show that the computational time is not directly proportional to the value of λT . When the change-points are close to each other, as in Signal (S11), large values of λT fail to detect any change-points. 
+
+Code availability: The code is available in https://github.com/Sophia-Loizidou/PCID .
+
+Data availability: The flare and acrophase datasets are available in the online Supplementary Material of Lombard et al. [2017]. The wave dataset is available upon request to S.L. 19 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+Acknowledgments: The authors would like to thank Francesco Lagona for the wave data. S.L. was funded by the Luxembourg National Research Fund (FNR), grant reference PRIDE/21/16747448/MATHCODA. 
+
+## References 
+
+C. Agostinelli and U. Lund. R package circular : Circular Statistics (version 0.5-2) , 2025. URL https://CRAN. R-project.org/package=circular .A. Anastasiou and P. Fryzlewicz. Detecting multiple generalized change-points by isolating single ones. Metrika , 85(2): 141–174, 2022. A. Anastasiou and S. Loizidou. Data-adaptive structural change-point detection via isolation. Statistics and Computing ,35(5):117, 2025. J. Antoch and M. Hušková. Permutation tests in change point analysis. Statistics & Probability Letters , 53(1):37–46, 2001. R. Baranowski, Y. Chen, and P. Fryzlewicz. Narrowest-over-threshold detection of multiple change points and change-point-like features. Journal of the Royal Statistical Society: Series B (Statistical Methodology) , 81(3):649–672, 2019. doi:https://doi.org/10.1111/rssb.12322. K. J. Berry, J. E. Johnston, and P. W. Mielke Jr. A chronicle of permutation statistical methods. Cham: Springer , 2014. H. Cao and W. Biao Wu. Changepoint estimation: another look at multiple testing problems. Biometrika , 102(4): 974–980, 2015. doi:10.1093/biomet/asv031. H. Cho and P. Fryzlewicz. Multiscale and multilevel technique for consistent segmentation of nonstationary time series. 
+
+Statistica Sinica , 22(1):207–229, 2012. H. Cho and C. Kirch. Data segmentation algorithms: Univariate mean change and beyond. Econometrics and Statistics ,30:76–95, 2024. doi:https://doi.org/10.1016/j.ecosta.2021.10.008. M. Csörg˝ o and L. Horváth. A note on the change-point problem for angular data. Statistics & Probability Letters , 27 (1):61–65, 1996. G. Dilillo, K. Ward, I. A. Eckley, P. Fearnhead, R. Crupi, Y. Evangelista, A. Vacchi, and F. Fiore. Gamma-ray burst detection with poisson-focus and other trigger algorithms. The Astrophysical Journal , 962(2):137, 2024. M. D. Ernst. Permutation methods: A basis for exact inference. Statistical Science , 19(4):676–685, 2004. P. Fryzlewicz. Wild binary segmentation for multiple change-point detection. The Annals of Statistics , 42(6):2243–2281, 2014. P. Fryzlewicz. Detecting possibly frequent change-points: Wild Binary Segmentation 2 and steepest-drop model selection. Journal of the Korean Statistical Society , 49(4):1027–1070, 2020. R. J. Gadsden and G. K. Kanji. Sequential analysis for angular data. Journal of the Royal Statistical Society. Series D (The Statistician) , 30(2):119–129, 1981. Y. Ge, S. Dudoit, and T. P. Speed. Resampling-based multiple testing for microarray data analysis. Test , 12(1):1–77, 2003. K. Ghosh, S. R. Jammalamadaka, and M. Vasudaven. Change-point problems for the von Mises distribution. Journal of Applied Statistics , 26(4):423–434, 1999. J. Gill and D. Hangartner. Circular data in political science and how to handle it. Political Analysis , 18(3):316–336, 2010. I. Grabovsky and L. Horváth. Change-Point Detection in Angular Data. Annals of the Institute of Statistical Mathematics ,53(3):552–566, 2001. G. Gugliani, A. Sarkar, C. Ley, and S. Mandal. New methods to assess wind resources in terms of wind speed, load, power and direction. Renewable Energy , 129:168–182, 2018. doi:https://doi.org/10.1016/j.renene.2018.05.088. D. M. Hawkins and F. Lombard. Segmentation of circular data. Journal of Applied Statistics , 42(1):88–97, 2015. D. M. Hawkins and F. Lombard. Cusum control for data following the von Mises distribution. Journal of Applied Statistics , 44(8):1319–1332, 2017. L. Horváth and M. Hušková. Testing for changes using permutations of U-statistics. Journal of Statistical Planning and Inference , 128(2):351–371, 2005. 20 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+L. Hubert and P. Arabie. Comparing partitions. Journal of Classification , 2(1):193–218, 1985. M.-H. Huh and M. Jhun. Random permutation testing in multiple linear regression. Communications in Statistics-Theory and Methods , 30(10):2023–2032, 2001. M. Hušková and A. Slab` y. Permutation tests for multiple changes. Kybernetika , 37(5):605–622, 2001. S. Jia and L. Shi. Efficient change-points detection for genomic sequences via cumulative segmented regression. 
+
+Bioinformatics , 38(2):311–317, 2021. doi:10.1093/bioinformatics/btab685. B. C. Jung, M. Jhun, and S. H. Song. A new random permutation test in ANOVA models. Statistical Papers , 48(1): 47–62, 2007. S. Kovács, P. Bühlmann, H. Li, and A. Munk. Seeded Binary Segmentation: A general methodology for fast and optimal changepoint detection. Biometrika , 110(1):249–256, 2023. doi:10.1093/biomet/asac052. D. Lacomba, A. Simó, and O. Belmonte. Detection of anomalous behaviour using mixtures of von Mises distributions and an extension of the CUSUM algorithm. Journal of Statistical Computation and Simulation , 95(7):1556–1571, 2025. F. Lagona, M. Picone, and A. Maruotti. A hidden Markov model for the analysis of cylindrical time series. Environ-metrics , 26(8):534–544, 2015. doi:10.1002/env.2355. C. Ley and T. Verdebout. Modern Directional Statistics . Chapman and Hall/CRC Press, Boca Ratón, Florida, 2017. ISBN 978-1-4987-0664-3. C. Ley and T. Verdebout, editors. Applied Directional Statistics: Modern Methods and Case Studies . Chapman and Hall/CRC Press, Boca Ratón, Florida, 2018. S. Loizidou, C. Ley, S. Kato, and K. V. Mardia. Modelling toroidal and cylindrical data via the trivariate wrapped Cauchy copula with non-uniform marginals, 2025. arXiv:2511.10336. F. Lombard. The change-point problem for angular data: A nonparametric approach. Technometrics , 28(4):391–397, 1986. F. Lombard. A changepoint analysis of some data arising in gamma-ray astronomy. South African Statistical Journal ,25(2):83–98, 1991. F. Lombard and R. Maxwell. A cusum procedure to detect deviations from uniformity in angular data. Journal of Applied Statistics , 39(9):1871–1880, 2012. F. Lombard, O. de Jager, and D. Schultz. The detection of a change point in periodic gamma ray data. Nuclear Physics B - Proceedings Supplements , 14(1):285–290, 1990. F. Lombard, D. M. Hawkins, and C. J. Potgieter. Sequential rank CUSUM charts for angular data. Computational Statistics & Data Analysis , 105:268–279, 2017. M. A. Long, K. J. Berry, and P. W. Mielke Jr. Tetrachoric correlation: A permutation alternative. Educational and Psychological Measurement , 69(3):429–437, 2009. Y. Ma, A. Anastasiou, and F. Montiel. Automated detection of short-term slow slip events using GNSS data via change-point analysis. Geophysical Journal International , 244(3):ggaf517, 2025. doi:10.1093/gji/ggaf517. K. V. Mardia and P. E. Jupp. Directional Statistics . John Wiley & Sons, Chichester, United Kingdom, 2000. N. Piana Agostinetti and G. Sgattoni. Changepoint detection in seismic double-difference data: application of a trans-dimensional algorithm to data-space exploration. Solid Earth , 12(12):2717–2733, 2021. doi:10.5194/se-12-2717-2021. C. J. Potgieter, F. Lombard, and D. M. Hawkins. Statistical Process Control on the Circle: A Review and Some New Results , pages 425–447. Springer Nature Singapore, Singapore, 2022. ISBN 978-981-19-1044-9. P. T. Reiss, M. H. H. Stevens, Z. Shehzad, E. Petkova, and M. P. Milham. On distance-based permutation tests for between-group comparisons. Biometrics , 66(2):636–643, 2010. A. Sengupta and A. Kumar Laha. A Bayesian analysis of the change-point problem for directional data. Journal of Applied Statistics , 35(6):693–700, 2008. Z. Šidák. Rectangular confidence regions for the means of multivariate normal distributions. Journal of the American statistical association , 62(318):626–633, 1967. M. A. Stephens. Techniques for directional data. Technical report, 1969. S. Touati, M. Naylor, and I. Main. Detection of change points in underlying earthquake rates, with application to global mega-earthquakes. Geophysical Journal International , 204(2):753–767, 2015. doi:10.1093/gji/ggv398. 21 Multiple change-point detection on the circle via isolation using permutation testing A P REPRINT 
+
+C. Truong, L. Oudre, and N. Vayatis. Selective review of offline change point detection methods. Signal Processing ,167:107299, 2020. doi:https://doi.org/10.1016/j.sigpro.2019.107299. L. Y. Vostrikova. Detecting “disorder” in multidimensional random processes. In Doklady Akademii Nauk , volume 259, pages 270–274. Russian Academy of Sciences, 1981. J. Xu, A. T. A. Wood, and T. Zou. Change Point Detection for Random Objects with Periodic Behavior, 2025. arXiv:2501.01657 [stat]. A. Zeileis and T. Hothorn. A toolbox of permutation tests for structural change. Statistical Papers , 54(4):931–954, 2013. 22

@@ -1,0 +1,745 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-18T20:24:49.908912+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 11,
+    "deep_cap": 7,
+    "deep_selected": 7,
+    "quick_candidates": 33,
+    "quick_skim_target": 12,
+    "quick_selected": 12
+  },
+  "deep_dive": [
+    {
+      "id": "2603.14681v1",
+      "title": "\\texttt{BayesBreak}: Generalized Hierarchical Bayesian Segmentation with Irregular Designs, Multi-Sample Hierarchies, and Grouped/Latent-Group Designs",
+      "abstract": "Bayesian change-point and segmentation models provide uncertainty-aware piecewise-constant representations of ordered data, but exact inference is often tied to narrow likelihood classes, single-sequence settings, or index-uniform designs. We present \\texttt{BayesBreak}, a modular offline Bayesian segmentation framework built around a simple separation: each candidate block contributes a marginal likelihood and any required moment numerators, and a global dynamic program combines those block scores into posterior quantities over segment counts, boundary locations, and latent signals. For weighted exponential-family likelihoods with conjugate priors, block evidences and posterior moments are available in closed form from cumulative sufficient statistics, yielding exact sum-product inference for $P(y\\mid k)$, $P(k\\mid y)$, boundary marginals, and Bayes regression curves. We also distinguish these quantities from the \\emph{joint} MAP segmentation, which is recovered by a separate max-sum backtracking recursion.",
+      "authors": [
+        "Omid Shams Solari"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-16T00:36:16+00:00",
+      "link": "https://arxiv.org/pdf/2603.14681v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Generalized Bayesian segmentation framework for ordered data",
+      "llm_evidence_cn": "针对有序数据的通用贝叶斯分割框架",
+      "llm_evidence": "针对有序数据的通用贝叶斯分割框架",
+      "canonical_evidence": "针对有序数据的通用贝叶斯分割框架",
+      "llm_tldr_en": "Presents BayesBreak, a modular Bayesian framework for offline segmentation and change-point detection in ordered data.",
+      "llm_tldr_cn": "推出BayesBreak，一个用于有序数据离线分割和变点检测的模块化贝叶斯框架。",
+      "llm_tldr": "推出BayesBreak，一个用于有序数据离线分割和变点检测的模块化贝叶斯框架。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.14992v1",
+      "title": "Exposing Cross-Modal Consistency for Fake News Detection in Short-Form Videos",
+      "abstract": "Short-form video platforms are major channels for news but also fertile ground for multimodal misinformation where each modality appears plausible alone yet cross-modal relationships are subtly inconsistent, like mismatched visuals and captions. On two benchmark datasets, FakeSV (Chinese) and FakeTT (English), we observe a clear asymmetry: real videos exhibit high text-visual but moderate text-audio consistency, while fake videos show the opposite pattern. Moreover, a single global consistency score forms an interpretable axis along which fake probability and prediction errors vary smoothly. Motivated by these observations, we present MAGIC3 (Modal-Adversarial Gated Interaction and Consistency-Centric Classifier), a detector that explicitly models and exposes cross-tri-modal consistency signals at multiple granularities. MAGIC3 combines explicit pairwise and global consistency modeling with token- and frame-level consistency signals derived from cross-modal attention, incorporates multi-style LLM rewrites to obtain style-robust text representations, and employs an uncertainty-aware classifier for selective VLM routing. Using pre-extracted features, MAGIC3 consistently outperforms the strongest non-VLM baselines on FakeSV and FakeTT. While matching VLM-level accuracy, the two-stage system achieves 18-27x higher throughput and 93% VRAM savings, offering a strong cost-performance tradeoff.",
+      "authors": [
+        "Chong Tian",
+        "Yu Wang",
+        "Chenxu Yang",
+        "Junyi Guan",
+        "Zheng Lin",
+        "Yuhan Liu",
+        "Xiuying Chen",
+        "Qirong Ho"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.MM"
+      ],
+      "published": "2026-03-16T08:58:02+00:00",
+      "link": "https://arxiv.org/pdf/2603.14992v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "cross-modal consistency for fake news detection in short-form videos",
+      "llm_evidence_cn": "短视频虚假新闻检测中的跨模态一致性",
+      "llm_evidence": "短视频虚假新闻检测中的跨模态一致性",
+      "canonical_evidence": "短视频虚假新闻检测中的跨模态一致性",
+      "llm_tldr_en": "Detects short-form video misinformation by modeling cross-modal consistency patterns.",
+      "llm_tldr_cn": "通过建模跨模态一致性模式来检测短视频中的虚假信息。",
+      "llm_tldr": "通过建模跨模态一致性模式来检测短视频中的虚假信息。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.10772v1",
+      "title": "Multiple change-point detection on the circle via isolation using permutation testing",
+      "abstract": "In this paper we propose a new method for multiple change-point detection for piecewise-constant circular signals, a setting that, despite its importance in many scientific domains, remains comparatively under-explored. The proposed method, Permutation-based Circular Isolate-Detect, denoted PCID, uses an appropriately chosen contrast function and permutation testing to detect change-points in an offline manner, for the data sequence under consideration. Prior to detection, PCID isolates the change-points. The contrast function used is derived under the assumption of von Mises distribution for the noise, but we show that the method is robust and performs well for other distributions as well. Simulations are used to showcase the usability of the method in different signal and noise structures, including serially correlated noise. In order to exhibit the practical relevance of the method in real-world applications, PCID is applied to three real-world datasets, namely flare, acrophase and wave data.",
+      "authors": [
+        "Sophia Loizidou",
+        "Andreas Anastasiou",
+        "Christophe Ley"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME"
+      ],
+      "published": "2026-03-11T13:49:18+00:00",
+      "link": "https://arxiv.org/pdf/2603.10772v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multiple change-point detection for circular signals",
+      "llm_evidence_cn": "圆形信号的多变点检测",
+      "llm_evidence": "圆形信号的多变点检测",
+      "canonical_evidence": "圆形信号的多变点检测",
+      "llm_tldr_en": "Proposes a permutation-based method for offline change-point detection in circular data sequences.",
+      "llm_tldr_cn": "提出了一种基于排列的方法，用于圆形数据序列的离线变点检测。",
+      "llm_tldr": "提出了一种基于排列的方法，用于圆形数据序列的离线变点检测。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.12561v1",
+      "title": "Consistent and powerful CUSUM change-point test for panel data with changes in variance",
+      "abstract": "This paper investigates change-point of variance in panel data models with time series of $α$-mixing. Based on the cumulative sum (CUSUM) method and the individual differences, we construct a CUSUM test for panel data models to detect variance changes. Under the null hypothesis, we derive the limit distribution of this test, which can be used to detect the change-point of variance. Under the alternative hypothesis, the limit behavior of the CUSUM test is also derived. To validate the performance of the test, we conducted simulation analyses on with Gaussian and Gamma errors. The results demonstrate that this testing method significantly outperforms existing approaches, particularly in detecting sparse variance changes. Finally, we conducted a practical case study using panel data from the Shanghai Shenzhen CSI 300 Index Components. Not only did we successfully identify the change-points of variance, but we also delved deeper into the underlying economic drivers behind these changes.",
+      "authors": [
+        "Wenzhi Yang",
+        "Yueting Xu",
+        "Xiaoping Shi",
+        "Qiong Li"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME"
+      ],
+      "published": "2026-03-13T01:49:54+00:00",
+      "link": "https://arxiv.org/pdf/2603.12561v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "CUSUM change-point test for time series panel data",
+      "llm_evidence_cn": "针对时间序列面板数据的CUSUM变点检测",
+      "llm_evidence": "针对时间序列面板数据的CUSUM变点检测",
+      "canonical_evidence": "针对时间序列面板数据的CUSUM变点检测",
+      "llm_tldr_en": "Develops a CUSUM-based test to detect variance change-points in time series panel data models.",
+      "llm_tldr_cn": "开发了一种基于CUSUM的检验方法，用于检测时间序列面板数据模型中的方差变点。",
+      "llm_tldr": "开发了一种基于CUSUM的检验方法，用于检测时间序列面板数据模型中的方差变点。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.15026v1",
+      "title": "Training-free Detection of Generated Videos via Spatial-Temporal Likelihoods",
+      "abstract": "Following major advances in text and image generation, the video domain has surged, producing highly realistic and controllable sequences. Along with this progress, these models also raise serious concerns about misinformation, making reliable detection of synthetic videos increasingly crucial. Image-based detectors are fundamentally limited because they operate per frame and ignore temporal dynamics, while supervised video detectors generalize poorly to unseen generators, a critical drawback given the rapid emergence of new models. These challenges motivate zero-shot approaches, which avoid synthetic data and instead score content against real-data statistics, enabling training-free, model-agnostic detection. We introduce \\emph{STALL}, a simple, training-free, theoretically justified detector that provides likelihood-based scoring for videos, jointly modeling spatial and temporal evidence within a probabilistic framework. We evaluate STALL on two public benchmarks and introduce ComGenVid, a new benchmark with state-of-the-art generative models. STALL consistently outperforms prior image- and video-based baselines. Code and data are available at https://omerbenhayun.github.io/stall-video.",
+      "authors": [
+        "Omer Ben Hayun",
+        "Roy Betser",
+        "Meir Yossef Levi",
+        "Levi Kassel",
+        "Guy Gilboa"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-03-16T09:26:56+00:00",
+      "link": "https://arxiv.org/pdf/2603.15026v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "detection of generated videos to combat misinformation",
+      "llm_evidence_cn": "检测生成视频以应对虚假信息",
+      "llm_evidence": "检测生成视频以应对虚假信息",
+      "canonical_evidence": "检测生成视频以应对虚假信息",
+      "llm_tldr_en": "Introduces a training-free method to detect synthetic videos and combat misinformation.",
+      "llm_tldr_cn": "引入了一种无需训练的方法来检测合成视频，从而应对虚假信息。",
+      "llm_tldr": "引入了一种无需训练的方法来检测合成视频，从而应对虚假信息。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.14033v1",
+      "title": "What Counts as Real? Speech Restoration and Voice Quality Conversion Pose New Challenges to Deepfake Detection",
+      "abstract": "Audio anti-spoofing systems are typically formulated as binary classifiers distinguishing bona fide from spoofed speech. This assumption fails under layered generative processing, where benign transformations introduce distributional shifts that are misclassified as spoofing. We show that phonation-modifying voice conversion and speech restoration are treated as out-of-distribution despite preserving speaker authenticity. Using a multi-class setup separating bona fide, converted, spoofed, and converted-spoofed speech, we analyse model behaviour through self-supervised learning (SSL) embeddings and acoustic correlates. The benign transformations induce a drift in the SSL space, compressing bona fide and spoofed speech and reducing classifier separability. Reformulating anti-spoofing as a multi-class problem improves robustness to benign shifts while preserving spoof detection, suggesting binary systems model the distribution of raw speech rather than authenticity itself.",
+      "authors": [
+        "Shree Harsha Bokkahalli Satish",
+        "Harm Lameris",
+        "Joakim Gustafson",
+        "Éva Székely"
+      ],
+      "primary_category": "cs.SD",
+      "categories": [
+        "cs.SD",
+        "cs.AI",
+        "cs.LG",
+        "eess.AS"
+      ],
+      "published": "2026-03-14T17:15:31+00:00",
+      "link": "https://arxiv.org/pdf/2603.14033v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "deepfake detection and audio anti-spoofing",
+      "llm_evidence_cn": "深度伪造检测与音频防欺骗",
+      "llm_evidence": "深度伪造检测与音频防欺骗",
+      "canonical_evidence": "深度伪造检测与音频防欺骗",
+      "llm_tldr_en": "Investigates challenges in deepfake detection under benign transformations, relevant to misinformation.",
+      "llm_tldr_cn": "研究良性变换下深度伪造检测面临的挑战，与虚假信息检测高度相关。",
+      "llm_tldr": "研究良性变换下深度伪造检测面临的挑战，与虚假信息检测高度相关。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.14525v1",
+      "title": "MALicious INTent Dataset and Inoculating LLMs for Enhanced Disinformation Detection",
+      "abstract": "The intentional creation and spread of disinformation poses a significant threat to public discourse. However, existing English datasets and research rarely address the intentionality behind the disinformation. This work presents MALINT, the first human-annotated English corpus developed in collaboration with expert fact-checkers to capture disinformation and its malicious intent. We utilize our novel corpus to benchmark 12 language models, including small language models (SLMs) such as BERT and large language models (LLMs) like Llama 3.3, on binary and multilabel intent classification tasks. Moreover, inspired by inoculation theory from psychology and communication studies, we investigate whether incorporating knowledge of malicious intent can improve disinformation detection. To this end, we propose intent-based inoculation, an intent-augmented reasoning for LLMs that integrates intent analysis to mitigate the persuasive impact of disinformation. Analysis on six disinformation datasets, five LLMs, and seven languages shows that intent-augmented reasoning improves zero-shot disinformation detection. To support research in intent-aware disinformation detection, we release the MALINT dataset with annotations from each annotation step.",
+      "authors": [
+        "Arkadiusz Modzelewski",
+        "Witold Sosnowski",
+        "Eleni Papadopulos",
+        "Elisa Sartori",
+        "Tiziano Labruna",
+        "Giovanni Da San Martino",
+        "Adam Wierzbicki"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-03-15T18:07:12+00:00",
+      "link": "https://arxiv.org/pdf/2603.14525v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "disinformation detection and malicious intent classification",
+      "llm_evidence_cn": "虚假信息检测与恶意意图分类",
+      "llm_evidence": "虚假信息检测与恶意意图分类",
+      "canonical_evidence": "虚假信息检测与恶意意图分类",
+      "llm_tldr_en": "Introduces MALINT corpus for enhanced disinformation detection and intent classification using LLMs.",
+      "llm_tldr_cn": "引入MALINT语料库，利用大语言模型增强虚假信息检测和意图分类。",
+      "llm_tldr": "引入MALINT语料库，利用大语言模型增强虚假信息检测和意图分类。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2603.11745v1",
+      "title": "CINDI: Conditional Imputation and Noisy Data Integrity with Flows in Power Grid Data",
+      "abstract": "Real-world multivariate time series, particularly in critical infrastructure such as electrical power grids, are often corrupted by noise and anomalies that degrade the performance of downstream tasks. Standard data cleaning approaches often rely on disjoint strategies, which involve detecting errors with one model and imputing them with another. Such approaches can fail to capture the full joint distribution of the data and ignore prediction uncertainty. This work introduces Conditional Imputation and Noisy Data Integrity (CINDI), an unsupervised probabilistic framework designed to restore data integrity in complex time series. Unlike fragmented approaches, CINDI unifies anomaly detection and imputation into a single end-to-end system built on conditional normalizing flows. By modeling the exact conditional likelihood of the data, the framework identifies low-probability segments and iteratively samples statistically consistent replacements. This allows CINDI to efficiently reuse learned information while preserving the underlying physical and statistical properties of the system. We evaluate the framework using real-world grid loss data from a Norwegian power distribution operator, though the methodology is designed to generalize to any multivariate time series domain. The results demonstrate that CINDI yields robust performance compared to competitive baselines, offering a scalable solution for maintaining reliability in noisy environments.",
+      "authors": [
+        "David Baumgartner",
+        "Helge Langseth",
+        "Heri Ramampiaro"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-03-12T09:49:10+00:00",
+      "link": "https://arxiv.org/pdf/2603.11745v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "unsupervised probabilistic framework for anomaly detection in time series",
+      "llm_evidence_cn": "时间序列异常检测的无监督概率框架",
+      "llm_evidence": "时间序列异常检测的无监督概率框架",
+      "canonical_evidence": "时间序列异常检测的无监督概率框架",
+      "llm_tldr_en": "Presents CINDI, a framework for anomaly detection and imputation in multivariate power grid time series.",
+      "llm_tldr_cn": "提出CINDI框架，用于多变量电网时间序列的异常检测和数据修复。",
+      "llm_tldr": "提出CINDI框架，用于多变量电网时间序列的异常检测和数据修复。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.09185v1",
+      "title": "DEO: Training-Free Direct Embedding Optimization for Negation-Aware Retrieval",
+      "abstract": "Recent advances in Large Language Models (LLMs) and Retrieval-Augmented Generation (RAG) have enabled diverse retrieval methods. However, existing retrieval methods often fail to accurately retrieve results for negation and exclusion queries. To address this limitation, prior approaches rely on embedding adaptation or fine-tuning, which introduce additional computational cost and deployment complexity. We propose Direct Embedding Optimization (DEO), a training-free method for negation-aware text and multimodal retrieval. DEO decomposes queries into positive and negative components and optimizes the query embedding with a contrastive objective. Without additional training data or model updates, DEO outperforms baselines on NegConstraint, with gains of +0.0738 nDCG@10 and +0.1028 MAP@100, while improving Recall@5 by +6\\% over OpenAI CLIP in multimodal retrieval. These results demonstrate the practicality of DEO for negation- and exclusion-aware retrieval in real-world settings.",
+      "authors": [
+        "Taegyeong Lee",
+        "Jiwon Park",
+        "Seunghyun Hwang",
+        "JooYoung Jang"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-03-10T04:47:15+00:00",
+      "link": "https://arxiv.org/pdf/2603.09185v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "training-free method for negation-aware multimodal retrieval",
+      "llm_evidence_cn": "无需训练的否定感知多模态检索方法",
+      "llm_evidence": "无需训练的否定感知多模态检索方法",
+      "canonical_evidence": "无需训练的否定感知多模态检索方法",
+      "llm_tldr_en": "A training-free embedding optimization method for negation-aware text and multimodal retrieval.",
+      "llm_tldr_cn": "一种用于否定感知文本和多模态检索的无需训练的嵌入优化方法。",
+      "llm_tldr": "一种用于否定感知文本和多模态检索的无需训练的嵌入优化方法。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.09108v1",
+      "title": "Composed Vision-Language Retrieval for Skin Cancer Case Search via Joint Alignment of Global and Local Representations",
+      "abstract": "Medical image retrieval aims to identify clinically relevant lesion cases to support diagnostic decision making, education, and quality control. In practice, retrieval queries often combine a reference lesion image with textual descriptors such as dermoscopic features. We study composed vision-language retrieval for skin cancer, where each query consists of an image to text pair and the database contains biopsy-confirmed, multi-class disease cases. We propose a transformer based framework that learns hierarchical composed query representations and performs joint global-local alignment between queries and candidate images. Local alignment aggregates discriminative regions via multiple spatial attention masks, while global alignment provides holistic semantic supervision. The final similarity is computed through a convex, domain-informed weighting that emphasizes clinically salient local evidence while preserving global consistency. Experiments on the public Derm7pt dataset demonstrate consistent improvements over state-of-the-art methods. The proposed framework enables efficient access to relevant medical records and supports practical clinical deployment.",
+      "authors": [
+        "Yuheng Wang",
+        "Yuji Lin",
+        "Dongrun Zhu",
+        "Jiayue Cai",
+        "Sunil Kalia",
+        "Harvey Lui",
+        "Chunqi Chang",
+        "Z. Jane Wang",
+        "Tim K. Lee"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-10T02:42:30+00:00",
+      "link": "https://arxiv.org/pdf/2603.09108v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "composed vision-language retrieval and joint alignment",
+      "llm_evidence_cn": "组合视觉语言检索与联合对齐",
+      "llm_evidence": "组合视觉语言检索与联合对齐",
+      "canonical_evidence": "组合视觉语言检索与联合对齐",
+      "llm_tldr_en": "Learns hierarchical composed query representations for vision-language retrieval via global-local alignment.",
+      "llm_tldr_cn": "通过全局-局部对齐学习视觉-语言检索的层次化组合查询表示。",
+      "llm_tldr": "通过全局-局部对齐学习视觉-语言检索的层次化组合查询表示。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.13537v1",
+      "title": "AMES: Approximate Multi-modal Enterprise Search via Late Interaction Retrieval",
+      "abstract": "We present AMES (Approximate Multimodal Enterprise Search), a unified multimodal late interaction retrieval architecture which is backend agnostic. AMES demonstrates that fine-grained multimodal late interaction retrieval can be deployed within a production grade enterprise search engine without architectural redesign. Text tokens, image patches, and video frames are embedded into a shared representation space using multi-vector encoders, enabling cross-modal retrieval without modality specific retrieval logic. AMES employs a two-stage pipeline: parallel token level ANN search with per document Top-M MaxSim approximation, followed by accelerator optimized Exact MaxSim re-ranking. Experiments on the ViDoRe V3 benchmark show that AMES achieves competitive ranking performance within a scalable, production ready Solr based system.",
+      "authors": [
+        "Tony Joseph",
+        "Carlos Pareja",
+        "David Lopes Pegna",
+        "Abhishek Singh"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR",
+        "cs.LG"
+      ],
+      "published": "2026-03-13T19:20:59+00:00",
+      "link": "https://arxiv.org/pdf/2603.13537v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal late interaction retrieval for cross-modal search",
+      "llm_evidence_cn": "用于跨模态搜索的多模态延迟交互检索",
+      "llm_evidence": "用于跨模态搜索的多模态延迟交互检索",
+      "canonical_evidence": "用于跨模态搜索的多模态延迟交互检索",
+      "llm_tldr_en": "A unified multimodal late interaction retrieval architecture for fine-grained cross-modal search.",
+      "llm_tldr_cn": "一种用于细粒度跨模态搜索的统一多模态延迟交互检索架构。",
+      "llm_tldr": "一种用于细粒度跨模态搜索的统一多模态延迟交互检索架构。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.10430v1",
+      "title": "Domain-Adaptive Health Indicator Learning with Degradation-Stage Synchronized Sampling and Cross-Domain Autoencoder",
+      "abstract": "The construction of high quality health indicators (HIs) is crucial for effective prognostics and health management. Although deep learning has significantly advanced HI modeling, existing approaches often struggle with distribution mismatches resulting from varying operating conditions. Although domain adaptation is typically employed to mitigate these shifts, two critical challenges remain: (1) the misalignment of degradation stages during random mini-batch sampling, resulting in misleading discrepancy losses, and (2) the structural limitations of small-kernel 1D-CNNs in capturing long-range temporal dependencies within complex vibration signals. To address these issues, we propose a domain-adaptive framework comprising degradation stage synchronized batch sampling (DSSBS) and the cross-domain aligned fusion large autoencoder (CAFLAE). DSSBS utilizes kernel change-point detection to segment degradation stages, ensuring that source and target mini-batches are synchronized by their failure phases during alignment. Complementing this, CAFLAE integrates large-kernel temporal feature extraction with cross-attention mechanisms to learn superior domain-invariant representations. The proposed framework was rigorously validated on a Korean defense system dataset and the XJTU-SY bearing dataset, achieving an average performance enhancement of 24.1% over state-of-the-art methods. These results demonstrate that DSSBS improves cross-domain alignment through stage-consistent sampling, whereas CAFLAE offers a high-performance backbone for long-term industrial condition monitoring.",
+      "authors": [
+        "Jungho Choo",
+        "Hanbyeol Park",
+        "Gawon Lee",
+        "Yunkyung Park",
+        "Hyerim Bae"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-03-11T05:24:18+00:00",
+      "link": "https://arxiv.org/pdf/2603.10430v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Degradation-stage synchronized sampling for temporal dependencies in vibration signals",
+      "llm_evidence_cn": "针对振动信号时间依赖性的退化阶段同步采样",
+      "llm_evidence": "针对振动信号时间依赖性的退化阶段同步采样",
+      "canonical_evidence": "针对振动信号时间依赖性的退化阶段同步采样",
+      "llm_tldr_en": "Addresses temporal dependencies and distribution mismatches in health indicator learning for vibration signals.",
+      "llm_tldr_cn": "解决了振动信号健康指标学习中的时间依赖性和分布不匹配问题。",
+      "llm_tldr": "解决了振动信号健康指标学习中的时间依赖性和分布不匹配问题。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.09149v1",
+      "title": "RTFDNet: Fusion-Decoupling for Robust RGB-T Segmentation",
+      "abstract": "RGB-Thermal (RGB-T) semantic segmentation is essential for robotic systems operating in low-light or dark environments. However, traditional approaches often overemphasize modality balance, resulting in limited robustness and severe performance degradation when sensor signals are partially missing. Recent advances such as cross-modal knowledge distillation and modality-adaptive fine-tuning attempt to enhance cross-modal interaction, but they typically decouple modality fusion and modality adaptation, requiring multi-stage training with frozen models or teacher-student frameworks. We present RTFDNet, a three-branch encoder-decoder that unifies fusion and decoupling for robust RGB-T segmentation. Synergistic Feature Fusion (SFF) performs channel-wise gated exchange and lightweight spatial attention to inject complementary cues. Cross-Modal Decouple Regularization (CMDR) isolates modality-specific components from the fused representation and supervises unimodal decoders via stop-gradient targets. Region Decouple Regularization (RDR) enforces class-selective prediction consistency in confident regions while blocking gradients to the fusion branch. This feedback loop strengthens unimodal paths without degrading the fused stream, enabling efficient standalone inference at test time. Extensive experiments demonstrate the effectiveness of RTFDNet, showing consistent performance across varying modality conditions. Our implementation will be released to facilitate further research. Our source code are publicly available at https://github.com/curapima/RTFDNet.",
+      "authors": [
+        "Kunyu Tan",
+        "Mingjian Liang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-10T03:40:26+00:00",
+      "link": "https://arxiv.org/pdf/2603.09149v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "cross-modal interaction and synergistic feature fusion",
+      "llm_evidence_cn": "跨模态交互与协同特征融合",
+      "llm_evidence": "跨模态交互与协同特征融合",
+      "canonical_evidence": "跨模态交互与协同特征融合",
+      "llm_tldr_en": "Proposes RTFDNet for robust RGB-T segmentation using synergistic feature fusion and modality decoupling.",
+      "llm_tldr_cn": "提出RTFDNet，通过协同特征融合和模态解耦实现鲁棒的RGB-T分割。",
+      "llm_tldr": "提出RTFDNet，通过协同特征融合和模态解耦实现鲁棒的RGB-T分割。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.13638v1",
+      "title": "Performance-Driven Causal Signal Engineering for Financial Markets under Non-Stationarity",
+      "abstract": "We introduce a performance-driven framework for constructing strictly causal forward-oriented observables in strongly non-stationary time series. The method combines a robustly normalized composite of heterogeneous indicators with a causally computed derivative component, yielding a local phase-leading effect that is amplified near regime transitions while remaining fully causal. A hysteresis-based decision functional maps the observable into discrete system states, with execution delayed by one step to preserve strict temporal ordering. Adaptation is achieved through a walk-forward scheme, in which model parameters are selected using rolling train--validation windows and subsequently applied out-of-sample. In this setting, the validation segment acts as an internal performance screen rather than as a statistical validation set, and no claims of generalization are inferred from it alone. The framework is evaluated on high-frequency financial time series as an experimentally accessible realization of a non-stationary complex system. Under a controlled zero-cost setting, the resulting dynamics exhibit a pronounced risk-reshaping effect, characterized by smoother trajectories and reduced drawdowns relative to direct exposure, and should be interpreted as an upper bound on achievable performance. These results illustrate how causal signal engineering can generate anticipatory structure in non-stationary systems without relying on non-causal information, explicit horizon labeling, or high-capacity predictive models.",
+      "authors": [
+        "Lucas A. Souza"
+      ],
+      "primary_category": "q-fin.CP",
+      "categories": [
+        "q-fin.CP"
+      ],
+      "published": "2026-03-13T22:44:26+00:00",
+      "link": "https://arxiv.org/pdf/2603.13638v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Causal signal engineering for non-stationary time series and regime transitions",
+      "llm_evidence_cn": "针对非平稳时间序列和状态转换的因果信号工程",
+      "llm_evidence": "针对非平稳时间序列和状态转换的因果信号工程",
+      "canonical_evidence": "针对非平稳时间序列和状态转换的因果信号工程",
+      "llm_tldr_en": "A framework for constructing causal observables in non-stationary time series to detect system state transitions.",
+      "llm_tldr_cn": "一种在非平稳时间序列中构建因果观测量的框架，用于检测系统状态转换。",
+      "llm_tldr": "一种在非平稳时间序列中构建因果观测量的框架，用于检测系统状态转换。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.10961v1",
+      "title": "Bio-Inspired Self-Supervised Learning for Wrist-worn IMU Signals",
+      "abstract": "Wearable accelerometers have enabled large-scale health and wellness monitoring, yet learning robust human-activity representations has been constrained by the scarcity of labeled data. While self-supervised learning offers a potential remedy, existing approaches treat sensor streams as unstructured time series, overlooking the underlying biological structure of human movement, a factor we argue is critical for effective Human Activity Recognition (HAR). We introduce a novel tokenization strategy grounded in the submovement theory of motor control, which posits that continuous wrist motion is composed of superposed elementary basis functions called submovements. We define our token as the movement segment, a unit of motion composed of a finite sequence of submovements that is readily extractable from wrist accelerometer signals. By treating these segments as tokens, we pretrain a Transformer encoder via masked movement-segment reconstruction to model the temporal dependencies of movement segments, shifting the learning focus beyond local waveform morphology. Pretrained on the NHANES corpus (approximately 28k hours; approximately 11k participants; approximately 10M windows), our representations outperform strong wearable SSL baselines across six subject-disjoint HAR benchmarks. Furthermore, they demonstrate stronger data efficiency in data-scarce settings. Code and pretrained weights will be made publicly available.",
+      "authors": [
+        "Prithviraj Tarale",
+        "Kiet Chu",
+        "Abhishek Varghese",
+        "Kai-Chun Liu",
+        "Maxwell A Xu",
+        "Mohit Iyyer",
+        "Sunghoon I. Lee"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-11T16:48:33+00:00",
+      "link": "https://arxiv.org/pdf/2603.10961v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "tokenization strategy for continuous wrist motion segments in time series",
+      "llm_evidence_cn": "针对时间序列中连续手腕运动分段的标记化策略",
+      "llm_evidence": "针对时间序列中连续手腕运动分段的标记化策略",
+      "canonical_evidence": "针对时间序列中连续手腕运动分段的标记化策略",
+      "llm_tldr_en": "Introduces a bio-inspired tokenization for IMU time series to improve activity recognition.",
+      "llm_tldr_cn": "引入一种受生物启发的IMU时间序列标记化方法，提升活动识别效果。",
+      "llm_tldr": "引入一种受生物启发的IMU时间序列标记化方法，提升活动识别效果。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.09316v1",
+      "title": "CLoE: Expert Consistency Learning for Missing Modality Segmentation",
+      "abstract": "Multimodal medical image segmentation often faces missing modalities at inference, which induces disagreement among modality experts and makes fusion unstable, particularly on small foreground structures. We propose Consistency Learning of Experts (CLoE), a consistency-driven framework for missing-modality segmentation that preserves strong performance when all modalities are available. CLoE formulates robustness as decision-level expert consistency control and introduces a dual-branch Expert Consistency Learning objective. Modality Expert Consistency enforces global agreement among expert predictions to reduce case-wise drift under partial inputs, while Region Expert Consistency emphasizes agreement on clinically critical foreground regions to avoid background-dominated regularization. We further map consistency scores to modality reliability weights using a lightweight gating network, enabling reliability-aware feature recalibration before fusion. Extensive experiments on BraTS 2020 and MSD Prostate demonstrate that CLoE outperforms state-of-the-art methods in incomplete multimodal segmentation, while exhibiting strong cross-dataset generalization and improving robustness on clinically critical structures.",
+      "authors": [
+        "Xinyu Tong",
+        "Meihua Zhou",
+        "Bowu Fan",
+        "Haitao Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-03-10T07:49:58+00:00",
+      "link": "https://arxiv.org/pdf/2603.09316v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal medical image segmentation with missing modalities",
+      "llm_evidence_cn": "缺失模态下的多模态医学图像分割",
+      "llm_evidence": "缺失模态下的多模态医学图像分割",
+      "canonical_evidence": "缺失模态下的多模态医学图像分割",
+      "llm_tldr_en": "Proposes CLoE for robust multimodal segmentation, applicable to general segmentation tasks.",
+      "llm_tldr_cn": "提出CLoE框架，用于鲁棒的多模态分割，可应用于通用分割任务。",
+      "llm_tldr": "提出CLoE框架，用于鲁棒的多模态分割，可应用于通用分割任务。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.15818v1",
+      "title": "Conflict-Aware Multimodal Fusion for Ambivalence and Hesitancy Recognition",
+      "abstract": "Ambivalence and hesitancy (A/H) are subtle affective states where a person shows conflicting signals through different channels -- saying one thing while their face or voice tells another story. Recognising these states automatically is valuable in clinical settings, but it is hard for machines because the key evidence lives in the \\emph{disagreements} between what is said, how it sounds, and what the face shows.   We present \\textbf{ConflictAwareAH}, a multimodal framework built for this problem. Three pre-trained encoders extract video, audio, and text representations. Pairwise conflict features -- element-wise absolute differences between modality embeddings -- serve as \\emph{bidirectional} cues: large cross-modal differences flag A/H, while small differences confirm behavioural consistency and anchor the negative class. This conflict-aware design addresses a key limitation of text-dominant approaches, which tend to over-detect A/H (high F1-AH) while struggling to confirm its absence: our multimodal model improves F1-NoAH by +4.6 points over text alone and halves the class-performance gap. A complementary \\emph{text-guided late fusion} strategy blends a text-only auxiliary head with the full model at inference, adding +4.1 Macro F1.   On the BAH dataset from the ABAW10 Ambivalence/Hesitancy Challenge, our method reaches \\textbf{0.694 Macro F1} on the labelled test split and \\textbf{0.715} on the private leaderboard, outperforming published multimodal baselines by over 10 points -- all on a single GPU in under 25 minutes of training.",
+      "authors": [
+        "Salah Eddine Bekhouche",
+        "Hichem Telli",
+        "Azeddine Benlamoudi",
+        "Salah Eddine Herrouz",
+        "Abdelmalik Taleb-Ahmed",
+        "Abdenour Hadid"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-16T18:49:46+00:00",
+      "link": "https://arxiv.org/pdf/2603.15818v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "cross-modal conflict detection for state recognition",
+      "llm_evidence_cn": "用于状态识别的跨模态冲突检测",
+      "llm_evidence": "用于状态识别的跨模态冲突检测",
+      "canonical_evidence": "用于状态识别的跨模态冲突检测",
+      "llm_tldr_en": "Uses cross-modal differences to detect conflicting signals, a core technique for multimodal fake news detection.",
+      "llm_tldr_cn": "利用跨模态差异检测冲突信号，这是多模态虚假新闻检测的核心技术。",
+      "llm_tldr": "利用跨模态差异检测冲突信号，这是多模态虚假新闻检测的核心技术。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2603.11520v1",
+      "title": "FBCIR: Balancing Cross-Modal Focuses in Composed Image Retrieval",
+      "abstract": "Composed image retrieval (CIR) requires multi-modal models to jointly reason over visual content and semantic modifications presented in text-image input pairs. While current CIR models achieve strong performance on common benchmark cases, their accuracies often degrades in more challenging scenarios where negative candidates are semantically aligned with the query image or text. In this paper, we attribute this degradation to focus imbalances, where models disproportionately attend to one modality while neglecting the other. To validate this claim, we propose FBCIR, a multi-modal focus interpretation method that identifies the most crucial visual and textual input components to a model's retrieval decisions. Using FBCIR, we report that focus imbalances are prevalent in existing CIR models, especially under hard negative settings. Building on the analyses, we further propose a CIR data augmentation workflow that facilitates existing CIR datasets with curated hard negatives designed to encourage balanced cross-modal reasoning. Extensive experiments across multiple CIR models demonstrate that the proposed augmentation consistently improves performance in challenging cases, while maintaining their capabilities on standard benchmarks. Together, our interpretation method and data augmentation workflow provide a new perspective on CIR model diagnosis and robustness improvements.",
+      "authors": [
+        "Chenchen Zhao",
+        "Jianhuan Zhuo",
+        "Muxi Chen",
+        "Zhaohua Zhang",
+        "Wenyu Jiang",
+        "Tianwen Jiang",
+        "Qiuyong Xiao",
+        "Jihong Zhang",
+        "Qiang Xu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-12T04:05:27+00:00",
+      "link": "https://arxiv.org/pdf/2603.11520v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "balancing cross-modal focuses in multi-modal models",
+      "llm_evidence_cn": "平衡多模态模型中的跨模态关注点",
+      "llm_evidence": "平衡多模态模型中的跨模态关注点",
+      "canonical_evidence": "平衡多模态模型中的跨模态关注点",
+      "llm_tldr_en": "Proposes FBCIR to interpret and balance visual and textual focuses in composed image retrieval tasks.",
+      "llm_tldr_cn": "提出FBCIR方法，用于解释和平衡组合图像检索任务中的视觉和文本关注点。",
+      "llm_tldr": "提出FBCIR方法，用于解释和平衡组合图像检索任务中的视觉和文本关注点。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.09940v1",
+      "title": "SignalMC-MED: A Multimodal Benchmark for Evaluating Biosignal Foundation Models on Single-Lead ECG and PPG",
+      "abstract": "Recent biosignal foundation models (FMs) have demonstrated promising performance across diverse clinical prediction tasks, yet systematic evaluation on long-duration multimodal data remains limited. We introduce SignalMC-MED, a benchmark for evaluating biosignal FMs on synchronized single-lead electrocardiogram (ECG) and photoplethysmogram (PPG) data. Derived from the MC-MED dataset, SignalMC-MED comprises 22,256 visits with 10-minute overlapping ECG and PPG signals, and includes 20 clinically relevant tasks spanning prediction of demographics, emergency department disposition, laboratory value regression, and detection of prior ICD-10 diagnoses. Using this benchmark, we perform a systematic evaluation of representative time-series and biosignal FMs across ECG-only, PPG-only, and ECG + PPG settings. We find that domain-specific biosignal FMs consistently outperform general time-series models, and that multimodal ECG + PPG fusion yields robust improvements over unimodal inputs. Moreover, using the full 10-minute signal consistently outperforms shorter segments, and larger model variants do not reliably outperform smaller ones. Hand-crafted ECG domain features provide a strong baseline and offer complementary value when combined with learned FM representations. Together, these results establish SignalMC-MED as a standardized benchmark and provide practical guidance for evaluating and deploying biosignal FMs.",
+      "authors": [
+        "Fredrik K. Gustafsson",
+        "Xiao Gu",
+        "Mattia Carletti",
+        "Patitapaban Palo",
+        "David W. Eyre",
+        "David A. Clifton"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-10T17:32:28+00:00",
+      "link": "https://arxiv.org/pdf/2603.09940v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multimodal benchmark for evaluating biosignal foundation models on ECG and PPG",
+      "llm_evidence_cn": "用于评估心电图和光电容积脉搏波生物信号基础模型的多模态基准",
+      "llm_evidence": "用于评估心电图和光电容积脉搏波生物信号基础模型的多模态基准",
+      "canonical_evidence": "用于评估心电图和光电容积脉搏波生物信号基础模型的多模态基准",
+      "llm_tldr_en": "Introduces a benchmark for evaluating multimodal biosignal foundation models on clinical tasks.",
+      "llm_tldr_cn": "引入了一个基准，用于评估多模态生物信号基础模型在临床任务中的表现。",
+      "llm_tldr": "引入了一个基准，用于评估多模态生物信号基础模型在临床任务中的表现。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

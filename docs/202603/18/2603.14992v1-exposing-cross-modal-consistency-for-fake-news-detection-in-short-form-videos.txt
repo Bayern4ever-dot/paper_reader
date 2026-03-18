@@ -1,0 +1,757 @@
+Title: Exposing Cross-Modal Consistency for Fake News Detection in Short-Form Videos
+
+URL Source: https://arxiv.org/pdf/2603.14992v1
+
+Published Time: Tue, 17 Mar 2026 05:18:37 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+# Exposing Cross-Modal Consistency for Fake News Detection in Short-Form Videos 
+
+Chong Tian 1, Yu Wang 1, Chenxu Yang 2, Junyi Guan 1,Zheng Lin 2, Yuhan Liu 1, Xiuying Chen 1*, Qirong Ho 1*1Mohamed bin Zayed University of Artificial Intelligence (MBZUAI) 
+
+> 2
+
+Institute of Information Engineering, Chinese Academy of Sciences (CAS) 
+
+{chong.tian, xiuying.chen, qirong.ho}@mbzuai.ac.ae 
+
+Abstract 
+
+Short-form video platforms are major channels for news but also fertile ground for multimodal misinformation where each modality appears plausible alone yet cross-modal relationships are subtly inconsistent, like mismatched visu-als and captions. On two benchmark datasets, FakeSV (Chinese) and FakeTT (English), we observe a clear asymmetry: real videos exhibit high text–visual but moderate text–audio con-sistency, while fake videos show the opposite pattern. Moreover, a single global consistency score forms an interpretable axis along which fake probability and prediction errors vary smoothly. Motivated by these observations, we present MAGIC 3 (Modal-Adversarial Gated Interaction and Consistency-Centric Classi-fier), a detector that explicitly models and ex-poses cross-tri-modal consistency signals at multiple granularities. MAGIC 3 combines ex-plicit pairwise and global consistency model-ing with token- and frame-level consistency signals derived from cross-modal attention, in-corporates multi-style LLM rewrites to ob-tain style-robust text representations, and em-ploys an uncertainty-aware classifier for selec-tive VLM routing. Using pre-extracted fea-tures, MAGIC 3 consistently outperforms the strongest non-VLM baselines on FakeSV and FakeTT. While matching VLM-level accuracy, the two-stage system achieves 18–27× higher throughput and 93% VRAM savings, offering a strong cost–performance tradeoff .
+
+1 Introduction 
+
+Short-form video platforms such as TikTok, Douyin, YouTube Shorts, and Kuaishou have re-shaped how people consume news and public infor-mation (Bu et al., 2023). Given the sheer volume of uploads, detection systems must be not only accurate but also computationally efficient. Rich multimodal signals and highly optimized recom-mendation systems allow fake news short videos to 
+
+> *
+
+Corresponding authors. MAGIC³     
+
+> Detector
+> Text
+> (Caption) Atruck's brakes failed…
+> Audio
+> Serious BGM
+> Visual
+> (Frame) Car accident scene
+> Text
+> (Caption) 100+ stars disappear
+> Audio
+> Emotional BGM
+> Visual
+> (Frame) Unrelated online images
+> Real News (High Consistency) Fake News (Semantic Misalignment)
+> High Global Consistency Score Low Global Consistency Score
+
+Figure 1: Illustration of cross-modal consistency pat-terns. In real news short videos, text, visuals, and audio are contextually aligned (Consistent). In fake news, a “semantic gap” often exists between the sensa-tional claims (text/audio) and the actual visual content. MAGIC 3 acts as a consistency lens to quantify these multimodal relationships for fake news detection. 
+
+attract massive attention before professional fact-checking becomes available, amplifying societal risks (Vosoughi et al., 2018; Zhou and Zafarani, 2020). Compared to text-only fake news (Devlin et al., 2019; Shu et al., 2019; Tian et al., 2025), short news videos are harder to analyze: manipula-tions may occur in any modality and at any granu-larity, and successful fakes rarely contain glaring artifacts in a single stream. Instead, they often exploit cross-modal inconsistencies , where each modality looks plausible alone but the joint mes-sage is misleading—as illustrated in Figure 1. 
+
+A consistency-centric view. We adopt a task-oriented taxonomy of cross-modal inconsistency in short-form news videos, covering entity/context, event semantics, affect, temporal audio–visual mis-alignment, and style/pragmatics, with detailed def-initions and examples provided in Appendix A. Throughout this paper, we use “consistency” to de-note learned, task-oriented compatibility signals in feature space , rather than factual correctness with respect to external world knowledge. Instead of designing yet another heavy backbone, we build a 1
+
+> arXiv:2603.14992v1 [cs.AI] 16 Mar 2026
+
+lightweight, interpretable consistency lens that sits on top of any multimodal feature extractor and is tailored to fake news short videos. 
+
+Key findings. Grounded in this consistency-centric view, our analysis reveals four key insights: (i) Asymmetric consistency : real videos show high text–visual but moderate text–audio consistency, while fake videos flip this pattern; (ii) Interpretable axis : global consistency strongly correlates with prediction difficulty, with errors clustering at inter-mediate values; (iii) Efficient routing : combining consistency with uncertainty enables routing only 25% of samples to heavyweight VLMs while sur-passing VLM-only accuracy; (iv) Style robustness :multi-style LLM rewrites improve robustness, with fake videos showing higher consistency variance. 
+
+Our method. We introduce MAGIC 3, a feature-level detector designed around explicit consis-tency modeling. Given frozen text, visual, and audio features (and a few LLM-rewritten texts), MAGIC 3 (i) computes pairwise and global con-sistency scores through the Cross-Modal Consis-tency Gate (CMCG), (ii) derives token- and frame-level consistency fields from cross-modal atten-tion, (iii) builds style-robust text representations in an Adversarial-Aware Rewrite Fusion (AARF) module, (iv) performs lightweight hierarchical mul-timodal fusion with a temporal audio–visual in-consistency score (TCMI), and (v) exposes cali-brated uncertainty estimates that drive a two-stage pipeline where expensive VLM-based detectors are invoked only when needed. 
+
+Contributions. We make three contributions: (i) To our knowledge, this is the first work on fake news short videos that makes tri-modal (text–visual–audio) consistency an explicit , multi-granularity output: pairwise and global scalar scores, plus token- and frame-level consistency fields that reveal text–visual vs. text–audio asym-metries and an interpretable consistency–difficulty axis. (ii) MAGIC 3, a detector that builds on these explicit consistency signals together with calibrated uncertainty estimates, providing an interpretable “consistency lens” for short-form news videos. (iii) A consistency- and uncertainty-driven two-stage VLM routing strategy that reaches state-of-the-art accuracy on FakeSV and FakeTT while offering 18–27× higher throughput, offering substantially better cost–performance tradeoff. 
+
+2 Related Work 
+
+Multimodal fake news on image–text pairs. 
+
+Prior work extends fake news detection to im-age–text posts by jointly modeling captions and images (Zhou et al., 2020; Müller-Budack et al., 2020; Li et al., 2025). Event-adversarial methods such as EANN (Wang et al., 2018) learn event-invariant multimodal features to improve gener-alization, while similarity-aware approaches like SAFE (Zhou et al., 2020) encode image–text agree-ment or mismatch to flag manipulations. These methods motivate our focus on explicit cross-modal consistency, but they mainly target article- or post-level content rather than short videos with audio. 
+
+Short news video detection. Existing fake news detectors on short videos fall into three fami-lies. Feature-based multimodal models use strong single-modality encoders with late fusion like FakeSV Qi et al., 2023, but weakly exploit cross-modal interactions. Deep fusion architectures such as TikTec, FANVM, SVFEND, FakingRecipe, and KDSGAT-FNVD (Shang et al., 2021; Choi and Ko, 2021; Qi et al., 2023; Bu et al., 2024; Huang et al., 2025) learn powerful joint representations and implicitly reason about consistency, but do not expose where inconsistencies arise. More re-cent systems, like CA-FVD (Wang et al., 2025b), GLFE-SVFD (Wang et al., 2025a), and SCMG-FND (Yang et al., 2025), leverage consistency-aware training, global–local feature enhancement, or LLM-based semantic credibility scores to better capture multimodal relationships, yet their consis-tency cues remain coarse video-level signals or internal features. In contrast, we focus on short news videos with three modalities and turn multi-granularity consistency—pairwise/global scores, token-/frame-level consistency fields, and temporal audio–visual inconsistency—into explicit outputs that also drive an uncertainty-aware VLM routing. 
+
+3 Methodology 
+
+3.1 Problem Formulation 
+
+In this work, we focus on short-form news videos, as they constitute a dominant and practically im-portant modality for online news consumption and multimodal misinformation. Both benchmarks we study, FakeSV and FakeTT, are constructed specif-ically from short videos on real-world platforms and reflect how users actually encounter news in today’s media ecosystem. Our modeling choices, 2Text  
+
+> Re-Text
+> Key Frames
+> BERT Encoder
+> Shared BERT
+> Swin Transf.
+> Audio HuBERT
+> Cross-Modal Consistency Gate
+> Consistency Field Estimator
+> Temporal Cross-Modal Inconsistency
+> Consistency Weighted Cross Attention
+> Adversarial Aware Rewrite Fusion
+> Global Fusion
+> Intra-Modal Refinement
+
+Feature Extraction Consistency Computation 
+
+Cross-Modal Fusion 
+
+Training & Prediction 
+
+> Contrastive Adversarial Joint Learning
+> Classification
+> Prediction (Fake/Real)
+> Confidence Score
+> Uncertainty Estimation
+
+Figure 2: MAGIC 3 Overview. Frozen encoders provide text, visual, audio, and rewrite features. The Cross-Modal Consistency Gate outputs pairwise and global consistency scores; Consistency Field Estimator converts cross-modal attention into token- and frame-level consistency fields; Temporal Cross-Modal Inconsistency computes a temporal inconsistency score. Adversarial Aware Rewrite Fusion fuses original text with LLM rewrites into a style-robust representation; Hierarchical Multimodal Transformer performs hierarchical multimodal fusion; and the classifier outputs fake probability and uncertainty. The framework is trained via Contrastive Adversarial Joint Learning. 
+
+findings, and efficiency claims should therefore be interpreted within this practically important but in-tentionally scoped domain. Given a short news video V with associated text T (titles, subtitles, and descriptions), the task is to predict whether it is fake ( y = 1 ) or real ( y = 0 ). 
+
+3.2 Feature Extraction 
+
+Following prior work (Qi et al., 2023; Huang et al., 2025), we employ fixed pretrained encoders to extract feature-level representations. Specifically, we use BERT (Devlin et al., 2019) for encoding text titles and descriptions, Swin Transformer (Liu et al., 2021) for encoding visual keyframes, and ExHuBERT (Amiriparian et al., 2024) for audio emotion embeddings. This decoupled design lets MAGIC 3 leverage state-of-the-art representations without the burden of end-to-end fine-tuning. To enhance robustness, we also generate three LLM rewrites of each text (neutral, formal, sensational) and encode them with the same text encoder. 
+
+3.3 Consistency Computation 
+
+This module computes multi-granularity consis-tency signals to expose cross-modal discrepancies at different abstraction levels. We hypothesize that fake news videos exhibit inconsistencies in diverse ways: some are globally incoherent (e.g., unrelated subtitles and visuals), while others contain sub-tle, localized manipulations (e.g., a specific phrase contradicting a visual frame) or temporal artifacts. To capture this spectrum, we design three comple-mentary mechanisms: (1) a global gate for high-level filtering, (2) fine-grained consistency fields for localized grounding, and (3) temporal incon-sistency scores to detect synchronization artifacts. This multi-view approach ensures that MAGIC 3
+
+remains sensitive to both cheapfakes and sophisti-cated manipulations. 
+
+Cross-Modal Consistency Gate (CMCG). As shown in Figure 2, this module pools modality features into vectors ¯htext , ¯hvis , and ¯haud . It then computes scalar consistency scores for each pair 
+
+(mi, m j ) via a gated mechanism: 
+
+cij = σ(w⊤ 
+
+> ij
+
+[¯hmi ; ¯hmj ] + bij ). (1) These pairwise scores form a vector c =[ctv , c ta , c va ], which provides a compact summary of inter-modal agreement. Finally, they are com-pressed into a single global consistency scalar: 
+
+cglobal = σ(MLP c(c)) . (2) This global score cglobal provides a high-level mea-sure of the video’s overall coherence and modulates cross-modal attention. Throughout, we use "con-sistency” to denote learned, task-oriented compati-bility proxies computed in frozen encoder feature spaces, keeping the consistency lens lightweight and decoupled from heavy backbones. 3Consistency Field Estimator (CFE). It con-verts cross-modal attention matrices into per-token and per-frame “consistency fields”, localizing 
+
+where a video is inconsistent. Given a cross-attention matrix Ami←mj ∈ RLmi ×Lmj from the cross-modal transformer, we define: 
+
+F (mi) 
+
+> ij
+
+(t) = max  
+
+> k
+
+Ami←mj (t, k ), t = 1 , . . . , L mi .
+
+(3) Intuitively, F (mi) 
+
+> ij
+
+(t) ∈ [0 , 1] reflects how strongly token t in modality mi finds supporting evidence in modality mj . Tokens that attend strongly and with high focus receive high scores; tokens that attend diffusely or weakly receive low scores. These fields support heatmap visualizations and localized analy-sis, and visualizations of some examples of FakeSV and FakeTT are shown in Figure 6 in Appendix B. 
+
+Temporal Cross-Modal Inconsistency (TCMI). In parallel, we align audio and visual features along time to capture coarse mismatches. We resam-ple both modalities to length T ′ and compute per-timestep distances: 
+
+dt = ˜hvis ,t − Proj av (˜haud ,t ) 2, (4) which are summarized into stemp =[mean( d); var( d); max( d)] and mapped to: 
+
+ctemp = 1 − σ MLP temp (stemp ). (5) This captures coarse audio–visual mismatches in-spired by deepfake detectors (Gao et al., 2024). 
+
+3.4 Cross-Modal Fusion Adversarial-Aware Rewrite Fusion (AARF). The Multi-view Adversarial-Aware Rewrite Fusion module treats LLM rewrites as semantic-preserving but style-altering views (like in neutral, formal, and sensational styles). Let horig = Pool( Htext ) be the original text and h(v)rew the v-th rewrite. We compute gated weights: 
+
+q(v) = σ MLP q[horig ; h(v)rew ], (6) where q(v) estimates rewrite quality. A gating MLP produces fusion logits from all views, and we en-force a minimum weight αmin on the original text: 
+
+hfuse text = α0 horig +
+
+> V
+
+X
+
+> v=1
+
+αv Proj  h(v)rew 
+
+, (7) where α0 ≥ αmin and P 
+
+> v
+
+αv = 1 , and Proj( ·) is a learned linear projection that aligns the rewrite embeddings with the original text embedding di-mension. Contrastive losses pull together repre-sentations of rewrites from the same video and push apart those from different videos, encourag-ing style-invariant embeddings. 
+
+Hierarchical Multimodal Transformer 
+
+(HMT). This component operates in three stages. (i) Intra-modal refinement : for each modality m ∈ { text , visual , audio }, we apply a modality-specific Transformer encoder with self-attention, H(A) 
+
+> m
+
+= TransEnc m(Hm), to refine token or frame sequences within that modality. (ii) Consistency-weighted cross-attention : we then add cross-attention blocks where queries from one modality attend to keys/values from another modality, and aggregate the resulting messages using weights derived from the pairwise consistency vector c. The cross-attention matrices in this stage are also used by CFE to construct token- and frame-level consistency fields. (iii) 
+
+Global aggregation : finally, we pool the refined representations from all modalities (and the fused text) and feed them into a small global fusion layer to obtain a single video-level representation hglobal 
+
+that is passed to the classifier. 
+
+3.5 Training and Prediction 
+
+We train MAGIC 3 using a Contrastive–Adversarial Joint Learning (CAJL) objective to jointly optimize classification accuracy and the reliability of con-sistency and uncertainty signals for prediction and routing. The primary supervised loss is standard binary cross-entropy: 
+
+Lce = − 1
+
+N
+
+X
+
+> i
+
+
+
+yi log ˆ yi + (1 − yi) log(1 − ˆyi)
+
+
+
+.
+
+(8) To improve robustness and alignment, we employ InfoNCE-style contrastive losses for intra- and cross-modal alignment ( Lintra , Lcross ). For a batch of N pairs (ui, vi), the loss is: 
+
+LNCE = − 1
+
+N
+
+X
+
+> i
+
+log exp(sim( ui, vi)/τ )
+
+P 
+
+> j
+
+exp(sim( ui, vj )/τ ) .
+
+(9) To improve prediction robustness, we also intro-duce random noise perturbations to the hidden representations during training and minimize the KL-divergence between predictions on clean and perturbed features, formulated as an adversarial consistency regularizer Ladv . The final composite objective combines these terms with a consistency 4regularizer Lreg that aligns global and local scores: 
+
+L = Lce + λintra Lintra + λcross Lcross 
+
++ λadv Ladv + λreg Lreg , (10) where λ are trade-off hyperparameters. More de-tails on all terms are provided in Appendix C. 
+
+Classifier. The final classifier produces three distinct signals: (1) Prediction: The binary clas-sification probability ˆyf ake indicating the likeli-hood of the video being fake. (2) Confidence Score: Derived from the softmax output as conf =max(ˆ y, 1− ˆy), representing the model’s confidence in its chosen class. (3) Uncertainty Estimation: A composite metric combining predictive entropy 
+
+uent = − P p log p and the learned auxiliary scalar 
+
+ˆu (trained to regress the error margin). These sig-nals provide a robust basis for the subsequent rout-ing decision, allowing the system to distinguish between confident errors and genuine ambiguity. 
+
+Two-stage Routing. During inference, we em-ploy a routing function R(x) to decide whether to trust MAGIC 3’s prediction or escalate to a heavy-weight VLM. Unlike simple confidence threshold-ing, we leverage our multi-dimensional outputs to define effective routing strategies (detailed in Appendix D.4): (1) Uncertainty-based : Routes samples with high predictive entropy ( uent > τ ), prioritizing cases where the model is information-theoretically uncertain. (2) Difficulty-based : Uses a composite difficulty score d = Norm (uent ) + (1 − cglobal ) + (1 − conf ) to route samples that are simultaneously uncertain, inconsistent, and low-confidence. By filtering out the ∼75% of "easy" cases that MAGIC 3 handles correctly, we achieve VLM-level accuracy at a fraction of the cost. 
+
+4 Experiments 
+
+4.1 Experimental Setup 
+
+We evaluate MAGIC 3 on the FakeSV and FakeTT benchmarks for short video fake news detection (Qi et al., 2023; Huang et al., 2025). We follow the chronological split protocol of Huang et al. (2025), using 70%/15%/15% of videos for training, valida-tion, and testing. Dataset statistics are summarized in Table 10 and detailed further in Appendix E. Text, visual, and audio features are extracted as described in Section 3.2 using fixed pretrained encoders. All trainable parameters reside in the MAGIC 3 detector head (CMCG, CFE, AARF, HMT+TCMI, and the classifier). We use AdamW with learning rate 5 × 10 −5, batch size 32, cosine decay with 10% warm-up, hidden size 256, and 8 attention heads. LLM rewrites are generated of-fline using DeepSeek-V3.2 with three style prompts (neutral, formal, sensational); detailed prompts are listed in Appendix F. Loss weights and hy-perparameters are tuned on the validation set (Ta-ble 11 in Appendix G). Once video/audio/text fea-tures are pre-extracted, the detector head reaches roughly ∼680 feature-level samples per second with batch size 128 on a single RTX 5090 GPU (about 1.5 ms/sample and ∼1.67 GB peak GPU memory on cached features); end-to-end latency is dominated by decoding and feature extraction, which can be amortized via caching and asyn-chronous preprocessing. We have more efficiency and deployment discussion in Appendix H as well. 
+
+4.2 Baselines 
+
+We compare MAGIC 3 against three categories of baselines. (i) Zero-shot VLMs : GPT-4o-mini, GPT-4.1-mini, Qwen2.5-VL (Bai et al., 2025), In-ternVL2.5 (Chen et al., 2024), and InternVL2.5-MPO (Wang et al., 2024b), evaluated by directly prompting them on the detection task. (ii) Su-pervised multimodal methods : HCFC-Hou (Bu et al., 2024), HCFC-Medina (Serrano et al., 2020) (hand-crafted feature classifiers), TikTec (Shang et al., 2021), FANVM (Choi and Ko, 2021), SVFEND (Qi et al., 2023), FakingRecipe (Bu et al., 2024), and KDSGAT-FNVD (Huang et al., 2025). (iii) VLM-based detector : FakeSV-VLM (Wang et al., 2025c), a fine-tuned VLM specifically de-signed for fake news video detection. 
+
+4.3 Main Results 
+
+Table 1 reports results on FakeTT and FakeSV. We compare MAGIC 3 with the baselines detailed in Section 4.2. For each dataset, we report accu-racy, macro-F1, and per-class precision/recall. On FakeSV, MAGIC 3 reaches 86.71% accuracy and 86.84 macro-F1, outperforming KDSGAT-FNVD by 1.98 and 2.16 points, respectively, with balanced precision/recall across real and fake classes. On FakeTT, MAGIC 3 achieves 84.95% accuracy and 82.28 macro-F1, improving over KDSGAT-FNVD by 3.01 and 3.34 points. Zero-shot VLMs lag far behind: on FakeSV the best VLM trails MAGIC 3
+
+by about 16 accuracy points, and on FakeTT the gap exceeds 20 points, underscoring the value of su-pervision and explicit consistency modeling. These gains also hold across macro-F1 and per-class preci-sion/recall, particularly on the real class of FakeTT 5Method FakeSV FakeTT Acc macF1 Real Fake Acc macF1 Real Fake                                                                                                                                                                                                    
+
+> Pre Rec Pre Rec Pre Rec Pre Rec
+> Zero-shot VLMs
+> GPT-4o-mini 68.08 68.05 65.35 73.97 74.41 64.93 61.54 61.20 81.62 52.00 47.28 79.80 GPT-4.1-mini 70.30 70.25 68.12 73.53 73.10 68.21 49.16 48.54 77.42 48.00 37.50 71.40 Qwen2.5-VL 64.21 60.79 62.50 60.54 66.60 62.50 45.82 45.31 72.10 45.00 41.28 65.84 InternVL2.5 64.39 57.89 63.80 57.50 73.24 63.50 46.82 45.29 77.60 49.00 52.24 69.46 InternVL2.5-MPO 65.13 61.07 63.75 59.16 69.17 65.08 43.14 40.84 74.00 47.00 49.80 65.46
+> Supervised baselines
+> HCFC-Hou 74.91 73.61 77.72 60.08 73.46 86.51 73.24 72.00 87.04 70.50 56.93 78.79 HCFC-Medina 76.38 75.83 74.77 69.75 77.50 81.58 62.54 62.23 84.92 53.50 46.24 80.81 TikTec 73.43 73.26 68.08 74.37 78.37 72.70 66.22 65.08 82.35 63.00 49.32 72.73 FANVM 79.52 78.81 80.98 69.75 78.64 87.17 71.57 70.21 85.28 69.50 55.15 75.76 SVFEND 80.88 80.17 74.53 83.61 85.82 77.63 77.14 75.63 87.91 76.33 62.33 78.79 FakingRecipe 82.87 83.52 91.35 71.00 80.67 94.74 79.26 77.87 89.66 78.00 64.80 81.82 KDSGAT-FNVD 84.73 84.68 82.23 83.61 87.00 85.86 81.94 78.94 92.68 76.00 64.44 87.88
+> Ours
+> FakeSV-VLM 89.60 89.40 89.20 90.10 90.50 88.00 88.90 87.60 88.20 86.50 86.60 89.10
+> MAGIC 3(ours) 86.71 86.84 86.52 83.61 87.50 89.80 84.95 82.28 94.12 80.00 68.99 89.90
+> MAGIC 3+VLM (ours) 90.93 90.41 90.85 90.95 91.10 88.90 89.52 88.14 89.70 88.50 87.20 90.10
+> End-to-End Efficiency
+> FakeSV-VLM 18.67 samp/s @24.68 GB 30.25 samp/s @22.76 GB
+> MAGIC 3(ours) 680.43 samp/s @1.67 GB 693.76 samp/s @1.67 GB MAGIC 3+VLM (ours) 509.71 samp/s @24.68 GB 530.73 samp/s @22.76 GB
+
+Table 1: Main results on FakeSV and FakeTT. Best values in bold , second best underlined . MAGIC 3+VLM routes 25% of samples to VLM (Figure 5) while achieving comparable or better accuracy, offering the best cost– performance tradeoff : VLM-level or higher accuracy at up to 18–27 × higher throughput than VLM-only. 
+
+where MAGIC 3 attains the highest precision. When combined with a heavyweight VLM (FakeSV-VLM) in a two-stage pipeline, MAGIC 3+VLM makes further improvement and even surpasses the specialized VLM-only detector FakeSV-VLM on both FakeSV (90.93% vs. 89.60%) and FakeTT (89.52% vs. 88.90%), while still clearly outperforming all non-VLM baselines (Table 1). A detailed analysis of the routing policy and its superior cost–performance benefits is provided in Section 5.3. 
+
+4.4 Ablation Study 
+
+To assess the contribution of each component, we conduct ablations on both datasets (Table 2). Re-moving core consistency modules (CMCG, CFE, TCMI) consistently degrades performance, con-firming that explicit consistency modeling is ef-fective. AARF style-robust fusion impacts per-formance particularly on FakeTT, supporting the need for handling style shifts. CFE and TCMI also contribute to interpretability, driving the field visu-alizations and temporal inconsistency detection. 
+
+5 Analysis and Findings 
+
+Beyond the main results, we investigate the consis-tency signals to uncover deeper insights about how real and fake videos differ. 
+
+5.1 Asymmetric Cross-Modal Consistency 
+
+We first examine cross-modal consistency in aggre-gate for real vs. fake videos. Using CMCG, we compute four scalar scores per video: text–visual, text–audio, visual–audio, and global consistency. Figure 3 shows their distributions for FakeSV (left) and FakeTT (right). In both datasets, real videos exhibit high text–visual and moderate text–audio consistency, whereas fake videos show the reverse: text–audio consistency is very high, but text–visual consistency collapses. Visual–audio consistency remains high for both. Global consistency is, on average, higher for real videos, but the asymmetry is the distinguishing factor. 
+
+Underlying Causes of Asymmetric Cross-Modal Consistency This asymmetry is consistent with the production mechanics of “cheapfakes” (Paris and Donovan, 2019). Qualitatively, we observe that fake news producers often start with high-6Figure 3: Cross-modal consistency distributions of text–visual, text–audio, visual–audio, and global consistency scores for real vs. fake videos. Real news shows high text–visual but moderate text–audio consistency; fake news flips this pattern, while visual–audio consistency remains high. Left: FakeSV; right: FakeTT.    
+
+> Figure 4: Consistency–prediction analysis. Global consistency is strongly (negatively) correlated with fake probability; errors concentrate in the middle-consistency band, while cglobal vs. entropy is non-linear with uncertainty peaking at mid-range consistency. Left: FakeSV; right: FakeTT.
+
+quality, visually coherent stock footage or stolen clips, which naturally preserves strong alignment between the visual stream and background audio. These materials are then repurposed with fabricated subtitles and voiceovers to convey a false narra-tive. The generated text is designed to be emotion-ally engaging and closely aligned with the affect of the audio, while gradually drifting away from the actual visual evidence, creating the semantic gap that MAGIC 3 detects. In contrast, real news videos, particularly those from professional out-lets in FakeTT, emphasize factual grounding, with voiceovers that closely describe the visual events, resulting in stronger text–visual consistency. More statistics are shown in Appendix D.1. 
+
+5.2 Global Consistency for Interpretability 
+
+We examine how the global consistency score 
+
+cglobal relates to predictions. Figure 4 plots cglobal 
+
+against the predicted fake probability on FakeSV (left) and FakeTT (right). cglobal is strongly and roughly negatively correlated with the model’s fake probability; prediction errors cluster in the middle band of cglobal , indicating that the score provides an interpretable, low-dimensional difficulty axis. 
+
+Interpretability of Global Consistency Because 
+
+cglobal is an explicit input feature, this correlation is expected. However, its value lies in its opera-tional utility . Unlike opaque end-to-end probabil-ities, cglobal offers human moderators a tangible explanation for the model’s decision: a video is flagged not just because it “looks fake,” but specif-7Variant Acc F1 AUC FakeSV                                                         
+
+> MAGIC 3(full) 86.71 86.84 92.23 Consistency w/o CMCG 84.90 84.85 91.77 w/o CFE 85.69 85.61 92.30 w/o TCMI 85.75 85.89 91.94 Fusion w/o AARF 84.49 84.71 91.43 w/o HMT 85.86 85.79 92.48
+> Training w/o contr. 85.75 85.89 92.15 w/o adv. 86.56 86.53 92.23
+> FakeTT
+> MAGIC 3(full) 84.95 82.28 89.08
+> Consistency w/o CMCG 81.94 78.68 87.44 w/o CFE 78.83 80.13 87.88 w/o TCMI 78.64 77.22 86.92 Fusion w/o AARF 80.91 78.90 88.30 w/o HMT 82.91 81.48 88.47 Training w/o contr. 82.93 80.47 88.50 w/o adv. 78.37 77.78 88.37
+> Table 2: Ablation study. Consistency modules (CMCG, CFE, TCMI) and AARF are critical.
+
+ically because its modalities fail to cohere. We show that uncertainty peaks precisely in the middle-consistency region in Appendix D.2, suggesting that cglobal can serve as a filter to identify ambigu-ous cases that require human or VLM intervention. 
+
+5.3 Uncertainty-Aware Two-Stage VLM Routing 
+
+We now examine how consistency and uncertainty can be used to orchestrate a two-stage pipeline with a heavyweight VLM detector. Figure 5 summa-rizes uncertainty distributions, calibration curves, and routing behavior on both datasets. We imple-ment FakeSV-VLM (Wang et al., 2025c) for the stage-2 detector. The top row shows that entropy is typically lower for correct predictions than for incorrect ones, and that confidence is reasonably calibrated. The bottom row then visualizes routing policies that identify difficult samples for VLM es-calation. We treat the routing threshold as a hyper-parameter and tune it on the validation set to route approximately 25% of samples on both datasets. Routed samples are indeed harder (lower detector-only accuracy), and the overall accuracy of the two-stage system improves. As shown in Table 1, on FakeSV, routing 25% of samples to a VLM (MAGIC 3+VLM) increases overall accu-racy from 86.71% to 90.93%, surpassing FakeSV-VLM’s 89.60% by 1.33 percentage points. On FakeTT, a 25% routing ratio boosts accuracy from 84.95% to 89.52%, surpassing the VLM-only base-line of 88.90% by 0.62pp. Crucially, this hybrid approach achieves 18–27 × higher throughput and massive VRAM savings compared to a pure VLM pipeline. MAGIC 3 effectively filters out the bulk of easy cases ( ∼75%), allowing expensive VLMs to focus only on the hardest samples, and thus achiev-ing the best cost–performance tradeoff. 
+
+5.4 Consistency Stability under Style Perturbations 
+
+Finally, we explore the effect of multi-style LLM rewrites. Adversarial-Aware Rewrite Fusion fuses the original caption with neutral, formal, and sen-sational rewrites and is trained with style-aware contrastive losses. Table 2 reports an ablation in which we remove AARF (i.e., use only the original text) while keeping other components fixed. Per-formance drops on both datasets, indicating that exposure to style variation improves robustness. Conceptually, this connects to work on style-aware neural fake news detection like Style-News (Wang et al., 2024a), where stylized generation is used as an adversary to stress-test detectors. Our setup differs in two ways: we treat rewrites as semantic-preserving perturbations generated by a general-purpose LLM (rather than a task-specific genera-tor), and we explicitly measure how cross-modal consistency behaves under style changes (statistical details in Appendix D.3). Our hypothesis is that real news remains consistent under style rewrites, whereas fake news shows larger variance, espe-cially in text–visual consistency. This is supported qualitatively by Figure 7, where fake samples ex-hibit larger shifts under stylistic perturbations. Ap-pendix D.3 reports detailed variance statistics. 
+
+6 Conclusion 
+
+We presented MAGIC 3, a consistency-centric de-tector for fake news short videos that explicitly exposes cross-tri-modal consistency at multiple granularities: pairwise and global scores, token-level consistency fields, a temporal audio–visual inconsistency score, and uncertainty estimates. On FakeSV and FakeTT, MAGIC 3 achieves state-of-the-art supervised performance on frozen features and offers a superior cost–performance tradeoff: when combined with VLM routing, it surpasses VLM-only accuracy at 18–27 × higher throughput. Future work should integrate external knowledge search for fact-level verification. 8Limitations 
+
+First, our method relies on pre-extracted multi-modal features and offline LLM-generated text rewrites, which introduce additional pre-processing cost and potential sensitivity to the choice of LLMs and prompt designs; however, this is a deliber-ate design choice that decouples heavy backbone computation from the detector head, enabling high throughput, low memory usage, and flexible in-tegration with different pretrained encoders, and our ablation results further show that the core con-sistency modeling remains effective even without LLM rewrites. Second, the current TCMI module focuses on coarse-grained temporal audio–visual inconsistency and does not explicitly model fine-grained temporal logic or causal structures; never-theless, it is intentionally designed as a lightweight complement to static consistency signals, targeting prominent synchronization mismatches commonly observed in repurposed or cheaply manipulated videos. Third, MAGIC 3 operates as a feature-level detector and does not directly process raw video inputs; while this limits strictly on-device, end-to-end deployment, it allows the framework to re-main backbone-agnostic and deployment-friendly for large-scale platform settings where features are often cached or shared across tasks. More-over, consistency-based detectors may still struggle with carefully crafted misinformation in which all modalities are internally consistent but factually incorrect; addressing such cases typically requires external knowledge and verification resources, and we view our consistency-centric approach as a com-plementary detection axis rather than a standalone solution to factual verification. Finally, although the proposed consistency fields and uncertainty es-timates improve model transparency and enable fine-grained analysis, more human-centered eval-uations are needed to fully understand how practi-tioners interpret and act upon these signals, which we leave as an important direction for future work. 
+
+Ethics Statement 
+
+This work aims to mitigate the harmful impact of multimedia misinformation in short-form news videos. Nonetheless, there are dual-use risks: un-derstanding detection mechanisms can inform ad-versaries seeking to evade them. We therefore fo-cus on general architectural principles rather than attack-specific heuristics, and we encourage respon-sible deployment practices that combine automated detection with human oversight. All datasets used are publicly available; we fol-low their original licenses and respect existing pri-vacy safeguards. In real-world deployments, partic-ular care should be taken to monitor false positives, ensure fairness across topics and languages, and provide appropriate channels for appeals when au-tomated decisions affect users. 
+
+References             
+
+> Shahin Amiriparian, Filip Packa´ n, Maurice Gerczuk, and Björn W Schuller. 2024. Exhubert: Enhancing hubert through block extension and fine-tuning on 37 emotion datasets. arXiv preprint arXiv:2406.10275 .Shuai Bai, Yuxuan Cai, Ruizhe Chen, Keqin Chen, Xionghui Chen, Zesen Cheng, Lianghao Deng, Wei Ding, Chang Gao, Chunjiang Ge, and 1 others. 2025. Qwen3-vl technical report. arXiv preprint arXiv:2511.21631 .Yuyan Bu, Qiang Sheng, Juan Cao, Peng Qi, Dand-ing Wang, and Jintao Li. 2023. Combating online misinformation videos: Characterization, detection, and future directions. In Proceedings of the 31st ACM International Conference on Multimedia , pages 8770–8780. Yuyan Bu, Qiang Sheng, Juan Cao, Peng Qi, Danding Wang, and Jintao Li. 2024. Fakingrecipe: Detecting fake news on short video platforms from the perspec-tive of creative process. In Proceedings of the 32nd ACM International Conference on Multimedia , pages 1351–1360. Zhe Chen, Weiyun Wang, Yue Cao, Yangzhou Liu, Zhangwei Gao, Erfei Cui, Jinguo Zhu, Shenglong Ye, Hao Tian, Zhaoyang Liu, and 1 others. 2024. Expanding performance boundaries of open-source multimodal models with model, data, and test-time scaling. arXiv preprint arXiv:2412.05271 .Hyewon Choi and Youngjoong Ko. 2021. Using topic modeling and adversarial neural networks for fake news video detection. In Proceedings of the 30th ACM international conference on information & knowledge management , pages 2950–2954. Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019. Bert: Pre-training of deep bidirectional transformers for language understand-ing. In Proceedings of the 2019 conference of the North American chapter of the association for com-putational linguistics: human language technologies, volume 1 (long and short papers) , pages 4171–4186. Yuan Gao, Xuelong Wang, Yu Zhang, Ping Zeng, and Yingjie Ma. 2024. Temporal feature predic-tion in audio–visual deepfake detection. Electronics ,13(17):3433.
+
+9Xuejian Huang, Tinghuai Ma, Hao Tang, and Huan Rong. 2025. Knowledge-enhanced dynamic scene graph attention network for fake news video detec-tion. IEEE Transactions on Multimedia .Xianghua Li, Jiao Qiao, Shu Yin, Lianwei Wu, Chao Gao, Zhen Wang, and Xuelong Li. 2025. A survey of multimodal fake news detection: a cross-modal inter-action perspective. IEEE Transactions on Emerging Topics in Computational Intelligence .Ze Liu, Yutong Lin, Yue Cao, Han Hu, Yixuan Wei, Zheng Zhang, Stephen Lin, and Baining Guo. 2021. Swin transformer: Hierarchical vision transformer using shifted windows. In Proceedings of the IEEE/CVF international conference on computer vi-sion , pages 10012–10022. Eric Müller-Budack, Jonas Theiner, Sebastian Diering, Maximilian Idahl, and Ralph Ewerth. 2020. Multi-modal analytics for real-world news using measures of cross-modal entity consistency. In Proceedings of the 2020 international conference on multimedia retrieval , pages 16–25. Britt Paris and Joan Donovan. 2019. Deepfakes and cheap fakes. United States of America: Data & Society , 1. Peng Qi, Yuyan Bu, Juan Cao, Wei Ji, Ruihao Shui, Junbin Xiao, Danding Wang, and Tat-Seng Chua. 2023. Fakesv: A multimodal benchmark with rich social context for fake news detection on short video platforms. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 37, pages 14444– 14452. Juan Carlos Medina Serrano, Orestis Papakyriakopou-los, and Simon Hegelich. 2020. Nlp-based feature extraction for the detection of covid-19 misinforma-tion videos on youtube. In Proceedings of the 1st Workshop on NLP for COVID-19 at ACL 2020 .Lanyu Shang, Ziyi Kou, Yang Zhang, and Dong Wang. 2021. A multimodal misinformation detector for covid-19 short videos on tiktok. In 2021 IEEE in-ternational conference on big data (big data) , pages 899–908. IEEE. Kai Shu, Suhang Wang, and Huan Liu. 2019. Beyond news contents: The role of social context for fake news detection. In Proceedings of the twelfth ACM international conference on web search and data mining , pages 312–320. Chong Tian, Qirong Ho, and Xiuying Chen. 2025. A symbolic adversarial learning framework for evolv-ing fake news generation and detection. In Proceed-ings of the 2025 Conference on Empirical Methods in Natural Language Processing , pages 12307–12321. Soroush Vosoughi, Deb Roy, and Sinan Aral. 2018. The spread of true and false news online. science ,359(6380):1146–1151. Haoran Wang, Yan Yang, and Yingli Zhong. 2025a. Global and local feature enhancement for short video fake news detection. In International Conference on Intelligent Computing , pages 435–446. Springer. Junxi Wang, Jize Liu, Na Zhang, and Yaxiong Wang. 2025b. Consistency-aware fake videos detection on short video platforms. In International Conference on Intelligent Computing , pages 200–210. Springer. Junxi Wang, Yaxiong Wang, Lechao Cheng, and Zhun Zhong. 2025c. Fakesv-vlm: Taming vlm for detect-ing fake short-video news via progressive mixture-ofexperts adapter. arXiv preprint arXiv:2508.19639 .Wei-Yao Wang, Yu-Chieh Chang, and Wen-Chih Peng. 2024a. Style-news: Incorporating stylized news gen-eration and adversarial verification for neural fake news detection. arXiv preprint arXiv:2401.15509 .Weiyun Wang, Zhe Chen, Wenhai Wang, Yue Cao, Yangzhou Liu, Zhangwei Gao, Jinguo Zhu, Xizhou Zhu, Lewei Lu, Yu Qiao, and 1 others. 2024b. En-hancing the reasoning ability of multimodal large language models via mixed preference optimization. 
+
+arXiv preprint arXiv:2411.10442 .Yaqing Wang, Fenglong Ma, Zhiwei Jin, Ye Yuan, Guangxu Xun, Kishlay Jha, Lu Su, and Jing Gao. 2018. Eann: Event adversarial neural networks for multi-modal fake news detection. In Proceedings of the 24th acm sigkdd international conference on knowledge discovery & data mining , pages 849–857. Yukun Yang, Xiwei Shi, Haoxu Li, Buwei Fan, and Yijia Xu. 2025. Fake news detection in short videos by integrating semantic credibility and multi-granularity contrastive learning. Applied Sciences ,15(23):12621. X Zhou, J Wu, and R Zafarani. 2020. Safe: similarity-aware multi-modal fake news detection. arxiv. arXiv preprint arXiv:2003.04981 .Xinyi Zhou and Reza Zafarani. 2020. A survey of fake news: Fundamental theories, detection methods, and opportunities. ACM Computing Surveys (CSUR) ,53(5):1–40. 
+
+10 A Cross-modal Inconsistency Taxonomy (Details) 
+
+Table 3 provides a detailed version of the task-oriented inconsistency taxonomy mentioned in the introduction. For each category we list a brief de-scription and typical patterns; MAGIC 3’s corre-sponding signals are discussed in the main text. 
+
+B Additional Figures 
+
+See Figure 5 and Figure 7. 
+
+C Method Details 
+
+This section provides the mathematical details of the components sketched in Section 3. 
+
+C.1 Cross-Modal Consistency Gate (CMCG) 
+
+We first compute pooled representations for each modality: 
+
+¯htext = Pool( Htext ) , ¯hvis = Pool( Hvis ) ,
+
+¯haud = Pool( Haud ) . (11) Here Pool( ·) denotes mean pooling or a special CLS token. For each modality pair (mi, m j ) ∈{(text , vis) , (text , aud) , (vis , aud) }, CMCG computes a scalar consistency score 
+
+cij = σ
+
+
+
+w⊤ 
+
+> ij
+
+[¯hmi ; ¯hmj ] + bij 
+
+
+
+, (12) where [·; ·] is concatenation and σ is the sigmoid function. This yields a 3-dimensional consistency vector 
+
+c = [ ctv , c ta , c va ] ∈ R3. (13) A small MLP then produces a global consistency score 
+
+cglobal = σ(MLP c(c)) . (14) 
+
+C.2 Consistency Field Estimator (CFE) 
+
+Suppose we have a cross-attention matrix from modality mi to mj ,
+
+Ami←mj ∈ RLmi ×Lmj , (15) produced by the cross-modal transformer. Row t
+
+corresponds to a token or frame in modality mi.We define the consistency field of mi with respect to mj as 
+
+F (mi) 
+
+> ij
+
+(t) = max  
+
+> k
+
+Ami←mj (t, k ), t = 1 , . . . , L mi .
+
+(16) Intuitively, F (mi) 
+
+> ij
+
+(t) ∈ [0 , 1] reflects how strongly token t in modality mi finds supporting evidence in modality mj . For training, we add a mild regular-izer aligning global CMCG scores with aggregated fields: 
+
+Lreg = X
+
+> (i,j )
+
+ cij − mean( F (mi) 
+
+> ij
+
+)2. (17) 
+
+C.3 Multi-view Adversarial-Aware Rewrite Fusion (AARF) 
+
+Let Htext be the original text sequence and H(v)rew 
+
+the v-th rewrite. We pool them into vectors 
+
+horig = Pool( Htext ), (18) 
+
+h(v)rew = Pool  H(v)rew 
+
+. (19) For each view v, we estimate a scalar rewrite qual-ity 
+
+q(v) = σ MLP q[horig ; h(v)rew ], (20) and compute gating logits 
+
+g = MLP g
+
+ [horig ; h(1) rew ; . . . ; h(V )rew ; q(1) , . . . , q (V )].
+
+(21) We obtain preliminary weights αsoft =softmax( g), enforce a minimum weight αmin on the original text, and renormalize: 
+
+˜α0 = max( αsoft 0 , α min ), (22) 
+
+˜αv = αsoft  
+
+> v
+
+, v ≥ 1, (23) 
+
+αv =
+
+
+
+˜α0, v = 0 ,
+
+(1 − ˜α0) ˜αv
+
+PVu=1 ˜αu
+
+, v ≥ 1. (24) The fused representation is 
+
+hfuse text = α0 horig +
+
+> V
+
+X
+
+> v=1
+
+αv Proj  h(v)rew 
+
+. (25) An InfoNCE-style loss encourages all views of the same video to be close and views of different videos to be separated. 
+
+C.4 Hierarchical Multimodal Transformer (HMT) 
+
+Layer A performs intra-modal refinement: 
+
+H(A)text = TransEnc text (Htext ), (26) 
+
+H(A)vis = TransEnc vis (Hvis ), (27) 
+
+H(A)aud = TransEnc aud (Haud ). (28) 11 Category Description and typical patterns 
+
+Entity & context incon-sistency Entities (persons, organizations, places) or contexts (e.g., country, city, venue) mentioned in text do not match those present in video or audio. A typical pattern is subtitles claiming “thousands protest in Paris” while the video shows a small rally in a different city. Event-level semantic in-consistency Modalities disagree on the core event: what happened, at what scale, or with which participants. For example, the caption claims “violent clashes erupt” but the video shows a peaceful gathering, or the audio describes a different incident. Affective inconsistency Sentiment or emotion conveyed by audio contradicts text or visual content, such as tragic subtitles overlaid on upbeat background music or calm narration over highly dramatic visuals. Temporal audio–visual inconsistency Audio and visual streams are misaligned in time, reused from different footage, or re-ordered. This includes dubbed videos, re-edited footage, or mis-timed sound effects. Stylistic / pragmatic in-consistency Rhetorical style, framing, or level of sensationalism in one modality is inconsistent with the others, e.g., a sensational subtitle for a relatively mundane video, or highly emotional text with neutral audio. 
+
+Table 3: Task-oriented taxonomy of inconsistencies in short-form news videos. These categories serve as design targets for MAGIC 3’s consistency-centric architecture. 
+
+Layer B performs consistency-weighted cross-modal attention; for modalities mi, m j we com-pute 
+
+˜Hmi←mj = CrossAttn  H(A) 
+
+> mi
+
+, H(A)
+
+> mj
+
+. (29) Attention weights are stored for CFE. We then ag-gregate messages using weights derived from c:
+
+βm = softmax  MLP m(c), (30) 
+
+H(B) 
+
+> m
+
+= X 
+
+> j̸=m
+
+βmj ˜Hm←j . (31) Layer C pools refined representations and fuses them with the AARF text: 
+
+Z =
+
+
+
+Pool( H(B)text )Pool( H(B)vis )Pool( H(B)aud )
+
+hfuse text 
+
+ , (32) 
+
+hglobal = TransEnc global (Z)[CLS] . (33) 
+
+C.5 Contrastive–Adversarial Joint Learning (CAJL) 
+
+Let yi ∈ { 0, 1} be labels and ˆyi predicted probabil-ities. The cross-entropy loss is 
+
+Lce = − 1
+
+N
+
+X
+
+> i
+
+
+
+yi log ˆ yi + (1 − yi) log(1 − ˆyi)
+
+
+
+.
+
+(34) We use InfoNCE for contrastive terms. For repre-sentation pairs (ui, vi) from the same video and negatives from other videos, 
+
+LNCE = − 1
+
+N
+
+X
+
+> i
+
+log exp(sim( ui, vi)/τ )
+
+P 
+
+> j
+
+exp(sim( ui, vj )/τ ) .
+
+(35) 
+
+Lintra uses different views of the same video (origi-nal text, rewrites, audio, visuals), and Lcross aligns fused text and global representations. For adversarial consistency, we apply small per-turbations δi to intermediate representations and enforce prediction consistency: 
+
+Ladv = 1
+
+N
+
+X
+
+> i
+
+KL  pθ(y | hi)∥pθ(y | hi + δi).
+
+(36) We also encourage consistent predictions between original and fused text: 
+
+Lsem = 1
+
+N
+
+X
+
+> i
+
+KL  pθ(y | horig ,i )∥pθ(y | hfuse text ,i ).
+
+(37) A style invariance term applies InfoNCE over pro-jections of all text views: 
+
+Lstyle = 1
+
+N
+
+X
+
+> i
+
+LNCE 
+
+ {z(v)text ,i }Vv=0 
+
+. (38) The final loss is 
+
+L = Lce + λintra Lintra + λcross Lcross + λadv Ladv 
+
++λsem Lsem + λstyle Lstyle + λreg Lreg .
+
+(39) Hyperparameters are given in Table 11. 
+
+D Additional Quantitative Analyses for Findings 
+
+This appendix reports the quantitative statistics that support Findings 1–4. 
+
+D.1 Aggregate Consistency Statistics 
+
+Table 5 lists mean ± standard deviation of the four consistency scores for real vs. fake videos, 12 Component Function Consistency level Role in findings / interpretability 
+
+Consistency Computation 
+
+CMCG Computes pairwise consistency scores [ctv , c ta , c va ] and global score cglobal 
+
+Pairwise → global Reveals asymmetric text–visual vs. text–audio patterns; defines the global consistency axis (Figures 3– 4). CFE Derives token/frame-level consis-tency fields from cross-modal at-tention Local (token / frame) Localizes suspicious phrases or frames; supports heatmap visualiza-tion (Figure 6). TCMI Computes temporal audio–visual inconsistency score ctemp 
+
+Temporal Detects coarse audio–visual syn-chronization mismatches common in repurposed videos. 
+
+Cross-Modal Fusion 
+
+AARF Fuses original text with neu-tral/formal/sensational LLM rewrites via gated weights Text-internal Builds style-robust text embed-dings; used to study style pertur-bation effects (Finding 4). HMT Three-stage hierarchical fu-sion: intra-modal refinement, consistency-weighted cross-attention, global aggregation Structural Integrates multimodal representa-tions with consistency-modulated attention. 
+
+Training and Prediction 
+
+CAJL Contrastive–adversarial joint learning with InfoNCE and perturbation losses Training Aligns multimodal representations and improves robustness under per-turbations. Classifier Outputs fake probability, confi-dence, and uncertainty for two-stage routing Prediction Provides calibrated uncertainty for selective VLM escalation (Find-ing 3). 
+
+Table 4: MAGIC 3 component overview. Components are grouped by function: consistency computation (CMCG, CFE, TCMI), cross-modal fusion (AARF, HMT), and training/prediction (CAJL, Classifier). Together they provide the signals used in our four findings and the two-stage VLM pipeline. 
+
+along with two-sample t-tests. The text–visual vs. text–audio asymmetry is highly significant on both datasets; visual–audio is nearly identical across classes. 
+
+Dataset Score Real Fake p-value FakeSV 
+
+ctv 0.82 ±0.32 0.16 ±0.27 p ≪ 0.001 
+
+cta 0.50 ±0.20 0.88 ±0.13 p ≪ 0.001 
+
+cva 0.89 ±0.02 0.89 ±0.02 p = 0 .82 
+
+cglobal 0.47 ±0.04 0.38 ±0.04 p ≪ 0.001 
+
+FakeTT 
+
+ctv 0.84 ±0.29 0.31 ±0.35 p ≪ 0.001 
+
+cta 0.39 ±0.23 0.77 ±0.18 p ≪ 0.001 
+
+cva 0.86 ±0.03 0.86 ±0.03 p = 0 .49 
+
+cglobal 0.47 ±0.04 0.40 ±0.04 p ≪ 0.001 
+
+Table 5: Finding 1 statistics: consistency scores by class (mean ±std) and two-sample t-test p-values. Text–visual vs. text–audio patterns flip between real and fake videos on both datasets. 
+
+D.2 Correlation Between Global Consistency and Predictions 
+
+Table 6 reports Spearman/Pearson correlations be-tween cglobal and predicted fake probability, along with a linear-fit R2. Table 7 shows the empirical fake rate in five cglobal bins, illustrating the gener-ally decreasing trend. 
+
+Dataset Spear. ρ Pear. r R2
+
+FakeSV −0.91 (p ≪ 0.001 ) −0.99 (p ≪ 0.001 ) 0.99 
+
+FakeTT −0.96 (p ≪ 0.001 ) −0.96 (p ≪ 0.001 ) 0.91 
+
+Table 6: Finding 2: correlation between cglobal and predicted fake probability. 
+
+cglobal bin FakeSV rate FakeTT rate Lowest (Q1) 0.93 0.83 Q2 0.89 0.55 Q3 0.76 0.17 Q4 0.19 0.03 Highest (Q5) 0.05 0.07 
+
+Table 7: Finding 2: fake rates in five quantile bins of 
+
+cglobal (lower scores = more inconsistent). 
+
+D.3 Style Sensitivity Statistics 
+
+Table 8 compares style-induced variance (across original+three rewrites) for real vs. fake videos. Fake samples show consistently higher variance for text–visual, text–audio, and global consistency on both datasets; visual–audio is unchanged, as expected. 13 Figure 5: Uncertainty and two-stage routing behaviour of MAGIC 3. Top: entropy/confidence distributions and calibration plots. Bottom: split between direct predictions and routed samples, and accuracies for routed vs. non-routed subsets when using a VLM-based stage-2 detector. Left: FakeSV; right: FakeTT. 
+
+Dataset Score Real var Fake var p
+
+FakeSV 
+
+ctv 0.0336 0.0815 p < 10 −16 
+
+cta 0.0109 0.0148 p < 10 −2
+
+cva 0.0 0.0 n.s. 
+
+cglobal 6.19 ×10 −4 1.44 ×10 −3 p < 10 −15 
+
+FakeTT 
+
+ctv 0.0194 0.0801 p < 10 −21 
+
+cta 0.0081 0.0170 p < 10 −7
+
+cva 0.0 0.0 n.s. 
+
+cglobal 3.13 ×10 −4 1.23 ×10 −3 p < 10 −20 
+
+Table 8: Finding 4: variance of consistency scores un-der style rewrites (real vs. fake). “n.s.” denotes non-significant differences ( p ≥ 0.05 ). 
+
+D.4 Two-Stage Routing Analysis Details 
+
+We treat the routing threshold as a hyperpa-rameter and tune it on the validation set to route approximately 25% of samples on both datasets. Table 9 summarizes the routing strate-gies used. For FakeSV, we use entropy-based rout-ing (high entropy indicates uncertain predictions); for FakeTT, we use a difficulty score that com-bines entropy, global consistency, and confidence: 
+
+d = entropy norm +(1 −cglobal ,norm )+(1 −conf norm ),routing samples with the highest difficulty scores.          
+
+> Dataset Routed Ratio MAGIC 3+VLM Acc Routing Strategy FakeSV 25.1% 90.93% Entropy-based FakeTT 25.1% 89.52% Difficulty score
+
+Table 9: Finding 3: routing strategies and routed ratios used to construct the two-stage systems. Both strate-gies outperform the standalone VLM detector (FakeSV: +1.33pp, FakeTT: +0.62pp). 
+
+E Datasets and Splits 
+
+Table 10 summarizes the two benchmarks used in this paper. We follow the official chrono-logical splits from Huang et al. (2025), using 70%/15%/15% for training, validation, and testing. 
+
+Statistic FakeSV FakeTT 
+
+Time range 2017/10–2022/02 2019/05–2024/03 Avg. duration (s) 39.88 47.69 # Fake videos 1,810 1,172 # Real videos 1,814 819 # Total 3,624 1,991 
+
+Table 10: Statistics of FakeSV and FakeTT. All videos are short-form clips on real-world platforms. 
+
+14 Figure 6: CFE consistency fields. Colors indicate per-token consistency with the visual stream; sharp high-score regions suggest localized support, while diffuse/low scores indicate potential inconsistencies. 
+
+Figure 7: Style sensitivity heatmaps (Finding 4). Rows: consistency types; columns: style rewrites vs. original. Fake samples show larger shifts than real ones. 
+
+F LLM Rewriting Prompts 
+
+We use three prompts to obtain multi-view rewrites. In our experiments we use DeepSeek-V3.2; for FakeSV we use Chinese translations of these prompts. 
+
+Neutral news style. 
+
+> You are a professional news editor. Rewrite the following video description in a neu-tral, objective news style. Focus on clarity and factual accuracy. Do not add new information. Original text: {input_text} Rewritten text:
+
+Formal elaborated style. 
+
+> You are a senior journalist. Rewrite the following video description in a more formal and elaborated style, making the key facts explicit and clearly struc-tured. Avoid emotional language. Original text: {input_text} Rewritten text:
+
+Sensational style. 
+
+> You are writing a sensational social media post about breaking news. Rewrite the following video description to sound more emotional and attention-grabbing, while keeping the core facts unchanged. Original text: {input_text} Rewritten text:
+
+G Implementation Details and Hyperparameters 
+
+Backbone encoders use 
+
+bert-base-multilingual-uncased for text (maximum length 256), Swin Transformer (Liu et al., 2021) for K keyframes per video, and ExHuBERT-based emotion embeddings for audio (Amiriparian et al., 2024). These encoders are used only for offline feature extraction; during MAGIC 3 training we operate purely on the pre-extracted features and do not update encoder parameters. Training uses AdamW with learning rate 5 ×
+
+10 −5, batch size 32, cosine decay with 10% warm-up, dropout 0.3 in transformer layers, and early stopping based on validation macro-F1. We train for up to 50 epochs and keep the checkpoint with best validation macro-F1. In our main experiments we set λintra = λcross = 0 .1, λadv = 0 .5, λsem =0.1, λstyle = 0 .1, and λreg = 0 .05 , with αmin =0.5, V = 3 , and KMC = 5 .
+
+H Efficiency and Deployment Discussion 
+
+Because all encoders are used only for offline feature extraction and MAGIC 3 operates on pre-extracted features, inference on cached features reduces to a single detector head. The trainable 15 Hyperparameter Value                    
+
+> Learning rate 5×10 −5
+> Batch size 32 Epochs 50 Warmup ratio 0.1 Hidden dimension 256 Attention heads (HMT) 8Dropout 0.3
+> λintra 0.1
+> λcross 0.1
+> λadv 0.5
+> λsem 0.1
+> λstyle 0.1
+> λreg 0.05
+> αmin (AARF) 0.5
+> V(rewrites per video) 3
+
+Table 11: Key hyperparameter settings for MAGIC 3.
+
+detector head has roughly 185M parameters (with no encoder fine-tuning), which is lightweight com-pared to multi-billion-parameter VLM backbones. On a single RTX 5090 GPU, a full training run on each dataset (including validation and test evalua-tion) takes about 15 minutes. With inference batch size 128 on the same GPU, we measure about 680 samples/s and ∼1.5 ms per sample, with ∼1.67 GB peak GPU memory on cached features. Peak GPU memory usage during training is about 11 GB on the same GPU. End-to-end latency is dominated by video decoding and feature extraction, which can be amortized via caching and asynchronous preprocessing in practical systems. In contrast, VLM-based detectors typically re-quire end-to-end processing with a large vision– language backbone, which is more expensive to train (often requiring multi-GPU setups) and to serve at scale. Operating purely at the feature level allows MAGIC 3 to be retrained quickly for new topics or sub-verticals within the short-video mis-information space, making it a practical choice for platforms that need rapid adaptation under hard-ware constraints. 16

@@ -1,0 +1,1164 @@
+Title: Consistent and powerful CUSUM change-point test for panel data with changes in variance
+
+URL Source: https://arxiv.org/pdf/2603.12561v1
+
+Published Time: Mon, 16 Mar 2026 00:27:20 GMT
+
+Number of Pages: 24
+
+Markdown Content:
+# Consistent and powerful CUSUM change-point test for panel data with changes in variance 
+
+Wenzhi Yang School of Big Data and Statistics, Anhui University, Hefei, China Yueting Xu School of Big Data and Statistics, Anhui University, Hefei, China Xiaoping Shi Irving K. Barber Faculty of Science, University of British Columbia, Kelowna, Canada and Qiong Li ∗
+
+Guangdong Provincial Key Laboratory of Interdisciplinary Research and Application for Data Science, Beijing Normal-Hong Kong Baptist University, Zhuhai, China March 16, 2026 
+
+Abstract 
+
+This paper investigates the change-point of variance in panel data models with time series of 𝛼 -mixing. Based on the cumulative sum (CUSUM) method and the individual differences, we construct a CUSUM test for panel data models to detect variance changes. Under the null hypothesis, we derive the limit distribution of this test, which can be used to detect the change-point of variance. Under the alternative hypothesis, the limit behavior of the CUSUM test is also derived. To validate the performance of the test, we conducted simulation analyses with Gaussian and Gamma errors. The results demonstrate that this testing method significantly outperforms existing approaches, particularly in detecting sparse variance changes. Finally, we conducted a practical case study using panel data from the Shanghai Shenzhen CSI 300 Index Components. Not only did we successfully identify the change-points of variance, but we also delved deeper into the underlying economic drivers behind these changes. 
+
+> ∗
+
+Corresponding author: qiongli@bnbu.edu.cn 
+
+1
+
+> arXiv:2603.12561v1 [stat.ME] 13 Mar 2026
+
+Keywords: Panel data; Change-point of variance; CUSUM method; Powerful test; Limit distribution. 
+
+# 1 Introduction 
+
+Change-point detection is a statistical methodology concerned with identifying points in time (or sequence order) at which the underlying probability distribution of a data-generating process undergoes a significant alteration. These points, often referred to as change-points, breakpoints, or structural breaks, represent moments of regime shifts, tran-sitions, or discontinuities in the system being observed (Csörgő & Horváth 1997, Chen & Gupta 2012). Panel data, comprising observations on multiple entities (individuals, firms, countries, households, etc.) over multiple time periods, combine both cross-sectional and time-series dimensions, enabling more powerful detection of structural changes, including both mean shifts and variance shifts. Detecting variance changes in panel data is particularly important in applications such as finance, genomics, and sensor networks, where volatility shifts may occur in only a subset of units. For instance, in financial markets, occasional shocks may affect only a few assets; in genomics, mutations may induce variance changes in some genes but not others; and in sensor networks, sporadic sensor failures or anomalies can lead to localized variance changes. Classical approaches, such as the test of Li et al. (2015), aggregate panel-wise CUSUM statistics of squared residuals normalized by individual long-run variances. While asymptotically valid, these methods can lose power under sparse alternatives, where only a few panels undergo variance changes. To address this issue, we propose a new statistic, which aggregates squared residuals across panels prior to normalization, preserving signal strength in affected panels. The panel errors are modeled as stationary 𝛼 -mixing sequences, allowing for weak temporal depen-dence within each panel while maintaining independence across panels. Its performance is evaluated using two complementary criteria: (i) the signal-to-noise ratio (SNR), which quantifies the strength of the signal relative to the variability under the alternative hypoth-esis, and (ii) stochastic comparison, defined as the probability that one statistic exceeds another under the alternative. Monte Carlo simulations demonstrate the superior power of our new statistic in detecting sparse variance changes; see Section 2 for details. There has been a growing literature on change-point detection in panel data. For example, Bai (2010) studied common breaks in means and variances using least squares and quasi-maximum likelihood; Horváth & Hušková (2012) proposed a centered CUSUM statistic for mean changes; Li et al. (2015) extended this framework to variance changes; Cho (2016) proposed a double CUSUM approach for constant signals; Xu et al. (2016) introduced weighted differences of averages for dependent panels; Choi & Shin (2021) gave a general panel break test based on the self-normalization method; and several recent works (Jin et al. 2016, Shi et al. 2017, Avanesov & Buzun 2018, Wang & Samworth 2018, Liu et al. 2021, Li et al. 2023, Düker et al. 2024, Shao & Zhang 2010, She et al. 2025, Lumsdaine et al. 2023, Wang & Zwetsloot 2024, Loyo & Boot 2025) have addressed high-dimensional and sparse change scenarios. In addition, alternative variance change-point tests have been proposed, including the ICSS algorithm (Inclán & Tiao 1994), wavelet-based methods (Sharifzadeh 2et al. 2005), and likelihood-ratio tests. These approaches often assume independence, focus on univariate series, or are sensitive to noise. By contrast, our CUSUM-based modification is robust to weak dependence, accommodates irregular panels, and directly addresses sparse variance changes, making it well-suited for practical applications where only a subset of panels experiences variance shifts. The rest of this paper is organized as follows. Section 2 introduces the panel variance change-point model and the construction of the proposed test. Section 3 presents the theo-retical asymptotic analysis, including the distribution under the null hypothesis and limit behavior under the alternative. Section 4 illustrates the test via Monte Carlo simulations for Gaussian and Gamma error panels, highlighting superior performance compared to the test of Li et al. (2015). Section 5 provides a real data application to the Shanghai Shenzhen CSI 300 Index Components to detect variance change-points. Finally, Section 6 concludes, and Appendix A contains the proofs. 
+
+# 2 Panel Variance Change-Point Models and Test Con-struction 
+
+2.1 Variance Change-Point Test of Li et al. (2015) 
+
+Detecting variance changes is particularly important in econometrics, finance, genomics, and sensor networks, where volatility or dispersion may shift in a subset of cross-sectional units. Li et al. (2015) studied the problem of detecting a variance change-point in panel data models. They considered the panel data model 
+
+𝑋 𝑖,𝑡 = 𝜇 𝑖 + 𝑒 𝑖,𝑡 , 1 ≤ 𝑖 ≤ 𝑁 , 1 ≤ 𝑡 ≤ 𝑇 , (1) where 𝜇 𝑖 denotes an individual-specific mean and {𝑒 𝑖,𝑡 } are zero-mean error sequences of linear processes which are assumed to be weakly dependent over time and independent across panels. The error variance is allowed to change at an unknown common time point 
+
+𝑡 ∗ ∈ {1, … , 𝑇 − 1} , such that lim 
+
+> 𝑇 →∞
+
+1𝑇 Var (
+
+> 𝑇
+
+∑
+
+> 𝑡=1
+
+𝑒 𝑖,𝑡 ) = { 𝜎 2𝑖 , 𝑡 ≤ 𝑡 ∗,𝜎 2𝑖 + 𝛿 𝑖 , 𝑡 > 𝑡 ∗, 1 ≤ 𝑖 ≤ 𝑁 . (2) The null hypothesis of no variance change is given by 
+
+𝐻 0 ∶ 𝛿 1 = 𝛿 2 = ⋯ = 𝛿 𝑁 = 0, (3) while the alternative hypothesis assumes a common variance increase across all panels, 
+
+𝐻 1 ∶ 𝛿 𝑖 > 0 for all 𝑖 = 1, … , 𝑁 . (4) Li et al. (2015) constructed a centered CUSUM statistic of squared residuals, 
+
+𝐶 𝑖,𝑇 (𝑘) = 1√𝑇 (
+
+> 𝑘
+
+∑
+
+> 𝑡=1
+
+̂𝑒 2𝑖,𝑡 − 𝑘 𝑇 
+
+> 𝑇
+
+∑
+
+> 𝑡=1
+
+̂𝑒 2𝑖,𝑡 ) , 1 ≤ 𝑘 ≤ 𝑇 − 1, (5) 3where ̂ 𝑒 𝑖,𝑡 = 𝑋 𝑖,𝑡 − 𝑋 𝑖 and 𝑋 𝑖 = 1𝑇 ∑𝑇 𝑡=1 𝑋 𝑖,𝑡 denotes the sample mean of panel 𝑖 . For each panel. Each panel-wise statistic is normalized by a long-run variance estimator ̂ 𝑠 2∗ 𝑖,𝑇 of lim  
+
+> 𝑇 →∞ 1𝑇
+
+Var (∑ 𝑇 𝑡=1 (𝑋 𝑖,𝑡 − 𝜇 𝑖 )2) = lim  
+
+> 𝑇 →∞ 1𝑇
+
+Var (∑ 𝑇 𝑡=1 𝑒 2𝑖,𝑡 ) in (1), and the aggregated statistic is defined as 
+
+𝑉 𝑁,𝑇 (𝑘) = 1√𝑁 
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+1√̂𝑠 2∗ 𝑖,𝑇 
+
+𝐶 𝑖,𝑇 (𝑘). (6) The corresponding test statistic is 
+
+𝑇 𝑉 = max  
+
+> 1≤𝑘≤𝑇 −1
+
+∣𝑉 𝑁,𝑇 (𝑘)∣ . (7) Under the null hypothesis 𝐻 0 and suitable regularity conditions, Li et al. (2015) showed that 
+
+𝑇 𝑉 𝑑 
+
+−→ sup 
+
+> 0≤𝑥≤1
+
+|𝐵 0(𝑥)|, (8) where {𝐵 0(𝑥), 0 ≤ 𝑥 ≤ 1} denotes a standard Brownian bridge. By the (11.38) of Billings-ley (1968), it shows that 𝑃 ( sup 
+
+> 0≤𝑡≤1
+
+|𝐵 0(𝑡)| ≤ 𝑥) = 1 + 2 ∑ ∞𝑘=1 (−1) 𝑘 𝑒 −2𝑘 2𝑥 2
+
+, 𝑥 > 0 . The critical values of sup 
+
+> 0≤𝑡≤1
+
+|𝐵 0(𝑡)| are also given in Table 1 of Inclán & Tiao (1994), where the 10%, 5% and 1% critical values of sup 
+
+> 0≤𝑡≤1
+
+|𝐵 0(𝑡)| are 1.224, 1.358 and 1.628. 
+
+2.2 Motivation for a Modified Test 
+
+The variance change-point test of Li et al. (2015) provides an important foundation for detecting volatility shifts in panel data. However, both the modeling framework and the construction of their test statistic impose restrictions that can substantially reduce power in empirically relevant situations, especially when variance changes are heterogeneous or sparse across panels. In this subsection, we introduce a more general panel data model and explain the motivation for a modified CUSUM-based test that overcomes these limitations. 
+
+2.2.1 Modeling framework 
+
+Since 𝛼 -mixing (Hall & Heyde 1980) contains linear and nonlinear processes and it is widely used in the fields of time series, we will study the change-point of variance of the panel data model with 𝛼 -mixing errors. Let us recall the definition of 𝛼 -mixing sequence. 
+
+Definition 2.1 ( 𝛼 -mixing sequence) . Denote 𝒩 = {1, 2, ⋯ , 𝑛, ⋯} . The sequence {𝑒 𝑛 , 𝑛 ≥ 1} 
+
+is called strong mixing or 𝛼 -mixing if the 𝛼 -mixing coefficient 
+
+𝛼(𝑛) = sup 
+
+> 𝑚∈𝒩
+
+sup  
+
+> 𝐴∈ℱ 𝑚 1,𝐵∈ℱ ∞𝑚+𝑛
+
+|𝑃 (𝐴 ∩ 𝐵) − 𝑃 (𝐴)𝑃 (𝐵)|, 
+
+converges to zero as 𝑛 → ∞ , where ℱ𝑛 𝑚 denotes the 𝜎 -field generated by 𝑒 𝑚 , 𝑒 𝑚+1 , ⋯ , 𝑒 𝑛 
+
+with 𝑚 ≤ 𝑛 .Many linear and nonlinear time series models satisfy the mixing properties (Hall & Heyde 1980). For example, we consider an infinite order moving average (MA( ∞)) process 𝑒 𝑡 =
+
+4∑∞𝑖=0 𝑎 𝑖 𝜀 𝑡−𝑖 , 𝑡 ≥ 1 , where 𝑎 𝑖 → 0 exponentially fast, and {𝜀 𝑡 } is an 𝑖.𝑖.𝑑. sequence. If the probability density function of 𝑒 𝑡 exists (such as Normal, Cauchy, Exponential), then {𝑒 𝑡 }
+
+is an 𝛼 -mixing with exponentially decaying coefficients. The strictly stationary time series, including the autoregressive moving average (ARMA) processes and geometrically ergodic Markov chains, are the 𝛼 -mixing processes. For more properties and applications, we can refer to Györfi et al. (1989), Hall & Heyde (1980), etc. In contrast to Li et al. (2015), who characterize variance changes through shifts in the long-run variance of the error process and implicitly focus on common variance increases across all panels, we consider the following variance change-point panel data model: there exists an unknown time point 𝑡 ∗ ∈ {1, … , 𝑇 − 1} such that 
+
+𝑋 𝑖,𝑡 = 𝜇 𝑖 + (𝜎 𝑖 + 𝛿 𝑖 𝐼(𝑡 > 𝑡 ∗))𝑒 𝑖,𝑡 , 1 ≤ 𝑖 ≤ 𝑁 , 1 ≤ 𝑡 ≤ 𝑇 , (9) where 𝜇 𝑖 , 𝜎 𝑖 , 𝛿 𝑖 , and 𝑡 ∗ are unknown parameters. For each 𝑖 , {𝑒 𝑖,𝑡 }𝑇 𝑡=1 is a stationary 
+
+𝛼 -mixing sequence with 𝐸𝑒 𝑖,𝑡 = 0 , Var (𝑒 𝑖,𝑡 ) = 1 and the error processes are independent across panels. This formulation (9) differs from (1) by Li et al. (2015) in several important aspects. First, both the baseline scale 𝜎 𝑖 and the magnitude of the variance change 𝛿 𝑖 are allowed to vary across panels, permitting heterogeneous volatility dynamics. Second, variance changes may occur only in a subset of panels, rather than being common to all units. Third, the 𝛼 -mixing assumption on {𝑒 𝑖,𝑡 } substantially weakens the linear process assumption adopted in Li et al. (2015), allowing for a much broader class of temporal dependence structures encountered in practice. The null and alternative hypotheses are formulated as 
+
+𝐻 0 ∶ 𝛿 1 = ⋯ = 𝛿 𝑁 = 0, (10) 
+
+𝐻 1 ∶ 𝛿 𝑖 ≠ 0 for some 𝑖 ∈ {1, … , 𝑁 }, at an unknown 𝑡 ∗. (11) Unlike the alternative in Li et al. (2015), which assumes 𝛿 𝑖 > 0 for all panels, our alternative explicitly accommodates sparse variance changes , where only a small fraction of panels experience a volatility shift. 
+
+2.2.2 Comparison of test construction 
+
+Li et al. (2015) constructed a panel statistic by first forming panel-wise CUSUM statistics of squared residuals and then normalizing each panel individually by its long-run variance estimator before aggregation. While this normalization guarantees asymptotic pivotality under the null hypothesis, it can severely attenuate the contribution of panels exhibiting variance changes when such changes are sparse. To address this issue, we propose a modified CUSUM statistic that aggregates information across panels prior to normalization: 
+
+𝑈 𝑁,𝑇 (𝑘) = 𝑘(𝑇 − 𝑘) 𝑇 ( 1𝑘 
+
+> 𝑘
+
+∑
+
+> 𝑡=1 𝑁
+
+∑
+
+> 𝑖=1
+
+̂𝑒 2𝑖,𝑡 − 1𝑇 − 𝑘 
+
+> 𝑇
+
+∑
+
+> 𝑡=𝑘+1 𝑁
+
+∑
+
+> 𝑖=1
+
+̂𝑒 2𝑖,𝑡 ), 1 ≤ 𝑘 ≤ 𝑇 − 1, (12) 5where ̂ 𝑒 𝑖,𝑡 = 𝑋 𝑖,𝑡 − 𝑋 𝑖 and 𝑋 𝑖 = 1𝑇 ∑𝑇 𝑡=1 𝑋 𝑖𝑡 . The resulting test statistic is 
+
+𝑇 𝑈 = 1√𝑇 ∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 
+
+max  
+
+> 1≤𝑘≤𝑇 −1
+
+|𝑈 𝑁,𝑇 (𝑘)| 𝑑 
+
+−→ sup 
+
+> 0≤𝑥≤1
+
+|𝐵 0(𝑥)|, (13) where ̂ 𝑠 2∗ 𝑖,𝑇 is a long-run variance estimator of 𝜎 4𝑖 lim  
+
+> 𝑇 →∞ 1𝑇
+
+Var (∑ 𝑇 𝑡=1 𝑒 2𝑖,𝑡 ) in (9). At the significance level 𝛼 = 0.05 , if 𝑇 𝑈 defined by (13) is bigger than 1.358 (or the 𝑝 -value of 𝑇 𝑈 defined by 𝑃 ( sup 
+
+> 0≤𝑡≤1
+
+|𝐵 0(𝑡)| > 𝑇 𝑈 ) is smaller than 0.05), then we reject 𝐻 0:
+
+𝛿 1 = 𝛿 2 = … = 𝛿 𝑁 = 0 and make a conclusion that there is a change-point of variance in the panel data model (9), and the change-point time location 𝑡 ∗ is suggested by ̂𝑡 𝑁,𝑇 = arg max 
+
+> 1≤𝑘≤𝑇 −1
+
+1√𝑇 ∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 
+
+|𝑈 𝑁,𝑇 (𝑘)| = arg max 
+
+> 1≤𝑘≤𝑇 −1
+
+|𝑈 𝑁,𝑇 (𝑘)|. (14) 
+
+2.2.3 Power comparison 
+
+The principal advantage of the proposed statistic 𝑇 𝑈 lies in its superior power under sparse variance-change alternatives. In this subsection, we compare the power of 𝑇 𝑈 with that of the test statistic 𝑇 𝑉 proposed by Li et al. (2015) using two complementary criteria: (i) signal-to-noise ratio analysis and (ii) stochastic comparison under the alternative hypothe-sis. 
+
+Definition 2.2 (Signal-to-noise ratio). Let 𝑇 be a test statistic that can be decomposed under the alternative hypothesis 𝐻 1 as 𝑇 = signal + noise. The signal-to-noise ratio (SNR) of 𝑇 is defined as SNR (𝑇 ) = 𝐸(𝑇 ∣ 𝐻 1)√Var (𝑇 ∣ 𝐻 1).
+
+A larger SNR indicates stronger separation between the null and alternative distributions and hence higher detection power. 
+
+Definition 2.3 (Stochastic comparison). We say that 𝑇 𝑈 is more powerful than 𝑇 𝑉 under the alternative hypothesis 𝐻 1 if 
+
+𝑃 (𝑇 𝑈 > 𝑇 𝑉 ∣ 𝐻 1) > 12,
+
+that is, 𝑇 𝑈 stochastically dominates 𝑇 𝑉 under 𝐻 1.Although 𝑇 𝑈 and 𝑇 𝑉 share the same asymptotic distribution under 𝐻 0, under 𝐻 1 the stochastic comparison shows that 𝑇 𝑈 tends to take larger values than 𝑇 𝑉 , reflecting its higher detection power for sparse variance changes. We illustrate the power advantage of the proposed statistic under sparse variance changes using a simple simulation. We consider a panel data model with a single common variance change-point, 𝑋 𝑖,𝑡 = 𝜇 𝑖 + (𝜎 𝑖 + 𝛿 𝑖 𝐼(𝑡 > 𝑡 ∗))𝑒 𝑖,𝑡 , 1 ≤ 𝑖 ≤ 𝑁 , 1 ≤ 𝑡 ≤ 𝑇 , where 𝑡 ∗ denotes the common change-point and {𝑒 𝑖,𝑡 } are independent and identically distributed ( 𝑖.𝑖.𝑑. 
+
+6standard normal random variables. Let ℐ𝑚 = {1, … , 𝑚} be an index set containing 𝑚 
+
+panels affected by the variance change, and ℐ𝑐 𝑚 = {1, … , 𝑁 } − ℐ 𝑚 = {𝑚 + 1, … , 𝑁 } be the difference set. Let 𝜇 𝑖 = 0 and the time-varying scale parameters (𝜎 𝑖 + 𝛿 𝑖 𝐼(𝑡 > 𝑡 ∗)) be specified as 
+
+(𝜎 𝑖 + 𝛿 𝑖 𝐼(𝑡 > 𝑡 ∗)) = ⎧{⎨{⎩1, 𝑡 ≤ 𝑡 ∗, 𝑖 ∈ {1, … , 𝑁 }, 1 + 𝛿, 𝑡 > 𝑡 ∗, 𝑖 ∈ ℐ 𝑚 ,1, 𝑡 > 𝑡 ∗, 𝑖 ∈ ℐ 𝑐 𝑚 .
+
+This construction corresponds to a sparse alternative , where only a small fraction of panels experience a structural change. In the simulations, we fix 𝑁 = 50, 𝑇 = 100, 𝑡 ∗ =50, 𝑚 = 5 , so that only 10% of the panels exhibit a variance change. The magnitude of the variance shift is set to 𝛿 = 0.8 , which represents a moderate but non-negligible deviation from the null hypothesis. All results are based on 1000 Monte Carlo repli-cations. For both test statistics, by the independent, the long-run variance component 
+
+𝑠 2∗ 𝑖 = 𝜎 4𝑖 lim  
+
+> 𝑇 →∞ 1𝑇
+
+Var (∑ 𝑇 𝑡=1 𝑒 2𝑖,𝑡 ) = 𝜎 4𝑖 Var (𝑒 2𝑖,1 ) is estimated using a simple variance es-timator ̂ 𝑠 2∗ 𝑖,𝑇 = 1𝑇 −1 ∑𝑇 𝑡=1 (̂𝑒 2𝑖,𝑡 −̂ 𝑒 2𝑖 )2, where ̂ 𝑒 𝑖,𝑡 = 𝑋 𝑖,𝑡 − 𝑋 𝑖 , 𝑋 𝑖 = 1𝑇 ∑𝑇 𝑡=1 𝑋 𝑖𝑡 and ̂𝑒 2𝑖 = 1𝑇 ∑𝑇 𝑡=1 ̂ 𝑒 2𝑖,𝑡 .This choice is sufficient for illustrating the relative signal preservation properties of 𝑇 𝑉 and 
+
+𝑇 𝑈 , and aligns with the asymptotic arguments in Section 3. For each simulated dataset, we compute: • 𝑇 𝑉 , the maximum absolute value of the panel-wise normalized CUSUM statistic proposed by Li et al. (2015); • 𝑇 𝑈 , the proposed statistic that aggregates squared residuals across panels prior to normalization. Both statistics are evaluated over all possible change-point locations 𝑡 = 1, … , 𝑇 − 1 .Figure 1 compares the finite-sample behavior of the classical statistic 𝑇 𝑉 and the proposed statistic 𝑇 𝑈 under a sparse variance change setting. The results are based on 1000 Monte Carlo replications. In the left panel, the empirical distribution of 𝑇 𝑈 is visibly shifted to the right relative to that of 𝑇 𝑉 , indicating that 𝑇 𝑈 tends to take larger values when only a small subset of panels experiences a variance change. Quantitatively, the empirical signal-to-noise ratios are SNR (𝑇 𝑉 ) = 3.113 and SNR (𝑇 𝑈 ) = 5.180 , showing that 𝑇 𝑈 provides a stronger signal relative to noise compared to 𝑇 𝑉 .The right panel plots the distribution of the difference 𝑇 𝑈 −𝑇 𝑉 . The mass of the distribution lying entirely to the right of zero is consistent with the Monte Carlo estimate ℙ(𝑇 𝑈 > 𝑇 𝑉 ) = 1.000 , providing direct evidence that 𝑇 𝑈 dominates 𝑇 𝑉 in detecting sparse variance changes. Overall, the figure demonstrates that 𝑇 𝑈 , by effectively aggregating variance change infor-mation without dilution across unaffected panels, achieves higher SNR and greater sensi-tivity than 𝑇 𝑉 , making it particularly well-suited for detecting variance changes when only a few panels ( 𝑚 ≪ 𝑁 ) are affected. 7Figure 1: Comparison of the panel variance change statistics 𝑇 𝑉 and 𝑇 𝑈 under a sparse variance change model. The left panel displays the empirical distributions of 𝑇 𝑉 and 𝑇 𝑈 
+
+based on 1000 Monte Carlo replications. The right panel shows the distribution of the difference 𝑇 𝑈 − 𝑇 𝑉 .
+
+# 3 Model Assumptions and Theoretical Results 
+
+First, we state some assumptions in the panel data model (9) as follows: (A1) Let 𝑁 ≥ 1 . For each 𝑖 ∈ {1, … , 𝑁 } , {𝑒 𝑖,𝑡 , 𝑡 ≥ 1} is a stationary sequence of 𝛼 -mixing with the mixing coefficient denoted by 𝛼 𝑖 (𝑡) . Let the sequences {𝑒 𝑖,𝑡 , 𝑡 ≥ 1}, … , {𝑒 𝑁,𝑡 , 𝑡 ≥ 1} be independent of each other. For all 𝑖 ≥ 1 and 𝑡 ≥ 1 , there are 𝐸𝑒 𝑖,𝑡 = 0 , Var (𝑒 𝑖,𝑡 ) = 1 and sup 
+
+> 𝑖≥1,𝑡≥1
+
+𝐸|𝑒 𝑖,𝑡 |4+2𝜆 < ∞ with some 𝜆 > 0 . Let sup 
+
+> 𝑖≥1
+
+𝛼 𝑖 (𝑡) = 𝑂(𝑡 −𝛽 ), where 𝛽 > 𝜔 2+𝜆 𝜆 and 𝜔 > 1 .(A2) For each 𝑖 ∈ {1, 2, … , 𝑁 } , let 𝜎 2𝑖 be defined by (9) satisfying 
+
+0 < inf  
+
+> 𝑖≥1
+
+𝜎 2𝑖 ≤ sup 
+
+> 𝑖≥1
+
+𝜎 2𝑖 < ∞. (15) (A3) For each 𝑖 ∈ {1, 2, … , 𝑁 } , let lim 
+
+> 𝑇 →∞
+
+1𝑇 (
+
+> 𝑇
+
+∑
+
+> 𝑡=1
+
+Var (𝑒 2𝑖,𝑡 ) + 2 ∑
+
+> 1≤𝑡 1<𝑡 2≤𝑇
+
+Cov (𝑒 2𝑖,𝑡 1 , 𝑒 2𝑖,𝑡 2 )) = 𝑠 2𝑖 > 0 (16) and 
+
+0 < inf  
+
+> 𝑖≥1
+
+𝑠 2𝑖 ≤ sup 
+
+> 𝑖≥1
+
+𝑠 2𝑖 < ∞. (17) (A4) Let 
+
+𝑁 𝑇 → 0, (18) as 𝑁 , 𝑇 → ∞ .(A5) For each 𝑖 ∈ {1, … , 𝑁 } , let {𝑒 𝑖,𝑡 , 𝑡 ≥ 1} be a second-order stationarity sequence of 𝛼 -mixing with the mixing coefficient denoted by 𝛼 𝑖 (𝑡) . For each 𝑖 , suppose 8𝐸𝑒 𝑖,1 = 0 , Var (𝑒 𝑖,1 ) = 1 and 𝐸𝑒 𝑖,1 𝑒 2𝑖,1+𝑗 = 𝐸𝑒 2𝑖,1 𝑒 𝑖,1+𝑗 = 0 for all 𝑗 ≥ 0 . Let the sequences {𝑒 𝑖,𝑡 , 𝑡 ≥ 1}, … , {𝑒 𝑁,𝑡 , 𝑡 ≥ 1} be independent of each other. Assume that sup 𝑖≥1 𝐸|𝑒 𝑖,1 |8+4𝜆 < ∞ for some 𝜆 > 0 . Let sup 
+
+> 𝑖≥1
+
+𝛼 𝑖 (𝑡) = 𝑂(𝑡 −𝛽 ), where 𝛽 > 𝜔 2+𝜆 𝜆 
+
+and 𝜔 > 1 .(A6) For each 𝑖 ∈ {1, 2, … , 𝑁 } , let 
+
+𝑠 2𝑖 ∶= 𝛾 𝑖 (0) + 2 
+
+> ∞
+
+∑
+
+> ℎ=1
+
+𝛾 𝑖 (ℎ) > 0, (19) where 𝛾 𝑖 (ℎ) = 𝐶𝑜𝑣(𝑒 2𝑖,1 , 𝑒 2𝑖,1+ℎ ) for ℎ = 0, 1, 2, ⋯ .(A7) Let {ℎ 𝑇 , 𝑇 ≥ 1} be a sequence of positive integers satisfying 
+
+ℎ𝑇 → ∞ as 𝑇 → ∞ and ℎ𝑇 = 𝑂(𝑇 𝜂 ) for some 𝜂 ∈ (0, 1/2). (20) (A8) Let 𝑁 → ∞ , 𝑇 → ∞ and 
+
+𝑁 1/2 𝑇 −1/2+𝜂 = 𝑜(1) and 𝑁 1/2 𝑇 −(𝜔−1)𝜂 = 𝑜(1), (21) where 𝜂 ∈ (0, 1/2) is defined by (20) and 𝜔 > 1 is defined by the condition (A5). 
+
+Remark 3.1 Li et al. (2015) considered the error {𝑒 𝑖,𝑡 } to be a linear process: 𝑒 𝑖,𝑡 =∑∞𝑗=1 𝑐 𝑖,𝑗 𝜀 𝑖,𝑡−𝑗 , where 𝜀 𝑖,𝑡−𝑗 are 𝑖.𝑖.𝑑. random variables and 𝑐 𝑖,𝑗 are constant coefficients. Under some conditions of moments and coefficients, Li et al. (2015) studies the variance change-point with the panel data model. In our paper, we consider the error to be 𝛼 -mixing error. For example, condition (𝐴1) is for the 𝛼 -mixing errors, which contains the conditions of moments and mixing coefficients. It will be used to study the asymptotic distribution for the CUSUM statistic (12) based on ̂ 𝑒 2𝑖,𝑡 = (𝑋 𝑖,𝑡 − 𝑋 𝑖 )2. In addition, the condition that 
+
+{𝑒 𝑖,𝑡 , 𝑡 ≥ 1}, … , {𝑒 𝑁,𝑡 , 𝑡 ≥ 1} are independent of each other can be relaxed to 𝑚 -dependence, since the sequence of 𝑚 -dependence can be decomposed into 𝑚 independent subsequences. Condition (𝐴2) requires the boundedness of error variances. The (16) in (𝐴3) is used to study the limit variances of 1√𝑇 ∑𝑇 𝑡=1 (𝑒 2𝑖,𝑡 − 1) , 1 ≤ 𝑖 ≤ 𝑁 , and (17) is the boundedness of these limit variances. For details, see the Lemma A.5 of Appendix A. Condition (𝐴4) 
+
+means that the number 𝑁 of panels is smaller than the length of the observed time series 𝑇 
+
+(see Horváth & Hušková (2012), Li et al. (2015)). In order to estimate 𝑠 2𝑖 in (𝐴3) , we need a second-order stationarity and high moment conditions in the (𝐴5) , which are different from the (𝐴1) . We also need the conditions 𝐸𝑒 𝑖,1 𝑒 2𝑖,1+𝑗 = 0 and 𝐸𝑒 2𝑖,1 𝑒 𝑖,1+𝑗 = 0 to calculate Var ( 1𝑇 ∑𝑇 −ℎ 𝑡=1 𝑒 2𝑖,𝑡 𝑒 𝑖,𝑡+ℎ ), Var ( 1𝑇 ∑𝑇 𝑡=1 𝑒 3𝑖,𝑡 ) and Var ( 1𝑇 ∑𝑇 −ℎ 𝑡=1 𝑒 𝑖,𝑡 𝑒 2𝑖,𝑡+ℎ ) (see the proof of Lemma 3.1 for estimating 𝑠 2∗ 𝑖 = 𝜎 4𝑖 𝑠 2𝑖 ). Denote 𝑓(𝑥, 𝑦; 𝑘) as a joint probability density func-tion of random variables 𝑒 𝑡 and 𝑒 𝑡+𝑘 for all 𝑡 ≥ 1 and 𝑘 ≥ 1 . Let 𝑓(𝑥, 𝑦; 𝑘) be symmetrical, i.e., 𝑓(𝑥, 𝑦; 𝑘) = 𝑓(−𝑥, −𝑦; 𝑘) for all 𝑥, 𝑦 ∈ 𝑅 . It is easy to check that 𝐸[𝑒 𝑡 𝑒 2𝑡+𝑘 ] = −𝐸𝑒 𝑡 𝑒 2𝑡+𝑘 
+
+and 𝐸[𝑒 2𝑡 𝑒 𝑡+𝑘 ] = −𝐸𝑒 2𝑡 𝑒 𝑡+𝑘 , which implies 𝐸𝑒 𝑡 𝑒 2𝑡+𝑘 = 0 and 𝐸𝑒 2𝑡 𝑒 𝑡+𝑘 = 0 for all 𝑡 ≥ 1 and 
+
+𝑘 ≥ 1 . It also gets 𝐸𝑒 31 = 0 . For more details, see Remark 1 of Gao et al. (2023). The (19) in (𝐴6) is a long-run variance of 𝑠 2𝑖 . We use the sample autocovariance functions with condition (𝐴7) to estimate them (see Lee & Park (2001), Horváth & Hušková (2012), Li et al. (2015)). For example, in (22), we can rewrite 𝜎 4𝑖 𝑠 2𝑖 by 𝑠 2∗ 𝑖 and give the estimator ̂ 𝑠 2∗ 𝑖,𝑇 
+
+9in (26). In the Lemma 3.1, we show that ̂ 𝑠 2∗ 𝑖,𝑇 − 𝑠 2∗ 𝑖 = 𝑂(𝑇 −(𝜔−1)𝜂 ) + 𝑂 𝑃 (𝑇 −1/2+𝜂 ), where 
+
+𝜔 > 1 and 𝜂 ∈ (0, 1/2) . This requires that the number 𝑁 of panels does not increase too large as 𝑇 increasing, i.e. 𝑁 1/2 𝑇 −1/2+𝜂 = 𝑜(1) and 𝑁 1/2 𝑇 −(𝜔−1)𝜂 = 𝑜(1) in the condition 
+
+(𝐴.8) . If 𝜔 = 2 and 𝜂 = 1/4 , then 𝑁 can take 𝑇 𝜅 with 𝜅 ∈ (0, 1/2) . If one can improve the convergence rate for ̂ 𝑠 2∗ 𝑖,𝑇 − 𝑠 2∗ 𝑖 , the number 𝑁 can relax to be large. For more estimating of long-run variances, one can refer to Lee & Park (2001), Horváth & Hušková (2012), etc. Next, we study the limit distribution for the CUSUM statistic 𝑈 𝑁,𝑇 (𝑘) under the null hypothesis. 
+
+Theorem 3.1 . Consider the change-point of variance in the panel data model (9). Let assumptions (𝐴1) -(𝐴4) hold. Then, under 𝐻 0 defined by (10), we obtain 
+
+1√𝑇 ∑ 𝑁 𝑖=1 𝜎 4𝑖 𝑠 2𝑖 
+
+max  
+
+> 1≤𝑘≤𝑇 −1
+
+|𝑈 𝑁,𝑇 (𝑘)| 𝑑 
+
+→ sup 
+
+> 0≤𝑥≤1
+
+|𝐵 0(𝑥)| (22) where 𝑈 𝑁,𝑇 (𝑘) is defined by (12), 𝜎 2𝑖 and 𝑠 2𝑖 are defined by (15) and (16), respectively. In the following, we discuss the estimator of 𝜎 4𝑖 𝑠 2𝑖 , 1 ≤ 𝑖 ≤ 𝑁 . Denote 
+
+𝜎 4𝑖 Cov (𝑒 2𝑖,1 , 𝑒 2𝑖,1+ℎ ) = 𝜎 4𝑖 𝛾 𝑖 (ℎ) ∶= 𝛾 ∗𝑖 (ℎ), ℎ = 0, 1, 2, … , (23) where 𝛾 𝑖 (ℎ) = 𝐶𝑜𝑣(𝑒 2𝑖,1 , 𝑒 2𝑖,1+ℎ ) is defined by (19). Then 𝜎 4𝑖 𝑠 2𝑖 can be rewritten by 𝑠 2∗ 𝑖 as 
+
+𝑠 2∗ 𝑖 ∶= 𝜎 4𝑖 𝑠 2𝑖 = 𝜎 4𝑖 𝛾 𝑖 (0) + 2 
+
+> ∞
+
+∑
+
+> ℎ=1
+
+𝜎 4𝑖 𝛾 𝑖 (ℎ) ∶= 𝛾 ∗𝑖 (0) + 2 
+
+> ∞
+
+∑
+
+> ℎ=1
+
+𝛾 ∗𝑖 (ℎ), (24) where 𝑠 2𝑖 , 𝛾 𝑖 (ℎ) and 𝛾 ∗𝑖 (ℎ) are respectively defined by (19) and (23). So in order to esti-mate 𝑠 2∗ 𝑖 , we discuss the estimators of the sample autocovariance functions for 𝛾 ∗𝑖 (ℎ) . For example, 𝛾 ∗𝑖 (ℎ) can be estimated by ̂𝛾 ∗𝑖 (ℎ) = 1𝑇 
+
+> 𝑇 −ℎ
+
+∑
+
+> 𝑡=1
+
+(̂𝑒 2𝑖,𝑡 −̂ 𝑒 2𝑖 )(̂𝑒 2𝑖,𝑡+ℎ −̂ 𝑒 2𝑖 ), 0 ≤ ℎ < 𝑇 , (25) where ̂ 𝑒 𝑖,𝑡 = 𝑋 𝑖,𝑡 − 𝑋 𝑖 , 𝑋 𝑖 = 1𝑇 ∑𝑇 𝑡=1 𝑋 𝑖𝑡 and ̂ 𝑒 2𝑖 = 1𝑇 ∑𝑇 𝑡=1 ̂ 𝑒 2𝑖,𝑡 . Thus, the estimator of 𝑠 2∗ 𝑖 
+
+is suggested by ̂𝑠 2∗ 𝑖,𝑇 ∶=̂ 𝛾 ∗𝑖 (0) + 2 
+
+> ℎ𝑇
+
+∑
+
+> ℎ=1
+
+̂𝛾 ∗𝑖 (ℎ), (26) where ̂ 𝛾 ∗𝑖 (ℎ) and ℎ𝑇 are defined by (25) and (20), respectively. Then, the consistency of convergence rate between ̂ 𝑠 2∗ 𝑖,𝑇 and 𝑠 2∗ 𝑖 is presented in Lemma 3.1. 
+
+Lemma 3.1 . Consider the change-point of variance in the panel data model (9). Let the assumptions (𝐴5) -(𝐴7) hold. Under 𝐻 0 defined by (10), for each 𝑖 ∈ {1, 2, … , 𝑁 } , it has ̂𝑠 2∗ 𝑖,𝑇 − 𝑠 2∗ 𝑖 = 𝑂(𝑇 −(𝜔−1)𝜂 ) + 𝑂 𝑃 (𝑇 −1/2+𝜂 ), (27) 10 where 𝜔 > 1 and 𝜂 ∈ (0, 1/2) are respectively defined by (A5) and (20), 𝑠 2∗ 𝑖 ,̂ 𝑠 2∗ 𝑖,𝑇 and are defined by (24) and (26), respectively. Combining Theorem 3.1 with Lemma 3.1, one can get the following Theorem 3.2 immedi-ately. 
+
+Theorem 3.2 . Consider the change-point of variance in the panel data model (9). Let assumptions (𝐴5) -(𝐴8) hold. Then, under 𝐻 0 defined by (10), we have 
+
+𝑇 𝑈 = 1√𝑇 ∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 
+
+max  
+
+> 1≤𝑘≤𝑇 −1
+
+|𝑈 𝑁,𝑇 (𝑘)| 𝑑 
+
+→ sup 
+
+> 0≤𝑥≤1
+
+|𝐵 0(𝑥)| (28) where 𝑈 𝑁,𝑇 (𝑘) is defined by (12), and ̂ 𝑠 2∗ 𝑖,𝑇 is defined by (26). Last, we consider the limit behavior for the CUSUM statistic 𝑈 𝑁,𝑇 (𝑘) under the alternative hypothesis. 
+
+Theorem 3.3 . Let assumptions (𝐴1) -(𝐴4) hold. Consider the change-point of variance in the panel data model (9) satisfying 
+
+0 < lim inf 
+
+> 𝑇 →∞
+
+𝑡 ∗
+
+𝑇 ≤ lim sup 
+
+> 𝑇 →∞
+
+𝑡 ∗
+
+𝑇 < 1, (29) min 
+
+> 1≤𝑖≤𝑁
+
+(𝜎 𝑖 + 𝛿 𝑖 ) > 0, (30) 
+
+𝑁 𝑇 
+
+max 1≤𝑖≤𝑁 |𝛿 𝑖 |∣| ∑ 𝑁 𝑖=1 𝜎 𝑖 𝛿 𝑖 | − ∑ 𝑁 𝑖=1 𝛿 2𝑖 ∣→ 0, min (𝑁 , 𝑇 ) → ∞, (31) 
+
+1√𝑇 | ∑ 𝑁 𝑖=1 𝜎 𝑖 𝛿 𝑖 | + ∑ 𝑁 𝑖=1 𝛿 2𝑖 
+
+∣| ∑ 𝑁 𝑖=1 𝜎 𝑖 𝛿 𝑖 | − ∑ 𝑁 𝑖=1 𝛿 2𝑖 ∣→ 0, min (𝑁 , 𝑇 ) → ∞, (32) 
+
+√𝑇 √𝑁 ∣∣ 
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+𝜎 𝑖 𝛿 𝑖 ∣ − 
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+𝛿 2𝑖 ∣ → ∞, min (𝑁 , 𝑇 ) → ∞. (33) Then 1√𝑇 ∑ 𝑁 𝑖=1 𝜎 4𝑖 𝑠 2𝑖 
+
+max  
+
+> 1≤𝑘≤𝑇 −1
+
+|𝑈 𝑁,𝑇 (𝑘)| 𝑃 
+
+→ ∞. (34) 
+
+Remark 3.2 . Li et al. (2015) considered the change-point of variance in panel data model (1) with linear process of errors, where 𝛿 𝑖 = 0 for all 1 ≤ 𝑖 ≤ 𝑁 . They gave the CUSUM statistic 𝑉 𝑁,𝑇 (𝑘) defined by (6). For the estimator ̂ 𝑠 2∗ 𝑖,𝑇 in (6), Li et al. (2015) used the method of Lee & Park (2001) to show that there existed a positive constant 𝑠 2∗ 𝑖 satisfying ̂𝑠 2∗ 𝑖,𝑇 𝑃 
+
+→ 𝑠 2∗ 𝑖 , as 𝑇 → ∞ . Under the null hypothesis of no variance change, for 1 ≤ 𝑖 ≤ 𝑁 ,they also gave that max 
+
+> 1≤𝑘≤𝑇 −1
+
+1√̂𝑠 2∗ 𝑖,𝑇 
+
+1√𝑇 ∣
+
+> 𝑘
+
+∑
+
+> 𝑡=1
+
+𝑒 2𝑖,𝑡 − 𝑘 𝑇 
+
+> 𝑇
+
+∑
+
+> 𝑡=1
+
+𝑒 2𝑖,𝑡 ∣ 𝑑 
+
+→ sup 
+
+> 0≤𝑥≤1
+
+|𝐵 0(𝑥)|, 1 ≤ 𝑖 ≤ 𝑁 
+
+11 and 
+
+𝑇 𝑉 = max 
+
+> 1≤𝑘≤𝑇 −1
+
+1√𝑁 𝑇 ∣
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+1√̂𝑠 2∗ 𝑖,𝑇 
+
+(
+
+> 𝑘
+
+∑
+
+> 𝑡=1
+
+̂𝑒 2𝑖,𝑡 − 𝑘 𝑇 
+
+> 𝑇
+
+∑
+
+> 𝑡=1
+
+̂𝑒 2𝑖,𝑡 )∣ 𝑑 
+
+→ sup 
+
+> 0≤𝑥≤1
+
+|𝐵 0(𝑥)|, (35) where 𝑒 𝑖,𝑡 = 𝑋 𝑖,𝑡 − 𝜇 𝑖 and ̂ 𝑒 𝑖,𝑡 = 𝑋 𝑖,𝑡 − 𝑋 𝑖 . It extended the results of Horváth & Hušková (2012). But they did not give the consistency rate between ̂ 𝑠 2∗ 𝑖,𝑇 and 𝑠 2∗ 𝑖,𝑇 . In our Lemma 3.1, we give the consistency rate ̂ 𝑠 2∗ 𝑖,𝑇 − 𝑠 2∗ 𝑖 = 𝑂(𝑇 −(𝜔−1)𝜂 ) + 𝑂 𝑃 (𝑇 −1/2+𝜂 ). The difference between 𝑇 𝑈 test and 𝑇 𝑉 test is that our test 𝑇 𝑈 contains a formula 1√∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 
+
+, while Li et al. (2015)’s test 𝑇 𝑉 contains a formula 1√𝑁 1√̂𝑠 2∗ 𝑖,𝑇 
+
+. In fact, by the proof of Theorem 3.1,  
+
+> 1√𝑇 ∑ 𝑁 𝑖=1 ̂𝑠 2∗ 𝑖,𝑇
+
+𝑈 𝑁,𝑇 (𝑘) is absolutely integrable. If 1√𝑁 1√̂𝑠 2∗ 𝑖,𝑇 
+
+in (6) is replaced by 1√∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 
+
+,then 𝑉 𝑁,𝑇 (𝑘) can be be rewritten by 𝑉 ∗𝑁,𝑇 (𝑘) as 
+
+𝑉 ∗𝑁,𝑇 (𝑘) =
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+1√∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 
+
+1√𝑇 (
+
+> 𝑘
+
+∑
+
+> 𝑡=1
+
+̂𝑒 2𝑖,𝑡 − 𝑘 𝑇 
+
+> 𝑇
+
+∑
+
+> 𝑡=1
+
+̂𝑒 2𝑖,𝑡 )= 1√𝑇 ∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 
+
+𝑘(𝑇 − 𝑘) 𝑇 ( 1𝑘 
+
+> 𝑘
+
+∑
+
+> 𝑡=1 𝑁
+
+∑
+
+> 𝑖=1
+
+̂𝑒 2𝑖,𝑡 − 1𝑇 − 𝑘 
+
+> 𝑇
+
+∑
+
+> 𝑡=1+𝑘 𝑁
+
+∑
+
+> 𝑖=1
+
+̂𝑒 2𝑖,𝑡 )= 1√𝑇 ∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 
+
+𝑈 𝑁,𝑇 (𝑘). 
+
+So it will have our test, i.e. 
+
+𝑇 ∗𝑉 = max  
+
+> 1≤𝑘≤𝑇 −1
+
+|𝑉 ∗𝑁,𝑇 (𝑘)| = 1√𝑇 ∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 
+
+max  
+
+> 1≤𝑘≤𝑇 −1
+
+|𝑈 𝑁,𝑇 (𝑘)| = 𝑇 𝑈 .
+
+Under the null hypothesis, the tests 𝑇 𝑈 and 𝑇 𝑉 have the same limit distribution. However, under the alternative hypothesis, the limit behavior is not the same. In fact, for each 
+
+𝑖 ∈ {1, 2, … , 𝑁 } , the estimator ̂ 𝑠 2∗ 𝑖,𝑇 in 𝑇 𝑉 test increases by a factor 𝑁 , while the estimator ̂𝑠 2∗ 𝑖,𝑇 in our 𝑇 𝑈 test has a harmonized formula ∑𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 . If all the estimators ̂ 𝑠 2∗ 𝑖,𝑇 have the same order, then there may be 𝑁̂ 𝑠 2∗ 𝑖,𝑇 ≈ ∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 , i.e. the tests 𝑇 𝑈 and 𝑇 𝑉 may have the same limit behavior. But in more situations, 𝑁̂ 𝑠 2∗ 𝑖,𝑇 and ∑𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 are not equal in the asymptotic sense. In other words, if there exist some changes of variance in the panel data model, then the consistency of ̂ 𝑠 2∗ 𝑖,𝑇 may be changed, and significant differences may exist between 𝑁̂ 𝑠 2∗ 𝑖,𝑇 and ∑𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 . For example, in the panel data model (9), for each 
+
+𝑖 ∈ {1, 2, … , 𝑁 } , if 𝑡 ∗ = 𝑇 (i.e., there is no change of variance), then by (26) and Lemma 3.1, we have ̂𝑠 2∗ 𝑖,𝑇 =̂ 𝛾 ∗𝑖 (0) + 2 
+
+> ℎ𝑇
+
+∑
+
+> ℎ=1
+
+̂𝛾 ∗𝑖 (ℎ) 𝑃 
+
+→ 𝜎 4𝑖 𝑠 2𝑖 ∶= 𝑠 2∗ 𝑖 , 𝑇 → ∞, 
+
+where ̂ 𝛾 ∗𝑖 (ℎ) = 1𝑇 ∑𝑇 −ℎ 𝑡=1 (̂𝑒 2𝑖,𝑡 −̂ 𝑒 2𝑖 )(̂𝑒 2𝑖,𝑡+ℎ −̂ 𝑒 2𝑖 ),̂ 𝑒 2𝑖,𝑡 and ̂ 𝑒 2𝑖 are defined by (25), and 𝑠 2𝑖 is defined by (19). Similarly, if 𝑡 ∗ = 0 in (9), for each 𝑖 , there is ̂𝑠 2∗ 𝑖,𝑇 𝑃 
+
+→ (𝜎 𝑖 + 𝛿 𝑖 )4𝑠 2𝑖 ∶= 𝑠 2∗∗ 𝑖 , 𝑇 → ∞. 
+
+12 Let 𝑡 ∗ ∈ {1, 2, … , 𝑇 −1} be a change-point of variance in the panel data model (9) satisfying 
+
+𝑡 ∗/𝑇 → 𝜔 ∈ (0, 1) as 𝑇 → ∞ . Then, by the weighted average method, one will have ̂𝑠 2∗ 𝑖,𝑇 =̂ 𝛾 ∗𝑖 (0) + 2 
+
+> ℎ𝑇
+
+∑
+
+> ℎ=1
+
+̂𝛾 ∗𝑖 (ℎ) 𝑃 
+
+→̄ 𝑠 2∗ 𝑖 , 𝑇 → ∞, 
+
+where ̂𝛾 ∗𝑖 (ℎ) = 1𝑇 
+
+> 𝑇 −ℎ
+
+∑
+
+> 𝑡=1
+
+(̂𝑒 2𝑖,𝑡 −̂ 𝑒 2𝑖 )(̂𝑒 2𝑖,𝑡+ℎ −̂ 𝑒 2𝑖 )= 𝑡 ∗
+
+𝑇 1𝑡 ∗𝑡 ∗
+
+∑
+
+> 𝑡=1
+
+(̂𝑒 2𝑖,𝑡 −̂ 𝑒 2𝑖 )(̂𝑒 2𝑖,𝑡+ℎ −̂ 𝑒 2𝑖 ) + 𝑇 − ℎ − 𝑡 ∗
+
+𝑇 1𝑇 − ℎ − 𝑡 ∗𝑇 −ℎ 
+
+∑
+
+> 𝑡=𝑡 ∗+1
+
+(̂𝑒 2𝑖,𝑡 −̂ 𝑒 2𝑖 )(̂𝑒 2𝑖,𝑡+ℎ −̂ 𝑒 2𝑖 ),̂ 𝑒 2𝑖,𝑡 and ̂ 𝑒 2𝑖 are defined by (25), and ̄ 𝑠 2∗ 𝑖 is a positive constant between 𝑠 2∗ 𝑖 and 𝑠 2∗∗ 𝑖 , 1 ≤ 𝑖 ≤ 𝑁 . So, for each 𝑖 ,̂ 𝑠 2∗ 𝑖,𝑇 in the test 𝑇 𝑉 increases to 𝑁̂ 𝑠 2∗ 𝑖,𝑇 , while ̂ 𝑠 2∗ 𝑖,𝑇 in our test 𝑇 𝑈 increases to ∑𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 . We find that the performances of our test 𝑇 𝑈 are better than the ones of test 𝑇 𝑉 , particularly in sparse changes of variance. For example, let’s consider a simple case. In the model (9), let 𝜎 1 = … = 𝜎 𝑁 = 𝜎 0 > 0 and {𝑒 𝑖,𝑡 , 1 ≤ 𝑖 ≤ 𝑁 , 1 ≤ 𝑡 ≤ 𝑇 } 𝑖.𝑖.𝑑. 
+
+random variables with 𝐸𝑒 1,1 = 0 and 𝐸𝑒 21,1 = 1 . Let 𝑚 be a positive integer much smaller than 𝑁 . We consider the sparse changes in variance and assume that there are only 𝑚 
+
+signal changes of variance such as 𝛿 1 = … = 𝛿 𝑚 = 𝛿 0 > 0 and 𝛿 𝑚+1 = … = 𝛿 𝑁 = 0 . Then, for 1 ≤ 𝑖 ≤ 𝑚 ,̂ 𝑠 2∗ 𝑖,𝑇 𝑃 
+
+→̄ 𝑠 4, where 𝜎 40 <̄ 𝑠 4 < (𝜎 0 + 𝛿 0)4. Meanwhile, for 𝑚 + 1 ≤ 𝑖 ≤ 𝑁 ,̂𝑠 2∗ 𝑖,𝑇 𝑃 
+
+→ 𝜎 40. Thus, in probability, we have 
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+̂𝑠 2∗ 𝑖,𝑇 =
+
+> 𝑚
+
+∑
+
+> 𝑖=1
+
+̂𝑠 2∗ 𝑖,𝑇 +
+
+> 𝑁
+
+∑
+
+> 𝑖=𝑚+1
+
+̂𝑠 2∗ 𝑖,𝑇 ≈ 𝑚̄𝑠 4 + (𝑁 − 𝑚)𝜎 40,
+
+and 
+
+𝑁̂ 𝑠 2∗ 𝑖,𝑇 ≈ 𝑁̄ 𝑠 4 > 𝑚̄𝑠 4 + (𝑁 − 𝑚)𝜎 40, 1 ≤ 𝑖 ≤ 𝑚. 
+
+Consequently, for 1 ≤ 𝑖 ≤ 𝑚 , the signal change 𝛿 𝑖 > 0 of variance, 1√𝑁 1√̂𝑠 2∗ 𝑖,𝑇 
+
+in 𝑇 𝑉 is smaller in probability than 1√∑ 𝑁 𝑖=1 ̂ 𝑠 2∗ 𝑖,𝑇 
+
+in 𝑇 𝑈 , which reduces the power of test 𝑇 𝑉 .That’s why in this paper, we also consider the change-point of variance in the panel data model and give a more powerful test 𝑇 𝑈 defined by (13). See the comparison in Figure 1. In the simulation of Section 4, we also consider the spares changes of variance with 𝛿 𝑖 > 0 
+
+and 𝛿 𝑖 < 0 . For example, we randomly select 10 values for 𝛿 𝑖 , with 5 set to 1.5, 5 set to -0.5, and all others set to zero; The power of our test 𝑇 𝑈 is close to 1, while the power of the test 𝑇 𝑉 is much smaller than 0.1. We also randomly select 10 𝛿 𝑖 values as -0.5, and set all others to zero. It shows that the power of our test 𝑇 𝑈 is also better than the one of test 
+
+𝑇 𝑉 .
+
+Remark 3.3 . In the panel data model (1) with linear process of errors and 𝛿 𝑖 = 0 for all 1 ≤ 𝑖 ≤ 𝑁 , Li et al. (2015) considered the variance of panel 𝑖 changes from 𝜎 2𝑖 to 13 𝜎 2𝑖 + 𝛿 𝑖 with 𝛿 𝑖 > 0 . When 𝑇 1/2  
+
+> 𝑁 1/2
+
+∑𝑁 𝑖=1 𝛿 𝑖 → ∞ as min (𝑁 , 𝑇 ) → ∞ , they showed that max  
+
+> 1≤𝑘≤𝑇 −1
+
+|𝑉 𝑁,𝑇 (𝑘)| 𝑃 
+
+→ ∞ , which extended Theorem 3 of Horváth & Hušková (2012) for the mean change-point to the variance change-point. We consider the change-point of variance in the panel data model (9), which is different from the one of Li et al. (2015). Next, we give two examples to illustrate the changes of variance for the conditions of (30), (31), (32) and (33). For simplicity, let 𝜎 1 = … = 𝜎 𝑁 = 𝜎 0 > 0 and 𝑁 /𝑇 = 𝑜(1) .Let 𝛿 𝑖 = 𝑖 −1/2 , 1 ≤ 𝑖 ≤ 𝑁 . It is easy to see that 𝑐 1𝑁 1/2 ≤ ∑ 𝑁 𝑖=1 𝛿 𝑖 ≤ 𝑐 2𝑁 1/2 and 
+
+𝑐 3 log 𝑁 ≤ ∑ 𝑁 𝑖=1 𝛿 2𝑖 ≤ 𝑐 4 log 𝑁 , ∣ ∑ 𝑁 𝑖=1 𝛿 𝑖 − ∑ 𝑁 𝑖=1 𝛿 2𝑖 ∣ ≥ 𝑐 5𝑁 1/2 , max  
+
+> 1≤𝑖≤𝑁
+
+|𝛿 𝑖 | = 𝑂(1) , where 
+
+𝑐 1, … , 𝑐 5 are positive constants. So 
+
+𝑁 𝑇 
+
+max 1≤𝑖≤𝑁 |𝛿 𝑖 |∣| ∑ 𝑁 𝑖=1 𝜎 𝑖 𝛿 𝑖 | − ∑ 𝑁 𝑖=1 𝛿 2𝑖 ∣≤ 𝑐 6
+
+𝑁 𝑇 𝑁 1/2 = 𝑂( 𝑁 1/2 
+
+𝑇 ) = 𝑜(1), 1√𝑇 | ∑ 𝑁 𝑖=1 𝜎 𝑖 𝛿 𝑖 | + ∑ 𝑁 𝑖=1 𝛿 2𝑖 
+
+∣| ∑ 𝑁 𝑖=1 𝜎 𝑖 𝛿 𝑖 | − ∑ 𝑁 𝑖=1 𝛿 2𝑖 ∣≤ 𝑐 7
+
+1√𝑇 = 𝑜(1), √𝑇 √𝑁 ∣∣ 
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+𝜎 𝑖 𝛿 𝑖 ∣ − 
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+𝛿 2𝑖 ∣ ≥ 𝑐 8
+
+√𝑇 √𝑁 𝑁 1/2 = 𝑐 8
+
+√𝑇 → ∞. 
+
+Similarly, let 𝛿 𝑖 = 𝑖 1/2 , 1 ≤ 𝑖 ≤ 𝑁 . It has max  
+
+> 1≤𝑖≤𝑁
+
+|𝛿 𝑖 | = 𝑂(𝑁 1/2 ), 𝑐 9𝑁 3/2 ≤
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+𝛿 𝑖 ≤ 𝑐 10 𝑁 3/2 , 𝑐 11 𝑁 2 ≤
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+𝛿 2𝑖 ≤ 𝑐 12 𝑁 2,∣
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+𝛿 𝑖 −
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+𝛿 2𝑖 ∣ ≥ 𝑐 13 𝑁 3/2 .
+
+Thus 
+
+𝑁 𝑇 
+
+max 1≤𝑖≤𝑁 |𝛿 𝑖 |∣| ∑ 𝑁 𝑖=1 𝜎 𝑖 𝛿 𝑖 | − ∑ 𝑁 𝑖=1 𝛿 2𝑖 ∣≤ 𝑐 14 
+
+𝑁 3/2 
+
+𝑇 𝑁 3/2 = 𝑂( 1𝑇 ) = 𝑜(1), 1√𝑇 | ∑ 𝑁 𝑖=1 𝜎 𝑖 𝛿 𝑖 | + ∑ 𝑁 𝑖=1 𝛿 2𝑖 
+
+∣| ∑ 𝑁 𝑖=1 𝜎 𝑖 𝛿 𝑖 | − ∑ 𝑁 𝑖=1 𝛿 2𝑖 ∣≤ 𝑐 15 
+
+𝑁 2
+
+√𝑇 𝑁 3/2 𝑂(√ 𝑁 𝑇 ) = 𝑜(1), √𝑇 √𝑁 ∣∣ 
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+𝜎 𝑖 𝛿 𝑖 ∣ − 
+
+> 𝑁
+
+∑
+
+> 𝑖=1
+
+𝛿 2𝑖 ∣ ≥ 𝑐 16 
+
+√𝑇 √𝑁 𝑁 3/2 = 𝑐 16 
+
+√𝑇 𝑁 → ∞. 
+
+Therefore, the conditions of (30), (31), (32) and (33) are satisfied. So we obtain   
+
+> 1√𝑇 ∑ 𝑁 𝑖=1 𝜎 4𝑖 𝑠 2𝑖
+
+max  
+
+> 1≤𝑘≤𝑇 −1
+
+|𝑈 𝑁,𝑇 (𝑘)| 𝑃 
+
+→ ∞ in the Theorem 3.3. 14 4 Simulations 
+
+In this section, we do some simulations to show the performances of our test 𝑇 𝑈 and other test 𝑇 𝑉 . We consider a single change-point of variance in the panel data model (9) such as 
+
+𝑋 𝑖,𝑡 = 𝜇 𝑖 + (𝜎 𝑖 + 𝛿 𝑖 𝐼(𝑡 ≥ 𝑡 ∗ + 1))𝑒 𝑖,𝑡 , 1 ≤ 𝑖 ≤ 𝑁 , 1 ≤ 𝑡 ≤ 𝑇 . (1) First, we consider the error term. Let 𝑒 𝑖 = (𝑒 𝑖,1 , 𝑒 𝑖,2 , … , 𝑒 𝑖,𝑇 ) 𝑖.𝑖.𝑑. 
+
+∼ (𝜀 1, 𝜀 2, … , 𝜀 𝑇 ), 1 ≤ 𝑖 ≤ 𝑁 . Assume that (𝜀 1, 𝜀 2, … , 𝜀 𝑇 ) satisfies a general multivariate model 
+
+(𝜀 1, 𝜀 2, … , 𝜀 𝑇 ) = (̃𝜀 1,̃ 𝜀 2, … ,̃ 𝜀 𝑇 )Γ ′
+
+where the entries ̃ 𝜀 2,̃ 𝜀 2, … ,̃ 𝜀 𝑇 are 𝑖.𝑖.𝑑. random variables with 𝐸̃𝜀 1 = 0 , Var (̃𝜀 1) = 1 , and 
+
+Γ′Γ is a Toeplitz covariance matrix (Gray 1972) satisfying 
+
+Γ′Γ = ⎡⎢⎢⎣𝜌 0 𝜌 1, … , 𝜌 𝑇 −1 
+
+𝜌 1 𝜌 0, … , 𝜌 𝑇 −2 
+
+… , … , … , …𝜌 𝑇 −1 … , 𝜌 1, 𝜌 0
+
+⎤⎥⎥⎦. (2) Here 𝜌 𝑖 takes two cases such as 𝜌 𝑖 = 2 −𝑖 and 𝜌 𝑖 = 𝑖 −2 for 𝑖 = 0, 1, … , 𝑇 − 1 . When 𝜌 𝑖 = 2 −𝑖 
+
+or 𝜌 𝑖 = 𝑖 −2 in (2), we respectively take ℎ𝑇 = ⌊𝑇 1/4 ⌋ and ℎ𝑇 = ⌊𝑇 1/3 ⌋ in the process of estimator ̂ 𝑠 2∗ 𝑖,𝑇 by (26). In the simulation, we consider ̃ 𝜀 1 to be Gaussian and Gamma 
+
+random variables such as ̃ 𝜀 1 ∼ 𝑁 (0, 1) and ̃ 𝜀 1 ∼ 𝐺𝑎𝑚𝑚𝑎(4,1)−4 2 .Second, we consider the panel data model (1) with a matrix form. Let 𝐴⊙𝐵 be a Hadamard product. For example, if 𝐴, 𝐵 ∈ 𝑅 2, then 
+
+𝐴 ⊙ 𝐵 = [ 𝑎 11 𝑎 12 
+
+𝑎 21 𝑎 22 
+
+] ⊙ [ 𝑏 11 𝑏 12 
+
+𝑏 21 𝑏 22 
+
+] = [ 𝑎 11 𝑏 11 𝑎 12 𝑏 12 
+
+𝑎 21 𝑏 21 𝑎 22 𝑏 22 
+
+] . 
+
+Then, the panel data model (1) can be written by 
+
+𝑋 𝑁×𝑇 = 𝜇 𝑁×𝑇 + Δ 𝑁×𝑇 ⊙ 𝑒 𝑁×𝑇 , (3) where 
+
+𝜇 𝑁×𝑇 = ⎡⎢⎢⎣𝜇 1 𝜇 1, … , 𝜇 1
+
+𝜇 2 𝜇 2, … , 𝜇 2
+
+… , … , … , …𝜇 𝑁 𝜇 𝑁 , … , 𝜇 𝑁 
+
+⎤⎥⎥⎦, 𝑒 𝑁×𝑇 = ⎡⎢⎣𝑒 1
+
+⋮𝑒 𝑁 
+
+⎤⎥⎦,Δ𝑁×𝑇 = ⎡⎢⎢⎣𝜎 1, … , 𝜎 1, 𝜎 1 + 𝛿 1, … , 𝜎 1 + 𝛿 1
+
+𝜎 2, … , 𝜎 2, 𝜎 2 + 𝛿 2, … , 𝜎 2 + 𝛿 2
+
+… , … , … , … , … , …𝜎 𝑁 , … , 𝜎 𝑁 , 𝜎 𝑁 + 𝛿 𝑁 , … , 𝜎 𝑁 + 𝛿 𝑁 
+
+⎤⎥⎥⎦,
+
+and (𝜎 1, … , 𝜎 1⏟
+
+> 𝑡 ∗
+
+, 𝜎 1 + 𝛿 1, … , 𝜎 1 + 𝛿 1⏟⏟ ⏟⏟⏟⏟ ⏟⏟⏟ 
+
+> 𝑇 −𝑡 ∗
+
+). In the simulation, we take the change-point location by 𝑡 ∗ = ⌊𝑐𝑇 ⌋ with 𝑐 = 1/3 and 𝑐 = 1/2 , where ⌊𝑥⌋ denotes the largest integer not exceeding 
+
+𝑥 .15 Third, we consider the terms of 𝜇 , 𝛿 and 𝜎 . Let 𝜇 1, … , 𝜇 𝑁 be 𝑖.𝑖.𝑑. random variables with 
+
+𝜇 1 ∼ 𝑈 (0, 1) . Similarly, let 𝜎 1, … , 𝜎 𝑁 be 𝑖.𝑖.𝑑. random variables with 𝜎 1 ∼ 𝑈 (1, 2) . Next, we consider the changes of variance 𝛿 𝑖 . In the following, we take them as non-sparse and 
+
+sparse cases: 1) Non-sparse cases: let 𝛿 1, … , 𝛿 𝑁 be 𝑖.𝑖.𝑑. random variables with (a) 𝛿 1 ∼ 𝑈 (−0.5, 0.5) ;
+
+(b) 𝛿 1 ∼ 𝑈 (−0.5, 1) .2) Sparse cases: (a) randomly select 10 values for 𝛿 𝑖 , with 5 set to 1.5, 5 set to -0.5, and all others set to zero; (b) randomly select 10 𝛿 𝑖 values as -0.5, and set all others to zero. Fourth, we discuss the accuracy of a change-point estimator ̂ 𝑡 𝑁,𝑇 . Let 𝛼 be the significance level 𝐶 𝛼 be the threshold defined by Remark 3.1. An accuracy of the estimator ̂ 𝑡 𝑁,𝑇 for the variance change-point based on test 𝑇 𝑡𝑒𝑠𝑡 is also suggested by 
+
+𝐴𝑐𝑐𝑢𝑟𝑎𝑐𝑦 = ♯{𝑇 𝑈 ≥ 𝐶 𝛼 and |̂𝑡 𝑁,𝑇 − 𝑡 ∗| ≤ 𝑚} 𝑀 ,
+
+where 𝑚 is a positive constant, 𝑀 is the number of simulations and ♯{𝐴} denotes the length or size of set 𝐴 . In the simulation, 𝛼 and 𝐶 𝛼 are respectively taken by 0.05 and 1.358, 𝑚 
+
+and 𝑀 are respectively taken by 0.05𝑇 and 1000. We also take the individual number 𝑁 = [100, 200, 300, 400, 1000, 1500, 2000] and length time 𝑇 = [500, 1000, 2000, 4000] . Choi & Shin (2021) used a self-normalization method to have a variance change test. So as a comparison, we denote our test by 𝑇 𝑈 , Li et al. (2015)’s test by 𝑇 𝑉 and Choi & Shin (2021)’s test by 𝑇 𝐿𝑉 , respectively. Under the null hypothesis 𝐻 0 of no variance change in the panel data model (3), we give the empirical size of the tests 𝑇 𝑈 , 𝑇 𝑉 and 𝑇 𝐿𝑉 based on the Gaussian and Gamma errors in the Table 1. Table 1: Empirical size of tests 𝑇 𝑈 , 𝑇 𝑉 and 𝑇 𝐿𝑉 with different errors and significance level 𝛼 = 0.05                                                                                                                                                                                           
+
+> 𝜌 Error NTsize 𝑇 𝑈 size 𝑇 𝑉 size 𝑇 𝐿𝑉 Error NTsize 𝑇 𝑈 size 𝑇 𝑉 size 𝑇 𝐿𝑉
+> 2−𝑖 Gaussian 100 500 0.036 0.044 0.054 Gamma 100 500 0.045 0.043 0.056
+> 2−𝑖 Gaussian 200 1000 0.041 0.043 0.053 Gamma 200 1000 0.049 0.043 0.057
+> 2−𝑖 Gaussian 300 2000 0.061 0.047 0.047 Gamma 300 2000 0.047 0.034 0.056
+> 2−𝑖 Gaussian 400 2000 0.043 0.051 0.067 Gamma 400 2000 0.038 0.039 0.053
+> 2−𝑖 Gaussian 1000 4000 0.043 0.046 0.055 Gamma 1000 4000 0.049 0.044 0.068
+> 2−𝑖 Gaussian 1500 4000 0.054 0.058 0.048 Gamma 1500 4000 0.053 0.048 0.056
+> 2−𝑖 Gaussian 2000 4000 0.052 0.055 0.054 Gamma 2000 4000 0.053 0.053 0.059
+> 𝑖 −2 Gaussian 100 500 0.044 0.034 0.046 Gamma 100 500 0.036 0.041 0.047
+> 𝑖 −2 Gaussian 200 1000 0.055 0.047 0.054 Gamma 200 1000 0.038 0.043 0.054
+> 𝑖 −2 Gaussian 300 2000 0.043 0.039 0.055 Gamma 300 2000 0.055 0.060 0.047
+> 𝑖 −2 Gaussian 400 2000 0.042 0.044 0.051 Gamma 400 2000 0.049 0.049 0.065
+> 𝑖 −2 Gaussian 1000 4000 0.051 0.053 0.054 Gamma 1000 4000 0.056 0.045 0.050
+> 𝑖 −2 Gaussian 1500 4000 0.046 0.049 0.051 Gamma 1500 4000 0.051 0.045 0.051
+> 𝑖 −2 Gaussian 2000 4000 0.046 0.044 0.060 Gamma 2000 4000 0.047 0.048 0.049
+
+By the Table 1, it can be seen that all of our test 𝑇 𝑈 , Li et al. (2015)’s test 𝑇 𝑉 , and Choi & Shin (2021)’s test 𝑇 𝐿𝑉 control the empirical size at the significance level 𝛼 = 0.05 .Next, we consider the tests 𝑇 𝑈 , 𝑇 𝑉 and 𝑇 𝐿𝑉 for the alternative hypothesis 𝐻 1 of variance change in the panel data model. For the change point location 𝑡 ∗ = ⌊𝑇 /2⌋ , the empirical 16 power and accuracy of tests 𝑇 𝑈 , 𝑇 𝑉 and 𝑇 𝐿𝑉 with Gaussian errors are presented in the Table 2. By the Table 2, for the symmetric change of variance 𝑈 (−0.5, 0.5) , our proposed test 𝑇 𝑈 
+
+and test 𝑇 𝐿𝑉 by Choi & Shin (2021) outperformed the test 𝑇 𝑉 by Li et al. (2015); for the asymmetric change of variance 𝑈 (−0.5, 0.1) , all the tests 𝑇 𝑈 , 𝑇 𝑉 and 𝑇 𝐿𝑉 demonstrated outstanding performance; for the sparse change (a) of variance changes non-monotonically with positive and negative values, our test 𝑇 𝑈 demonstrated superior performance, while tests 𝑇 𝑉 and 𝑇 𝐿𝑉 showed the poor results with minimal power; for sparse change (b) of variance monotonically changes with negative values, 𝑇 𝐿𝑉 test performed best, followed by 
+
+𝑇 𝑈 test, while 𝑇 𝑉 test performed worst with minimal power. On the one hand, the absolute values of changes in sparse change (b) are smaller than that in sparse change (a), so the performances of test 𝑇 𝑈 were not as good as that in sparse change (a). On the other hand, variance changes in practice are more likely to involve both positive and negative shifts. Therefore, our proposed test 𝑇 𝑈 demonstrates overall superiority over tests 𝑇 𝑉 and 𝑇 𝐿𝑉 .In addition, the performances of tests 𝑇 𝑈 , 𝑇 𝑉 and 𝑇 𝐿𝑉 in Table 3 (see Appendix A), based on Gamma errors, are similar to those in Table 2, which are based on Gaussian errors. Furthermore, we consider the change-point location 𝑡 ∗ to be ⌊𝑇 /3⌋ , and obtain the empirical power and accuracy in the Tables 4 and 5 (see Appendix A). The results of Tables 4 and 5 are similar to those in Tables 2 and 3. Here we did not give the details. 
+
+# 5 The Real Data Analysis 
+
+In this section, we do the detection of the variance change-points based on the panel data of the Shanghai Shenzhen CSI 300 Index Components, which comes from https: //www.csindex.com.cn/#/indices/family/detail?indexCode=000300. Following the simulation section, 𝑇 𝑈 denotes our test defined by (28), 𝑇 𝑉 denotes the test of Li et al. (2015) defined by (35), while 𝑇 𝐿𝑉 denotes the test from Choi & Shin (2021). The data from 2006-01-01 to 2016-12-31 have 300 stocks, among which 4 stocks such as 302132, 688599, 688981, 001391 have missing values. So we consider the returns of Adjusted Closing Prices (ACP) for these no missing 296 stocks, where the ACP is calculated by multiplying the closing price by the adjustment factor. For example, consider the return 
+
+𝑟 𝑖,𝑡 = log 𝑃 𝑖,𝑡 − log 𝑃 𝑖,𝑡−1 , (1) where 𝑃 𝑖,𝑡 is the ACP of 𝑖 -th stock at 𝑡 time, 𝑃 𝑖,0 = 0 , 1 ≤ 𝑖 ≤ 296 and 1 ≤ 𝑡 ≤ 2673 .Typically, after applying logarithmic transformation and differencing, changes in mean and variance become sparse. Thus, we focus on the variance changes for the panel data of return 
+
+{𝑟 𝑖,𝑡 }. Employing binary method at a significance level 𝛼 = 0.05 , our proposed test 𝑇 𝑈 
+
+(with ℎ𝑇 = ⌊𝑇 1/3 ⌋) successfully detected 5 variance change-points: 2008-04-23, 2009-07-24, 2010-09-20, 2015-03-25, and 2015-10-26. In contrast, the test 𝑇 𝐿𝑉 by Choi & Shin (2021) detected only 2 change-points (2014-11-27 and 2016-03-02), where the critical value was 40.1. But the test 𝑇 𝑉 by Li et al. (2015) failed to detect any change-points. The change-points detected by tests 𝑇 𝑈 and 𝑇 𝐿𝑉 are presented in the Figure 2. 17 Table 2: Empirical power and accuracy of tests 𝑇 𝑈 , 𝑇 𝑉 and 𝑇 𝐿𝑉 with Gaussian error, significance level 
+
+𝛼 = 0.05 and location 𝑡 ∗ = ⌊𝑇 /2⌋ 
+
+𝜌 𝛿 N T power 𝑇 𝑈 power 𝑇 𝑉 power 𝑇 𝐿𝑉 accuracy 𝑇 𝑈 accuracy 𝑇 𝑉 accuracy 𝑇 𝐿𝑉 
+
+2−𝑖 𝑈(−0.5, 0.5) 100 500 0.494 0.455 0.522 0.323 0.316 0.320 
+
+2−𝑖 𝑈(−0.5, 0.5) 200 1000 0.708 0.651 0.698 0.577 0.531 0.535 
+
+2−𝑖 𝑈(−0.5, 0.5) 300 2000 0.859 0.788 0.844 0.776 0.703 0.728 
+
+2−𝑖 𝑈(−0.5, 0.5) 400 2000 0.904 0.826 0.903 0.836 0.745 0.780 
+
+2−𝑖 𝑈(−0.5, 0.5) 1000 4000 0.999 0.967 0.989 0.996 0.953 0.979 
+
+2−𝑖 𝑈(−0.5, 0.5) 1500 4000 0.999 0.990 0.999 0.998 0.980 0.998 
+
+2−𝑖 𝑈(−0.5, 0.5) 2000 4000 1 0.995 1 1 0.995 0.998 
+
+2−𝑖 𝑈(−0.5, 1) 100 500 1 1 0.999 1 0.987 0.993 
+
+2−𝑖 𝑈(−0.5, 1) 200 1000 1 1 1 1 1 1
+
+2−𝑖 𝑈(−0.5, 1) 300 2000 1 1 1 1 1 1
+
+2−𝑖 𝑈(−0.5, 1 400 2000 1 1 1 1 1 1
+
+2−𝑖 𝑈(−0.5, 1) 1000 4000 1 1 1 1 1 1
+
+2−𝑖 𝑈(−0.5, 1) 1500 4000 1 1 1 1 1 1
+
+2−𝑖 𝑈(−0.5, 1) 2000 4000 1 1 1 1 1 1
+
+2−𝑖 Sparse (a) 100 500 1 0.047 0.087 0.915 0.014 0.031 
+
+2−𝑖 Sparse (a) 200 1000 1 0.066 0.096 0.933 0.013 0.031 
+
+2−𝑖 Sparse (a) 300 2000 1 0.074 0.112 0.955 0.025 0.037 
+
+2−𝑖 Sparse (a) 400 2000 1 0.063 0.106 0.931 0.017 0.026 
+
+2−𝑖 Sparse (a) 1000 4000 1 0.062 0.093 0.906 0.022 0.027 
+
+2−𝑖 Sparse (a) 1500 4000 0.991 0.043 0.064 0.833 0.011 0.019 
+
+2−𝑖 Sparse (a) 2000 4000 0.969 0.049 0.071 0.758 0.015 0.016 
+
+2−𝑖 Sparse (b) 100 500 0.801 0.747 0.908 0.536 0.422 0.631 
+
+2−𝑖 Sparse (b) 200 1000 0.798 0.618 0.911 0.538 0.355 0.646 
+
+2−𝑖 Sparse (b) 300 2000 0.877 0.593 0.956 0.616 0.337 0.731 
+
+2−𝑖 Sparse (b) 400 2000 0.778 0.453 0.907 0.512 0.232 0.643 
+
+2−𝑖 Sparse (b) 1000 4000 0.678 0.301 0.828 0.431 0.153 0.527 
+
+2−𝑖 Sparse (b) 1500 4000 0.509 0.223 0.690 0.269 0.082 0.380 
+
+2−𝑖 Sparse (b) 2000 4000 0.430 0.163 0.573 0.215 0.068 0.302 
+
+𝑖 −2 𝑈(−0.5, 0.5) 100 500 0.525 0.473 0.523 0.385 0.344 0.349 
+
+𝑖 −2 𝑈(−0.5, 0.5) 200 1000 0.744 0.640 0.759 0.646 0.510 0.600 
+
+𝑖 −2 𝑈(−0.5, 0.5) 300 2000 0.862 0.774 0.880 0.815 0.679 0.788 
+
+𝑖 −2 𝑈(−0.5, 0.5) 400 2000 0.922 0.770 0.917 0.871 0.699 0.836 
+
+𝑖 −2 𝑈(−0.5, 0.5) 1000 4000 0.997 0.921 0.994 0.996 0.880 0.985 
+
+𝑖 −2 𝑈(−0.5, 0.5) 1500 4000 1 0.948 0.999 0.999 0.932 0.999 
+
+𝑖 −2 𝑈(−0.5, 0.5) 2000 4000 1 0.972 1 1 0.960 1
+
+𝑖 −2 𝑈(−0.5, 1) 100 500 1 0.999 1 1 0.993 0.999 
+
+𝑖 −2 𝑈(−0.5, 1) 200 1000 1 1 1 1 1 1
+
+𝑖 −2 𝑈(−0.5, 1) 300 2000 1 1 1 1 1 1
+
+𝑖 −2 𝑈(−0.5, 1 400 2000 1 1 1 1 1 1
+
+𝑖 −2 𝑈(−0.5, 1) 1000 4000 1 1 1 1 1 1
+
+𝑖 −2 𝑈(−0.5, 1) 1500 4000 1 1 1 1 1 1
+
+𝑖 −2 𝑈(−0.5, 1) 2000 4000 1 1 1 1 1 1
+
+𝑖 −2 Sparse (a) 100 500 1 0.045 0.139 0.951 0.011 0.044 
+
+𝑖 −2 Sparse (a) 200 1000 1 0.036 0.147 0.952 0.013 0.038 
+
+𝑖 −2 Sparse (a) 300 2000 1 0.061 0.156 0.987 0.012 0.047 
+
+𝑖 −2 Sparse (a) 400 2000 1 0.051 0.115 0.970 0.008 0.033 
+
+𝑖 −2 Sparse (a) 1000 4000 1 0.065 0.121 0.952 0.012 0.036 
+
+𝑖 −2 Sparse (a) 1500 4000 1 0.063 0.073 0.899 0.014 0.012 
+
+𝑖 −2 Sparse (a) 2000 4000 0.994 0.043 0.078 0.842 0.008 0.026 
+
+𝑖 −2 Sparse (b) 100 500 0.904 0.777 0.970 0.647 0.400 0.736 
+
+𝑖 −2 Sparse (b) 200 1000 0.904 0.654 0.970 0.658 0.368 0.742 
+
+𝑖 −2 Sparse (b) 300 2000 0.970 0.632 0.989 0.733 0.357 0.829 
+
+𝑖 −2 Sparse (b) 400 2000 0.907 0.537 0.959 0.647 0.299 0.714 
+
+𝑖 −2 Sparse (b) 1000 4000 0.864 0.337 0.932 0.579 0.158 0.673 
+
+𝑖 −2 Sparse (b) 1500 4000 0.654 0.213 0.830 0.424 0.088 0.506 
+
+𝑖 −2 Sparse (b) 2000 4000 0.555 0.190 0.703 0.310 0.074 0.414 
+
+18 Figure 2: The adjusted closing price chart and variance change-point of Shanghai Shenzhen CSI 300 index components, 296 stocks from 2006-01-01 to 2016-12-31 In Figure 2, the notation 𝑇 𝑈 _𝐶𝑃 _1(2008-04-23) denotes the first change-point detected by test 𝑇 𝑈 , which occurred on 2008-04-23. The remaining symbols are defined analogously. It can be observed that two change-points (2014-11-27 and 2016-03-02) detected by Choi & Shin (2021)’s test 𝑇 𝐿𝑉 were in close to those detected by our proposed 𝑇 𝑈 (2015-03-25, and 2015-10-26). However, our test detected three additional change-points (2008-04-23, 2009-07-24, 2010-09-20) that were missed by 𝑇 𝐿𝑉 . Meanwhile, the test 𝑇 𝑉 by Li et al. (2015) failed to detect any change-points. On the other hand, for each return 𝑟 𝑖,𝑡 of 𝑖 -th stock, we also use the binary method and the ‘cpt.var’ method by the R Package changepoint 
+
+of Killick & Eckley (2014) to detect the change-point of variances at the significance level 
+
+𝛼 = 0.05 . We give the histograms of these change-points in Figure 3. 
+
+Figure 3: The histogram of variance change-points with ‘cpt.var’ method for 296 stocks from 2006-01-01 to 2016-12-31 As illustrated in Figure 3, the seven change-points detected by tests 𝑇 𝑈 and 𝑇 𝐿𝑉 exhibit high frequencies. To verify the financial implications of the change-points, we conducted a correlation analysis between the detection results and key historical events in the A-share 19 market, as well as the macroeconomic context. (1) Financial Crises and Policy Stimulus Cycles (2008-2010). During this period, the market was primarily influenced by exogenous macroeconomic shocks and counter-cyclical adjustment policies. 
+
+• Performance of 𝑇 𝐿𝑉 : No significant change-points were detected within this interval. At the significance level 𝛼 = 0.05 , the critical value 40.1 of 𝑇 𝐿𝑉 is relatively high. This implies that 𝑇 𝐿𝑉 exhibited a high rate of false negatives when volatility was driven purely by fundamental and policy factors, in the absence of leveraged fund amplification. 
+
+• Performance of 𝑇 𝑈 : Successfully identified three key structural turning points within this cycle: 
+
+∘ 2008-04-23: Corresponding to the announcement of the stamp duty reduc-tion policy (on the evening of April 23, 2008, the Ministry of Finance and the State Administration of Taxation announced that, starting April 24, the securities transaction stamp duty rate would be reduced from 3 ‰ to 1‰). The market ended its unilateral downward trend and entered a phase of high-volatility contention. 𝑇 𝑈 accurately captured the restructuring of the volatility structure following the release of downside risks. 
+
+∘ 2009-07-24: Corresponding to the point of diminishing marginal returns of the “four trillion yuan” stimulus package. The State Council executive meeting proposed the measures on November 5, 2008, followed by the official announcement on the evening of November 9, unveiling ten measures to further boost domestic demand and promote economic growth, with a total scale of approximately four trillion yuan. This timing accurately marked the peak zone of the 2009 recovery rally (the Shanghai Composite Index peaked in early August), reflecting a shift in market expectations from policy easing to concerns about stimulus withdrawal, serving as a forward-looking indicator of an impending trend reversal. 
+
+∘ 2009-07-24: Corresponding to the start of the “National Day Rally” and rising inflation expectations. Market sentiment shifted from small and mid-cap thematic stocks to cyclical and heavyweight stocks, leading to a marked increase in the volatility midpoint. (2) The Leverage Cycle and Abnormal Volatility (2014-2016). This phase exhibited typ-ical capital-driven characteristics, as the market went through a complete cycle from valuation recovery to irrational exuberance, and ultimately to a liquidity crisis. 
+
+• Bull Market Initiation Phase: 
+
+∘ 𝑇 𝐿𝑉 (2014-11-27): It accurately identified the first high-volatility window following the central bank’s interest rate cut. On the evening of November 21, 2014, the People’s Bank of China announced a reduction in the bench-mark interest rates for RMB loans and deposits of financial institutions, effective from November 22. Thus, this change-point marked the official 20 establishment of the “leverage-driven bull market” fueled by declining risk-free rates, as market volatility underwent a discontinuous surge, breaking free from a prolonged period of stagnation. 
+
+∘ 𝑇 𝑈 (2015-03-25): It identified the acceleration phase of the market rally. At this change-point, the Shanghai Composite Index broke through a key resistance level, and massive amounts of off-exchange margin financing en-tered the market. The signal from 𝑇 𝑈 indicated a qualitative shift in market dynamics, transitioning from a rational valuation recovery to a speculative bubble, with a significant expansion of risk exposure. 
+
+• Bubble Burst and Bottoming Phase: 
+
+∘ 𝑇 𝑈 (2015-10-26): Marked the end of the rebound following “Stock Market Crash 2.0”. From August 18 to 26, 2015, after the initial crash in June, the A-share market experienced another cliff-like decline in mid-to-late August, particularly a consecutive plunge starting August 24 (“Black Monday”), with the Shanghai Composite Index falling below 3000 points within days. The term “rebound” here specifically refers to the recovery rally after Stock Market Crash 2.0 (the August Crash). As regulatory scrutiny intensified (e.g., the Xu Xiang case), market volatility retreated from a state of panic-driven highs to a gradual, grinding decline, signaling the final phase of the deleveraging process. On November 1, 2015, Xu Xiang was apprehended on the Hangzhou Bay Bridge in Ningbo, leading to a swift retreat of speculative capital and fundamentally altering the nature of the rebound. The change-point on October 26 (a few days before Xu Xiang’s arrest) indicates that the algorithm astutely detected the preemptive sell-off by major funds ahead of the risk event. 
+
+∘ 𝑇 𝐿𝑉 (2016-03-02): Marked the absolute low point after the “circuit breaker” crisis. Following the extreme liquidity squeeze in early 2016, market volatil-ity contracted sharply, subsequently entering a prolonged phase of low-volatility, slow-growth uptrend. The A-share market circuit breaker mech-anism was officially implemented on January 1, 2016. It was triggered twice-on January 4 (the first trading day) and January 7, leading to early market closures. On the evening of January 7, the China Securities Reg-ulatory Commission announced the suspension of the mechanism. After hitting a low of 2638 points (January 27, 2016), the market underwent a month of repeated bottoming consolidation. In early March 2016 (partic-ularly around the “Two Sessions” held on March 5 and March 3, 2016), the market established a pattern of not breaking below previous lows and launched the well-known “2016-2017 blue-chip slow bull” rally. The empirical results indicate that the comparison method 𝑇 𝐿𝑉 functions more as a “crisis early-warning system”. It demonstrates a high signal-to-noise ratio in capturing extreme market risks (such as the post-circuit breaker bottom in early 2016), making it well-suited for strategic timing decisions. In contrast, our method 𝑇 𝑈 proposed in this paper serves as a “market structure monitor for all seasons”. It exhibits superior sensitivity and inter-21 pretability in handling macroeconomic cycles not driven by leverage (2008-2010) as well as distinct market phases (such as the bubble formation in 2015 and the protracted decline in 2016). Our 𝑇 𝑈 test is capable of delineating the evolutionary path of market volatility in greater detail, thereby providing richer informational dimensions to support medium to long-term macro risk management and asset allocation. 
+
+# 6 Conclusion and Discussion 
+
+On the one hand, the CUSUM method is a widely used technique for change-point anal-ysis. On the other hand, panel data models play a crucial role in economics and finance. Horváth & Hušková (2012) investigated mean change-point detection in panel data models with errors following a linear process based on 𝑖.𝑖.𝑑. random variables. Li et al. (2015) extended this framework to variance change-point detection. Given that 𝛼 -mixing is a reasonably weak dependence condition with broad applications in time series analysis, this paper further examines variance change-points in the panel data model (9) with 𝛼 -mixing errors. Under the null hypothesis of no variance change, Theorem 3.1 establishes the limit distribution of the CUSUM statistic. To estimate the long-run variances, Lemma 3.1 pro-vides the consistency rates of the corresponding estimators. Consequently, Theorem 3.2 presents the CUSUM test 𝑇 𝑈 of variance change-point detection, which can be effectively used to identify structural breaks in variance. We also also analyze the asymptotic be-havior of the CUSUM statistic under alternative hypothesis. To evaluate the performance of our test, we conduct simulations for panel data models with Gaussian and Gamma er-rors. For comparison, we give the empirical size, power and accuracy of our test 𝑇 𝑈 , Li et al. (2015)’s test 𝑇 𝑉 and Choi & Shin (2021)’s test 𝑇 𝐿𝑉 under symmetric, asymmetric and sparse variance change. In the case of symmetric variance changes, tests 𝑇 𝑈 and test 
+
+𝑇 𝐿𝑉 outperformed the test 𝑇 𝑉 . For asymmetric changes, all the tests 𝑇 𝑈 , 𝑇 𝑉 and 𝑇 𝐿𝑉 
+
+demonstrated excellent performance. For the sparse change (a), where variance changes non-monotonically with both positive and negative values, test 𝑇 𝑈 achieved superior per-formance, while tests 𝑇 𝑉 and 𝑇 𝐿𝑉 exhibited poor results with minimal power. For the sparse change (b), characterized by monotonically decreasing variance, 𝑇 𝐿𝑉 test performed best, followed by 𝑇 𝑈 test, while 𝑇 𝑉 test performed worst with minimal power. It is worth noting that the absolute magnitude of variance changes in sparse change (b) is smaller than in sparse change (a), which explains why the performance of 𝑇 𝑈 in case (b) was not as good as in case (a). Moreover, in practice, variance changes are more likely to involve both positive and negative shifts. Therefore, overall, our proposed test 𝑇 𝑈 demonstrates superior performance compared to tests 𝑇 𝑉 and 𝑇 𝐿𝑉 . Finally, we apply our method to a real data set from Shanghai Shenzhen CSI 300 Index Components, identifying 5 variance change-points and providing economic interpretations for the observed volatility shifts. In contrast, Choi & Shin (2021)’s test 𝑇 𝐿𝑉 detected only 2 change-points, while the test 𝑇 𝑉 
+
+by Li et al. (2015) failed to detect any change-points. For future research, it would be interesting to explore change-point detection in panel data models when the number of panels 𝑁 exceeds the number of time periods 𝑇 .
+
+Disclose Statement 
+
+22 The authors have no conflict of interest to disclose. 
+
+Funding 
+
+This research is partially supported by NSSFC grant 24BTJ073. 
+
+# References 
+
+Avanesov, V. & Buzun, N. (2018), ‘Change-point detection in high-dimensional covariance structure’, Electronic Journal of Statistics 12 (2), 3254–3294. Bai, J. (2010), ‘Common breaks in means and variance for panel data’, Journal of Econo-metrics 157 (1), 78–92. Billingsley, P. (1968), Convergence of Probability Measures , Wiley, New York. Chen, J. & Gupta, A. K. (2012), Parametric Statistical Change Point Analysis with Appli-cations to Genetics, Medicine and Finance , 2 edn, Birkhäuser, Boston. Cho, H. (2016), ‘Change-point detection in panel data via double CUSUM statistic’, Elec-tronic Journal of Statistics 10 (2), 2000–2038. Choi, J.-E. & Shin, D. W. (2021), ‘A general panel break test based on the self-normalization method’, Journal of the Korean Statistical Society 50 (3), 654–680. Csörgő, M. & Horváth, L. (1997), Limit Theorems in Change-Point Analysis , Wiley, Chich-ester. Düker, M.-C., Jeong, S.-O., Lee, T. & Baek, C. (2024), ‘Detection of multiple change-points in high-dimensional panel data with cross-sectional and temporal dependence’, Statistical Papers 65 (4), 2327–2359. Gao, M., Shi, X., Wang, X. & Yang, W. (2023), ‘Combination test for mean shift and variance change’, Symmetry 15 (11), 1975. Gray, R. (1972), ‘On the asymptotic eigenvalue distribution of toeplitz matrices’, IEEE Transactions on Information Theory 18 (6), 725–730. Györfi, L., Härdle, W., Sarda, P. & Vieu, P. (1989), Nonparametric Curve Estimation from Time Series , Springer, New York. Hall, P. & Heyde, C. C. (1980), Martingale Limit Theory and Its Application , Academic Press, Inc, New York. Horváth, L. & Hušková, M. (2012), ‘Change-point detection in panel data’, Journal of Time Series Analysis 33 (4), 631–648. Inclán, C. & Tiao, G. C. (1994), ‘Use of cumulative sums of squares for retrospective detec-tion of changes of variance’, Journal of the American Statistical Association 89 (427), 913– 923. Jin, B., Pan, G., Yang, Q. & Zhou, W. (2016), ‘On high-dimensional change point problem’, 
+
+Science China Mathematics 59 (12), 2355–2378. 23 Killick, R. & Eckley, I. A. (2014), ‘changepoint: An R Package for Changepoint Analysis’, 
+
+Journal of Statistical Software 58 , 1–19. Lee, S. & Park, S. (2001), ‘The cusum of squares test for scale changes in infinite order moving average processes’, Scandinavian Journal of Statistics 28 (4), 625–644. Li, F., Tian, Z., Xiao, Y. & Chen, Z. (2015), ‘Variance change-point detection in panel data models’, Economics Letters 126 , 140–143. Li, F., Xiao, Y. & Chen, Z. (2023), ‘Estimation of multiple breaks in panel data models based on a modified screening and ranking algorithm’, Symmetry 15 (10), 1890. Liu, H., Gao, C. & Samworth, R. J. (2021), ‘Minimax rates in sparse, high-dimensional change point detection’, The Annals of Statistics 49 (2), 1081–1112. Loyo, J. A. & Boot, T. (2025), ‘Grouped heterogeneity in linear panel data models with heterogeneous error variances’, Journal of Business & Economic Statistics 43 (1), 68–80. Lumsdaine, R. L., Okui, R. & Wang, W. (2023), ‘Estimation of panel group structure models with structural breaks in group memberships and coefficients’, Journal of Econo-metrics 233 (1), 45–65. Shao, X. & Zhang, X. (2010), ‘Testing for change points in time series’, Journal of the American Statistical Association 105 (491), 1228–1240. Sharifzadeh, M., Azmoodeh, F. & Shahabi, C. (2005), Change detection in time series data using wavelet footprints, in C. B. Medeiros, M. J. Egenhofer & E. Bertino, eds, ‘Advances in Spatial and Temporal Databases’, Vol. 3633 of Lecture Notes in Computer Science ,Springer, Berlin, Heidelberg. She, R., Dai, L. & Ling, S. (2025), ‘Testing for change-points in heavy-tailed time series: a winsorized CUSUM approach’, Journal of Business & Economic Statistics . Published online, https://doi.org/10.1080/07350015.2025.2561747. Shi, X., Wu, Y. & Rao, C. R. (2017), ‘Consistent and powerful graph-based change-point test for high-dimensional data’, Proceedings of the National Academy of Sciences 
+
+114 (15), 3873–3878. Wang, T. & Samworth, R. J. (2018), ‘High dimensional change point estimation via sparse projection’, Journal of the Royal Statistical Society: Series B (Statistical Methodology) 
+
+80 (1), 57–83. Wang, Z. & Zwetsloot, I. M. (2024), ‘A change-point–based control chart for detecting sparse mean changes in high-dimensional heteroscedastic data’, Journal of Quality Tech-nology 56 (1), 56–70. Xu, M., Zhong, P.-S. & Wang, W. (2016), ‘Detecting variance change-points for blocked time series and dependent panel data’, Journal of Business & Economic Statistics 
+
+34 (2), 213–226. 24

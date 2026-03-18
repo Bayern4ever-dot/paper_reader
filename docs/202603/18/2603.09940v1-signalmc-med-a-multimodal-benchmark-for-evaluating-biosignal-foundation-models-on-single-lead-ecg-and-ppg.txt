@@ -1,0 +1,2463 @@
+Title: SignalMC-MED: A Multimodal Benchmark for Evaluating Biosignal Foundation Models on Single-Lead ECG and PPG
+
+URL Source: https://arxiv.org/pdf/2603.09940v1
+
+Published Time: Wed, 11 Mar 2026 01:28:04 GMT
+
+Number of Pages: 37
+
+Markdown Content:
+# SignalMC-MED: A Multimodal Benchmark for Evaluating Biosignal Foundation Models on Single-Lead ECG and PPG 
+
+## Fredrik K. Gustafsson 1,2 Xiao Gu 1 Mattia Carletti 1 Patitapaban Palo 1
+
+## David W. Eyre 2,3,4 David A. Clifton 1,2,5
+
+> 1
+
+Department of Engineering Science, University of Oxford 
+
+> 2
+
+NIHR Health Protection Research Unit in Healthcare Associated Infections and Antimicrobial Resistance 
+
+> 3
+
+Big Data Institute, Nuffield Department of Population Health, University of Oxford 
+
+> 4
+
+NIHR Oxford Biomedical Research Centre 
+
+> 5
+
+Oxford Suzhou Centre for Advanced Research, University of Oxford   
+
+> fredrik.gustafsson@eng.ox.ac.uk, xiao.gu@eng.ox.ac.uk, david.clifton@eng.ox.ac.uk
+
+## Abstract 
+
+Recent biosignal foundation models (FMs) have demon-strated promising performance across diverse clinical pre-diction tasks, yet systematic evaluation on long-duration multimodal data remains limited. We introduce SignalMC-MED, a benchmark for evaluating biosignal FMs on syn-chronized single-lead electrocardiogram (ECG) and photo-plethysmogram (PPG) data. Derived from the MC-MED dataset, SignalMC-MED comprises 22,256 visits with 10-minute overlapping ECG and PPG signals, and includes 20 clinically relevant tasks spanning prediction of demo-graphics, emergency department disposition, laboratory value regression, and detection of prior ICD-10 diagnoses. Using this benchmark, we perform a systematic evalua-tion of representative time-series and biosignal FMs across ECG-only, PPG-only, and ECG + PPG settings. We find that domain-specific biosignal FMs consistently outperform general time-series models, and that multimodal ECG + PPG fusion yields robust improvements over unimodal in-puts. Moreover, using the full 10-minute signal consistently outperforms shorter segments, and larger model variants do not reliably outperform smaller ones. Hand-crafted ECG domain features provide a strong baseline and offer comple-mentary value when combined with learned FM representa-tions. Together, these results establish SignalMC-MED as a standardized benchmark and provide practical guidance for evaluating and deploying biosignal FMs. 
+
+Foundation models (FMs) for time-series and biosignals have recently emerged as a promising paradigm for scalable representation learning across diverse downstream tasks [7, 11, 13, 17, 29]. In cardiovascular medicine, large-scale pretraining on electrocardiogram (ECG) and photoplethys-mography (PPG) signals offers the potential to learn physi-ologically meaningful representations that generalize across diagnostic and prognostic settings [1, 12, 16, 25]. However, systematic evaluation on realistic, multimodal bedside data remains limited. In continuous monitoring environments, clinicians rely on long-duration single-lead ECG and PPG signals (often spanning minutes to hours in duration), which capture complementary and temporally evolving aspects of cardiovascular physiology [5, 26, 27]. Yet, recent benchmarking studies [2, 3, 18] and FM devel-opment papers [16, 21, 23–25, 28] primarily focus on uni-modal ECG or PPG data and short signal segments (typ-ically 10 seconds). Moreover, while CSFM [12] demon-strates the promise of large-scale multimodal ECG + PPG pretraining across heterogeneous sensing scenarios, it does not establish a standardized benchmark explicitly designed for controlled comparison of FMs on synchronized long-duration ECG and PPG signals. Consequently, it remains unclear how different types of biosignal FMs perform on realistic multimodal emergency department data, and how these domain-specific FMs compare to general-purpose time-series FMs. In particular, the interaction between mul-timodal fusion, varying signal lengths, and model scale has not been systematically evaluated, nor has the relative value of learned FM representations versus traditional domain feature baselines been rigorously assessed. To address these gaps, we introduce SignalMC-MED ,a clinically grounded benchmark derived from the MC-MED dataset [14, 15], comprising 22,256 adult emergency department visits with 10-minute synchronized ECG and PPG signals (Figure 1). The benchmark includes 20 clin-ically relevant tasks spanning prediction of demographics, emergency department disposition, laboratory value regres-sion, and detection of prior ICD-10 diagnoses, and adopts 1
+
+> arXiv:2603.09940v1 [cs.LG] 10 Mar 2026
+
+10-second ECG + PPG Segments 
+
+Segment-level Feature Vectors 
+
+∑ Visit-level Feature Vector 
+
+> Sex cls ED_dispo cls Labs reg (8 tasks) ICD-10 cls (9 tasks)
+
+20 Prediction Tasks 
+
+10-second ECG Segments 
+
+∑
+
+ECG-only Feature Vector 
+
+10-second PPG Segments 
+
+∑ PPG-only Feature Vector 
+
+∑ ECG + PPG Feature Vector 
+
+ECG-only Prediction 
+
+PPG-only Prediction 
+
+ECG + PPG Prediction 
+
+10-second Segment 
+
+∑
+
+ECG-only Feature Vector 
+
+10-second Segment 
+
+∑ PPG-only Feature Vector 
+
+∑ ECG + PPG Feature Vector 
+
+ECG-only Prediction 
+
+PPG-only Prediction 
+
+ECG + PPG Prediction 
+
+. . . 
+
+10-second Segment 
+
+10-minute ECG Signal 
+
+. . . 
+
+10-second Segment 
+
+10-minute PPG Signal 
+
+Segment-level Feature Vectors 
+
+∑ Visit-level Feature Vector 
+
+> Age reg Sex cls ED_dispo cls Labs reg (8 tasks) ICD-10 cls (9 tasks)
+
+20 Prediction Tasks 10-second Segment 
+
+. . . 
+
+10-second Segment 
+
+10-minute ECG + PPG Signal 
+
+10-second Segment 
+
+. . . 
+
+10-second Segment 
+
+10-minute ECG + PPG Signal 
+
+∑
+
+ECG-only Feature Vector 
+
+10-second PPG Segments 
+
+∑ PPG-only Feature Vector 
+
+∑ ECG + PPG Feature Vector 
+
+EP
+
+PP
+
+10-second ECG Segments (a) SignalMC-MED benchmark overview. 3                                            
+
+> 2
+> 1
+> 0
+> 1
+> 2
+> 3
+> Amplitude
+> Segment 1 |Start time: 01:40 Segment 2 |Start time: 03:20 Segment 3 |Start time: 05:00 Segment 4 |Start time: 06:40 Segment 5 |Start time: 08:20
+> 2
+> 1
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> Amplitude
+> 00.5 11.5 22.5 3
+> Seconds
+> 3
+> 2
+> 1
+> 0
+> 1
+> 2
+> 3
+> 4
+> Amplitude
+> 00.5 11.5 22.5 3
+> Seconds
+> 00.5 11.5 22.5 3
+> Seconds
+> 00.5 11.5 22.5 3
+> Seconds
+> 00.5 11.5 22.5 3
+> Seconds
+> Visit 1  Visit 2  Visit 3
+
+(b) Examples of synchronized ECG and PPG signals in SignalMC-MED. 
+
+Figure 1. (a) Overview of the SignalMC-MED benchmark and evaluation framework. For each of the 22,256 visits, synchronized 10-minute single-lead ECG ( black ) and PPG ( red ) signals are divided into non-overlapping 10-second segments. A frozen FM ( blue ) extracts a feature vector for each 10-second segment. The resulting segment-level features are aggregated via mean pooling ( Σ) to form a visit-level representation, which is used to train a linear prediction model ( green ) across 20 downstream tasks: age regression, sex classification, emergency department disposition classification, laboratory value regression (8 tasks), and prior ICD-10 diagnosis classification (9 tasks). 
+
+(b) Examples of synchronized ECG and PPG signals from three different visits. For each visit, five 3-second segments are shown, evenly sampled from the full 10-minute signal (segment start times indicated above each panel). The signals illustrate inter-patient variability in rhythm, morphology, amplitude and noise characteristics. Additional examples are provided in Figure S1 in the supplementary material. 
+
+chronological train/val/test splits without patient overlap to approximate real-world deployment conditions. Using this benchmark, we perform a systematic evaluation of repre-sentative time-series and biosignal FMs (Table 1). 
+
+Our study provides three key contributions: (1) We in-troduce a large-scale multimodal benchmark for rigorous evaluation of biosignal FMs on synchronized ECG and PPG signals collected in routine emergency care. (2) We conduct a systematic head-to-head evaluation of general time-series FMs, unimodal ECG- and PPG-specific biosignal FMs, a multimodal biosignal FM, and hand-crafted domain fea-tures across ECG-only, PPG-only, and ECG + PPG settings. (3) We provide comprehensive empirical evidence clarify-ing how modality specialization, multimodal fusion, signal duration, model scale, and physiologically grounded do-main features influence the performance of biosignal FMs. 
+
+## Results 
+
+We evaluate eight representative approaches spanning two general time-series FMs (MOMENT [10], Chronos-Bolt [4]), four unimodal biosignal FMs (D-BETA [23], 
+
+Table 1. Overview of all evaluated FMs , including model size (number of parameters) and expected input sampling frequency. 
+
+Model Name Size Feature Dimension Sampling Frequency Pretraining Data MOMENT-small [10] 35M 512 Mixed 13M time series; 1.2B timestamps 
+
+MOMENT-base 110M 768 — —MOMENT-large 341M 1024 — —Chronos-Bolt-tiny [4] 9M 256 Mixed 100B time series observations 
+
+Chronos-Bolt-mini 21M 384 — —Chronos-Bolt-small 48M 512 — —Chronos-Bolt-base 205M 768 — —PaPaGei [24] 6M 512 125Hz 20M 10-sec PPG segments from 13.5K subjects 
+
+D-BETA [23] 62M 768 500Hz 0.78M 10-sec, 12-lead ECGs from ∼150K subjects 
+
+ECGFounder [16] 31M 1024 500Hz 10.8M ECGs (“predominantly 10-sec, 12-lead”) from 1.8M subjects 
+
+xECG [18] 57M 1024 100Hz 
+
+2.4M 7–10-sec, 12-lead ECGs from ∼1.7M subjects + 75 30-min, 12-lead ECGs 
+
+CSFM-tiny [12] 43M 768 250Hz 2.3M 10-sec, 12-lead ECGs + 0.27M 
+
+CSFM-base 109M 768 — paired 10-sec PPGs and single-lead 
+
+CSFM-large 334M 1024 — ECGs from 1.7M subjects 
+
+ECGFounder [16], xECG [18], PaPaGei [24]), one multi-modal biosignal FM (CSFM [12]), and hand-crafted ECG and PPG domain features. None of the evaluated FMs were 2Table 2. Main model comparison on the test set , with results aggregated across training using 10%, 25%, 50%, and 100% of the train visits. Regression tasks are evaluated using Pearson correlation ( ↑), and classification tasks using AUROC ( ↑). Columns correspond to aggregated performance for: age regression, sex classification, ED disposition classification, laboratory value regression (mean across eight laboratory tests), and prior ICD-10 diagnosis classification (mean across nine diagnosis groups). For each train percentage, training visits are sampled with replacement, and both downstream training and hyperparameter selection are repeated five times. Each table entry represents the mean ± standard deviation across resampling repetitions, after aggregation across tasks within each category and across train visit percentages. Bold red marks the best mean value in each column, bold marks the second-best, and underline marks the third-best.                                                                                                                                                                                                                                                                                                                                                                                                       
+
+> Model Name Modality Age reg Sex cls ED dispo cls Labs reg ICD-10 cls
+> Domain Features ECG-only 0.678 ±0.002 0.652 ±0.004 0.711 ±0.003 0.319 ±0.002 0.748 ±0.003 Domain Features PPG-only 0.684 ±0.052 0.737 ±0.002 0.676 ±0.002 0.213 ±0.018 0.677 ±0.002 Domain Features (concat) ECG + PPG 0.751 ±0.044 0.769 ±0.002 0.713 ±0.001 0.299 ±0.015 0.736 ±0.005 MOMENT-base ECG-only 0.641 ±0.002 0.741 ±0.002 0.662 ±0.004 0.239 ±0.005 0.671 ±0.005 MOMENT-base PPG-only 0.702 ±0.002 0.724 ±0.003 0.676 ±0.002 0.240 ±0.002 0.670 ±0.002 MOMENT-base ECG + PPG 0.757 ±0.002 0.776 ±0.001 0.678 ±0.003 0.283 ±0.004 0.692 ±0.004 Chronos-Bolt-small ECG-only 0.650 ±0.004 0.720 ±0.002 0.652 ±0.004 0.233 ±0.002 0.666 ±0.004 Chronos-Bolt-small PPG-only 0.701 ±0.003 0.731 ±0.002 0.666 ±0.002 0.237 ±0.002 0.655 ±0.004 Chronos-Bolt-small ECG + PPG 0.745 ±0.002 0.765 ±0.001 0.669 ±0.003 0.270 ±0.002 0.682 ±0.003 PaPaGei ECG-only 0.478 ±0.003 0.651 ±0.002 0.617 ±0.002 0.156 ±0.001 0.640 ±0.003 PaPaGei PPG-only 0.665 ±0.001 0.678 ±0.003 0.648 ±0.003 0.234 ±0.002 0.655 ±0.001 PaPaGei ECG + PPG 0.647 ±0.002 0.706 ±0.002 0.640 ±0.003 0.213 ±0.003 0.661 ±0.003 D-BETA ECG-only 0.629 ±0.006 0.699 ±0.002 0.666 ±0.003 0.221 ±0.002 0.689 ±0.003 D-BETA PPG-only 0.538 ±0.034 0.700 ±0.003 0.650 ±0.003 0.131 ±0.009 0.643 ±0.003 D-BETA ECG + PPG 0.692 ±0.010 0.731 ±0.002 0.670 ±0.004 0.239 ±0.005 0.695 ±0.005 ECGFounder ECG-only 0.733 ±0.002 0.740 ±0.002 0.693 ±0.003 0.304 ±0.004 0.716 ±0.006 ECGFounder PPG-only 0.681 ±0.011 0.724 ±0.002 0.673 ±0.004 0.229 ±0.016 0.667 ±0.004 ECGFounder ECG + PPG 0.799 ±0.002 0.796 ±0.001 0.700 ±0.004 0.322 ±0.002 0.722 ±0.005 xECG-10min ECG-only 0.741 ±0.002 0.796 ±0.003 0.701 ±0.002 0.332 ±0.003 0.715 ±0.002 xECG-10min PPG-only 0.753 ±0.003 0.751 ±0.002 0.692 ±0.002 0.258 ±0.003 0.681 ±0.002 xECG-10min ECG + PPG 0.803 ±0.002 0.822 ±0.003 0.707 ±0.004 0.348 ±0.002 0.721 ±0.002 CSFM-base ECG-only 0.752 ±0.001 0.791 ±0.003 0.709 ±0.003 0.350 ±0.002 0.729 ±0.002 CSFM-base PPG-only 0.784 ±0.002 0.762 ±0.002 0.712 ±0.003 0.303 ±0.003 0.701 ±0.004 CSFM-base ECG + PPG 0.818 ±0.002 0.823 ±0.002 0.721 ±0.005 0.374 ±0.003 0.735 ±0.003
+
+pretrained on MC-MED, preventing any overlap between pretraining data and the benchmark. All FMs are evaluated in ECG-only, PPG-only, and ECG + PPG settings, includ-ing those pretrained exclusively on a single modality. This unified evaluation allows us to assess cross-modality gen-eralization and determine whether learned representations encode modality-specific morphology or more general car-diovascular dynamics transferable across related biosignals. All models are used strictly as frozen feature extractors within a unified linear-probing framework to isolate rep-resentation quality (see Methods and Figure 8). Each 10-minute signal is divided into non-overlapping 10-second segments, segment-level features are extracted, and visit-level representations are obtained via mean aggregation. For shorter-duration experiments (10 seconds to 5 minutes), only the initial contiguous portion of the signal is used. Downstream prediction is performed using ridge regression for regression tasks and regularized logistic regression for classification tasks. For each model, a single regularization hyperparameter per task type is selected on the val split. Performance is reported using Pearson correlation for re-gression and area under the receiver operating characteris-tic curve (AUROC) for classification. To assess robustness and data efficiency, downstream models are trained on 10%, 25%, 50%, and 100% of the available train visits with five repeated resamplings. Multimodal fusion is implemented via late feature-level fusion by averaging independently ex-tracted ECG-only and PPG-only visit-level representations. The 20 benchmark tasks (Table 4) are grouped into five cat-egories and models are ranked by mean category rank to facilitate cross-model comparison. 
+
+Main Model Comparison 
+
+Table S1 in the supplementary material reports val results for all model variants, with corresponding rankings in Ta-ble S2. Based on these, one representative variant each for MOMENT, Chronos-Bolt, xECG, CSFM, and the PPG domain features is selected and evaluated on the test set alongside D-BETA, PaPaGei, and ECG domain features (Table 2). Model rankings on test are shown separately for ECG-only, PPG-only, and ECG + PPG in Table 3, and jointly across modalities in Table S3. Moreover, Figure 2 3shows the test performance as a function of the percentage of train visits used, highlighting both absolute performance and data-efficiency trends. Across modalities, CSFM-base achieves the best over-all performance and mean rank, while xECG consistently attains the second-best performance. The two models perform strongly across both regression and classification tasks. In contrast, PaPaGei and D-BETA rank among the weakest performers overall. Notably, PaPaGei, which is the only evaluated PPG-specific FM, ranks last for ECG-only and ECG + PPG, and second-last even for PPG-only. Hand-crafted domain features provide a strong baseline, rank-ing fourth across all modalities and outperforming multi-ple FMs. Among ECG-specific models, ECGFounder ranks third for ECG-only and ECG + PPG but drops for PPG-only, whereas xECG, despite ECG-only pretraining, ranks second across modalities and performs strongly even on PPG-only inputs. Table 4 further reports CSFM-base val performance across all 20 benchmark tasks. Performance varies substan-tially across tasks, with particularly strong results for atrial fibrillation and cardiac device detection, and more mod-est performance for conditions such as anemia and venous thromboembolism. Results on val for all eight evaluated models across the 20 tasks, when training with 10%, 25%, 50%, and 100% of the train visits, are provided in Table S4 -S15. Across tasks and train visit percentages, variability across resampling repetitions remains small overall, indi-cating stable performance estimates and consistent model rankings. 
+
+Extended Model Analysis 
+
+Beyond the primary benchmark comparison, we further an-alyze model behavior under different modality settings, sig-nal lengths, and architectural configurations. Figure 3 & S2 show that ECG + PPG fusion consistently improves perfor-mance over unimodal inputs for nearly all models and train percentages. Figure 5 & S5 demonstrate that these gains persist across different signal lengths, indicating that mul-timodal complementarity is not limited to specific temporal resolutions. Using the full 10-minute signal consistently outperforms shorter segments (Figure 4, S3 & S4), suggesting that longer temporal context provides additional predictive in-formation beyond short-window morphology. In contrast, larger variants within the same model family (e.g., CSFM-tiny/base/large) do not reliably outperform their smaller counterparts (Figure S6 & S7), indicating diminishing re-turns from parameter scaling under frozen linear evaluation. Figure 6 & S8 evaluate concatenation of hand-crafted domain features with learned FM representations. For ECG, domain-feature augmentation consistently improves perfor-
+
+Table 3. Main model ranking on the test set , computed sepa-rately for (a) ECG-only, (b) PPG-only, and (c) ECG + PPG inputs. Mean model rank ( ↓) across the five aggregated task categories based on Table 2. A joint ranking across modalities is in Table S3.                                                                                  
+
+> Rank Model Name Model Ranks Mean Model Rank ( ↓)
+> 1CSFM-base 7,5,5,2,4 4.6 2xECG-10min 10,3,7,4,8 6.4 3ECGFounder 11,12,9,7,7 9.2 4Domain Features 17,23,4,6,1 10.2 5MOMENT-base 21,11,19,15,16 16.4 6D-BETA 22,21,18,20,12 18.6 7Chronos-Bolt-small 19,18,20,18,19 18.8 8PaPaGei 24,24,24,23,24 23.8
+> (a) ECG-only.
+> Rank Model Name Model Ranks Mean Model Rank ( ↓)
+> 1CSFM-base 4,9,3,8,9 6.6 2xECG-10min 6,10,10,12,14 10.4 3MOMENT-base 12,17,12,13,17 14.2 4Domain Features 15,13,13,22,15 15.6 5Chronos-Bolt-small 13,15,17,16,22 16.6 6ECGFounder 16,16,14,19,18 16.6 7PaPaGei 18,22,22,17,21 20.0 8D-BETA 23,20,21,24,23 22.2
+> (b) PPG-only.
+> Rank Model Name Model Ranks Mean Model Rank ( ↓)
+> 1CSFM-base 1,1,1,1,3 1.4 2xECG-10min 2,2,6,3,6 3.8 3ECGFounder 3,4,8,5,5 5.0 4Domain Features (concat) 8,7,2,9,2 5.6 5MOMENT-base 5,6,11,10,11 8.6 6Chronos-Bolt-small 9,8,16,11,13 11.4 7D-BETA 14,14,15,14,10 13.4 8PaPaGei 20,19,23,21,20 20.6
+> (c) ECG + PPG.
+
+mance, whereas improvements are less consistent for PPG. Moreover, simple feature-level fusion slightly outperforms CSFM’s internal multimodal mechanism (Figure S9), and the performance gap between CSFM-base and domain fea-tures narrows with longer signals (Figure S10), suggesting that temporal aggregation partially compensates for repre-sentational differences. Finally, UMAP visualizations in Figure 7 & S11 show clearer clustering by age group and atrial fibrillation la-bel for CSFM-base, xECG, and ECGFounder than for gen-eral time-series FMs, consistent with their stronger quan-titative performance. Although UMAP provides only a qualitative projection, these patterns suggest that domain-specific biosignal FMs can learn more structured and clini-cally aligned latent representations. 
+
+## Discussion 
+
+Overall, our results demonstrate a clear advantage of domain-specific biosignal FMs over general time-series FMs across ECG-only, PPG-only, and ECG + PPG set-tings. CSFM-base achieves the best overall performance with xECG consistently second. This suggests that while 4Table 4. SignalMC-MED benchmark task summary and CSFM-base reference performance . Overview of the 20 included tasks, grouped into two demographics tasks, ED disposition classification, eight laboratory value regression tasks, and nine prior ICD-10 diagnosis classification tasks. CSFM-base performance across modalities on the val set when using 100% of the train set visits is shown as a reference for relative task difficulty. Training visits are sampled with replacement, and both downstream training and hyperparameter selection are repeated five times; results are reported as mean ± standard deviation across resampling repetitions. Bold red marks the best mean value in each row. Full results with 100%, 50%, 25%, and 10% of the train visits for all eight evaluated models are provided in Table S4 - S15.                                                                                                                                                                                                                     
+
+> Task Label / Description Label Source ECG-only PPG-only ECG + PPG
+> Age reg “Age” visits.csv 0.785 ±0.002 0.799 ±0.002 0.842 ±0.001 Sex cls “M” vs “F” 0.816 ±0.002 0.767 ±0.003 0.840 ±0.002 ED dispo cls “Discharge” vs {“Inpatient”, “Observation”, “ICU” }visits.csv 0.744 ±0.001 0.726 ±0.001 0.750 ±0.002 Potassium reg “POTASSIUM”
+> labs.csv
+> 0.386 ±0.007 0.190 ±0.006 0.386 ±0.006 Calcium reg “CALCIUM” 0.209 ±0.010 0.183 ±0.015 0.265 ±0.010 eGFR reg “EGFR REFIT WITHOUT RACE (2021)” 0.591 ±0.006 0.567 ±0.005 0.613 ±0.003 Glucose reg ‘GLUCOSE” 0.262 ±0.017 0.297 ±0.009 0.322 ±0.010 Hemoglobin reg “HEMOGLOBIN (HGB)” 0.373 ±0.007 0.392 ±0.009 0.423 ±0.007 Albumin reg “ALBUMIN” 0.428 ±0.004 0.394 ±0.006 0.450 ±0.006 BUN reg “BLOOD UREA NITROGEN (BUN)” 0.394 ±0.005 0.368 ±0.004 0.410 ±0.004 Sodium reg “SODIUM” 0.260 ±0.009 0.227 ±0.012 0.272 ±0.006 I48 cls Atrial Fibrillation Detection
+> pmh.csv
+> 0.861 ±0.005 0.814 ±0.004 0.857 ±0.005 I50 cls Heart Failure Detection 0.840 ±0.004 0.773 ±0.006 0.839 ±0.004
+> {Z95.0, Z95.2, Z95.3 }cls Cardiac Device Detection 0.854 ±0.010 0.735 ±0.016 0.852 ±0.009 N18 cls Chronic Kidney Disease Detection 0.783 ±0.005 0.748 ±0.004 0.782 ±0.003
+> {E10, E11 }cls Diabetes Mellitus Detection 0.696 ±0.005 0.702 ±0.012 0.720 ±0.006
+> {G47.3, E66.2 }cls Sleep-Related Breathing Disorder Detection 0.686 ±0.016 0.715 ±0.006 0.715 ±0.017
+> {D50, D51, D52, D53, D64 }cls Anemia Detection 0.671 ±0.010 0.665 ±0.009 0.669 ±0.011
+> {J96, R09.02, R06.0 }cls Respiratory Compromise Detection 0.676 ±0.004 0.673 ±0.004 0.685 ±0.002
+> {I26, I80, I82 }cls Venous Thromboembolism Detection 0.675 ±0.011 0.659 ±0.011 0.685 ±0.015
+
+general time-series FMs may learn broadly transferable se-quence patterns, they lack inductive biases tailored to car-diovascular physiology. However, the poor performance of PaPaGei even in the PPG-only setting shows that modality-specific pretraining alone does not guarantee strong perfor-mance. Notably, although PaPaGei is pretrained on 20 mil-lion PPG segments, these originate from only 13,500 sub-jects, whereas CSFM, ECGFounder, and xECG are trained on data from more than 1.5 million individuals (Table 1). The substantially greater subject-level diversity in the latter models may expose them to a wider range of physiological variability and signal conditions, which likely contributes to improved downstream generalization beyond what can be achieved through segment-level scale alone. Multimodal ECG + PPG fusion yields robust and consis-tent gains across tasks, train percentages, and signal lengths, including for models pretrained exclusively on ECG, high-lighting that PPG provides complementary physiological information beyond what can be captured from ECG alone. Notably, the simple late-fusion strategy of averaging uni-modal features slightly outperforms CSFM’s internal mul-timodal mechanism. This may reflect several factors, in-cluding the relative scarcity of paired ECG + PPG seg-ments compared to ECG-only data in CSFM’s multimodal pretraining (Table 1), and the absence of explicit cross-modality alignment losses. Under frozen linear evaluation, preserving unimodal structure and combining it at the fea-ture level may also allow the downstream model to exploit complementary information more flexibly than relying on a fixed internal fusion mechanism. These findings suggest that effective multimodal integration remains a non-trivial design challenge. Signal duration proves more impactful than architectural scale under our frozen linear evaluation: extending inputs to the full 10-minute recordings produces larger and more re-liable improvements than increasing parameter count, and larger model variants do not consistently outperform mid-sized models. When representations are projected to a 256-dimensional space using PCA, performance trends remain similar (Figure S6 & S7), indicating that the occasional un-derperformance of larger model variants is not attributable to differences in feature dimensionality alone. This scaling saturation may instead reflect a representational bottleneck under linear probing: once key rhythm and morphology fea-tures are linearly accessible, additional capacity may en-code information that is not exploitable without fine-tuning. It may also indicate that model size is not the primary con-straint at current pretraining data scales. Hand-crafted domain features provide a strong base-line and usually outperform both MOMENT and Chronos-Bolt, highlighting the continued value of physiologically grounded feature engineering. Importantly, feature concate-nation experiments further reveal complementary strengths between learned and hand-crafted representations. For ECG, augmenting FM embeddings with domain features consistently improves performance, even for models that already outperform standalone domain features, suggest-ing that explicit morphological descriptors add informa-510 25 50 100                
+
+> 0.63
+> 0.65
+> 0.67
+> 0.69
+> 0.71
+> 0.73
+> 0.75
+> AUROC ( ↑)
+> Average Classification Task Performance
+> CSFM-base
+> xECG-10min
+> ECGFounder
+> D-BETA
+> PaPaGei
+> Chronos-Bolt-small
+> MOMENT-base
+> Domain Features
+> 10 25 50 100
+> 0.15
+> 0.2
+> 0.25
+> 0.3
+> 0.35
+> 0.4
+> ECG-only
+> Pearson Correlation ( ↑)
+> Average Regression Task Performance
+> 10 25 50 100
+> 0.62
+> 0.64
+> 0.66
+> 0.68
+> 0.7
+> 0.72
+> AUROC ( ↑)
+> 10 25 50 100
+> 0.15
+> 0.2
+> 0.25
+> 0.3
+> 0.35
+> PPG-only
+> Pearson Correlation ( ↑)
+> 10 25 50 100
+> 0.64
+> 0.66
+> 0.68
+> 0.7
+> 0.72
+> 0.74
+> 0.76
+> % of Train Data
+> AUROC ( ↑)
+> 10 25 50 100
+> 0.25
+> 0.3
+> 0.35
+> 0.4
+> 0.45
+> ECG + PPG
+> % of Train Data
+> Pearson Correlation ( ↑)
+
+Figure 2. Main model comparison on the test set , with average classification task performance (eleven tasks, left column) and regression task performance (nine tasks, right column) shown as a function of the percentage of train visits used (10%, 25%, 50%, 100%). Rows correspond to ECG-only (top), PPG-only (middle), and ECG + PPG (bottom) inputs. Each curve represents one evaluated model and shows the mean performance across five resampling repetitions (standard deviations omitted for visual clarity). 
+
+tion beyond learned FM representations. The compara-tively weaker and less consistent gains for PPG indicate that our ECG-derived features encode particularly informa-tive structure. These findings suggest that current ECG FMs may not fully internalize certain established morphological abstractions, and that incorporating auxiliary objectives or physiologically informed inductive biases during pretrain-ing could help ensure that learned FM representations sub-sume strong handcrafted features rather than merely com-plement them. Interestingly, xECG performs strongly even on PPG-only inputs despite ECG-only pretraining, suggesting par-tial transferability of learned temporal and rhythm-level representations across related cardiovascular signals. Both ECG and PPG reflect manifestations of the same under-lying cardiac cycle, and models trained to capture long-range temporal structure and inter-beat dynamics in ECG may therefore learn higher-level cardiovascular represen-tations that remain informative for PPG. In contrast, the PPG-specific model PaPaGei does not generalize well be-yond its training modality, which may in part reflect the limited subject-level diversity in its pretraining data. To-gether, these findings suggest that large-scale exposure to diverse cardiovascular dynamics may be more important for cross-modality robustness than strict modality special-ization alone. Finally, variability in classification task performance does not follow class prevalence alone (Table S17). For ex-ample, cardiac device detection (2.4% test prevalence) and atrial fibrillation detection (7.6%) achieve among the high-est AUROC values, whereas more prevalent conditions such as anemia (11.1%) and respiratory compromise (13.1%) 610 25 50 100                
+
+> 0.66
+> 0.68
+> 0.7
+> 0.72
+> AUROC ( ↑)
+> Average Classification Task Performance
+> ECG-only
+> PPG-only
+> ECG + PPG
+> 10 25 50 100
+> 0.26
+> 0.28
+> 0.3
+> 0.32
+> 0.34
+> 0.36
+> MOMENT-base
+> Pearson Correlation ( ↑)
+> Average Regression Task Performance
+> 10 25 50 100
+> 0.66
+> 0.68
+> 0.7
+> 0.72
+> 0.74
+> 0.76
+> AUROC ( ↑)
+> 10 25 50 100
+> 0.3
+> 0.35
+> 0.4
+> xECG-10min
+> Pearson Correlation ( ↑)
+> 10 25 50 100
+> 0.68
+> 0.7
+> 0.72
+> 0.74
+> 0.76
+> % of Train Data
+> AUROC ( ↑)
+> 10 25 50 100
+> 0.32
+> 0.34
+> 0.36
+> 0.38
+> 0.4
+> 0.42
+> 0.44
+> CSFM-base
+> % of Train Data
+> Pearson Correlation ( ↑)
+
+Figure 3. Multimodal fusion comparison on the val set , comparing the ECG-only, PPG-only, and ECG + PPG performance for three representative models (MOMENT-base, xECG-10min, CSFM-base). Average classification (left) and regression (right) task performance is shown as a function of the percentage of train visits used. Results for the five remaining models are provided in Figure S2. 
+
+show more modest performance. This indicates that predic-tive accuracy is driven primarily by the strength and speci-ficity of physiological signatures present in ECG and PPG signals rather than by label frequency. Indeed, conditions such as atrial fibrillation and cardiac device implantation are known to produce clear and direct waveform-level man-ifestations, whereas anemia does not have a specific elec-trocardiographic signature. Venous thromboembolism may also occur without overt cardiac strain, consistent with the more modest performance observed for this task. This study has several limitations. All evaluations rely on frozen representations with linear downstream models, and results may differ under end-to-end fine-tuning or non-linear adaptation. The benchmark focuses on the first 10 minutes of ECG and PPG recordings and employs simple temporal aggregation strategies. Future work should ex-tend the evaluation to continuous monitoring scenarios with hours or days of data per patient to better assess long-term temporal modeling. We evaluate seven representative FMs spanning general time-series models and both unimodal and multimodal biosignal models, but many additional models could be included in future comparisons. Although chrono-logical splits prevent temporal leakage and patient overlap, all data originate from a single healthcare system. Gener-alizability across institutions, acquisition devices, and pa-tient populations therefore remains to be evaluated. Fi-nally, while the task suite spans 20 clinically relevant out-comes, it does not cover the full spectrum of cardiovascu-lar and systemic conditions, nor does it assess prospective clinical integration. Future work should also explore more advanced multimodal fusion strategies and temporal aggre-gation methods, and evaluate robustness under distribution 710 25 50 100                
+
+> 0.62
+> 0.64
+> 0.66
+> 0.68
+> 0.7
+> 0.72
+> AUROC ( ↑)
+> Average Classification Task Performance
+> 10 minutes
+> 5 minutes
+> 2 minutes
+> 1 minute
+> 30 seconds
+> 10 seconds
+> 10 25 50 100
+> 0.2
+> 0.25
+> 0.3
+> 0.35
+> MOMENT-base
+> Pearson Correlation ( ↑)
+> Average Regression Task Performance
+> 10 25 50 100
+> 0.7
+> 0.72
+> 0.74
+> AUROC ( ↑)
+> 10 25 50 100
+> 0.32
+> 0.34
+> 0.36
+> 0.38
+> 0.4
+> 0.42
+> xECG
+> Pearson Correlation ( ↑)
+> 10 25 50 100
+> 0.7
+> 0.72
+> 0.74
+> 0.76
+> % of Train Data
+> AUROC ( ↑)
+> 10 25 50 100
+> 0.32
+> 0.34
+> 0.36
+> 0.38
+> 0.4
+> 0.42
+> 0.44
+> CSFM-base
+> % of Train Data
+> Pearson Correlation ( ↑)
+
+Figure 4. Signal length comparison on the val set , showing how the ECG + PPG performance is affected by increasing the signal length from 10 seconds to 10 minutes for three representative models (MOMENT-base, xECG, CSFM-base). Results for the five remaining models are provided in Figure S3, and for ECG and PPG domain features in Figure S4. 
+
+shifts and real-world deployment settings. 
+
+The main actionable takeaways from our study are: (1) Domain-specific biosignal FMs should be preferred over general time-series FMs for cardiovascular prediction tasks. (2) Multimodal ECG and PPG data should be leveraged whenever available, as even simple late-fusion strategies yield consistent improvements over unimodal inputs. (3) Longer signal segments should be prioritized, as increased temporal coverage (up to the full 10-minute signal) consis-tently improves performance across models and tasks. (4) Larger FM variants should not be assumed to outperform smaller ones without task-specific validation. (5) Hand-crafted ECG domain features should be included as a sim-ple yet strong baseline to verify that FMs provide mean-ingful gains, and can offer complementary benefits when combined with learned FM representations. 
+
+## Methods 
+
+We describe the construction of the SignalMC-MED bench-mark, the downstream prediction tasks, and the unified eval-uation framework used to compare FMs. As illustrated in Figure 8, each visit comprises a synchronized 10-minute single-lead ECG and PPG signal that is segmented, encoded using frozen FMs, aggregated into visit-level representa-tions, and evaluated using linear models across 20 clinically relevant tasks. The following sections detail the dataset con-struction, preprocessing, task definitions, evaluation proto-col, and the evaluated FMs and baselines. 
+
+Dataset Construction 
+
+SignalMC-MED is derived from the MC-MED dataset [14, 15], which consists of data from 118,385 emergency de-810 25 50 100                
+
+> 0.62
+> 0.64
+> 0.66
+> 0.68
+> 0.7
+> 0.72
+> AUROC ( ↑)
+> Average Classification Task Performance
+> 10 min – ECG + PPG
+> 10 min – ECG-only
+> 1 min – ECG + PPG
+> 1 min – ECG-only
+> 10 sec – ECG + PPG
+> 10 sec – ECG-only
+> 10 25 50 100
+> 0.2
+> 0.25
+> 0.3
+> 0.35
+> MOMENT-base
+> Pearson Correlation ( ↑)
+> Average Regression Task Performance
+> 10 25 50 100
+> 0.7
+> 0.72
+> 0.74
+> AUROC ( ↑)
+> 10 25 50 100
+> 0.3
+> 0.32
+> 0.34
+> 0.36
+> 0.38
+> 0.4
+> 0.42
+> xECG
+> Pearson Correlation ( ↑)
+> 10 25 50 100
+> 0.7
+> 0.72
+> 0.74
+> 0.76
+> % of Train Data
+> AUROC ( ↑)
+> 10 25 50 100
+> 0.3
+> 0.35
+> 0.4
+> 0.45
+> CSFM-base
+> % of Train Data
+> Pearson Correlation ( ↑)
+
+Figure 5. Multimodal fusion comparison across signal lengths on the val set , comparing the ECG-only (dashed lines) and ECG + PPG (solid lines) performance with multiple signal lengths (10 seconds, 1 minute, 10 minutes) for three representative models (MOMENT-base, xECG, CSFM-base). Results for the five remaining models are provided in Figure S5. 
+
+partment visits involving 70,545 unique adult patients, col-lected at Stanford Health Care between 2020 and 2022. MC-MED includes continuously acquired single-lead ECG and PPG recordings captured using bedside patient moni-tors, together with structured clinical information such as visit outcomes, vital signs, prior medical history, and labo-ratory test results. Among the 54,024 visits with recordings of both ECG and PPG, we identify 24,567 visits with at least 10 minutes of temporally overlapping ECG and PPG data within the first recorded signal segment. After signal preprocessing and quality control, this yields 22,256 visits with valid synchronized ECG and PPG signals, correspond-ing to 17,841 unique patients. For each visit, a contiguous 10-minute ECG/PPG segment is extracted and used for all downstream analyses. We adopt the chronological train/val/test splits provided by MC-MED to reflect a realistic clinical deployment sce-nario. All val visits occur after the final train visit, and all 
+
+test visits occur after the final val visit, with no patient ap-pearing in more than one split. This gives 15,832 train visits (13,011 unique patients), 2,030 val visits (1,882 unique pa-tients), and 1,995 test visits (1,870 unique patients). 
+
+Signal Preprocessing & Segmentation Each 10-minute ECG and PPG signal undergoes standardized preprocess-ing consisting of resampling to a common frequency, signal cleaning using NeuroKit2 [19], and Z-score normalization. ECG and PPG signals are resampled to the same frequency, matched to the pretraining sampling frequency expected by each model (Table 1), with 250 Hz used as the default where applicable. The preprocessed 10-minute signals are then divided into non-overlapping 10-second segments, which form the basic input units for all FMs. For experiments in-910 25 50 100                
+
+> 0.7
+> 0.72
+> 0.74
+> 0.76
+> AUROC ( ↑)
+> Average Classification Task Performance
+> CSFM-base
+> CSFM-base + Domain Features
+> xECG
+> xECG + Domain Features
+> ECGFounder
+> ECGFounder + Domain Features
+> Domain Features
+> 10 25 50 100
+> 0.3
+> 0.35
+> 0.4
+> Pearson Correlation ( ↑)
+> Average Regression Task Performance
+> 10 25 50 100
+> 0.64
+> 0.66
+> 0.68
+> 0.7
+> 0.72
+> 0.74
+> AUROC ( ↑)
+> D-BETA
+> D-BETA + Domain Features
+> PaPaGei
+> PaPaGei + Domain Features
+> Domain Features
+> 10 25 50 100
+> 0.2
+> 0.25
+> 0.3
+> 0.35
+> Pearson Correlation ( ↑)
+> 10 25 50 100
+> 0.66
+> 0.68
+> 0.7
+> 0.72
+> 0.74
+> % of Train Data
+> AUROC ( ↑)
+> Chronos-Bolt-base
+> Chronos-Bolt-base + Domain Features
+> MOMENT-base
+> MOMENT-base + Domain Features
+> Domain Features
+> 10 25 50 100
+> 0.25
+> 0.3
+> 0.35
+> 0.4
+> % of Train Data
+> Pearson Correlation ( ↑)
+
+Figure 6. Effect of concatenating ECG domain features with learned FM representations on the val set . Comparison of ECG-only performance before (solid lines) and after (dashed lines) concatenation of hand-crafted ECG domain features to the frozen FM feature vectors, shown for each of the seven evaluated FMs. The same comparison for PPG domain features is provided in Figure S8. 
+
+volving shorter signal durations, only the initial contiguous subset of segments corresponding to the desired duration is used. As signal quality control, hand-crafted domain fea-tures are also extracted from both the ECG and PPG signals (see Domain Features below for details). Visits for which any preprocessing step fails are excluded from the analysis. 
+
+Benchmark Tasks 
+
+SignalMC-MED includes 20 downstream prediction tasks spanning both regression and binary classification. Regres-sion tasks include patient age and eight laboratory mea-surements obtained during the emergency department visit. Classification tasks include patient sex, emergency depart-ment disposition, and the presence of specific ICD-10 di-agnoses in the patient’s prior medical history, grouped into nine clinically meaningful code sets. These tasks were se-lected to capture a diverse range of physiological, demo-graphic, and clinically relevant outcomes. Table 4 summa-rizes all 20 benchmark tasks and reports CSFM-base perfor-mance across them. The positive class prevalence for each of the binary classification tasks across the train , val , and 
+
+test splits is reported in Table S17. These results provide a reference for relative task difficulty and highlight the het-erogeneity of signal predictability across clinical outcomes. 
+
+Demographics We include two demographic tasks: age re-gression and sex classification. Age is treated as a contin-uous target representing patient age in years at the time of the visit, and sex is formulated as a binary classification task using the recorded biological sex. Labels for both tasks are extracted from the visits.csv file in MC-MED. 
+
+ED Disposition Emergency department disposition is for-mulated as a binary classification task distinguishing vis-10 2 0 2 4 6 8 10 12                                  
+
+> 0
+> 2
+> 4
+> 6
+> 8
+> MOMENT-base
+> Age < 30
+> 30 < Age < 85
+> Age > 85 20246810
+> 2
+> 4
+> 6
+> 8
+> 10
+> Chronos-Bolt-small
+> Age < 30
+> 30 < Age < 85
+> Age > 85 5.0 2.5 0.0 2.5 5.0 7.5 10.0 12.5
+> 0
+> 2
+> 4
+> 6
+> 8
+> 10
+> 12
+> 14
+> PaPaGei
+> Age < 30
+> 30 < Age < 85
+> Age > 85 2.5 0.0 2.5 5.0 7.5 10.0 12.5
+> 0
+> 2
+> 4
+> 6
+> 8
+> 10
+> 12
+> ECGFounder
+> Age < 30
+> 30 < Age < 85
+> Age > 85 20246810 12
+> 0
+> 2
+> 4
+> 6
+> 8
+> xECG-600sec
+> Age < 30
+> 30 < Age < 85
+> Age > 85 20246810 12
+> 4
+> 6
+> 8
+> 10
+> 12
+> CSFM-base
+> Age < 30
+> 30 < Age < 85
+> Age > 85
+
+Figure 7. UMAP visualizations colored by age group . UMAP [20] projections of the train set ECG + PPG feature vectors for six selected models, colored according to three age groups ( < 30 years, 30 − 85 years, > 85 years). CSFM-base, xECG-10min and ECGFounder exhibit clearer age-related structure compared to general time-series FMs (MOMENT-base, Chronos-Bolt-small) and PaPaGei. 
+
+its resulting in discharge from those resulting in inpatient admission, observation status, or intensive care unit admis-sion. Disposition labels are extracted from visits.csv .
+
+Laboratory Measurements Eight laboratory regression tasks corresponding to commonly ordered laboratory tests are included (e.g., electrolytes, renal function markers, and metabolic indicators). For each task, the laboratory value measured during the visit is used as the regression target, extracted from labs.csv . To ensure unambiguous super-vision, only visits with exactly one recorded measurement of the corresponding laboratory test are included. The re-sulting number of train , val , and test visits therefore varies slightly by task, as reported in Table S16. 
+
+ICD-10 Codes Nine binary classification tasks are defined for detecting whether a patient has a documented history of specific ICD-10 diagnoses prior to the emergency depart-ment visit. Diagnoses are grouped into clinically meaning-ful categories, including atrial fibrillation, heart failure, car-diac device implantation, chronic kidney disease, diabetes mellitus, sleep-related breathing disorder, anemia, respi-ratory compromise, and venous thromboembolism. La-bels are derived from the patient prior medical history in 
+
+pmh.csv .
+
+Evaluation Framework 
+
+All FMs are evaluated using a unified linear probing frame-work designed to isolate representation quality, as illus-trated in Figure 8. Models are used exclusively as frozen feature extractors, and no fine-tuning is performed on down-stream tasks. 
+
+Feature Extraction & Aggregation Each 10-minute sig-nal is divided into non-overlapping 10-second segments. For each segment, a fixed-dimensional feature vector is ex-tracted from the FM. Segment-level features are aggregated by computing the mean feature vector across all segments within the selected signal duration (i.e., averaging all 60 segment feature vectors for the full 10-minute signal, or av-eraging the first 6 feature vectors for a 1-minute signal). For the multimodal setting, simple feature-level fusion is performed by averaging the ECG-only and PPG-only visit-level feature vectors. For each visit and FM, this yields an ECG-only, a PPG-only, and an ECG + PPG feature vector of the same dimensionality. 
+
+Downstream Prediction Models Downstream prediction is performed using linear models on top of the aggregated visit-level feature vectors. Ridge regression is used for regression tasks and logistic regression for classification tasks. To minimize task-specific tuning, a single regulariza-tion hyperparameter is selected per FM. The ridge penalty is 11 10-second Segment     
+
+> ∑PPG-only Feature Vector
+> ∑ECG + PPG Feature Vector
+> PPG-only Prediction
+> Prediction
+> . . .
+> 10-second Segment
+> 10-minute PPG Signal
+> 10-second Segment
+> . . .
+> 10-second Segment
+> 10-minute ECG + PPG Signal
+> ∑
+> ECG-only Feature Vector
+> 10-second PPG Segments
+> ∑PPG-only Feature Vector
+> ∑ECG + PPG Feature Vector
+> ECG-only Prediction
+> PPG-only Prediction
+> ECG + PPG Prediction
+> 10-second ECG Segments
+
+Figure 8. Detailed evaluation framework for SignalMC-MED. A 10-minute synchronized single-lead ECG ( black ) and PPG ( red )signal is divided into non-overlapping 10-second segments. ECG and PPG segments are processed separately by a frozen FM ( blue ) to extract a feature vector for each 10-second segment. The evaluated FM is applied to both ECG and PPG inputs, regardless of its pretraining modality. The resulting segment-level features are aggregated via mean pooling ( Σ) to form ECG-only and PPG-only visit-level feature vectors, which are then averaged to obtain an ECG + PPG feature vector of the same dimensionality. Separate linear models are trained on the ECG-only, PPG-only, and ECG + PPG representations to generate task-specific predictions across the 20 benchmark tasks. 
+
+optimized on the val split using the age regression task, and the logistic regression inverse regularization strength is op-timized using the sex classification task. These hyperparam-eters are then fixed and applied across all remaining tasks. Hyperparameter selection is performed separately for ECG-only, PPG-only, and ECG + PPG representations, as well as for each evaluated signal duration. Apart from this reg-ularization selection, all downstream training settings are held constant across modalities, signal lengths, and FMs to ensure fair comparison. The implementation uses scikit-learn [22] (version 1.7.2) with default settings. Feature vec-tors are standardized using the mean and standard deviation computed on the train split, and the same transformation is applied to both val and test .
+
+Evaluation Metrics & Reporting Model performance is evaluated using Pearson correlation for regression tasks and AUROC for classification tasks. To assess data efficiency and robustness, downstream models are trained using 10%, 25%, 50%, and 100% of the available train visits. For each percentage, training visits are sampled with replace-ment from the train split (including the 100% setting), and both downstream training and hyperparameter selection are repeated five times. Results across all 20 benchmark tasks (Table 4, Table S4 - S15) are reported as mean ± standard deviation over the five resampling repetitions, for a given train visit percentage. For summary comparisons (Table 2), the 20 benchmark tasks are grouped into five categories: age regression, sex classification, emergency department disposition classifica-tion, laboratory value regression (aggregated across eight laboratory tests), and ICD-10 diagnosis classification (ag-gregated across nine diagnosis groups). For each resam-pling repetition, performance is first aggregated across tasks within each category and across train visit percentages, yielding one aggregate value per category. The reported re-sults correspond to the mean ± standard deviation across the five resampling repetitions. This produces five aggre-gate mean performance values per FM and modality. Based on these, models are ranked separately for ECG-only, PPG-only, and ECG + PPG by computing ranks within each of the five task categories and then averaging these ranks across categories (Table 3). The mean model ranks are used to facilitate cross-model comparison while reducing sensi-tivity to any individual task. For figure-based comparisons (Figure 2 - 6, Figure S2 -S10), classification performance is aggregated across the eleven binary classification tasks and regression perfor-mance across the nine regression tasks. For clarity of visu-alization, figures display only the mean performance across the five resampling repetitions, omitting standard deviation bars to avoid visual clutter. 
+
+Evaluated Models 
+
+We evaluate eight representative approaches spanning general time-series FMs, ECG-specific and PPG-specific biosignal FMs, a multimodal ECG + PPG FM, and hand-crafted domain features. An overview of the evaluated FMs is provided in Table 1, including model size, pretraining data, feature dimensionality, and expected input sampling frequency. None of the evaluated FMs were pretrained on MC-MED, ensuring strict separation between model pre-training and benchmark evaluation. When multiple model sizes are available within a family, the variant used for pri-mary comparisons is selected based on validation perfor-mance (Table S1). 12 General Time-Series FMs We evaluate MOMENT [10] and Chronos-Bolt [4], which are modality-agnostic time-series FMs pretrained on large-scale heterogeneous time-series corpora. Multiple model sizes are considered (Ta-ble 1). Because these models were pretrained on data with varying sampling frequencies and do not specify an ex-pected input frequency, we resample ECG and PPG signals to the default 250 Hz across all experiments. For Chronos-Bolt, segment-level feature vectors are extracted by using the ChronosBoltPipeline.embed function and mean pooling across all patch token embeddings. For MOMENT, we use the MOMENTPipeline in its default embedding configura-tion. 
+
+Unimodal Biosignal FMs We evaluate four unimodal biosignal FMs: three ECG-specific models (D-BETA [23], ECGFounder [16] and xECG [18]) and one PPG-specific model (PaPaGei [24]). The ECG-specific models are pre-trained on large-scale ECG datasets and incorporate ar-chitectural and training strategies tailored to electrocardio-graphic morphology and rhythm modeling. PaPaGei is pre-trained on large-scale PPG datasets comprising millions of short PPG segments. We use the PaPaGei-S variant across all experiments. Inputs are resampled to match each model’s expected sampling frequency according to Table 1. Because xECG is based on the xLSTM architecture [6], which supports long input sequences, we additionally eval-uate a variant that directly processes the entire 10-minute signal and extracts a single visit-level feature vector. This long-input variant is denoted xECG-10min . Although all these models are pretrained exclusively on single-modality data, we evaluate them on both ECG-only, PPG-only, and ECG + PPG inputs to assess cross-modality generalization. For D-BETA, segment-level feature vectors are extracted using the get ecg feats function, where the ECG/PPG seg-ment is provided as the second channel and the remain-ing 11 channels are set to zero. For ECGFounder, we use the single-lead model version and extract features us-ing ft 1lead ECGFounder with return features set to true. For both xECG and xECG-10min, the ECG/PPG segment is provided as the second channel with the remaining leads set to zero. For PaPaGei, we use ResNet1DMoE configured with a single input channel. 
+
+Multimodal Biosignal FM We evaluate CSFM [12], a multimodal biosignal FM pretrained on more than 2 mil-lion ECGs and over 250,000 paired ECG and PPG record-ings. CSFM is designed to learn both shared and modality-specific representations across cardiovascular signals. In-puts are resampled to the 250 Hz sampling frequency used during pretraining, and multiple model sizes are consid-ered (Table 1). CSFM supports ECG-only, PPG-only, and joint ECG + PPG inputs via an internal multimodal fu-sion mechanism. For consistency with the other evaluated models, primary results are reported using simple feature-level fusion obtained by averaging the unimodal represen-tations. A direct comparison between this feature-level fu-sion and CSFM’s internal fusion mechanism is provided in Figure S9. For ECG-only and PPG-only inputs, the re-spective segment is provided as a single-channel input with 
+
+channel = [1] (ECG) or channel = [12] (PPG). For joint ECG + PPG inputs, the two segments are concatenated and provided as a two-channel input with channel = [1 , 12] .
+
+Domain Features As a simple yet strong baseline, we eval-uate hand-crafted domain features extracted independently from ECG and PPG signals. Following CSFM [12], we compute a 54-dimensional ECG feature vector using Neu-roKit2 [19] and a 306-dimensional PPG feature vector using pyPPG [8]. Signals are resampled to 250 Hz prior to fea-ture extraction for consistency. Features are extracted at the segment level and aggregated using the same mean pooling strategy applied to FM representations. Standard 10-second segments are used for ECG, whereas 20-second segments are used for PPG to satisfy pyPPG’s minimum input length requirement. For PPG, we also consider 60-second and 120-second segments (Table S1). In the multimodal ECG + PPG setting, ECG and PPG domain feature vectors are concate-nated to form a combined 360-dimensional representation. 
+
+Ethics Statement 
+
+This study exclusively utilizes publicly available, de-identified data from the MC-MED dataset [14, 15], and complies with the data use policies governing MC-MED. 
+
+## Data Availability 
+
+SignalMC-MED is derived from the MC-MED dataset which is available on PhysioNet [9] at https : / / physionet.org/content/mc-med .
+
+## Code Availability 
+
+The code for preprocessing, feature extraction and model evaluation is available at https : / / github . com / fregu856/SignalMC- MED . Further implementation details are available from FKG upon reasonable request. 
+
+## Acknowledgments 
+
+DAC was funded by an NIHR Research Professorship; a Royal Academy of Engineering Research Chair; and the In-noHK Hong Kong Centre for Cerebro-cardiovascular Engi-neering (COCHE); and was supported by the National Insti-tute for Health and Care Research (NIHR) Oxford Biomed-ical Research Centre (BRC) and the Pandemic Sciences In-stitute at the University of Oxford. XG was supported by funding from the Engineering and Physical Sciences Re-search Council IAA (EP/X525777/1), the Medical Research 13 Council (MR/X50273X/1), and a Smart Data Research UK Fellowship (UKRI4004). This study was also supported by the NIHR Health Protection Research Unit in Health-care Associated Infections and Antimicrobial Resistance (NIHR207397), a partnership between the UK Health Se-curity Agency (UKHSA), the University of Oxford, and the NIHR Oxford Biomedical Research Centre. The views ex-pressed are those of the authors and not necessarily those of the NIHR, UKHSA or the Department of Health and Social Care. 
+
+## Author Contributions 
+
+FKG was responsible for project conceptualization, soft-ware implementation, preparation of figures and tables, and manuscript drafting. XG, MC, and PP contributed to the design of experiments and to the interpretation and pre-sentation of results. DAC and XG supervised the project. DAC and DWE acquired funding. All authors contributed to manuscript revision and finalization. 
+
+## Competing Interests 
+
+The authors declare no competing interests. 
+
+## Declaration of Generative AI Use 
+
+During the preparation of this manuscript, the authors used ChatGPT 5.2 to assist with language editing and drafting. All content produced using this tool was critically reviewed, edited and validated by the authors, who take full responsi-bility for the final content of the manuscript. 
+
+## References 
+
+[1] Salar Abbaspourazad, Oussama Elachqar, Andrew Miller, Saba Emrani, Udhyakumar Nallasamy, and Ian Shapiro. Large-scale training of foundation models for wearable biosignals. In International Conference on Learning Rep-resentations (ICLR) , 2024. 1 [2] M A Al-Masud, Juan Lopez Alcaraz, and Nils Strodthoff. Benchmarking ECG foundational models: A reality check across clinical tasks. In International Conference on Learn-ing Representations (ICLR) , 2026. 1 [3] Juan Miguel Lopez Alcaraz, Hjalmar Bouma, and Nils Strodthoff. Enhancing clinical decision support with physio-logical waveforms—a multimodal benchmark in emergency care. Computers in Biology and Medicine , 192:110196, 2025. 1 [4] Abdul Fatir Ansari, Lorenzo Stella, Ali Caner Turkmen, Xiyuan Zhang, Pedro Mercado, Huibin Shen, Oleksandr Shchur, Syama Sundar Rangapuram, Sebastian Pineda Arango, Shubham Kapoor, Jasper Zschiegner, Danielle C. Maddix, Hao Wang, Michael W. Mahoney, Kari Torkkola, Andrew Gordon Wilson, Michael Bohlke-Schneider, and Bernie Wang. Chronos: Learning the language of time se-ries. Transactions on Machine Learning Research (TMLR) ,2024. 2, 13 [5] Karim Bayoumy, Mohammed Gaber, Abdallah Elshafeey, Omar Mhaimeed, Elizabeth H Dineen, Francoise A Marvel, Seth S Martin, Evan D Muse, Mintu P Turakhia, Khaldoun G Tarakji, and Mohamed B Elshazly. Smart wearable devices in cardiovascular care: where we are and how to move for-ward. Nature Reviews Cardiology , 18(8):581–599, 2021. 1 [6] Maximilian Beck, Korbinian P¨ oppel, Markus Spanring, An-dreas Auer, Oleksandra Prudnikova, Michael Kopp, G¨ unter Klambauer, Johannes Brandstetter, and Sepp Hochreiter. xL-STM: Extended long short-term memory. Advances in Neu-ral Information Processing Systems (NeurIPS) , 37:107547– 107603, 2024. 13 [7] Rishi Bommasani, Drew A Hudson, Ehsan Adeli, Russ Alt-man, Simran Arora, Sydney von Arx, Michael S Bernstein, Jeannette Bohg, Antoine Bosselut, Emma Brunskill, et al. On the opportunities and risks of foundation models. arXiv preprint arXiv:2108.07258 , 2021. 1 [8] M´ arton ´ A Goda, Peter H Charlton, and Joachim A Behar. pyPPG: a python toolbox for comprehensive photoplethys-mography signal analysis. Physiological Measurement , 45 (4):045001, 2024. 13 [9] Ary L Goldberger, Luis AN Amaral, Leon Glass, Jeffrey M Hausdorff, Plamen Ch Ivanov, Roger G Mark, Joseph E Mi-etus, George B Moody, Chung-Kang Peng, and H Eugene Stanley. PhysioBank, PhysioToolkit, and PhysioNet: Com-ponents of a new research resource for complex physiologic signals. Circulation , 101(23):e215–e220, 2000. 13 [10] Mononito Goswami, Konrad Szafer, Arjun Choudhry, Yifu Cai, Shuo Li, and Artur Dubrawski. MOMENT: A family of open time-series foundation models. In International Con-ference on Machine Learning (ICML) , pages 16115–16152, 2024. 2, 13 [11] Xiao Gu, Yuxuan Shu, Jinpei Han, Yuxuan Liu, Zhang-daihong Liu, James Anibal, Veer Sangha, Edward Phillips, Bradley Segal, Hang Yuan, et al. Foundation models for biosignals: A survey. Authorea Preprints , 2025. 1 [12] Xiao Gu, Wei Tang, Jinpei Han, Veer Sangha, Fenglin Liu, Shreyank N Gowda, Antonio H Ribeiro, Patrick Schwab, Kim Branson, Lei Clifton, Antonio Luiz P Ribeiro, Zhang-daihong Liu, and David A Clifton. Cardiac health assessment across scenarios and devices using a multimodal foundation model pretrained on data from 1.7 million individuals. Na-ture Machine Intelligence , 8:220–233, 2026. 1, 2, 13 [13] Yu Han, Vittorio Murino, Xiaofeng Liu, Xiang Zhang, and Cheng Ding. A systematic review on foundation models for electrocardiogram analysis: initial strides and expansive horizons. arXiv preprint arXiv:2410.19877 , 2024. 1 [14] Aman Kansal, Emma Chen, Boyang Tom Jin, Pranav Ra-jpurkar, and David A Kim. MC-MED, multimodal clinical monitoring in the emergency department. Scientific Data , 12 (1):1094, 2025. 1, 8, 13 [15] Aman Kansal, Emma Chen, Tom Jin, Pranav Rajpurkar, and David Kim. Multimodal Clinical Monitoring in the Emer-gency Department (MC-MED). PhysioNet , 2025. Version 1.0.1. 1, 8, 13 
+
+14 [16] Jun Li, Aaron D Aguirre, Valdery Moura Junior, Jiarui Jin, Che Liu, Lanhai Zhong, Chenxi Sun, Gari Clifford, M Bran-don Westover, and Shenda Hong. An electrocardiogram foundation model built on over 10 million recordings. NEJM AI , 2(7):AIoa2401033, 2025. 1, 2, 13 [17] Yuxuan Liang, Haomin Wen, Yuqi Nie, Yushan Jiang, Ming Jin, Dongjin Song, Shirui Pan, and Qingsong Wen. Founda-tion models for time series analysis: A tutorial and survey. In 
+
+Proceedings of the 30th ACM SIGKDD conference on knowl-edge discovery and data mining , pages 6555–6565, 2024. 1 [18] Riccardo Lunelli, Angus Nicolson, Samuel Martin Pr¨ oll, Sebastian Johannes Reinstadler, Axel Bauer, and Clemens Dlaska. BenchECG and xECG: a benchmark and baseline for ECG foundation models. arXiv preprint arXiv:2509.10151 , 2025. 1, 2, 13 [19] Dominique Makowski, Tam Pham, Zen J. Lau, Jan C. Brammer, Franc ¸ois Lespinasse, Hung Pham, Christopher Sch¨ olzel, and Annabel S H Chen. NeuroKit2: A python toolbox for neurophysiological signal processing, 2020. 9, 13 [20] Leland McInnes, John Healy, and James Melville. UMAP: Uniform manifold approximation and projection for dimen-sion reduction. arXiv preprint arXiv:1802.03426 , 2018. 11 [21] Kaden McKeen, Sameer Masood, Augustin Toma, Barry Ru-bin, and Bo Wang. ECG-FM: An open electrocardiogram foundation model. Jamia Open , 8(5):ooaf122, 2025. 1 [22] Fabian Pedregosa, Ga¨ el Varoquaux, Alexandre Gramfort, Vincent Michel, Bertrand Thirion, Olivier Grisel, Mathieu Blondel, Peter Prettenhofer, Ron Weiss, Vincent Dubourg, Jake Vanderplas, Alexandre Passos, David Cournapeau, Matthieu Brucher, Matthieu Perrot, and ´ Edouard Duchesnay. Scikit-learn: Machine learning in python. Journal of Ma-chine Learning Research (JMLR) , 12(85):2825–2830, 2011. 12 [23] Manh Pham Hung, Aaqib Saeed, and Dong Ma. Boosting masked ECG-text auto-encoders as discriminative learners. In International Conference on Machine Learning (ICML) ,pages 49277–49291, 2025. 1, 2, 13 [24] Arvind Pillai, Dimitris Spathis, Fahim Kawsar, and Moham-mad Malekzadeh. PaPaGei: Open foundation models for optical physiological signals. In International Conference on Learning Representations (ICLR) , pages 48230–48261, 2025. 2, 13 [25] Mithun Saha, Maxwell A Xu, Wanting Mao, Sameer Neu-pane, James M Rehg, and Santosh Kumar. Pulse-PPG: An open-source field-trained PPG foundation model for wear-able applications across lab and field settings. Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies , 9(3):1–35, 2025. 1 [26] Mohamed Adel Serhani, Hadeel T. El Kassabi, Heba Ismail, and Alramzana Nujum Navaz. ECG monitoring systems: Review, architecture, processes, and key challenges. Sen-sors , 20(6):1796, 2020. 1 [27] Sameer Sundrani, Julie Chen, Boyang Tom Jin, Zahra Shak-eri Hossein Abad, Pranav Rajpurkar, and David Kim. Pre-dicting patient decompensation from continuous physio-logic monitoring in the emergency department. npj Digital Medicine , 6(1):60, 2023. 1 [28] Megha Thukral, Cyrus Tanade, Simon A Lee, Juhyeon Lee, Hao Zhou, Keum San Chun, Migyeong Gwak, Viswam Nathan, Md Mahbubur Rahman, Li Zhu, et al. Wavelet-driven masked multiscale reconstruction for PPG foundation models. arXiv preprint arXiv:2601.12215 , 2026. 1 [29] Jiexia Ye, Yongzi Yu, Weiqi Zhang, Le Wang, Jia Li, and Fugee Tsung. Empowering time series analysis with foun-dation models: A comprehensive survey. arXiv preprint arXiv:2405.02358 , 2024. 1 
+
+15 SignalMC-MED: A Multimodal Benchmark for Evaluating Biosignal Foundation Models on Single-Lead ECG and PPG 
+
+## Supplementary Material A. Supplementary Figures 
+
+> This section contains Figure S1 - S11. 16
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+> Amplitude
+
+Segment 1 | Start time: 01:40 Segment 2 | Start time: 03:20 Segment 3 | Start time: 05:00 Segment 4 | Start time: 06:40 Segment 5 | Start time: 08:20 
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+> Amplitude
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+4
+
+> Amplitude
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+4
+
+> Amplitude
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+> Amplitude
+
+4
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+> Amplitude
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+> Amplitude
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+> Amplitude
+
+2
+
+0
+
+2
+
+4
+
+6
+
+> Amplitude
+
+0 0.5 1 1.5 2 2.5 3
+
+Seconds 
+
+3
+
+2
+
+1
+
+0
+
+1
+
+2
+
+3
+
+4
+
+> Amplitude
+
+0 0.5 1 1.5 2 2.5 3
+
+Seconds 
+
+0 0.5 1 1.5 2 2.5 3
+
+Seconds 
+
+0 0.5 1 1.5 2 2.5 3
+
+Seconds 
+
+0 0.5 1 1.5 2 2.5 3
+
+Seconds 
+
+> Visit 1  Visit 2  Visit 3  Visit 4  Visit 5  Visit 6  Visit 7  Visit 8  Visit 9  Visit 10
+
+Figure S1. Additional synchronized ECG and PPG signals in SignalMC-MED . An extension of Figure 1b, with seven more examples of synchronized single-lead ECG ( black ) and PPG ( red ) signals from visits in the train set. 
+
+17 10 25 50 100 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+> AUROC ( ↑)
+
+Average Classification Task Performance 
+
+> ECG-only
+> PPG-only
+> ECG + PPG
+
+10 25 50 100 
+
+0.2
+
+0.22 
+
+0.24 
+
+0.26 
+
+0.28 
+
+0.3
+
+> PaPaGei
+> Pearson Correlation ( ↑)
+
+Average Regression Task Performance 
+
+10 25 50 100 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+
+10 25 50 100 
+
+0.26 
+
+0.28 
+
+0.3
+
+0.32 
+
+0.34 
+
+0.36 
+
+0.38 
+
+> Chronos-Bolt-small
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.62 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+
+10 25 50 100 
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+> D-BETA
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+0.74 
+
+> AUROC ( ↑)
+
+10 25 50 100 
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+> ECGFounder
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+0.74 
+
+% of Train Data 
+
+> AUROC ( ↑)
+
+10 25 50 100 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+> Domain Features
+
+% of Train Data 
+
+> Pearson Correlation ( ↑)
+
+Figure S2. Multimodal fusion comparison on val for the remaining models . An extension of Figure 3, comparing the ECG-only, PPG-only, and ECG + PPG performance for the remaining models (PaPaGei, Chronos-Bolt-small, D-BETA, ECGFounder, Domain Features). 
+
+18 10 25 50 100 
+
+0.58 
+
+0.6
+
+0.62 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+> AUROC ( ↑)
+
+Average Classification Task Performance 
+
+10 minutes 
+
+5 minutes 
+
+2 minutes 
+
+1 minute 
+
+30 seconds 
+
+10 seconds 
+
+10 25 50 100 
+
+0.1
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+> PaPaGei
+> Pearson Correlation ( ↑)
+
+Average Regression Task Performance 
+
+10 25 50 100 
+
+0.6
+
+0.62 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+
+10 25 50 100 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+> Chronos-Bolt-small
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+
+10 25 50 100 
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+> D-BETA
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.68 
+
+0.7
+
+0.72 
+
+0.74 
+
+> AUROC ( ↑)
+
+10 25 50 100 
+
+0.3
+
+0.35 
+
+0.4
+
+> ECGFounder
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.69 
+
+0.7
+
+0.71 
+
+0.72 
+
+0.73 
+
+0.74 
+
+% of Train Data 
+
+> AUROC ( ↑)
+
+10 minutes 
+
+5 minutes 
+
+2 minutes 
+
+1 minute 
+
+10 25 50 100 
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+> Domain Features (concat)
+
+% of Train Data 
+
+> Pearson Correlation ( ↑)
+
+Figure S3. Signal length comparison on val for the remaining models . An extension of Figure 4, showing how the ECG + PPG 
+
+performance is affected by increasing the signal length from 10 seconds to 10 minutes for the remaining models (PaPaGei, Chronos-Bolt-small, D-BETA, ECGFounder, Domain Features). 
+
+19 10 25 50 100 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+0.74 
+
+> AUROC ( ↑)
+
+Average Classification Task Performance 
+
+10 minutes 
+
+5 minutes 
+
+2 minutes 
+
+1 minute 
+
+30 seconds 
+
+10 seconds 
+
+10 25 50 100 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+> ECG-only
+> Pearson Correlation ( ↑)
+
+Average Regression Task Performance 
+
+10 25 50 100 
+
+0.64 
+
+0.66 
+
+0.68 
+
+% of Train Data 
+
+> AUROC ( ↑)
+
+10 minutes 
+
+5 minutes 
+
+2 minutes 
+
+1 minute 
+
+10 25 50 100 
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+> PPG-only
+
+% of Train Data 
+
+> Pearson Correlation ( ↑)
+
+Figure S4. Signal length comparison on val for hand-crafted ECG and PPG domain features , showing how the performance is affected by increasing the signal length from 10 seconds to 10 minutes for ECG, and from 1 minute to 10 minutes for PPG. This analysis complements Figure 4 & S3. 
+
+20 10 25 50 100 
+
+0.55 
+
+0.6
+
+0.65 
+
+0.7
+
+> AUROC ( ↑)
+
+Average Classification Task Performance 
+
+10 min – ECG + PPG 
+
+10 min – PPG-only 
+
+1 min – ECG + PPG 
+
+1 min – PPG-only 
+
+10 sec – ECG + PPG 
+
+10 sec – PPG-only 
+
+10 25 50 100 
+
+0.1
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+> PaPaGei
+> Pearson Correlation ( ↑)
+
+Average Regression Task Performance 
+
+10 25 50 100 
+
+0.6
+
+0.65 
+
+0.7
+
+> AUROC ( ↑)
+
+10 min – ECG + PPG 
+
+10 min – ECG-only 
+
+1 min – ECG + PPG 
+
+1 min – ECG-only 
+
+10 sec – ECG + PPG 
+
+10 sec – ECG-only 
+
+10 25 50 100 
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+> Chronos-Bolt-small
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+
+10 min – ECG + PPG 
+
+10 min – ECG-only 
+
+1 min – ECG + PPG 
+
+1 min – ECG-only 
+
+10 sec – ECG + PPG 
+
+10 sec – ECG-only 
+
+10 25 50 100 
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+> D-BETA
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.68 
+
+0.7
+
+0.72 
+
+0.74 
+
+> AUROC ( ↑)
+
+10 min – ECG + PPG 
+
+10 min – ECG-only 
+
+1 min – ECG + PPG 
+
+1 min – ECG-only 
+
+10 sec – ECG + PPG 
+
+10 sec – ECG-only 
+
+10 25 50 100 
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+> ECGFounder
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.69 
+
+0.7
+
+0.71 
+
+0.72 
+
+0.73 
+
+0.74 
+
+% of Train Data 
+
+> AUROC ( ↑)
+
+10 min – ECG + PPG 
+
+10 min – ECG-only 
+
+1 min – ECG + PPG 
+
+1 min – ECG-only 
+
+10 25 50 100 
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+> Domain Features
+
+% of Train Data 
+
+> Pearson Correlation ( ↑)
+
+Figure S5. Multimodal fusion comparison across signal lengths on val for the remaining models . An extension of Figure 5, comparing the PPG-only and ECG + PPG performance for PaPaGei, and comparing the ECG-only and ECG + PPG performance for Chronos-Bolt-small, D-BETA, ECGFounder, and Domain Features. 
+
+21 10 25 50 100 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+
+Average Classification Task Performance 
+
+MOMENT-small 
+
+MOMENT-base 
+
+MOMENT-large 
+
+10 25 50 100 
+
+0.28 
+
+0.3
+
+0.32 
+
+0.34 
+
+0.36 
+
+> MOMENT
+> Pearson Correlation ( ↑)
+
+Average Regression Task Performance 
+
+10 25 50 100 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+
+Chronos-Bolt-tiny 
+
+Chronos-Bolt-mini 
+
+Chronos-Bolt-small 
+
+Chronos-Bolt-base 
+
+10 25 50 100 
+
+0.28 
+
+0.3
+
+0.32 
+
+0.34 
+
+0.36 
+
+0.38 
+
+> Chronos-Bolt
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.72 
+
+0.74 
+
+0.76 
+
+% of Train Data 
+
+> AUROC ( ↑)
+
+CSFM-tiny 
+
+CSFM-base 
+
+CSFM-large 
+
+10 25 50 100 
+
+0.34 
+
+0.36 
+
+0.38 
+
+0.4
+
+0.42 
+
+0.44 
+
+> CSFM
+
+% of Train Data 
+
+> Pearson Correlation ( ↑)
+
+Figure S6. Model size comparison on the val set , comparing the ECG + PPG performance of small/base/large model variants for MOMENT, of tiny/mini/small/base variants for Chronos-Bolt, and of tiny/base/large variants for CSFM. 
+
+22 10 25 50 100 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+
+Average Classification Task Performance 
+
+MOMENT-small 
+
+MOMENT-base 
+
+MOMENT-large 
+
+10 25 50 100 
+
+0.28 
+
+0.3
+
+0.32 
+
+0.34 
+
+0.36 
+
+> MOMENT
+> Pearson Correlation ( ↑)
+
+Average Regression Task Performance 
+
+10 25 50 100 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+
+Chronos-Bolt-tiny 
+
+Chronos-Bolt-mini 
+
+Chronos-Bolt-small 
+
+Chronos-Bolt-base 
+
+10 25 50 100 
+
+0.28 
+
+0.3
+
+0.32 
+
+0.34 
+
+0.36 
+
+0.38 
+
+> Chronos-Bolt
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.72 
+
+0.74 
+
+0.76 
+
+% of Train Data 
+
+> AUROC ( ↑)
+
+CSFM-tiny 
+
+CSFM-base 
+
+CSFM-large 
+
+10 25 50 100 
+
+0.34 
+
+0.36 
+
+0.38 
+
+0.4
+
+0.42 
+
+0.44 
+
+> CSFM
+
+% of Train Data 
+
+> Pearson Correlation ( ↑)
+
+Figure S7. Model size comparison with PCA on the val set . The same analysis as Figure S6, but with all visit-level feature vectors projected down to 256 dimensions using PCA prior to downstream linear probing. Performance trends remain similar: larger model variants do not reliably outperform smaller ones. This indicates that differences in feature dimensionality are not the primary explanation for the occasional underperformance of larger models. 
+
+23 10 25 50 100 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+
+Average Classification Task Performance 
+
+> CSFM-base
+> CSFM-base + Domain Features
+> xECG
+> xECG + Domain Features
+> ECGFounder
+> ECGFounder + Domain Features
+> Domain Features
+
+10 25 50 100 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+> Pearson Correlation ( ↑)
+
+Average Regression Task Performance 
+
+10 25 50 100 
+
+0.62 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+> AUROC ( ↑)
+> D-BETA
+> D-BETA + Domain Features
+> PaPaGei
+> PaPaGei + Domain Features
+> Domain Features
+
+10 25 50 100 
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+% of Train Data 
+
+> AUROC ( ↑)
+> Chronos-Bolt-base
+> Chronos-Bolt-base + Domain Features
+> MOMENT-base
+> MOMENT-base + Domain Features
+> Domain Features
+
+10 25 50 100 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+% of Train Data 
+
+> Pearson Correlation ( ↑)
+
+Figure S8. Effect of concatenating PPG domain features with learned FM representations on the val set . Comparison of PPG-only performance before (solid lines) and after (dashed lines) concatenation of hand-crafted PPG domain features to the frozen FM feature vectors, shown for each of the seven evaluated FMs. Identical analysis as in Figure 6, but for PPG domain features. 
+
+24 10 25 50 100 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+0.74 
+
+> AUROC ( ↑)
+
+Average Classification Task Performance 
+
+> 10 min – ECG + PPG
+> 10 min – ECG + PPG (internal)
+> 1 min – ECG + PPG
+> 1 min – ECG + PPG (internal)
+> 10 sec – ECG + PPG
+> 10 sec – ECG + PPG (internal)
+
+10 25 50 100 
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+> CSFM-tiny
+> Pearson Correlation ( ↑)
+
+Average Regression Task Performance 
+
+10 25 50 100 
+
+0.7
+
+0.72 
+
+0.74 
+
+0.76 
+
+> AUROC ( ↑)
+
+10 25 50 100 
+
+0.3
+
+0.35 
+
+0.4
+
+0.45 
+
+> CSFM-base
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.68 
+
+0.7
+
+0.72 
+
+0.74 
+
+% of Train Data 
+
+> AUROC ( ↑)
+
+10 25 50 100 
+
+0.3
+
+0.35 
+
+0.4
+
+> CSFM-large
+
+% of Train Data 
+
+> Pearson Correlation ( ↑)
+
+Figure S9. Multimodal fusion comparison for CSFM on the val set . Comparison between feature-level fusion (solid lines), obtained by averaging independently extracted ECG-only and PPG-only features, and CSFM’s internal multimodal fusion mechanism (dashed lines), which jointly processes ECG + PPG as a two-channel input. Results are shown for multiple signal lengths (10 seconds, 1 minute, 10 minutes) and all three CSFM model variants (tiny, base, large). Feature-level fusion consistently achieves slightly better performance. 
+
+25 10 25 50 100 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+0.74 
+
+0.76 
+
+> AUROC ( ↑)
+
+Average Classification Task Performance 
+
+> 10 min – CSFM-base
+> 10 min – Domain Features
+> 1 min – CSFM-base
+> 1 min – Domain Features
+> 10 sec – CSFM-base
+> 10 sec – Domain Features
+
+10 25 50 100 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+> ECG-only
+> Pearson Correlation ( ↑)
+
+Average Regression Task Performance 
+
+10 25 50 100 
+
+0.64 
+
+0.66 
+
+0.68 
+
+0.7
+
+0.72 
+
+> AUROC ( ↑)
+> 10 min – CSFM-base
+> 10 min – Domain Features
+> 1 min – CSFM-base
+> 1 min – Domain Fetaures
+
+10 25 50 100 
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+> PPG-only
+> Pearson Correlation ( ↑)
+
+10 25 50 100 
+
+0.7
+
+0.72 
+
+0.74 
+
+0.76 
+
+% of Train Data 
+
+> AUROC ( ↑)
+
+10 25 50 100 
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+0.45 
+
+> ECG + PPG
+
+% of Train Data 
+
+> Pearson Correlation ( ↑)
+
+Figure S10. Comparison of CSFM-base and Domain Features across signal lengths on the val set , showing ECG-only, PPG-only, and ECG + PPG performance of CSFM-base (solid lines) and Domain Features (dashed lines) with multiple signal lengths. Especially for ECG-only, the performance gap narrows with longer signals. 
+
+26 2 0 2 4 6 8 10 12 
+
+> 0
+> 2
+> 4
+> 6
+> 8
+
+MOMENT-base       
+
+> I48 label 0
+> I48 label 1 20246810
+> 2
+> 4
+> 6
+> 8
+> 10
+
+Chronos-Bolt-small        
+
+> I48 label 0
+> I48 label 1 5.0 2.5 0.0 2.5 5.0 7.5 10.0 12.5
+> 0
+> 2
+> 4
+> 6
+> 8
+> 10
+> 12
+> 14
+
+PaPaGei       
+
+> I48 label 0
+> I48 label 1 2.5 0.0 2.5 5.0 7.5 10.0 12.5
+> 0
+> 2
+> 4
+> 6
+> 8
+> 10
+> 12
+
+ECGFounder        
+
+> I48 label 0
+> I48 label 1 20246810 12
+> 0
+> 2
+> 4
+> 6
+> 8
+
+xECG-600sec        
+
+> I48 label 0
+> I48 label 1 20246810 12
+> 4
+> 6
+> 8
+> 10
+> 12
+
+CSFM-base 
+
+> I48 label 0
+> I48 label 1
+
+Figure S11. UMAP visualizations colored by atrial fibrillation (I48) label . UMAP projections of the train set ECG + PPG feature vectors for six selected models. CSFM-base, xECG-10min and ECGFounder exhibit clearer separation between positive and negative cases compared to general time-series FMs (MOMENT-base, Chronos-Bolt-small) and PaPaGei. 
+
+27 B. Supplementary Tables 
+
+This section contains Table S1 - S16. 28 Table S1. Comparison of all model variants on the val set , with results averaged across training with 10%, 25%, 50%, and 100% of the train visits (five resampling repeats per train fraction). Regression tasks are evaluated using Pearson correlation ( ↑), and classification tasks using AUROC ( ↑). Bold red marks the best result in each column, bold marks the second-best, and underline marks the third-best. Based on these results and the corresponding ranking in Table S2, one variant each for MOMENT, Chronos-Bolt, xECG, CSFM, and the PPG domain features is selected for inclusion in the main model comparison on the test set. These selected variants are here indicated with italics and a superscript ∗ next to the model name. 
+
+Model Name Modality Age reg Sex cls ED dispo cls Labs reg ICD-10 cls 
+
+MOMENT-small ECG-only 0.668 0.750 0.696 0.239 0.685 MOMENT-small PPG-only 0.676 0.721 0.665 0.224 0.652 MOMENT-small ECG + PPG 0.747 0.781 0.706 0.272 0.701 
+
+MOMENT-base ∗ ECG-only 0.680 0.757 0.695 0.253 0.683 
+
+MOMENT-base ∗ PPG-only 0.691 0.725 0.680 0.233 0.660 
+
+MOMENT-base ∗ ECG + PPG 0.762 0.791 0.703 0.284 0.700 MOMENT-large ECG-only 0.635 0.720 0.687 0.223 0.673 MOMENT-large PPG-only 0.638 0.690 0.645 0.200 0.628 MOMENT-large ECG + PPG 0.722 0.755 0.690 0.254 0.688 Chronos-Bolt-tiny ECG-only 0.667 0.721 0.687 0.236 0.685 Chronos-Bolt-tiny PPG-only 0.680 0.718 0.682 0.233 0.649 Chronos-Bolt-tiny ECG + PPG 0.739 0.761 0.696 0.265 0.690 Chronos-Bolt-mini ECG-only 0.677 0.732 0.697 0.252 0.671 Chronos-Bolt-mini PPG-only 0.707 0.721 0.681 0.248 0.660 Chronos-Bolt-mini ECG + PPG 0.762 0.777 0.707 0.292 0.691 
+
+Chronos-Bolt-small ∗ ECG-only 0.687 0.745 0.696 0.249 0.675 
+
+Chronos-Bolt-small ∗ PPG-only 0.705 0.719 0.676 0.250 0.650 
+
+Chronos-Bolt-small ∗ ECG + PPG 0.765 0.785 0.707 0.289 0.693 Chronos-Bolt-base ECG-only 0.670 0.749 0.694 0.245 0.685 Chronos-Bolt-base PPG-only 0.726 0.725 0.688 0.260 0.659 Chronos-Bolt-base ECG + PPG 0.764 0.784 0.704 0.287 0.697 xECG ECG-only 0.768 0.805 0.728 0.323 0.721 xECG PPG-only 0.737 0.750 0.685 0.245 0.666 xECG ECG + PPG 0.815 0.829 0.731 0.346 0.726 
+
+xECG-10min ∗ ECG-only 0.771 0.809 0.730 0.334 0.724 
+
+xECG-10min ∗ PPG-only 0.756 0.755 0.695 0.264 0.672 
+
+xECG-10min ∗ ECG + PPG 0.818 0.833 0.733 0.352 0.729 ECGFounder ECG-only 0.760 0.769 0.716 0.299 0.715 ECGFounder PPG-only 0.672 0.724 0.674 0.211 0.658 ECGFounder ECG + PPG 0.808 0.804 0.721 0.308 0.722 D-BETA ECG-only 0.631 0.719 0.692 0.214 0.698 D-BETA PPG-only 0.599 0.700 0.657 0.152 0.635 D-BETA ECG + PPG 0.675 0.755 0.695 0.228 0.699 PaPaGei ECG-only 0.542 0.670 0.648 0.189 0.663 PaPaGei PPG-only 0.664 0.688 0.656 0.245 0.655 PaPaGei ECG + PPG 0.676 0.722 0.665 0.229 0.678 CSFM-tiny ECG-only 0.703 0.774 0.705 0.278 0.706 CSFM-tiny PPG-only 0.746 0.750 0.693 0.270 0.671 CSFM-tiny ECG + PPG 0.800 0.809 0.721 0.323 0.715 
+
+CSFM-base ∗ ECG-only 0.775 0.804 0.73 5 0.346 0.741 
+
+CSFM-base ∗ PPG-only 0.784 0.758 0.720 0.303 0.701 
+
+CSFM-base ∗ ECG + PPG 0.834 0.829 0.740 0.371 0.744 
+
+CSFM-large ECG-only 0.761 0.810 0.721 0.320 0.720 CSFM-large PPG-only 0.759 0.763 0.700 0.268 0.686 CSFM-large ECG + PPG 0.824 0.839 0.732 0.351 0.730 ECG Domain Features ECG-only 0.690 0.668 0.723 0.327 0.732 PPG Domain Features - 20sec PPG-only 0.643 0.731 0.693 0.190 0.668 
+
+PPG Domain Features - 60sec ∗ PPG-only 0.699 0.732 0.694 0.214 0.668 PPG Domain Features - 120sec PPG-only 0.690 0.733 0.695 0.204 0.669 ECG Domain Features + PPG Domain Features - 20sec (concat) ECG + PPG 0.745 0.760 0.728 0.271 0.732 
+
+ECG Domain Features + PPG Domain Features - 60sec (concat) ∗ ECG + PPG 0.784 0.760 0.725 0.293 0.726 ECG Domain Features + PPG Domain Features - 120sec (concat) ECG + PPG 0.773 0.761 0.726 0.275 0.729 
+
+29 Table S2. Ranking of all model variants on the val set , computed jointly across ECG-only, PPG-only, and ECG + PPG. Mean model rank (↓) across the five aggregated task categories based on Table S1. Based on this ranking, one variant each for MOMENT, Chronos-Bolt, xECG, CSFM, and the PPG domain features is selected for inclusion in the main model comparison on the test set. 
+
+Rank Model Name Modality Model Ranks Mean Model Rank ( ↓)
+
+1 CSFM-base ECG + PPG 1,4,1,1,1 1.6 2 CSFM-large ECG + PPG 2,1,4,3,5 3.0 3 xECG-10min ECG + PPG 3,2,3,2,7 3.4 4 xECG ECG + PPG 4,3,5,4,8 4.8 5 CSFM-base ECG-only 9,9,2,5,2 5.4 6 xECG-10min ECG-only 11,6,6,6,10 7.8 7 xECG ECG-only 12,8,7,8,12 9.4 8 CSFM-tiny ECG + PPG 6,7,12,9,15 9.8 9 ECGFounder ECG + PPG 5,10,13,11,11 10.0 10 CSFM-large ECG-only 17,5,14,10,13 11.8 11 ECG Domain Features + PPG Domain Features - 60sec (concat) ECG + PPG 8,21,10,14,9 12.4 12 ECG Domain Features + PPG Domain Features - 120sec (concat) ECG + PPG 10,19,9,20,6 12.8 13 CSFM-base PPG-only 7,23,15,12,18 15.0 14 ECGFounder ECG-only 18,17,16,13,14 15.6 15 ECG Domain Features + PPG Domain Features - 20sec (concat) ECG + PPG 23,22,8,22,4 15.8 16 Chronos-Bolt-small ECG + PPG 13,12,18,16,23 16.4 17 MOMENT-base ECG + PPG 15,11,22,18,19 17.0 18 Chronos-Bolt-mini ECG + PPG 16,15,17,15,24 17.4 19 Chronos-Bolt-base ECG + PPG 14,13,21,17,22 17.4 20 MOMENT-small ECG + PPG 21,14,19,21,17 18.4 21 CSFM-tiny ECG-only 30,16,20,19,16 20.2 22 ECG Domain Features ECG-only 33,52,11,7,3 21.2 23 CSFM-large PPG-only 19,18,23,24,27 22.2 24 Chronos-Bolt-tiny ECG + PPG 24,20,27,25,25 24.2 25 xECG-10min PPG-only 20,26,30,26,35 27.4 26 MOMENT-large ECG + PPG 27,25,37,28,26 28.6 27 CSFM-tiny PPG-only 22,29,35,23,36 29.0 28 MOMENT-base ECG-only 37,24,28,29,31 29.8 29 Chronos-Bolt-small ECG-only 35,32,26,32,33 31.6 30 D-BETA ECG + PPG 41,27,29,42,20 31.8 31 MOMENT-small ECG-only 44,28,25,37,30 32.8 32 Chronos-Bolt-mini ECG-only 38,35,24,30,37 32.8 33 Chronos-Bolt-base ECG-only 43,31,33,36,28 34.2 34 xECG PPG-only 25,30,41,35,41 34.4 35 Chronos-Bolt-base PPG-only 26,37,38,27,45 34.6 36 PPG Domain Features - 60sec PPG-only 31,34,32,45,39 36.2 37 PPG Domain Features - 120sec PPG-only 34,33,31,48,38 36.8 38 Chronos-Bolt-mini PPG-only 28,43,43,33,43 38.0 39 Chronos-Bolt-tiny ECG-only 45,41,39,38,29 38.4 40 MOMENT-base PPG-only 32,38,44,39,44 39.4 41 D-BETA ECG-only 50,45,36,46,21 39.6 42 Chronos-Bolt-small PPG-only 29,46,45,31,49 40.0 43 PaPaGei ECG + PPG 40,40,47,41,32 40.0 44 PPG Domain Features - 20sec PPG-only 47,36,34,50,40 41.4 45 MOMENT-large ECG-only 49,44,40,44,34 42.2 46 Chronos-Bolt-tiny PPG-only 36,47,42,40,50 43.0 47 MOMENT-small PPG-only 39,42,48,43,48 44.0 48 ECGFounder PPG-only 42,39,46,47,46 44.0 49 PaPaGei PPG-only 46,50,50,34,47 45.4 50 PaPaGei ECG-only 52,51,51,51,42 49.4 51 MOMENT-large PPG-only 48,49,52,49,52 50.0 52 D-BETA PPG-only 51,48,49,52,51 50.2 
+
+30 Table S3. Main model ranking on the test set , computed jointly across ECG-only, PPG-only, and ECG + PPG. Mean model rank ( ↓)across the five aggregated task categories based on Table 2. This table complements the modality-specific rankings shown in Table 3. 
+
+Rank Model Name Modality Model Ranks Mean Model Rank ( ↓)
+
+1 CSFM-base ECG + PPG 1,1,1,1,3 1.4 2 xECG-10min ECG + PPG 2,2,6,3,6 3.8 3 CSFM-base ECG-only 7,5,5,2,4 4.6 4 ECGFounder ECG + PPG 3,4,8,5,5 5.0 5 Domain Features (concat) ECG + PPG 8,7,2,9,2 5.6 6 xECG-1omin ECG-only 10,3,7,4,8 6.4 7 CSFM-base PPG-only 4,9,3,8,9 6.6 8 MOMENT-base ECG + PPG 5,6,11,10,11 8.6 9 ECGFounder ECG-only 11,12,9,7,7 9.2 10 Domain Features ECG-only 17,23,4,6,1 10.2 11 xECG-10min PPG-only 6,10,10,12,14 10.4 12 Chronos-Bolt-small ECG + PPG 9,8,16,11,13 11.4 13 D-BETA ECG + PPG 14,14,15,14,10 13.4 14 MOMENT-base PPG-only 12,17,12,13,17 14.2 15 Domain Features PPG-only 15,13,13,22,15 15.6 16 MOMENT-base ECG-only 21,11,19,15,16 16.4 17 Chronos-Bolt-small PPG-only 13,15,17,16,22 16.6 18 ECGFounder PPG-only 16,16,14,19,18 16.6 19 D-BETA ECG-only 22,21,18,20,12 18.6 20 Chronos-Bolt-small ECG-only 19,18,20,18,19 18.8 21 PaPaGei PPG-only 18,22,22,17,21 20.0 22 PaPaGei ECG + PPG 20,19,23,21,20 20.6 23 D-BETA PPG-only 23,20,21,24,23 22.2 24 PaPaGei ECG-only 24,24,24,23,24 23.8 
+
+Table S4. Model comparison of ECG-only val performance on all 20 benchmark tasks when using 100% of the train visits . Tasks are grouped into two demographics tasks, ED disposition classification, eight laboratory value regression tasks, and nine prior ICD-10 diagnosis classification tasks. Performance on the val set when using 100% of the train set visits. Training visit are sampled with replacement and both downstream training and hyperparameter selection are repeated five times, results are mean ± std across repetitions. Regression tasks are evaluated using Pearson correlation ( ↑), and classification tasks using AUROC ( ↑). Bold red marks the best mean value in each row. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.696 ± 0.001 0.694 ± 0.001 0.710 ± 0.001 0.559 ± 0.001 0.688 ± 0.005 0.778 ± 0.003 0.785 ± 0.001 0.785 ± 0.002 Sex cls 0.676 ± 0.001 0.774 ± 0.002 0.770 ± 0.003 0.675 ± 0.002 0.730 ± 0.003 0.788 ± 0.003 0.822 ± 0.002 0.816 ± 0.002 ED dispo cls 0.729 ± 0.001 0.703 ± 0.003 0.712 ± 0.005 0.655 ± 0.003 0.695 ± 0.004 0.725 ± 0.003 0.745 ± 0.001 0.744 ± 0.001 Potassium reg 0.268 ± 0.004 0.322 ± 0.008 0.304 ± 0.010 0.194 ± 0.016 0.188 ± 0.023 0.315 ± 0.005 0.383 ± 0.007 0.386 ± 0.007 Calcium reg 0.155 ± 0.011 0.150 ± 0.007 0.127 ± 0.018 0.077 ± 0.012 0.098 ± 0.016 0.155 ± 0.014 0.205 ± 0.010 0.209 ± 0.010 eGFR reg 0.546 ± 0.001 0.494 ± 0.007 0.509 ± 0.005 0.369 ± 0.006 0.481 ± 0.015 0.579 ± 0.007 0.585 ± 0.003 0.591 ± 0.006 Glucose reg 0.297 ± 0.007 0.177 ± 0.010 0.199 ± 0.008 0.157 ± 0.013 0.150 ± 0.018 0.244 ± 0.009 0.257 ± 0.014 0.262 ± 0.017 Hemoglobin reg 0.359 ± 0.002 0.267 ± 0.007 0.261 ± 0.008 0.205 ± 0.014 0.253 ± 0.014 0.356 ± 0.015 0.365 ± 0.008 0.373 ± 0.007 Albumin reg 0.434 ± 0.003 0.290 ± 0.006 0.318 ± 0.007 0.278 ± 0.006 0.262 ± 0.023 0.414 ± 0.006 0.422 ± 0.006 0.428 ± 0.004 BUN reg 0.388 ± 0.006 0.322 ± 0.004 0.332 ± 0.014 0.224 ± 0.015 0.289 ± 0.010 0.376 ± 0.013 0.384 ± 0.011 0.394 ± 0.005 Sodium reg 0.291 ± 0.009 0.189 ± 0.015 0.171 ± 0.010 0.134 ± 0.010 0.150 ± 0.014 0.228 ± 0.013 0.249 ± 0.010 0.260 ± 0.009 I48 cls 0.826 ± 0.003 0.821 ± 0.009 0.805 ± 0.004 0.761 ± 0.006 0.838 ± 0.007 0.844 ± 0.009 0.845 ± 0.009 0.861 ± 0.005 I50 cls 0.846 ± 0.002 0.812 ± 0.010 0.812 ± 0.018 0.769 ± 0.003 0.826 ± 0.005 0.819 ± 0.008 0.842 ± 0.002 0.840 ± 0.004 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.831 ± 0.003 0.778 ± 0.018 0.789 ± 0.017 0.736 ± 0.006 0.819 ± 0.020 0.833 ± 0.012 0.825 ± 0.009 0.854 ± 0.010 N18 cls 0.798 ± 0.003 0.707 ± 0.019 0.727 ± 0.014 0.709 ± 0.009 0.730 ± 0.003 0.749 ± 0.004 0.775 ± 0.004 0.783 ± 0.005 
+
+{E10, E11 } cls 0.707 ± 0.004 0.628 ± 0.013 0.625 ± 0.008 0.623 ± 0.010 0.640 ± 0.005 0.678 ± 0.009 0.695 ± 0.005 0.696 ± 0.005 
+
+{G47.3, E66.2 } cls 0.677 ± 0.010 0.649 ± 0.022 0.635 ± 0.018 0.633 ± 0.015 0.648 ± 0.013 0.671 ± 0.017 0.696 ± 0.011 0.686 ± 0.016 
+
+{D50, D51, D52, D53, D64 } cls 0.673 ± 0.003 0.603 ± 0.005 0.595 ± 0.009 0.615 ± 0.004 0.610 ± 0.007 0.648 ± 0.009 0.664 ± 0.004 0.671 ± 0.010 
+
+{J96, R09.02, R06.0 } cls 0.678 ± 0.002 0.636 ± 0.008 0.636 ± 0.008 0.630 ± 0.006 0.654 ± 0.007 0.660 ± 0.010 0.680 ± 0.005 0.676 ± 0.004 
+
+{I26, I80, I82 } cls 0.660 ± 0.005 0.608 ± 0.011 0.604 ± 0.013 0.605 ± 0.015 0.587 ± 0.010 0.597 ± 0.010 0.659 ± 0.012 0.675 ± 0.011 
+
+31 Table S5. Model comparison of PPG-only val performance on all 20 benchmark tasks when using 100% of the train visits . Identical format and content as Table S4, but for PPG-only . Performance on the val set when using 100% of the train set visits. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.734 ± 0.003 0.704 ± 0.002 0.726 ± 0.002 0.673 ± 0.003 0.663 ± 0.007 0.703 ± 0.005 0.778 ± 0.002 0.799 ± 0.002 Sex cls 0.744 ± 0.004 0.731 ± 0.004 0.733 ± 0.005 0.691 ± 0.002 0.715 ± 0.004 0.735 ± 0.004 0.767 ± 0.003 0.767 ± 0.003 ED dispo cls 0.706 ± 0.003 0.688 ± 0.005 0.689 ± 0.001 0.673 ± 0.005 0.671 ± 0.006 0.686 ± 0.003 0.707 ± 0.004 0.726 ± 0.001 Potassium reg 0.152 ± 0.016 0.175 ± 0.016 0.178 ± 0.008 0.164 ± 0.014 0.115 ± 0.025 0.135 ± 0.025 0.145 ± 0.007 0.190 ± 0.006 Calcium reg 0.149 ± 0.010 0.122 ± 0.009 0.156 ± 0.015 0.117 ± 0.012 0.100 ± 0.009 0.121 ± 0.040 0.165 ± 0.016 0.183 ± 0.015 eGFR reg 0.485 ± 0.005 0.439 ± 0.004 0.479 ± 0.004 0.436 ± 0.007 0.399 ± 0.014 0.419 ± 0.063 0.513 ± 0.007 0.567 ± 0.005 Glucose reg 0.281 ± 0.014 0.255 ± 0.004 0.292 ± 0.013 0.236 ± 0.012 0.193 ± 0.017 0.188 ± 0.062 0.266 ± 0.015 0.297 ± 0.009 Hemoglobin reg 0.321 ± 0.008 0.323 ± 0.008 0.311 ± 0.009 0.321 ± 0.012 0.222 ± 0.008 0.310 ± 0.024 0.338 ± 0.011 0.392 ± 0.009 Albumin reg 0.325 ± 0.002 0.289 ± 0.005 0.331 ± 0.010 0.317 ± 0.008 0.199 ± 0.022 0.278 ± 0.035 0.331 ± 0.011 0.394 ± 0.006 BUN reg 0.282 ± 0.008 0.235 ± 0.017 0.299 ± 0.011 0.282 ± 0.011 0.188 ± 0.020 0.223 ± 0.037 0.310 ± 0.022 0.368 ± 0.004 Sodium reg 0.191 ± 0.020 0.199 ± 0.006 0.224 ± 0.012 0.214 ± 0.007 0.136 ± 0.050 0.155 ± 0.028 0.225 ± 0.012 0.227 ± 0.012 I48 cls 0.767 ± 0.010 0.774 ± 0.002 0.758 ± 0.006 0.769 ± 0.002 0.753 ± 0.010 0.780 ± 0.003 0.780 ± 0.005 0.814 ± 0.004 I50 cls 0.731 ± 0.010 0.727 ± 0.004 0.732 ± 0.005 0.739 ± 0.006 0.689 ± 0.006 0.726 ± 0.006 0.747 ± 0.004 0.773 ± 0.006 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.656 ± 0.017 0.682 ± 0.011 0.671 ± 0.012 0.674 ± 0.008 0.674 ± 0.011 0.706 ± 0.014 0.709 ± 0.014 0.735 ± 0.016 N18 cls 0.698 ± 0.014 0.662 ± 0.005 0.676 ± 0.009 0.672 ± 0.007 0.676 ± 0.010 0.681 ± 0.015 0.714 ± 0.005 0.748 ± 0.004 
+
+{E10, E11 } cls 0.684 ± 0.008 0.650 ± 0.006 0.653 ± 0.008 0.631 ± 0.008 0.651 ± 0.009 0.668 ± 0.007 0.674 ± 0.012 0.702 ± 0.012 
+
+{G47.3, E66.2 } cls 0.662 ± 0.019 0.660 ± 0.005 0.664 ± 0.005 0.674 ± 0.010 0.629 ± 0.012 0.662 ± 0.007 0.684 ± 0.011 0.715 ± 0.006 
+
+{D50, D51, D52, D53, D64 } cls 0.642 ± 0.006 0.620 ± 0.008 0.602 ± 0.008 0.615 ± 0.007 0.619 ± 0.008 0.606 ± 0.010 0.643 ± 0.014 0.665 ± 0.009 
+
+{J96, R09.02, R06.0 } cls 0.667 ± 0.005 0.638 ± 0.004 0.634 ± 0.005 0.653 ± 0.007 0.624 ± 0.008 0.626 ± 0.004 0.638 ± 0.003 0.673 ± 0.004 
+
+{I26, I80, I82 } cls 0.610 ± 0.017 0.654 ± 0.010 0.605 ± 0.018 0.636 ± 0.007 0.583 ± 0.008 0.608 ± 0.021 0.635 ± 0.013 0.659 ± 0.011 
+
+Table S6. Model comparison of ECG + PPG val performance on all 20 benchmark tasks when using 100% of the train visits .Identical format and content as Table S4, but for ECG + PPG . Performance on the val set when using 100% of the train set visits. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.803 ± 0.003 0.776 ± 0.001 0.781 ± 0.002 0.697 ± 0.002 0.747 ± 0.003 0.822 ± 0.002 0.831 ± 0.001 0.842 ± 0.001 Sex cls 0.771 ± 0.004 0.810 ± 0.001 0.808 ± 0.003 0.728 ± 0.002 0.770 ± 0.001 0.819 ± 0.002 0.848 ± 0.001 0.840 ± 0.002 ED dispo cls 0.734 ± 0.003 0.710 ± 0.006 0.720 ± 0.003 0.676 ± 0.003 0.702 ± 0.005 0.732 ± 0.002 0.750 ± 0.002 0.750 ± 0.002 Potassium reg 0.238 ± 0.017 0.333 ± 0.009 0.326 ± 0.005 0.216 ± 0.010 0.192 ± 0.019 0.308 ± 0.010 0.389 ± 0.005 0.386 ± 0.006 Calcium reg 0.203 ± 0.010 0.181 ± 0.011 0.180 ± 0.009 0.096 ± 0.003 0.130 ± 0.021 0.189 ± 0.007 0.231 ± 0.015 0.265 ± 0.010 eGFR reg 0.573 ± 0.008 0.515 ± 0.008 0.541 ± 0.007 0.448 ± 0.008 0.488 ± 0.017 0.585 ± 0.006 0.596 ± 0.003 0.613 ± 0.003 Glucose reg 0.311 ± 0.014 0.254 ± 0.010 0.279 ± 0.008 0.205 ± 0.010 0.197 ± 0.022 0.295 ± 0.007 0.303 ± 0.010 0.322 ± 0.010 Hemoglobin reg 0.416 ± 0.007 0.335 ± 0.009 0.340 ± 0.007 0.281 ± 0.007 0.291 ± 0.017 0.409 ± 0.014 0.413 ± 0.009 0.423 ± 0.007 Albumin reg 0.428 ± 0.005 0.327 ± 0.005 0.365 ± 0.010 0.310 ± 0.007 0.283 ± 0.011 0.423 ± 0.003 0.427 ± 0.006 0.450 ± 0.006 BUN reg 0.386 ± 0.007 0.327 ± 0.008 0.354 ± 0.013 0.263 ± 0.017 0.272 ± 0.011 0.384 ± 0.005 0.398 ± 0.008 0.410 ± 0.004 Sodium reg 0.240 ± 0.016 0.200 ± 0.017 0.204 ± 0.009 0.168 ± 0.014 0.158 ± 0.010 0.220 ± 0.009 0.265 ± 0.004 0.272 ± 0.006 I48 cls 0.814 ± 0.006 0.827 ± 0.010 0.818 ± 0.008 0.782 ± 0.003 0.836 ± 0.007 0.841 ± 0.008 0.840 ± 0.010 0.857 ± 0.005 I50 cls 0.834 ± 0.005 0.813 ± 0.007 0.815 ± 0.015 0.782 ± 0.003 0.831 ± 0.007 0.832 ± 0.007 0.842 ± 0.002 0.839 ± 0.004 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.776 ± 0.010 0.796 ± 0.012 0.788 ± 0.006 0.755 ± 0.007 0.817 ± 0.017 0.837 ± 0.007 0.815 ± 0.012 0.852 ± 0.009 N18 cls 0.782 ± 0.015 0.727 ± 0.009 0.742 ± 0.011 0.728 ± 0.007 0.733 ± 0.006 0.764 ± 0.005 0.778 ± 0.005 0.782 ± 0.003 
+
+{E10, E11 } cls 0.717 ± 0.008 0.666 ± 0.006 0.670 ± 0.009 0.638 ± 0.011 0.667 ± 0.004 0.695 ± 0.008 0.721 ± 0.006 0.720 ± 0.006 
+
+{G47.3, E66.2 } cls 0.699 ± 0.018 0.676 ± 0.012 0.692 ± 0.012 0.661 ± 0.008 0.669 ± 0.015 0.710 ± 0.014 0.715 ± 0.010 0.715 ± 0.017 
+
+{D50, D51, D52, D53, D64 } cls 0.677 ± 0.010 0.619 ± 0.007 0.620 ± 0.008 0.637 ± 0.005 0.616 ± 0.007 0.652 ± 0.005 0.668 ± 0.007 0.669 ± 0.011 
+
+{J96, R09.02, R06.0 } cls 0.691 ± 0.005 0.653 ± 0.007 0.654 ± 0.008 0.647 ± 0.007 0.659 ± 0.004 0.683 ± 0.006 0.684 ± 0.005 0.685 ± 0.002 
+
+{I26, I80, I82 } cls 0.630 ± 0.015 0.636 ± 0.011 0.634 ± 0.022 0.614 ± 0.014 0.579 ± 0.016 0.611 ± 0.008 0.663 ± 0.014 0.685 ± 0.015 
+
+32 Table S7. Model comparison of ECG-only val performance on all 20 benchmark tasks when using 50% of the train visits . Tasks are grouped into two demographics tasks, ED disposition classification, eight laboratory value regression tasks, and nine prior ICD-10 diagnosis classification tasks. Performance on the val set when using 50% of the train set visits. Training visit are sampled with replacement and both downstream training and hyperparameter selection are repeated five times, results are mean ± std across repetitions. Regression tasks are evaluated using Pearson correlation ( ↑), and classification tasks using AUROC ( ↑). Bold red marks the best mean value in each row. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.694 ± 0.001 0.685 ± 0.003 0.699 ± 0.004 0.554 ± 0.003 0.672 ± 0.009 0.775 ± 0.002 0.776 ± 0.002 0.780 ± 0.002 Sex cls 0.674 ± 0.005 0.766 ± 0.006 0.757 ± 0.006 0.673 ± 0.006 0.725 ± 0.002 0.779 ± 0.003 0.817 ± 0.002 0.811 ± 0.006 ED dispo cls 0.728 ± 0.002 0.699 ± 0.008 0.704 ± 0.003 0.653 ± 0.003 0.691 ± 0.005 0.720 ± 0.004 0.733 ± 0.004 0.737 ± 0.006 Potassium reg 0.268 ± 0.009 0.302 ± 0.017 0.279 ± 0.008 0.179 ± 0.005 0.178 ± 0.022 0.294 ± 0.026 0.370 ± 0.010 0.377 ± 0.005 Calcium reg 0.150 ± 0.016 0.133 ± 0.016 0.109 ± 0.012 0.088 ± 0.012 0.077 ± 0.025 0.142 ± 0.011 0.199 ± 0.016 0.195 ± 0.005 eGFR reg 0.540 ± 0.005 0.493 ± 0.004 0.500 ± 0.006 0.352 ± 0.009 0.459 ± 0.019 0.559 ± 0.007 0.581 ± 0.003 0.580 ± 0.005 Glucose reg 0.297 ± 0.002 0.185 ± 0.023 0.188 ± 0.026 0.152 ± 0.013 0.160 ± 0.025 0.233 ± 0.025 0.270 ± 0.011 0.249 ± 0.011 Hemoglobin reg 0.350 ± 0.006 0.258 ± 0.015 0.254 ± 0.012 0.199 ± 0.008 0.234 ± 0.018 0.304 ± 0.061 0.356 ± 0.013 0.366 ± 0.014 Albumin reg 0.433 ± 0.006 0.271 ± 0.009 0.289 ± 0.009 0.272 ± 0.013 0.241 ± 0.019 0.377 ± 0.042 0.406 ± 0.010 0.410 ± 0.003 BUN reg 0.382 ± 0.008 0.310 ± 0.023 0.312 ± 0.012 0.225 ± 0.010 0.257 ± 0.018 0.359 ± 0.012 0.374 ± 0.009 0.387 ± 0.012 Sodium reg 0.286 ± 0.017 0.176 ± 0.009 0.156 ± 0.012 0.127 ± 0.011 0.148 ± 0.024 0.211 ± 0.013 0.241 ± 0.007 0.255 ± 0.021 I48 cls 0.825 ± 0.005 0.813 ± 0.010 0.795 ± 0.008 0.752 ± 0.006 0.840 ± 0.005 0.854 ± 0.008 0.842 ± 0.004 0.864 ± 0.005 I50 cls 0.845 ± 0.004 0.810 ± 0.009 0.796 ± 0.009 0.773 ± 0.006 0.823 ± 0.009 0.819 ± 0.009 0.837 ± 0.006 0.837 ± 0.007 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.820 ± 0.007 0.766 ± 0.019 0.755 ± 0.019 0.726 ± 0.009 0.820 ± 0.006 0.830 ± 0.006 0.817 ± 0.010 0.844 ± 0.008 N18 cls 0.797 ± 0.003 0.709 ± 0.021 0.710 ± 0.010 0.707 ± 0.010 0.731 ± 0.007 0.758 ± 0.011 0.773 ± 0.008 0.782 ± 0.004 
+
+{E10, E11 } cls 0.709 ± 0.005 0.623 ± 0.022 0.631 ± 0.009 0.620 ± 0.007 0.642 ± 0.009 0.681 ± 0.007 0.694 ± 0.010 0.694 ± 0.008 
+
+{G47.3, E66.2 } cls 0.673 ± 0.013 0.643 ± 0.008 0.620 ± 0.020 0.632 ± 0.014 0.653 ± 0.011 0.669 ± 0.005 0.684 ± 0.009 0.680 ± 0.013 
+
+{D50, D51, D52, D53, D64 } cls 0.671 ± 0.003 0.592 ± 0.007 0.586 ± 0.012 0.615 ± 0.011 0.602 ± 0.010 0.652 ± 0.008 0.661 ± 0.006 0.673 ± 0.011 
+
+{J96, R09.02, R06.0 } cls 0.676 ± 0.002 0.639 ± 0.010 0.636 ± 0.007 0.633 ± 0.007 0.645 ± 0.005 0.657 ± 0.015 0.673 ± 0.007 0.676 ± 0.007 
+
+{I26, I80, I82 } cls 0.670 ± 0.018 0.603 ± 0.016 0.580 ± 0.013 0.608 ± 0.010 0.593 ± 0.017 0.611 ± 0.021 0.654 ± 0.018 0.678 ± 0.017 
+
+Table S8. Model comparison of PPG-only val performance on all 20 benchmark tasks when using 50% of the train visits . Identical format and content as Table S7, but for PPG-only . Performance on the val set when using 50% of the train set visits. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.718 ± 0.013 0.701 ± 0.004 0.716 ± 0.002 0.674 ± 0.003 0.604 ± 0.068 0.655 ± 0.083 0.768 ± 0.003 0.793 ± 0.002 Sex cls 0.740 ± 0.004 0.729 ± 0.002 0.726 ± 0.004 0.692 ± 0.001 0.711 ± 0.008 0.734 ± 0.006 0.764 ± 0.006 0.765 ± 0.004 ED dispo cls 0.704 ± 0.004 0.687 ± 0.004 0.682 ± 0.002 0.670 ± 0.004 0.664 ± 0.003 0.677 ± 0.008 0.703 ± 0.002 0.721 ± 0.004 Potassium reg 0.136 ± 0.008 0.173 ± 0.010 0.167 ± 0.018 0.172 ± 0.007 0.095 ± 0.036 0.136 ± 0.019 0.169 ± 0.014 0.175 ± 0.008 Calcium reg 0.133 ± 0.018 0.125 ± 0.016 0.157 ± 0.010 0.101 ± 0.006 0.100 ± 0.015 0.119 ± 0.026 0.171 ± 0.015 0.188 ± 0.018 eGFR reg 0.467 ± 0.009 0.425 ± 0.005 0.458 ± 0.006 0.424 ± 0.002 0.322 ± 0.020 0.381 ± 0.041 0.503 ± 0.005 0.552 ± 0.006 Glucose reg 0.245 ± 0.042 0.242 ± 0.020 0.258 ± 0.029 0.245 ± 0.008 0.160 ± 0.025 0.220 ± 0.034 0.273 ± 0.012 0.272 ± 0.007 Hemoglobin reg 0.294 ± 0.014 0.302 ± 0.006 0.295 ± 0.017 0.314 ± 0.016 0.182 ± 0.019 0.299 ± 0.017 0.341 ± 0.007 0.363 ± 0.015 Albumin reg 0.302 ± 0.011 0.269 ± 0.014 0.309 ± 0.007 0.304 ± 0.012 0.173 ± 0.027 0.264 ± 0.025 0.326 ± 0.013 0.384 ± 0.008 BUN reg 0.267 ± 0.019 0.239 ± 0.012 0.282 ± 0.004 0.281 ± 0.010 0.162 ± 0.048 0.234 ± 0.050 0.311 ± 0.005 0.354 ± 0.016 Sodium reg 0.176 ± 0.027 0.197 ± 0.021 0.218 ± 0.018 0.220 ± 0.011 0.122 ± 0.039 0.151 ± 0.022 0.212 ± 0.008 0.229 ± 0.006 I48 cls 0.766 ± 0.016 0.768 ± 0.010 0.752 ± 0.006 0.771 ± 0.008 0.741 ± 0.012 0.770 ± 0.007 0.767 ± 0.010 0.805 ± 0.012 I50 cls 0.727 ± 0.005 0.721 ± 0.011 0.713 ± 0.010 0.735 ± 0.006 0.684 ± 0.009 0.724 ± 0.003 0.739 ± 0.007 0.774 ± 0.007 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.667 ± 0.015 0.665 ± 0.008 0.646 ± 0.011 0.658 ± 0.011 0.658 ± 0.011 0.685 ± 0.010 0.684 ± 0.018 0.725 ± 0.006 N18 cls 0.694 ± 0.008 0.651 ± 0.004 0.659 ± 0.017 0.667 ± 0.007 0.657 ± 0.015 0.671 ± 0.008 0.702 ± 0.017 0.745 ± 0.004 
+
+{E10, E11 } cls 0.679 ± 0.011 0.655 ± 0.008 0.659 ± 0.008 0.631 ± 0.007 0.643 ± 0.006 0.669 ± 0.008 0.685 ± 0.007 0.700 ± 0.004 
+
+{G47.3, E66.2 } cls 0.649 ± 0.017 0.656 ± 0.019 0.662 ± 0.007 0.653 ± 0.014 0.610 ± 0.006 0.648 ± 0.023 0.665 ± 0.007 0.690 ± 0.012 
+
+{D50, D51, D52, D53, D64 } cls 0.627 ± 0.006 0.605 ± 0.016 0.594 ± 0.013 0.609 ± 0.006 0.607 ± 0.013 0.582 ± 0.010 0.624 ± 0.009 0.647 ± 0.012 
+
+{J96, R09.02, R06.0 } cls 0.657 ± 0.004 0.639 ± 0.006 0.634 ± 0.009 0.646 ± 0.013 0.612 ± 0.011 0.620 ± 0.008 0.629 ± 0.008 0.660 ± 0.007 
+
+{I26, I80, I82 } cls 0.621 ± 0.015 0.636 ± 0.012 0.595 ± 0.019 0.626 ± 0.011 0.566 ± 0.016 0.593 ± 0.015 0.612 ± 0.005 0.646 ± 0.014 
+
+33 Table S9. Model comparison of ECG + PPG val performance on all 20 benchmark tasks when using 50% of the train visits . Identical format and content as Table S7, but for ECG + PPG . Performance on the val set when using 50% of the train set visits. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.797 ± 0.003 0.768 ± 0.003 0.774 ± 0.002 0.687 ± 0.005 0.730 ± 0.011 0.818 ± 0.003 0.823 ± 0.002 0.839 ± 0.002 Sex cls 0.767 ± 0.003 0.798 ± 0.004 0.798 ± 0.005 0.727 ± 0.004 0.765 ± 0.002 0.815 ± 0.003 0.842 ± 0.002 0.835 ± 0.002 ED dispo cls 0.731 ± 0.005 0.708 ± 0.004 0.715 ± 0.005 0.673 ± 0.005 0.695 ± 0.005 0.724 ± 0.003 0.736 ± 0.004 0.745 ± 0.006 Potassium reg 0.223 ± 0.017 0.315 ± 0.012 0.297 ± 0.007 0.199 ± 0.007 0.189 ± 0.012 0.269 ± 0.035 0.384 ± 0.012 0.376 ± 0.006 Calcium reg 0.192 ± 0.020 0.165 ± 0.017 0.165 ± 0.014 0.104 ± 0.015 0.100 ± 0.022 0.164 ± 0.008 0.220 ± 0.017 0.254 ± 0.010 eGFR reg 0.568 ± 0.004 0.508 ± 0.008 0.529 ± 0.004 0.423 ± 0.011 0.467 ± 0.025 0.564 ± 0.008 0.588 ± 0.003 0.598 ± 0.004 Glucose reg 0.298 ± 0.029 0.254 ± 0.020 0.264 ± 0.016 0.202 ± 0.011 0.218 ± 0.035 0.281 ± 0.014 0.313 ± 0.014 0.300 ± 0.009 Hemoglobin reg 0.391 ± 0.015 0.324 ± 0.012 0.323 ± 0.010 0.265 ± 0.012 0.270 ± 0.014 0.386 ± 0.008 0.396 ± 0.012 0.410 ± 0.011 Albumin reg 0.412 ± 0.017 0.307 ± 0.004 0.339 ± 0.006 0.295 ± 0.010 0.272 ± 0.014 0.381 ± 0.034 0.409 ± 0.010 0.429 ± 0.005 BUN reg 0.372 ± 0.021 0.318 ± 0.027 0.335 ± 0.011 0.264 ± 0.011 0.259 ± 0.026 0.354 ± 0.007 0.388 ± 0.013 0.406 ± 0.011 Sodium reg 0.230 ± 0.032 0.195 ± 0.016 0.186 ± 0.017 0.160 ± 0.010 0.161 ± 0.020 0.200 ± 0.019 0.243 ± 0.014 0.269 ± 0.023 I48 cls 0.814 ± 0.014 0.819 ± 0.010 0.806 ± 0.007 0.775 ± 0.007 0.835 ± 0.003 0.848 ± 0.007 0.833 ± 0.005 0.859 ± 0.004 I50 cls 0.827 ± 0.008 0.811 ± 0.010 0.802 ± 0.004 0.787 ± 0.008 0.824 ± 0.010 0.827 ± 0.005 0.837 ± 0.005 0.837 ± 0.008 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.777 ± 0.027 0.778 ± 0.005 0.762 ± 0.013 0.742 ± 0.012 0.808 ± 0.011 0.822 ± 0.009 0.800 ± 0.008 0.840 ± 0.009 N18 cls 0.785 ± 0.004 0.722 ± 0.016 0.728 ± 0.012 0.723 ± 0.011 0.732 ± 0.012 0.764 ± 0.011 0.772 ± 0.011 0.785 ± 0.009 
+
+{E10, E11 } cls 0.719 ± 0.018 0.664 ± 0.008 0.674 ± 0.003 0.634 ± 0.006 0.669 ± 0.009 0.700 ± 0.005 0.719 ± 0.007 0.719 ± 0.008 
+
+{G47.3, E66.2 } cls 0.688 ± 0.028 0.677 ± 0.011 0.683 ± 0.021 0.647 ± 0.016 0.659 ± 0.012 0.693 ± 0.016 0.706 ± 0.008 0.715 ± 0.007 
+
+{D50, D51, D52, D53, D64 } cls 0.668 ± 0.011 0.604 ± 0.009 0.607 ± 0.013 0.627 ± 0.007 0.603 ± 0.010 0.647 ± 0.008 0.663 ± 0.005 0.665 ± 0.008 
+
+{J96, R09.02, R06.0 } cls 0.685 ± 0.005 0.657 ± 0.009 0.651 ± 0.010 0.650 ± 0.008 0.645 ± 0.006 0.670 ± 0.013 0.674 ± 0.007 0.685 ± 0.006 
+
+{I26, I80, I82 } cls 0.646 ± 0.023 0.623 ± 0.015 0.612 ± 0.017 0.615 ± 0.014 0.580 ± 0.021 0.609 ± 0.018 0.658 ± 0.011 0.690 ± 0.020 
+
+Table S10. Model comparison of ECG-only val performance on all 20 benchmark tasks when using 25% of the train visits . Tasks are grouped into two demographics tasks, ED disposition classification, eight laboratory value regression tasks, and nine prior ICD-10 diagnosis classification tasks. Performance on the val set when using 25% of the train set visits. Training visit are sampled with replacement and both downstream training and hyperparameter selection are repeated five times, results are mean ± std across repetitions. Regression tasks are evaluated using Pearson correlation ( ↑), and classification tasks using AUROC ( ↑). Bold red marks the best mean value in each row. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.689 ± 0.004 0.677 ± 0.005 0.681 ± 0.003 0.538 ± 0.007 0.645 ± 0.026 0.762 ± 0.013 0.769 ± 0.002 0.775 ± 0.004 Sex cls 0.665 ± 0.006 0.753 ± 0.003 0.737 ± 0.004 0.668 ± 0.005 0.713 ± 0.004 0.764 ± 0.004 0.806 ± 0.003 0.802 ± 0.004 ED dispo cls 0.725 ± 0.002 0.691 ± 0.004 0.690 ± 0.007 0.644 ± 0.003 0.693 ± 0.003 0.711 ± 0.006 0.724 ± 0.002 0.730 ± 0.005 Potassium reg 0.239 ± 0.018 0.291 ± 0.012 0.262 ± 0.018 0.175 ± 0.025 0.187 ± 0.020 0.285 ± 0.008 0.345 ± 0.014 0.362 ± 0.009 Calcium reg 0.141 ± 0.016 0.111 ± 0.011 0.101 ± 0.014 0.069 ± 0.010 0.050 ± 0.039 0.133 ± 0.013 0.183 ± 0.008 0.189 ± 0.012 eGFR reg 0.536 ± 0.005 0.468 ± 0.005 0.474 ± 0.010 0.352 ± 0.010 0.467 ± 0.021 0.554 ± 0.014 0.558 ± 0.007 0.567 ± 0.005 Glucose reg 0.278 ± 0.019 0.161 ± 0.023 0.154 ± 0.019 0.128 ± 0.028 0.148 ± 0.036 0.183 ± 0.044 0.235 ± 0.021 0.241 ± 0.021 Hemoglobin reg 0.352 ± 0.006 0.234 ± 0.012 0.226 ± 0.018 0.180 ± 0.014 0.223 ± 0.022 0.301 ± 0.038 0.335 ± 0.009 0.359 ± 0.019 Albumin reg 0.426 ± 0.006 0.263 ± 0.008 0.273 ± 0.012 0.256 ± 0.008 0.252 ± 0.011 0.343 ± 0.109 0.394 ± 0.008 0.414 ± 0.007 BUN reg 0.368 ± 0.010 0.285 ± 0.014 0.274 ± 0.019 0.215 ± 0.010 0.244 ± 0.061 0.331 ± 0.037 0.352 ± 0.013 0.375 ± 0.010 Sodium reg 0.270 ± 0.008 0.162 ± 0.026 0.125 ± 0.009 0.113 ± 0.014 0.146 ± 0.024 0.217 ± 0.023 0.224 ± 0.019 0.250 ± 0.010 I48 cls 0.822 ± 0.004 0.803 ± 0.012 0.786 ± 0.009 0.742 ± 0.003 0.838 ± 0.004 0.843 ± 0.009 0.837 ± 0.004 0.859 ± 0.001 I50 cls 0.838 ± 0.004 0.807 ± 0.007 0.792 ± 0.009 0.753 ± 0.010 0.819 ± 0.008 0.814 ± 0.012 0.823 ± 0.005 0.833 ± 0.006 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.817 ± 0.008 0.795 ± 0.011 0.764 ± 0.020 0.719 ± 0.009 0.824 ± 0.009 0.833 ± 0.013 0.815 ± 0.005 0.851 ± 0.011 N18 cls 0.791 ± 0.010 0.707 ± 0.016 0.703 ± 0.013 0.690 ± 0.011 0.709 ± 0.008 0.744 ± 0.016 0.746 ± 0.014 0.764 ± 0.010 
+
+{E10, E11 } cls 0.699 ± 0.010 0.633 ± 0.007 0.618 ± 0.011 0.619 ± 0.005 0.630 ± 0.010 0.669 ± 0.013 0.676 ± 0.009 0.689 ± 0.009 
+
+{G47.3, E66.2 } cls 0.648 ± 0.022 0.631 ± 0.015 0.609 ± 0.013 0.612 ± 0.009 0.645 ± 0.014 0.649 ± 0.036 0.660 ± 0.025 0.672 ± 0.018 
+
+{D50, D51, D52, D53, D64 } cls 0.664 ± 0.009 0.605 ± 0.002 0.591 ± 0.009 0.608 ± 0.013 0.601 ± 0.013 0.638 ± 0.016 0.640 ± 0.002 0.672 ± 0.015 
+
+{J96, R09.02, R06.0 } cls 0.671 ± 0.006 0.627 ± 0.025 0.625 ± 0.012 0.617 ± 0.012 0.637 ± 0.019 0.649 ± 0.012 0.650 ± 0.010 0.659 ± 0.013 
+
+{I26, I80, I82 } cls 0.639 ± 0.008 0.564 ± 0.019 0.580 ± 0.025 0.591 ± 0.019 0.568 ± 0.025 0.589 ± 0.022 0.610 ± 0.019 0.653 ± 0.028 
+
+34 Table S11. Model comparison of PPG-only val performance on all 20 benchmark tasks when using 25% of the train visits . Identical format and content as Table S10, but for PPG-only . Performance on the val set when using 25% of the train set visits. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.711 ± 0.007 0.690 ± 0.003 0.704 ± 0.003 0.661 ± 0.003 0.580 ± 0.082 0.696 ± 0.015 0.754 ± 0.003 0.783 ± 0.004 Sex cls 0.729 ± 0.005 0.724 ± 0.004 0.717 ± 0.004 0.688 ± 0.003 0.699 ± 0.006 0.723 ± 0.004 0.754 ± 0.004 0.757 ± 0.003 ED dispo cls 0.689 ± 0.007 0.678 ± 0.005 0.676 ± 0.007 0.651 ± 0.008 0.660 ± 0.007 0.674 ± 0.009 0.696 ± 0.005 0.720 ± 0.002 Potassium reg 0.092 ± 0.036 0.156 ± 0.018 0.144 ± 0.018 0.148 ± 0.008 0.088 ± 0.024 0.099 ± 0.026 0.146 ± 0.022 0.154 ± 0.019 Calcium reg 0.107 ± 0.021 0.106 ± 0.010 0.130 ± 0.017 0.081 ± 0.020 0.085 ± 0.018 0.079 ± 0.033 0.168 ± 0.017 0.188 ± 0.027 eGFR reg 0.412 ± 0.021 0.401 ± 0.008 0.422 ± 0.013 0.419 ± 0.006 0.318 ± 0.027 0.407 ± 0.015 0.476 ± 0.008 0.539 ± 0.002 Glucose reg 0.204 ± 0.056 0.216 ± 0.020 0.245 ± 0.034 0.234 ± 0.011 0.170 ± 0.034 0.224 ± 0.021 0.239 ± 0.016 0.256 ± 0.022 Hemoglobin reg 0.242 ± 0.035 0.280 ± 0.012 0.268 ± 0.019 0.298 ± 0.012 0.189 ± 0.036 0.260 ± 0.026 0.305 ± 0.012 0.337 ± 0.009 Albumin reg 0.227 ± 0.052 0.250 ± 0.014 0.284 ± 0.016 0.290 ± 0.003 0.150 ± 0.036 0.208 ± 0.036 0.292 ± 0.024 0.357 ± 0.012 BUN reg 0.193 ± 0.027 0.212 ± 0.013 0.233 ± 0.011 0.242 ± 0.010 0.120 ± 0.045 0.196 ± 0.018 0.267 ± 0.019 0.323 ± 0.013 Sodium reg 0.128 ± 0.023 0.175 ± 0.021 0.185 ± 0.007 0.205 ± 0.013 0.091 ± 0.036 0.113 ± 0.043 0.191 ± 0.011 0.221 ± 0.019 I48 cls 0.744 ± 0.010 0.758 ± 0.002 0.754 ± 0.009 0.739 ± 0.012 0.734 ± 0.009 0.771 ± 0.007 0.759 ± 0.009 0.793 ± 0.008 I50 cls 0.703 ± 0.004 0.715 ± 0.009 0.700 ± 0.008 0.710 ± 0.006 0.669 ± 0.012 0.701 ± 0.010 0.714 ± 0.009 0.757 ± 0.012 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.652 ± 0.020 0.655 ± 0.025 0.629 ± 0.024 0.637 ± 0.012 0.647 ± 0.017 0.672 ± 0.019 0.658 ± 0.013 0.705 ± 0.019 N18 cls 0.674 ± 0.011 0.641 ± 0.014 0.662 ± 0.006 0.656 ± 0.013 0.633 ± 0.014 0.652 ± 0.011 0.686 ± 0.014 0.722 ± 0.009 
+
+{E10, E11 } cls 0.673 ± 0.012 0.638 ± 0.010 0.639 ± 0.021 0.603 ± 0.010 0.631 ± 0.010 0.667 ± 0.014 0.668 ± 0.009 0.677 ± 0.011 
+
+{G47.3, E66.2 } cls 0.652 ± 0.022 0.657 ± 0.010 0.640 ± 0.021 0.655 ± 0.005 0.608 ± 0.013 0.655 ± 0.009 0.670 ± 0.024 0.678 ± 0.022 
+
+{D50, D51, D52, D53, D64 } cls 0.620 ± 0.004 0.610 ± 0.014 0.592 ± 0.014 0.603 ± 0.009 0.600 ± 0.021 0.599 ± 0.020 0.626 ± 0.007 0.649 ± 0.015 
+
+{J96, R09.02, R06.0 } cls 0.636 ± 0.014 0.626 ± 0.003 0.613 ± 0.008 0.633 ± 0.005 0.598 ± 0.010 0.617 ± 0.011 0.621 ± 0.007 0.650 ± 0.008 
+
+{I26, I80, I82 } cls 0.600 ± 0.016 0.625 ± 0.019 0.598 ± 0.022 0.618 ± 0.006 0.558 ± 0.014 0.602 ± 0.011 0.618 ± 0.011 0.646 ± 0.020 
+
+Table S12. Model comparison of ECG + PPG val performance on all 20 benchmark tasks when using 25% of the train visits .Identical format and content as Table S10, but for ECG + PPG . Performance on the val set when using 25% of the train set visits. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.789 ± 0.003 0.759 ± 0.004 0.762 ± 0.003 0.669 ± 0.002 0.696 ± 0.026 0.798 ± 0.028 0.816 ± 0.002 0.833 ± 0.002 Sex cls 0.757 ± 0.006 0.785 ± 0.002 0.781 ± 0.002 0.720 ± 0.004 0.748 ± 0.004 0.800 ± 0.003 0.829 ± 0.002 0.826 ± 0.004 ED dispo cls 0.722 ± 0.007 0.697 ± 0.005 0.701 ± 0.004 0.660 ± 0.003 0.697 ± 0.003 0.719 ± 0.005 0.728 ± 0.003 0.737 ± 0.004 Potassium reg 0.157 ± 0.034 0.297 ± 0.007 0.274 ± 0.014 0.187 ± 0.030 0.191 ± 0.029 0.258 ± 0.014 0.360 ± 0.014 0.361 ± 0.004 Calcium reg 0.167 ± 0.012 0.141 ± 0.011 0.144 ± 0.023 0.082 ± 0.012 0.074 ± 0.044 0.152 ± 0.012 0.203 ± 0.012 0.248 ± 0.012 eGFR reg 0.523 ± 0.014 0.492 ± 0.005 0.508 ± 0.013 0.418 ± 0.007 0.469 ± 0.031 0.549 ± 0.025 0.570 ± 0.004 0.586 ± 0.002 Glucose reg 0.243 ± 0.045 0.238 ± 0.018 0.232 ± 0.016 0.180 ± 0.031 0.186 ± 0.040 0.222 ± 0.039 0.283 ± 0.023 0.288 ± 0.016 Hemoglobin reg 0.351 ± 0.031 0.298 ± 0.013 0.289 ± 0.020 0.259 ± 0.019 0.238 ± 0.028 0.334 ± 0.046 0.376 ± 0.014 0.396 ± 0.013 Albumin reg 0.350 ± 0.036 0.294 ± 0.004 0.317 ± 0.012 0.287 ± 0.003 0.254 ± 0.018 0.374 ± 0.042 0.398 ± 0.006 0.425 ± 0.010 BUN reg 0.303 ± 0.026 0.288 ± 0.015 0.289 ± 0.013 0.254 ± 0.009 0.238 ± 0.070 0.293 ± 0.057 0.359 ± 0.016 0.385 ± 0.012 Sodium reg 0.180 ± 0.029 0.177 ± 0.023 0.155 ± 0.012 0.147 ± 0.014 0.154 ± 0.031 0.202 ± 0.025 0.230 ± 0.017 0.257 ± 0.011 I48 cls 0.797 ± 0.012 0.808 ± 0.013 0.791 ± 0.010 0.768 ± 0.003 0.834 ± 0.005 0.837 ± 0.007 0.832 ± 0.006 0.854 ± 0.003 I50 cls 0.813 ± 0.013 0.807 ± 0.008 0.799 ± 0.013 0.763 ± 0.006 0.819 ± 0.009 0.817 ± 0.009 0.826 ± 0.007 0.828 ± 0.007 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.764 ± 0.025 0.791 ± 0.024 0.752 ± 0.015 0.731 ± 0.011 0.815 ± 0.017 0.822 ± 0.012 0.813 ± 0.013 0.845 ± 0.012 N18 cls 0.766 ± 0.019 0.710 ± 0.023 0.719 ± 0.011 0.704 ± 0.008 0.709 ± 0.009 0.741 ± 0.009 0.748 ± 0.014 0.762 ± 0.010 
+
+{E10, E11 } cls 0.715 ± 0.015 0.658 ± 0.012 0.655 ± 0.008 0.635 ± 0.005 0.648 ± 0.011 0.688 ± 0.009 0.701 ± 0.007 0.703 ± 0.010 
+
+{G47.3, E66.2 } cls 0.689 ± 0.022 0.656 ± 0.014 0.646 ± 0.021 0.636 ± 0.013 0.658 ± 0.021 0.676 ± 0.028 0.685 ± 0.027 0.700 ± 0.008 
+
+{D50, D51, D52, D53, D64 } cls 0.665 ± 0.006 0.619 ± 0.001 0.606 ± 0.010 0.622 ± 0.016 0.604 ± 0.012 0.638 ± 0.010 0.647 ± 0.010 0.663 ± 0.011 
+
+{J96, R09.02, R06.0 } cls 0.667 ± 0.018 0.637 ± 0.023 0.631 ± 0.009 0.632 ± 0.012 0.636 ± 0.025 0.655 ± 0.010 0.658 ± 0.013 0.662 ± 0.012 
+
+{I26, I80, I82 } cls 0.612 ± 0.019 0.589 ± 0.027 0.602 ± 0.020 0.602 ± 0.016 0.555 ± 0.027 0.590 ± 0.021 0.617 ± 0.014 0.657 ± 0.022 
+
+35 Table S13. Model comparison of ECG-only val performance on all 20 benchmark tasks when using 10% of the train visits . Tasks are grouped into two demographics tasks, ED disposition classification, eight laboratory value regression tasks, and nine prior ICD-10 diagnosis classification tasks. Performance on the val set when using 10% of the train set visits. Training visit are sampled with replacement and both downstream training and hyperparameter selection are repeated five times, results are mean ± std across repetitions. Regression tasks are evaluated using Pearson correlation ( ↑), and classification tasks using AUROC ( ↑). Bold red marks the best mean value in each row. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.681 ± 0.003 0.663 ± 0.002 0.657 ± 0.004 0.517 ± 0.008 0.521 ± 0.139 0.726 ± 0.042 0.755 ± 0.004 0.761 ± 0.003 Sex cls 0.656 ± 0.011 0.735 ± 0.006 0.715 ± 0.004 0.665 ± 0.009 0.706 ± 0.004 0.745 ± 0.007 0.791 ± 0.004 0.788 ± 0.003 ED dispo cls 0.712 ± 0.011 0.687 ± 0.005 0.677 ± 0.014 0.638 ± 0.007 0.690 ± 0.010 0.708 ± 0.015 0.718 ± 0.004 0.726 ± 0.009 Potassium reg 0.220 ± 0.022 0.249 ± 0.012 0.229 ± 0.014 0.141 ± 0.020 0.124 ± 0.064 0.232 ± 0.021 0.310 ± 0.014 0.329 ± 0.011 Calcium reg 0.125 ± 0.013 0.094 ± 0.012 0.100 ± 0.019 0.062 ± 0.016 0.060 ± 0.010 0.111 ± 0.005 0.163 ± 0.006 0.163 ± 0.014 eGFR reg 0.519 ± 0.010 0.440 ± 0.015 0.440 ± 0.007 0.333 ± 0.016 0.423 ± 0.038 0.483 ± 0.060 0.541 ± 0.005 0.558 ± 0.011 Glucose reg 0.235 ± 0.070 0.150 ± 0.028 0.131 ± 0.027 0.117 ± 0.014 0.144 ± 0.057 0.195 ± 0.038 0.211 ± 0.019 0.229 ± 0.025 Hemoglobin reg 0.313 ± 0.018 0.196 ± 0.007 0.225 ± 0.019 0.154 ± 0.019 0.169 ± 0.061 0.270 ± 0.044 0.310 ± 0.009 0.350 ± 0.010 Albumin reg 0.405 ± 0.011 0.238 ± 0.033 0.242 ± 0.021 0.218 ± 0.016 0.206 ± 0.046 0.315 ± 0.048 0.350 ± 0.016 0.377 ± 0.012 BUN reg 0.351 ± 0.014 0.274 ± 0.017 0.282 ± 0.022 0.193 ± 0.026 0.246 ± 0.060 0.322 ± 0.044 0.325 ± 0.024 0.342 ± 0.040 Sodium reg 0.251 ± 0.024 0.132 ± 0.011 0.125 ± 0.015 0.111 ± 0.011 0.134 ± 0.063 0.148 ± 0.055 0.195 ± 0.023 0.233 ± 0.007 I48 cls 0.797 ± 0.022 0.785 ± 0.007 0.774 ± 0.010 0.721 ± 0.017 0.833 ± 0.008 0.828 ± 0.010 0.823 ± 0.005 0.847 ± 0.005 I50 cls 0.818 ± 0.020 0.793 ± 0.008 0.766 ± 0.016 0.739 ± 0.009 0.817 ± 0.008 0.809 ± 0.011 0.814 ± 0.009 0.825 ± 0.005 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.789 ± 0.028 0.748 ± 0.038 0.733 ± 0.028 0.700 ± 0.021 0.801 ± 0.013 0.821 ± 0.018 0.787 ± 0.033 0.838 ± 0.025 N18 cls 0.754 ± 0.026 0.689 ± 0.012 0.683 ± 0.024 0.667 ± 0.012 0.692 ± 0.014 0.725 ± 0.014 0.731 ± 0.011 0.750 ± 0.010 
+
+{E10, E11 } cls 0.683 ± 0.017 0.612 ± 0.015 0.592 ± 0.011 0.604 ± 0.013 0.614 ± 0.010 0.647 ± 0.005 0.656 ± 0.009 0.675 ± 0.009 
+
+{G47.3, E66.2 } cls 0.621 ± 0.011 0.613 ± 0.028 0.595 ± 0.024 0.585 ± 0.006 0.630 ± 0.021 0.621 ± 0.024 0.628 ± 0.015 0.662 ± 0.012 
+
+{D50, D51, D52, D53, D64 } cls 0.652 ± 0.019 0.590 ± 0.029 0.594 ± 0.008 0.571 ± 0.009 0.591 ± 0.004 0.634 ± 0.008 0.642 ± 0.009 0.669 ± 0.013 
+
+{J96, R09.02, R06.0 } cls 0.667 ± 0.002 0.603 ± 0.017 0.611 ± 0.017 0.600 ± 0.015 0.631 ± 0.009 0.638 ± 0.010 0.640 ± 0.007 0.645 ± 0.014 
+
+{I26, I80, I82 } cls 0.610 ± 0.021 0.557 ± 0.035 0.562 ± 0.020 0.568 ± 0.022 0.553 ± 0.032 0.568 ± 0.041 0.573 ± 0.016 0.624 ± 0.018 
+
+Table S14. Model comparison of PPG-only val performance on all 20 benchmark tasks when using 10% of the train visits . Identical format and content as Table S13, but for PPG-only . Performance on the val set when using 10% of the train set visits. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.633 ± 0.035 0.668 ± 0.006 0.673 ± 0.006 0.649 ± 0.003 0.549 ± 0.049 0.636 ± 0.023 0.726 ± 0.003 0.763 ± 0.005 Sex cls 0.716 ± 0.004 0.715 ± 0.005 0.698 ± 0.004 0.682 ± 0.006 0.673 ± 0.013 0.704 ± 0.008 0.734 ± 0.004 0.744 ± 0.006 ED dispo cls 0.676 ± 0.007 0.667 ± 0.006 0.657 ± 0.005 0.632 ± 0.007 0.635 ± 0.008 0.658 ± 0.005 0.672 ± 0.007 0.712 ± 0.005 Potassium reg 0.064 ± 0.023 0.124 ± 0.026 0.122 ± 0.026 0.129 ± 0.020 0.048 ± 0.028 0.103 ± 0.025 0.112 ± 0.020 0.127 ± 0.017 Calcium reg 0.076 ± 0.020 0.085 ± 0.027 0.076 ± 0.028 0.072 ± 0.006 0.030 ± 0.010 0.075 ± 0.014 0.118 ± 0.009 0.160 ± 0.013 eGFR reg 0.207 ± 0.029 0.374 ± 0.008 0.395 ± 0.019 0.401 ± 0.004 0.214 ± 0.097 0.318 ± 0.082 0.425 ± 0.018 0.510 ± 0.015 Glucose reg 0.095 ± 0.061 0.205 ± 0.023 0.202 ± 0.016 0.222 ± 0.019 0.063 ± 0.060 0.226 ± 0.026 0.203 ± 0.026 0.234 ± 0.015 Hemoglobin reg 0.173 ± 0.055 0.260 ± 0.018 0.244 ± 0.024 0.274 ± 0.014 0.142 ± 0.044 0.261 ± 0.023 0.259 ± 0.014 0.303 ± 0.012 Albumin reg 0.200 ± 0.039 0.233 ± 0.013 0.259 ± 0.017 0.278 ± 0.013 0.129 ± 0.033 0.216 ± 0.035 0.269 ± 0.025 0.338 ± 0.019 BUN reg 0.150 ± 0.038 0.198 ± 0.022 0.215 ± 0.027 0.227 ± 0.019 0.139 ± 0.020 0.215 ± 0.015 0.237 ± 0.026 0.304 ± 0.021 Sodium reg 0.076 ± 0.031 0.168 ± 0.023 0.161 ± 0.013 0.177 ± 0.013 0.036 ± 0.049 0.118 ± 0.035 0.154 ± 0.011 0.196 ± 0.014 I48 cls 0.735 ± 0.022 0.736 ± 0.008 0.752 ± 0.003 0.711 ± 0.020 0.721 ± 0.007 0.758 ± 0.008 0.755 ± 0.008 0.789 ± 0.009 I50 cls 0.695 ± 0.010 0.687 ± 0.017 0.677 ± 0.017 0.679 ± 0.017 0.648 ± 0.027 0.679 ± 0.021 0.688 ± 0.013 0.722 ± 0.013 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.634 ± 0.011 0.634 ± 0.021 0.596 ± 0.019 0.609 ± 0.013 0.615 ± 0.012 0.657 ± 0.017 0.638 ± 0.017 0.683 ± 0.022 N18 cls 0.653 ± 0.020 0.634 ± 0.010 0.634 ± 0.013 0.627 ± 0.020 0.605 ± 0.009 0.635 ± 0.011 0.655 ± 0.010 0.707 ± 0.012 
+
+{E10, E11 } cls 0.658 ± 0.011 0.634 ± 0.015 0.624 ± 0.012 0.584 ± 0.004 0.607 ± 0.014 0.638 ± 0.008 0.650 ± 0.012 0.662 ± 0.011 
+
+{G47.3, E66.2 } cls 0.642 ± 0.016 0.622 ± 0.022 0.605 ± 0.035 0.625 ± 0.020 0.602 ± 0.012 0.621 ± 0.019 0.640 ± 0.029 0.662 ± 0.021 
+
+{D50, D51, D52, D53, D64 } cls 0.613 ± 0.017 0.605 ± 0.021 0.591 ± 0.022 0.600 ± 0.007 0.596 ± 0.013 0.584 ± 0.011 0.613 ± 0.015 0.638 ± 0.006 
+
+{J96, R09.02, R06.0 } cls 0.631 ± 0.009 0.615 ± 0.005 0.610 ± 0.005 0.622 ± 0.007 0.586 ± 0.011 0.605 ± 0.007 0.608 ± 0.014 0.630 ± 0.006 
+
+{I26, I80, I82 } cls 0.620 ± 0.021 0.588 ± 0.031 0.561 ± 0.050 0.597 ± 0.016 0.518 ± 0.011 0.550 ± 0.042 0.589 ± 0.031 0.596 ± 0.040 
+
+36 Table S15. Model comparison of ECG + PPG val performance on all 20 benchmark tasks when using 10% of the train visits .Identical format and content as Table S13, but for ECG + PPG . Performance on the val set when using 10% of the train set visits. 
+
+Task Domain Features MOMENT-base Chronos-Bolt-small PaPaGei D-BETA ECGFounder xECG-10min CSFM-base 
+
+Age reg 0.746 ± 0.022 0.747 ± 0.003 0.742 ± 0.005 0.650 ± 0.010 0.528 ± 0.198 0.793 ± 0.004 0.801 ± 0.002 0.823 ± 0.003 Sex cls 0.746 ± 0.003 0.772 ± 0.006 0.755 ± 0.005 0.714 ± 0.009 0.736 ± 0.007 0.782 ± 0.004 0.813 ± 0.004 0.814 ± 0.004 ED dispo cls 0.712 ± 0.004 0.696 ± 0.007 0.691 ± 0.009 0.652 ± 0.006 0.686 ± 0.015 0.711 ± 0.013 0.718 ± 0.001 0.728 ± 0.006 Potassium reg 0.124 ± 0.053 0.260 ± 0.026 0.226 ± 0.019 0.166 ± 0.021 0.126 ± 0.067 0.199 ± 0.037 0.316 ± 0.027 0.323 ± 0.017 Calcium reg 0.113 ± 0.030 0.115 ± 0.012 0.121 ± 0.010 0.075 ± 0.011 0.087 ± 0.009 0.124 ± 0.014 0.180 ± 0.011 0.210 ± 0.007 eGFR reg 0.334 ± 0.072 0.469 ± 0.011 0.479 ± 0.008 0.381 ± 0.019 0.422 ± 0.031 0.514 ± 0.037 0.547 ± 0.006 0.572 ± 0.010 Glucose reg 0.139 ± 0.068 0.218 ± 0.031 0.193 ± 0.018 0.167 ± 0.008 0.166 ± 0.057 0.202 ± 0.041 0.260 ± 0.015 0.268 ± 0.024 Hemoglobin reg 0.261 ± 0.052 0.254 ± 0.009 0.268 ± 0.009 0.219 ± 0.019 0.170 ± 0.060 0.284 ± 0.081 0.346 ± 0.007 0.383 ± 0.005 Albumin reg 0.302 ± 0.055 0.272 ± 0.023 0.278 ± 0.027 0.250 ± 0.015 0.207 ± 0.048 0.349 ± 0.031 0.354 ± 0.024 0.393 ± 0.011 BUN reg 0.240 ± 0.040 0.283 ± 0.016 0.283 ± 0.030 0.216 ± 0.031 0.244 ± 0.064 0.290 ± 0.043 0.335 ± 0.019 0.352 ± 0.034 Sodium reg 0.111 ± 0.049 0.149 ± 0.002 0.157 ± 0.017 0.135 ± 0.021 0.138 ± 0.061 0.096 ± 0.043 0.195 ± 0.025 0.234 ± 0.015 I48 cls 0.792 ± 0.023 0.796 ± 0.006 0.783 ± 0.011 0.749 ± 0.012 0.824 ± 0.013 0.826 ± 0.010 0.817 ± 0.005 0.837 ± 0.011 I50 cls 0.806 ± 0.012 0.796 ± 0.004 0.769 ± 0.021 0.746 ± 0.011 0.809 ± 0.013 0.808 ± 0.012 0.809 ± 0.016 0.812 ± 0.019 
+
+{Z95.0, Z95.2, Z95.3 } cls 0.758 ± 0.019 0.756 ± 0.037 0.723 ± 0.028 0.709 ± 0.021 0.785 ± 0.022 0.810 ± 0.018 0.772 ± 0.049 0.828 ± 0.029 N18 cls 0.740 ± 0.020 0.699 ± 0.011 0.689 ± 0.019 0.672 ± 0.013 0.682 ± 0.026 0.722 ± 0.017 0.722 ± 0.015 0.748 ± 0.014 
+
+{E10, E11 } cls 0.696 ± 0.007 0.642 ± 0.015 0.623 ± 0.011 0.612 ± 0.012 0.627 ± 0.014 0.667 ± 0.007 0.680 ± 0.011 0.688 ± 0.005 
+
+{G47.3, E66.2 } cls 0.673 ± 0.008 0.643 ± 0.022 0.625 ± 0.022 0.606 ± 0.012 0.640 ± 0.019 0.641 ± 0.025 0.652 ± 0.012 0.687 ± 0.016 
+
+{D50, D51, D52, D53, D64 } cls 0.651 ± 0.015 0.617 ± 0.020 0.608 ± 0.012 0.584 ± 0.010 0.594 ± 0.013 0.628 ± 0.011 0.640 ± 0.010 0.657 ± 0.011 
+
+{J96, R09.02, R06.0 } cls 0.667 ± 0.005 0.625 ± 0.017 0.625 ± 0.010 0.613 ± 0.016 0.634 ± 0.012 0.644 ± 0.016 0.643 ± 0.014 0.637 ± 0.020 
+
+{I26, I80, I82 } cls 0.621 ± 0.015 0.577 ± 0.032 0.559 ± 0.035 0.577 ± 0.028 0.543 ± 0.037 0.563 ± 0.044 0.579 ± 0.023 0.619 ± 0.028 
+
+Table S16. Number of train , val , and test visits for each of the eight laboratory regression tasks . To ensure unambiguous supervision, only visits with exactly one recorded measurement of the corresponding laboratory test are included. 
+
+Task Train Val Test 
+
+Potassium reg (“POTASSIUM”) 13,481 1,700 1,683 Calcium reg (“CALCIUM”) 13,464 1,700 1,677 eGFR reg (“EGFR REFIT WITHOUT RACE (2021)”) 13,407 1,694 1,675 Glucose reg (“GLUCOSE”) 13,100 1,658 1,644 Hemoglobin reg (“HEMOGLOBIN (HGB)”) 13,854 1,772 1,724 Albumin reg (“ALBUMIN”) 13,538 1,729 1,707 BUN reg (“BLOOD UREA NITROGEN (BUN)”) 13,096 1,658 1,644 Sodium reg (“SODIUM”) 13,092 1,657 1,643 
+
+Table S17. Positive class prevalence for each of the eleven binary classification tasks . Percentage of visits labeled as the positive class in the train , val , and test splits. Values are computed at the visit level and are provided to contextualize reported AUROC performance. 
+
+Task Label / Description Train Val Test 
+
+Sex cls “M” vs “F” 52.2% 52.4% 52.5% ED dispo cls “Discharge” vs {“Inpatient”, “Observation”, “ICU” } 50.5% 51.0% 51.2% I48 cls Atrial Fibrillation Detection 10.5% 8.5% 7.6% I50 cls Heart Failure Detection 9.8% 7.2% 6.5% 
+
+{Z95.0, Z95.2, Z95.3 } cls Cardiac Device Detection 3.6% 2.6% 2.4% N18 cls Chronic Kidney Disease Detection 10.5% 7.0% 7.4% 
+
+{E10, E11 } cls Diabetes Mellitus Detection 15.4% 12.1% 11.7% 
+
+{G47.3, E66.2 } cls Sleep-Related Breathing Disorder Detection 9.3% 6.3% 7.3% 
+
+{D50, D51, D52, D53, D64 } cls Anemia Detection 16.1% 11.4% 11.1% 
+
+{J96, R09.02, R06.0 } cls Respiratory Compromise Detection 23.3% 15.2% 13.1% 
+
+{I26, I80, I82 } cls Venous Thromboembolism Detection 8.6% 5.4% 5.5% 
+
+37

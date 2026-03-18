@@ -1,0 +1,713 @@
+Title: Bio-Inspired Self-Supervised Learning for Wrist-worn IMU Signals
+
+URL Source: https://arxiv.org/pdf/2603.10961v1
+
+Published Time: Thu, 12 Mar 2026 01:25:07 GMT
+
+Number of Pages: 19
+
+Markdown Content:
+# Bio-Inspired Self-Supervised Learning for Wrist-worn IMU Signals 
+
+Prithviraj Tarale 1 Kiet Chu 1 Abhishek Varghese 1 Kai-Chun Liu 2 Maxwell A Xu 3 Mohit Iyyer 4
+
+Sunghoon I. Lee 1
+
+# Abstract 
+
+Wearable accelerometers have enabled large-scale health and wellness monitoring, yet learning ro-bust human-activity representations has been con-strained by the scarcity of labeled data. While self-supervised learning offers a potential remedy, existing approaches treat sensor streams as un-structured time series, overlooking the underlying biological structure of human movement, a factor we argue is critical for effective Human Activity Recognition (HAR). We introduce a novel tok-enization strategy grounded in the submovement theory of motor control, which posits that con-tinuous wrist motion is composed of superposed elementary basis functions called submovements. We define our token as the movement segment ,a unit of motion composed of a finite sequence of submovements that is readily extractable from wrist accelerometer signals. By treating these segments as tokens, we pretrain a Transformer encoder via masked movement-segment recon-struction to model the temporal dependencies of movement segments, shifting the learning focus beyond local waveform morphology. Pretrained on the NHANES corpus ( ≈ 28k hours; ≈ 11k par-ticipants; ≈ 10M windows), our representations outperform strong wearable SSL baselines across six subject-disjoint HAR benchmarks. Further-more, they demonstrate stronger data efficiency in data-scarce settings. Code and pretrained weights will be made publicly available. 
+
+# 1. Introduction 
+
+The ubiquity of cost-effective wearable inertial sensors presents a transformative opportunity for wellness and healthcare, enabling applications ranging from fitness and 
+
+> 1
+
+College of Information and Computer Science, University of Massachusetts, Amherst, United States 2Stevens Institute of Technology, Hoboken, United States 3Google Research 4University of Maryland, College Park, United States. Correspondence to: Prithviraj Tarale <ptarale@umass.edu >.
+
+Preprint. March 12, 2026. 
+
+sleep tracking (Fu et al., 2020; Levy et al., 2023), remote patient monitoring (Small et al., 2019), and personalized medicine (Dunn et al., 2018). However, realizing their full potential relies on robust representations capable of recog-nizing human activities from raw inertial data—spanning primitive upper-limb actions like reaching-to-grasp (Wang et al., 2025), simple behaviors such as walking or sleep-ing (Kontaxis et al., 2024), and complex functional activities like cooking or cleaning (Shoaib et al., 2016). Unfortunately, progress in Human Activity Recognition (HAR) has been hampered by a scarcity of large-scale labeled datasets, pri-marily due to the prohibitive costs and labor required for annotation (Haresamudram et al., 2025). To mitigate this label scarcity, recent research has pivoted to-ward developing self-supervised learning (SSL) objectives to build representations from vast volumes of unlabeled wrist-worn accelerometer data, designed to transfer effec-tively to limited labeled datasets (Yuan et al., 2024; Xu et al., 2025a;b). Typically, these models focus on learning fea-tures that characterize local time-series morphology within fixed-length sliding windows via unsupervised objectives, such as contrastive learning (Chen et al., 2020; Zhang et al., 2022), masked reconstruction (Narayanswamy et al., 2024), or augmentation prediction (Yuan et al., 2024). However, a fundamental limitation persists: they treat accelerometer data as unstructured time series and optimize objectives over arbitrary sample grids rather than meaningful move-ment units. We hypothesize that tokenization is a key bottleneck in wearable SSL. Without meaningful tokens, SSL tends to focus on modeling local waveform morphol-ogy and may underutilize the systematic organization of human movement. This mirrors a broader lesson from lan-guage modeling, where much of the success is enabled by pretraining on the domain’s compositional structure: mean-ingful tokens (words) and the syntactic rules governing their arrangement. In this work, we bridge this gap by formalizing a bio-inspired tokenization of wrist-IMU signals, enabling se-quence modeling over meaningful movement units and their temporal relations via self-supervised learning. Our ap-proach is grounded in the submovement theory of motor control , which posits that continuous, complex wrist move-ments are constructed from the superposition of elemen-1
+
+> arXiv:2603.10961v1 [cs.LG] 11 Mar 2026 Bio-Inspired Self-Supervised Learning for Wrist-worn IMU
+
+tary units known as submovements (Rohrer et al., 2004). These submovements act as the fundamental building blocks of observed wrist motion, analogous to how characters or phonemes serve as the building blocks of written or spo-ken language. Leveraging this theoretical framework, we propose a novel token definition: the movement segment .Defined as a sub-second unit composed of a finite number of submovements, we posit that this segment functions as the equivalent of a “word” in natural language. The primary hypothesis of this work is that these movement segments capture useful aspects of the organizational structure of hu-man activity, allowing the model to look beyond simple waveform morphology. Leveraging this framework, we also introduce Bio-PM (Bio-inspired Tokenization-based Pretrained Model), an open pretrained encoder designed to model the temporal depen-dencies between movement segments. Bio-PM is pretrained on NHANES, a large-scale public wrist-IMU corpus com-prising approximately 28,000 hours of data from 11,000 participants. To isolate the effect of SSL objectives, we pre-train all SSL baselines on the same corpus and evaluate them under the same subject-disjoint transfer protocol. Empiri-cally, Bio-PM achieves the strongest performance among the controlled SSL baselines we evaluate, improving macro-F1 scores by an average of 6% (range: 4–12%) across six public HAR benchmarks. To support reproducible research, we release pretrained weights and code. Our main contributions are: 1. Bio-inspired Tokenization for wrist IMU. We intro-duce a scalable tokenization strategy that chunks con-tinuous accelerometer signals into meaningful move-ment units for sequence modeling. 2. Contextual Representation Learning. We present Bio-PM, a Transformer-based encoder pretrained via masked movement-segment reconstruction to capture the compositional structure of human activity. 3. Data-efficient transfer from large-scale pretraining. 
+
+We show that segment-based pretraining improves la-bel efficiency over SSL baselines. 
+
+# 2. Related Work 
+
+Self-supervised learning objectives for wearable IMU. 
+
+Wearable HAR has increasingly adopted self-supervised learning to reduce reliance on labeled data (Haresamudram et al., 2022). Previous work explores three dominant fami-lies of objectives: (i) augmentation-prediction, which trains models to recognize which transformation was applied to the signal (Saeed et al., 2019; Yuan et al., 2024); (ii) masked re-construction, which trains models to impute missing signals (Haresamudram et al., 2020; Narayanswamy et al., 2024); and (iii) contrastive learning, which encourages alignment of representations of different views of the same signal (Chen et al., 2020; Xu et al., 2025a), including variants such as time–frequency consistency (TF-C) that align temporal and spectral views (Zhang et al., 2022). Augmentation-prediction can work when transformations re-flect realistic sensor variability, but it is sensitive to augmen-tation choice: artifacts or shortcuts (e.g., boundary effects from chunk-and-permute) can dominate the supervisory sig-nal and inflate pretext-task performance. Masked reconstruc-tion yields dense supervision from unlabeled data, but raw-value targets can often be solved via local interpolation and sensor statistics unless masking strategies and model bias force broader context use. Contrastive objectives (including TF-C) often transfer well by enforcing invariances across views, but what they learn depends strongly on view de-sign and batch composition and can prioritize augmentation-invariant cues over finer-grained activity structure. TF-C is a particularly competitive baseline in our setting. However, across these families, IMU signals are often treated as unstructured time series, with token boundaries chosen by arbitrary rules rather than aligned to meaning-ful motion events. This ignores the event-level structure of human movement, and consequently there is little pres-sure on models to learn that structure. Since activities are compositions of motion events, so ignoring event bound-aries can limit transfer. We therefore argue that tokeniza-tion is a missing design axis: in this work, we study it directly by proposing a biologically motivated tokenization for wrist IMU and evaluating it under controlled conditions. Specifically, we pretrain multiple SSL objectives on the same upstream corpus and compare them using identical downstream protocols (Sec. 3); this isolates methodological differences from upstream data quality and quantity. 
+
+# 3. Methods 
+
+3.1. Biological Prior: The Submovement Theory 
+
+The proposed tokenization draws on the submovement the-ory of motor control (Krebs et al., 1999; Elliott et al., 2001; Rohrer et al., 2004; Hogan & Sternad, 2012; Miranda et al., 2018). The theory treats the hand/wrist as the upper-limb’s end-effector and posits that its continuous motion along each Cartesian axis can be described as a superposition of discrete bell-shaped kinematic units, called submovements ,as illustrated in Figure 2 (right end). For axis i ∈ x, y, z ,velocity is expressed as 
+
+vi(t) = 
+
+> K
+
+X
+
+> k=1
+
+¯vik · σ(t | τk, d k), (1) where K is the number of submovements. Each submove-ment k is defined by a normalized bell-shaped basis function 
+
+σ(·) with onset τk, duration dk, and peak velocity ¯vik .2Bio-Inspired Self-Supervised Learning for Wrist-worn IMU  
+
+> Figure 1. Bio-PM Representation Learning. We (i) tokenize accelerometry into movement-aligned segments, (ii) pretrain by modeling temporal relation across segments with a Transformer under masked reconstruction, and (iii) transfer the frozen encoder to downstream HAR for linear probing.
+
+The canonical bell-shaped profile originates from observa-tions of point-to-point reaching tasks—the most fundamen-tal form of goal-directed upper-limb movement—where the hand moves between two positions, starting and ending at rest (Guigon et al., 2007). Crucially, this profile exhibits 
+
+shape invariance : although parameters such as duration 
+
+dk and peak velocity ¯vik scale with movement distance and speed, the underlying normalized shape σ(·) remains constant (Flash & Hogan, 1985). Submovement theory generalizes this principle to complex behaviors, modeling continuous velocity profiles as sequences of partially over-lapping submovements (Hogan & Sternad, 2012). 
+
+3.2. Proposed Tokenization of Wearable IMU Data 
+
+We seek a tokenization that captures the compositional struc-ture of human movement described by submovement theory while remaining computationally tractable for continuous wearable accelerometer streams. Although the submove-ment is the atomic unit of upper-limb movements, using it directly as a token introduces two practical limitations. First, estimating submovement parameters in Eq. (1) requires it-erative fitting procedures (Rohrer & Hogan, 2003; 2006), which are prohibitively expensive to run continuously at scale. Second, as a low-level kinematic primitive, a single submovement carries limited semantic content in isolation; we view it as analogous to a “phoneme” or a “letter” in natu-  
+
+> Figure 2. Movement segments in the velocity domain arise from overlapping submovements; we operationalize analogous units directly from accelerometry by defining tokens between successive acceleration Zero-Crossings (corresponding to velocity extrema). Example shown for walking (MHealth); Appendix Fig. 5 details the full tokenization pipeline.
+
+ral language—useful for composition, but rarely meaningful alone. We therefore adopt the movement segment (Daneault et al., 2023) as our guiding unit of tokenization. In the veloc-ity domain, a movement segment is defined as the interval between successive zero-crossings of velocity, as depicted using shades in Figure 2 (left end). We posit that movement 3Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+segments, representing an initialization and termination of movements in each axis, could function as a word-like unit whose temporal organization yields higher-level contexts that a sequence model can exploit. However, directly tok-enizing in the velocity domain poses significant practical hurdles for wearable accelerometry. Accelerometers mea-sure acceleration, so velocity must be obtained by numerical integration (e.g., Simpson’s rule), increasing compute and introducing artifacts such as integration drift that degrade signal fidelity over continuous sensor streams. To circumvent these complications, we define token bound-aries at acceleration zero-crossings, formally referred to as ‘type 2’ movement segments (Simo et al., 2014; Nunes et al., 2025; Noy et al., 2025). This strategy is kinematically justi-fied: a bell-shaped velocity profile manifests as a biphasic acceleration profile, where the peak velocity coincides pre-cisely with a zero-crossing in acceleration. This choice is supported by clinical research, which demonstrates that the morphology and temporal organization of these segments encode critical markers of motor impairment in neurological conditions, such as stroke (Simo et al., 2014), Parkinson’s disease (Noy et al., 2025), and Huntington’s disease (Nunes et al., 2025). The fact that these specific segments are sensi-tive to underlying motor phenotype suggests they faithfully capture the compositional structure of human movement. Appendix Fig. 5 provides a visual guide to our tokeniza-tion pipeline; we outline the components here and defer the formalization to Sec. 3.3. Our tokenization targets linear ac-celeration (voluntary motion), but raw accelerometer signals superpose both linear and gravitational components. We esti-mate linear acceleration by applying a 0.5 Hz high-pass filter to each axis, following standard practice in inertial sensing (Van Hees et al., 2013; Nunes et al., 2025). The resulting high-frequency component is then tokenized into movement segments by detecting zero-crossings in the filtered signal. Note that the residual low-frequency component also retains semantic value: largely due to the imperfect separation of digital filtering, it captures not only static gravity but also slow rotational movements, providing essential postural con-text (e.g., distinguishing sitting from lying). We describe how we re-incorporate this low-frequency component for downstream evaluation in Sec. 3.4. 
+
+3.3. Self-Supervised Pretraining Pipeline 
+
+Our goal is to learn representations of wrist IMU that cap-ture the temporal organization of movement segments. To this end, we pretrain a segment-based Transformer encoder using a masked reconstruction objective. In this section, we describe (i) IMU windowing and movement-segment tokenization, (ii) CNN segment encoding, (iii) Transformer sequence modeling, and (iv) masked segment reconstruc-tion. 
+
+Windowing and tokenization. We partition the gravity-reduced accelerometer stream into non-overlapping 10 s windows, Xj ∈ RT ×3, where j indexes windows and 
+
+T is the number of samples per window. For each axis 
+
+A ∈ { x, y, z }, we detect consecutive sign changes (zero-crossings) in X (: ,A ) 
+
+> j
+
+and define a movement segment as the samples between successive zero-crossings. Let Si,A j denote the i-th segment on axis A within window j. To suppress noise-induced crossings near zero, we apply a two-stage hysteresis (temporal and amplitude); implementation details are provided in Appendix F.2. We resample each segment Si,A j to a fixed length L=32 
+
+using linear interpolation, yielding ¯Si,A j ∈ RL. We also retain segment metadata: (i) duration in samples Di,A j to preserve original temporal fidelity, (ii) midpoint time ti,A j
+
+within the zero-crossing-window for position encoding, and (iii) axis identifier A to preserve spatial fidelity. 
+
+Movement-segment encoder (CNN). Because the local waveform within a movement segment encodes kinematic structure (e.g. peaks, asymmetry, and oscillation rate), we apply a 1D CNN to each resampled segment ¯Si,A j ∈ RL
+
+to produce an embedding hi,A j ∈ R60 . We form the token representation by concatenating (a) the CNN embedding, (b) a learned 3-dimensional axis embedding e(A), and (c) its original duration Di,A j (scalar): 
+
+zi,A j =
+
+h
+
+hi,A j , e (A), D i,A j
+
+i
+
+. (2) This construction yields tokens znj ∈ R64 (60 CNN + 3 axis + 1 duration), chosen based on upstream model size analysis (Appendix B, Table 4). We then merge tokens from all three axes and sort them by midpoint time to obtain a single token sequence znj Nj 
+
+> n=1
+
+for window j, where Nj is the number of segments. 
+
+Temporal reasoning (Transformer). We use a Trans-former encoder to model dependencies across move-ment segments. Given the sequence {znj }Nj
+
+> n=1
+
+, a 5-layer Transformer encoder produces contextual embeddings 
+
+{unj }Nj
+
+> n=1
+
+. Because segment timing is irregular, standard absolute/sinusoidal positional encodings–which implicitly assume roughly uniform spacing–can be unsuitable. We, therefore incorporate explicit time information through time-aware positional encodings. 
+
+Time-aware positional encodings. 
+
+Let tnj denote the midpoint time of token n within window 
+
+j (stored as metadata), and let ˜tnj ∈ [0 , 1] be its normalized value within the 10 s window. We encode absolute phase by 4Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+adding an MLP time embedding p(˜ tnj ):
+
+˜znj = LN  znj + p(˜ tnj ) . (3) For relative timing, we compute pairwise offsets ∆ti,k j =
+
+tij − tkj and normalize by the window’s median inter-token interval. Intuitively, this approximates the number of typ-ical inter-segment “steps” between segments i and k. We discretize the normalized offsets, index a learned relative-position embedding, and add the resulting bias to the atten-tion logits. We include an ablation of positional information in Appendix F.1. 
+
+Masked movement-segment reconstruction. We pre-train the model by reconstructing masked movement seg-ments from surrounding context. To encourage both local interpolation and long-range inference, we use a hybrid masking policy. For each window, we sample one of two masking schemes with equal probability: (i) random mask-ing, which masks a fraction r of tokens at random, and (ii) contiguous time masking, which partitions the 10 s window into 1 s bins, masks a fraction r of bins, and then masks every segment that overlaps a masked bin. After CNN en-coding, masked tokens are replaced with a learned [MASK] 
+
+embedding. We set the masking rate to r=0 .5, selected em-pirically by sweeping r ∈ { 0.25 , 0.50 , 0.75 } (see Appendix Table 3). To discourage trivial copying from visible context, we addi-tionally corrupt visible tokens: for 20% of unmasked tokens, we replace only the CNN embeddings h with one sampled from another token from the same window, while keeping the original metadata (axis, duration, time). A decoder reconstructs the resampled waveform ¯Snj for each valid token. We minimize an ℓ1 reconstruction loss over non-padding tokens, upweighting masked tokens by a factor of 100 .
+
+3.4. Downstream Embeddings 
+
+Given a window Xj , the Transformer produces contextual token embeddings {unj }Nj 
+
+> n=1
+
+for the movement segments in that window. We summarize these embeddings using mean and standard-deviation pooling and concatenate them to form a window-level segment representation Tj ∈ R128 .
+
+Re-incorporating gravity. Because our tokenization op-erates on gravity-reduced acceleration, Tj does not encode static posture and device orientation. For downstream lin-ear probing, we re-incorporate the low-frequency residual 
+
+gj by low-pass filtering the same raw acceleration stream using the matched cutoff of 0.5 Hz. We resample gj to 300 samples per axis and vectorize it into flat( gj ) ∈ R900 . The fused probe feature is Fj = [ Tj , flat( gj )] ∈ R1028 . Note that this fusion does not add additional information relative to methods that operate on raw acceleration; it simply re-stores the low-frequency component that is removed when forming gravity-reduced tokens. 
+
+3.5. Baselines 
+
+To isolate the effect of the SSL objective, we pretrain all baselines on the same NHANES corpus with matched win-dowing/sampling, and evaluate all methods under the same subject-disjoint transfer protocol. We consider four SSL ob-jectives: (i) contrastive learning (TF-C) (Zhang et al., 2022), (ii) augmentation prediction (AugPred; replicating the ar-chitecture and objective of Yuan et al. (2024)), (iii) masked reconstruction with equal-length chunking (naive tokeniza-tion), and (iv) our masked reconstruction of movement seg-ments. The equal-chunking baseline directly ablates to-kenization: it keeps the masked-reconstruction objective fixed while replacing movement-segment tokens with equal-length chunks. Upstream training metrics for all baselines are reported in Appendix C. Additional implementation de-tails (optimizers, model sizes, and baseline architectures) are provided in Appendix D. We also include two generic time-series foundation models – Chronos (Ansari et al., 2024) and Moment (Goswami et al., 2024) – as contextual reference points. Note that we eval-uate their publicly released checkpoints without additional pretraining. 
+
+3.6. Evaluation: Human Activity Recognition 
+
+We evaluate cross-subject generalization using subject-disjoint splits throughout. For datasets with ≤ 10 subjects, we use leave-one-subject-out cross-validation (LOSOCV). For datasets with > 10 subjects, we use 5-fold subject-wise cross-validation, ensuring test subjects are disjoint across folds. We report Macro-F1 on held-out test subjects as mean 
+
+± standard deviation across splits. 
+
+Linear probing protocol. For all 10 s windows, we ex-tract a representation using the frozen pretrained encoder. Then, for each representation and split, we (i) fit z-score nor-malization on the training subjects and apply it to train/test, (ii) select C by cross-validating on the training subjects to maximize Macro-F1, (iii) refit multinomial logistic regres-sion with the selected C on all training subjects, and (iv) report Macro-F1 on held-out test subjects. To contextualize the probe capacity, we report the number of trainable parameters in the logistic-regression classifier for each representation variant in Appendix G (Table 6). 5Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+Table 1. Macro-F1 (mean ± std) on six subject-disjoint HAR benchmarks using frozen representations and multinomial logistic regression. All wearable SSL baselines are pretrained on the same NHANES upstream corpus under a matched transfer protocol; generic time-series foundation models are included only as contextual reference and are not pretrained on NHANES. 
+
+Model UMH PAMAP WISDM MHealth WHARF HAD Avg. 
+
+Generic Time Series FMs 
+
+Chronos (8.3M) 0.23  
+
+> ±0.02
+
+0.56  
+
+> ±0.04
+
+0.53  
+
+> ±0.02
+
+0.63  
+
+> ±0.05
+
+0.25  
+
+> ±0.04
+
+0.34  
+
+> ±0.07
+
+0.42 
+
+> (n=6)
+
+Moment (35M) 0.48  
+
+> ±0.04
+
+0.64  
+
+> ±0.07
+
+0.68  
+
+> ±0.03
+
+0.66  
+
+> ±0.06
+
+0.37  
+
+> ±0.14
+
+0.72  
+
+> ±0.04
+
+0.59 
+
+> (n=6)
+
+Controlled (NHANES pretrained) 
+
+AugPred (Yuan et al., 2024) (10.5M) 0.29  
+
+> ±0.03
+
+0.55  
+
+> ±0.07
+
+0.56  
+
+> ±0.02
+
+0.60  
+
+> ±0.08
+
+0.24  
+
+> ±0.07
+
+0.41  
+
+> ±0.03
+
+0.44 
+
+> (n=6)
+
+Mask-Recon (1.4M) 0.39  
+
+> ±0.04
+
+0.61  
+
+> ±0.05
+
+0.58  
+
+> ±0.02
+
+0.62  
+
+> ±0.06
+
+0.30  
+
+> ±0.09
+
+0.33  
+
+> ±0.07
+
+0.47 
+
+> (n=6)
+
+Contrastive (TF-C) (8.7M) 0.53  
+
+> ±0.07
+
+0.62  
+
+> ±0.13
+
+0.64  
+
+> ±0.04
+
+0.68  
+
+> ±0.17
+
+0.37  
+
+> ±0.12
+
+0.72  
+
+> ±0.08
+
+0.59 
+
+> (n=6)
+
+Bio-PM (1.4M) 0.57  
+
+> ±0.05
+
+0.69  
+
+> ±0.16
+
+0.70  
+
+> ±0.03
+
+0.80  
+
+> ±0.08
+
+0.41  
+
+> ±0.03
+
+0.75  
+
+> ±0.06
+
+0.65 
+
+> (n=6)
+
+# 4. Results & Analysis 
+
+4.1. Comparing Self-Supervised Objectives 
+
+Under a controlled upstream setting where all SSL baselines are pretrained on the same NHANES corpus and evaluated with the same subject-disjoint linear-probe protocol, we find: (i) Bio-PM transfers best across all six HAR benchmarks (Table 1); (ii) movement-aligned tokenization is a major con-tributor to the gains, as replacing it with structure-agnostic equal chunking degrades transfer by 0.18 Macro-F1 on average (Table 2); and (iii) Bio-PM is more label-efficient and encodes order-dependent motion cues that support generalization to unseen transitions (Fig. 4, Sec. 4.3). 4.1.1. E VALUATING TRANSFER VIA LINEAR PROBE 
+
+Table 1 reports Macro-F1 for frozen linear probes across six subject-disjoint HAR benchmarks. Bio-PM achieves the best average transfer (0.65 Macro-F1) and is best on every dataset among the compared baselines. Compared to TF-C, a strong time-series contrastive baseline, Bio-PM improves transfer consistently (average +0.06), with the largest margin on MHealth (+0.12; 0.80 vs. 0.68). Relative to AugPred (Yuan et al. (2024)’s methodology), Bio-PM improves by +0.21 on average, and relative to a capacity-matched masked-reconstruction baseline it improves by +0.18 on average. 4.1.2. I SOLATING TOKENIZATION STRATEGY 
+
+We isolate tokenization by keeping the pretraining objective, model capacity, optimizer, masking rate, and downstream linear-probing protocol fixed, and only swapping the tok-enization strategy by pretraining the masked reconstruction model with uniform equal-length chunks (Table 2). For uniform chunking, we form fixed-length chunk tokens and encode them with the same CNN segment encoder used by Bio-PM (which expects a 32-sample waveform per to-ken). We choose the chunk duration to approximately match the typical temporal support of movement-segment tokens (yielding ∼0.5 s at 80 Hz) and resample each chunk to 32 samples, so the ablation primarily tests boundary alignment rather than changes in per-token temporal resolution. Swapping tokenization strategy for uniform chunks reduces average Macro-F1 from 0.65 to 0.47 ( -0.18 ), with the largest drops on HAD, UMA-Hand, and MHealth (Table 2). Be-cause the objective and capacity are matched, this gap sup-ports the interpretation that our proposed movement-aligned tokenization contributes substantially to transfer, i.e., is a task-relevant inductive bias .4.1.3. A DDITIONAL ABLATIONS : GRAVITY AND PRETRAINING 
+
+Gravity (low-frequency) component. Our tokenization is applied to gravity-reduced acceleration to emphasize vol-untary motion acceleration; however, the raw accelerome-6Bio-Inspired Self-Supervised Learning for Wrist-worn IMU                                           
+
+> Table 2. Macro-F1 (mean ±std) under controlled ablations isolating key design choices, including tokenization, gravity, and pretraining. Model UMH PAMAP WISDM MHealth WHARF HAD Avg. Bio-PM 0.57
+> ±0.05
+> 0.69
+> ±0.16
+> 0.70
+> ±0.03
+> 0.80
+> ±0.08
+> 0.41
+> ±0.03
+> 0.75
+> ±0.06
+> 0.65
+> ±0.07
+> Bio-PM w/o Gravity 0.48
+> ±0.04
+> 0.60
+> ±0.04
+> 0.67
+> ±0.02
+> 0.70
+> ±0.04
+> 0.33
+> ±0.08
+> 0.55
+> ±0.05
+> 0.56
+> ±0.05
+> Bio-PM w/o Proposed Tokenization w. Naive Tokenization 0.38
+> ±0.04
+> 0.61
+> ±0.05
+> 0.58
+> ±0.02
+> 0.62
+> ±0.06
+> 0.30
+> ±0.09
+> 0.33
+> ±0.07
+> 0.47
+> ±0.06
+> Bio-PM w/o Pretraining 0.45
+> ±0.13
+> 0.59
+> ±0.14
+> 0.58
+> ±0.02
+> 0.67
+> ±0.12
+> 0.41
+> ±0.11
+> 0.61
+> ±0.09
+> 0.55
+> ±0.10
+
+ter signal also contains a low-frequency orientation-related component, acceleration from gravity. Providing this com-ponent to the downstream linear probe improves average Macro-F1 from 0.56 to 0.65 (Table 2), with the largest gain on HAD (+0.20). Interestingly, even without the low-frequency component at linear probe, Bio-PM remains strong (0.56 Macro-F1 on average) and still exceeds the uniform-chunk masked-reconstruction baseline (0.47) and AugPred (0.44) ( Table 2). This further supports movement-aligned tokenization as a strong inductive bias. Pretraining improves mean performance and/or stabil-ity. End-to-end finetuning the same architecture without SSL pretraining reduces average Macro-F1 (0.65 → 0.55; Table 2). Note that end-to-end fine-tuning updates the entire 
+
+1.4M-parameter encoder, whereas linear probing trains only a lightweight classifier head ( ∼8k–26k parameters, depend-ing on the dataset). Interestingly, the beneficial effect of pre-training can manifest as improved mean performance (e.g., UMH, WISDM, HAD) and/or improved reliability across splits (e.g., WHARF exhibits similar mean but substantially reduced variance after pretraining). Together, these results support that Bio-PM encodes transferable features that are difficult to recover from limited labeled data alone. 
+
+4.2. Data efficiency: Fewer subject data 
+
+In wearable HAR, recruiting and annotating diverse partici-pant data is costly and logistically constrained. We therefore study transfer as the number of labeled training subjects de-creases, which simultaneously reduces (i) subject diversity and (ii) labeled data volume. We keep the held-out test subjects fixed. Fig. 4 shows that Bio-PM is consistently best or tied-best across subject budgets, with particularly clear improvements on MHealth and WISDM (the largest benchmark). Impor-tantly, the relative ordering observed at full labeled-subject budgets largely persists in low-subject regimes, indicating that the improvements are not confined to high-data transfer. 
+
+4.3. Generalization to Unseen Transitions 
+
+Complex human behaviors are often compositional: they reuse a finite set of recurring motion units in different orders to produce diverse activities. We therefore test whether Bio-PM understands how motion units function in context by evaluating next-token prediction on unseen transitions. 
+
+Experimental Setup For each dataset, we first induce a discrete vocabulary by clustering token embeddings with 
+
+K-means. We sweep K ∈ { 16 , 32 , 64 , 128 , 256 } and se-lect K by the highest silhouette score (reported in Fig. 3). This converts each 10 s window into a sequence of discrete IDs, (p1, . . . , p N ), where pi ∈ [1 , K ] and N represents the sequence length. We then train a linear classifier to predict the next token type pi+1 given the frozen embedding of the current token pi. Most importantly, we evaluate on a held-out bigram split : transitions (e.g., (A → B)) in the test set were excluded from the probe’s training set. This forces the model to generalize based on learned structural rules rather than memorized bigram frequencies. 
+
+Baselines. To isolate the source of performance, we com-pare Bio-PM’s contextual embeddings (post-Transformer) against: (i) Non-contextual embeddings (pre-Transformer CNN features from Eq. 2), to test the value of temporal mod-eling; (ii) A Markov baseline that predicts the most frequent successor observed during training; and (iii) A Shuffle con-trol, where tokens within a window are permuted to destroy temporal ordering during training and testing. 
+
+Results. As shown in Figure 3, Bio-PM ’s contextual em-beddings consistently outperform the non-contextual base-line on unseen transitions across datasets (Figure 3), with improvements of +3 .3 to +14 .9 percentage points. Criti-cally, shuffling token order largely removes the contextual advantage on four datasets. This failure of shuffle control implies that Bio-PM relies on the sequential structure and not just token-level cues. HAD is less stable in this test, as it has substantially fewer unique transitions ( ∼250 vs 2.3k–27k in the other datasets), reducing the severity of the shuffle control. 7Bio-Inspired Self-Supervised Learning for Wrist-worn IMU       
+
+> Figure 3. Next-token prediction accuracy on unseen token transi-tions using Bio-PM embeddings. Contextual embeddings outper-form the non-contextual baseline, and shuffling largely removes this gain, indicating reliance on temporal organization rather than token identity alone. Chance prediction is 1
+> K, with K selected per dataset by silhouette score. HAD* is less stable due to substantially fewer unique transitions ( ≈250 vs 2.3k–27k).
+
+Takeaway. Bio-PM’s token embeddings reflect a token’s 
+
+function in motion (not just its local waveform), enabling next-token prediction to generalize to unseen pairings of fa-miliar units by leveraging function-level transition patterns. 
+
+4.4. Qualitative error analysis 
+
+We use confusion matrices to probe whether Bio-PM ’s gains align with our hypothesis that movement-aligned to-kens better capture activities whose labels depend on tempo-ral phase order. We compare primarily against TF-C as the strongest controlled baseline (Appendix H). Across datasets, TF-C more often confuses classes with similar short-term motion patterns but different ordering, while Bio-PM re-duces these confusions (e.g., WHARF: sit down chair 0.50 vs 0.21; lie down bed 0.17 vs 0.02; UTD-MHAD: tennis serve 0.78 vs 0.44; UMAHand: cleaning 0.80 vs 0.67). Er-rors remain concentrated among inherently ambiguous pairs (e.g., stair variants vs walk in wrist-only sensing), but the qualitative shifts are consistent with our unseen-transition probe (Sec. 4.3), providing converging evidence that Bio-PM better encodes order-dependent structure beyond token identity. 
+
+# 5. Limitations and future work 
+
+Our study demonstrates the value of movement-aligned to-kenization for wrist-IMU self-supervised learning under a controlled pretraining and transfer protocol. An important open question is whether these gains persist—or widen—as upstream data and subject/sensor diversity scale (e.g., using UKBiobank). Secondly, while we focus on HAR, extending to clinical endpoints is an exciting next step, especially since submovement-based tokens have shown clinical relevance in prior studies; because these settings are high-stakes, such evaluations would require careful study design and rigorous validation. More broadly, we argue tokenization is a central design choice in time-series representation learning, and analogous “meaningful units” may benefit other sensor modalities. 
+
+# Impact Statement 
+
+This paper advances self-supervised representation learn-ing for wrist-worn IMU signals to improve data efficiency in human activity recognition. Our experiments use pub-licly available, de-identified datasets and are intended for research use on activity-recognition benchmarks. Any real-world deployment would require context-specific validation and adherence to applicable data governance and privacy practices. ——— 
+
+# References 
+
+Ansari, A. F., Stella, L., Turkmen, C., Zhang, X., Mercado, P., Shen, H., Shchur, O., Rangapuram, S. S., Arango, S. P., Kapoor, S., Zschiegner, J., Maddix, D. C., Wang, H., Mahoney, M. W., Torkkola, K., Wilson, A. G., Bohlke-Schneider, M., and Wang, Y. Chronos: Learning the language of time series, 2024. URL https://arxiv. org/abs/2403.07815 .Bai, J., Di, C., Xiao, L., Evenson, K., Lacroix, A., Crainiceanu, C., and Buchner, D. An activity index for raw accelerometry data and its comparison with other activity metrics. PLOS ONE , 11, 08 2016. doi: 10.1371/journal.pone.0160644. Banos, O., Garcia, R., Holgado-Terriza, J. A., Damas, M., Pomares, H., Rojas, I., Saez, A., and Villalonga, C. mhealthdroid: A novel framework for agile development of mobile health applications. In Pecchia, L., Chen, L. L., Nugent, C., and Bravo, J. (eds.), Ambient Assisted Living and Daily Activities , pp. 91–98, Cham, 2014a. Springer International Publishing. ISBN 978-3-319-13105-4. Banos, O., Garcia, R., and Saez, A. MHEALTH. UCI Machine Learning Repository, 2014b. DOI: https://doi.org/10.24432/C5TW22. Banos, O., Villalonga, C., Garcia, R., Saez, A., Damas, M., Holgado-Terriza, J. A., Lee, S., Pomares, H., and Rojas, I. Design, implementation and validation of a novel open framework for agile development of mobile health appli-cations. BioMedical Engineering OnLine , 14(Suppl 2):S6, 2015. doi: 10.1186/1475-925X-14-S2-S6. URL https: //doi.org/10.1186/1475-925X-14-S2-S6 .Bruno, B., Mastrogiovanni, F., and Sgorbissa, A. A public 8Bio-Inspired Self-Supervised Learning for Wrist-worn IMU  
+
+> Figure 4. Macro-F1 of frozen linear probes as a function of the fraction of labeled subjects used for training (subject-disjoint splits). Bio-PM remains competitive at low label fractions and scales more favorably with additional labeled subjects than controlled SSL baselines.
+
+domain dataset for adl recognition using wrist-placed accelerometers. In 2014 IEEE International Symposium on Robot and Human Interactive Communication (RO-MAN) , pp. 738–743, Edinburgh, UK, 08 2014. IEEE. doi: 10.1109/ROMAN.2014.6926341. Casilari, E., Barbosa-Galeano, J., and Gonz ´alez-Ca ˜nete, F. J. Umahand: Hand activity dataset (universidad de m ´alaga), 2024. Centers for Disease Control and Prevention (CDC) and National Center for Health Statistics (NCHS). National health and nutrition examination survey data. https: //wwwn.cdc.gov/Nchs/Data/Nhanes/ Public/2011/DataFiles/PAX80_G_R.htm ,2011-2012. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. Centers for Disease Control and Prevention (CDC) and National Center for Health Statistics (NCHS). National health and nutrition examination survey data. https: //wwwn.cdc.gov/Nchs/Data/Nhanes/ Public/2013/DataFiles/PAX80_H.htm ,2013-2014. Hyattsville, MD: U.S. Department of Health and Human Services, Centers for Disease Control and Prevention. Chen, C., Jafari, R., and Kehtarnavaz, N. Utd-mhad: A multimodal dataset for human action recognition utiliz-ing a depth camera and a wearable inertial sensor. In 
+
+2015 IEEE International Conference on Image Process-ing (ICIP) , pp. 168–172, 2015. doi: 10.1109/ICIP.2015. 7350781. Chen, T., Kornblith, S., Norouzi, M., and Hinton, G. Asimple framework for contrastive learning of visual repre-sentations, 2020. URL https://arxiv.org/abs/ 2002.05709 .Daneault, J.-F., Oubre, B., Miranda, J. G. V., and Lee, S. I. Understanding voluntary human movement variability through data-driven segmentation and clustering. Fron-tiers in Human Neuroscience , 17:1278653, 2023. Dunn, J., Runge, R., and Snyder, M. Wearables and the medical revolution. Personalized medicine , 15(5):429– 448, 2018. Elliott, D., Helsen, W. F., and Chua, R. A century later: Woodworth’s (1899) two-component model of goal-directed aiming. Psychological bulletin , 127(3):342, 2001. Flash, T. and Hogan, N. The coordination of arm move-ments: an experimentally confirmed mathematical model. 
+
+Journal of neuroscience , 5(7):1688–1703, 1985. Fu, B., Damer, N., Kirchbuchner, F., and Kuijper, A. Sensing technology for human activity recognition: A comprehensive survey. IEEE Access , 8:83791–83820, 2020. URL https://api.semanticscholar. org/CorpusID:218579308 .9Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+Goswami, M., Szafer, K., Choudhry, A., Cai, Y., Li, S., and Dubrawski, A. Moment: A family of open time-series foundation models, 2024. URL https: //arxiv.org/abs/2402.03885 .Guigon, E., Baraduc, P., and Desmurget, M. Computational motor control: redundancy and invariance. Journal of neurophysiology , 97(1):331–347, 2007. Haresamudram, H., Tang, C. I., Suh, S., Lukowicz, P., and Ploetz, T. Past, present, and future of sensor-based hu-man activity recognition using wearables: A surveying tutorial on a still challenging task. Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies , 9(2):1–44, 2025. Haresamudram, H. K., Beedu, A., Agrawal, V., Grady, P., Essa, I., Hoffman, J., and Pl ¨otz, T. Masked reconstruction based self-supervision for human ac-tivity recognition. Proceedings of the 2020 ACM International Symposium on Wearable Computers ,2020. URL https://api.semanticscholar. org/CorpusID:221499205 .Haresamudram, H. K., Essa, I., and Plotz, T. Assessing the state of self-supervised human activity recognition using wearables. Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies , 6:1 – 47, 2022. URL https://api.semanticscholar. org/CorpusID:247158005 .Hogan, N. and Sternad, D. Dynamic primitives of motor behavior. Biological cybernetics , 106(11):727–739, 2012. Kontaxis, S., Kanellos, F., Ntanis, A., Kostikis, N., Konit-siotis, S., and Rigas, G. An inertial-based wearable sys-tem for monitoring vital signs during sleep. Sensors , 24 (13), 2024. ISSN 1424-8220. doi: 10.3390/s24134139. URL https://www.mdpi.com/1424-8220/24/ 13/4139 .Krebs, H. I., Aisen, M. L., Volpe, B. T., and Hogan, N. Quantization of continuous arm movements in humans with brain injury. Proceedings of the National Academy of Sciences , 96(8):4645–4649, 1999. Langley, P. Crafting papers on machine learning. In Langley, P. (ed.), Proceedings of the 17th International Conference on Machine Learning (ICML 2000) , pp. 1207–1216, Stan-ford, CA, 2000. Morgan Kaufmann. Levy, J., ´Alvarez, D., Del Campo, F., and Behar, J. A. Deep learning for obstructive sleep apnea diagnosis based on single channel oximetry. Nature Communications , 14(1): 4881, 2023. Miranda, J. G. V., Daneault, J.-F., Vergara-Diaz, G., Torres, ˆA. F. S. d. O. e., Quixada, A. P., Fonseca, M. d. L., Vieira, J. P. B. C., dos Santos, V. S., da Figueiredo, T. C., Pinto, E. B., et al. Complex upper-limb movements are gener-ated by combining motor primitives that scale with the movement size. Scientific reports , 8(1):12918, 2018. Narayanswamy, G., Liu, X., Ayush, K., Yang, Y., Xu, X., Liao, S., Garrison, J., Tailor, S., Sunshine, J., Liu, Y., Althoff, T., Narayanan, S., Kohli, P., Zhan, J., Malhotra, M., Patel, S., Abdel-Ghaffar, S., and McDuff, D. Scaling wearable foundation models, 2024. URL https:// arxiv.org/abs/2410.13638 .Noy, L., Hassin-Baer, S., Fay-Karmon, T., Kattouf, N., Israeli-Korn, S., van der Wel, R., and Friedman, J. Sub-movements in manual tracking: people with parkinson’s disease produce more submovements than age-matched controls. Journal of neuroengineering and rehabilitation ,22(1):51, 2025. Nunes, A. S., Yıldız Potter, ˙I., Mishra, R. K., Casado, J., Dana, N., Geronimo, A., Tarolli, C. G., Schneider, R. B., Dorsey, E. R., Adams, J. L., et al. Using wearable sensors and machine learning to assess upper limb function in huntington’s disease. Communications Medicine , 5(1): 50, 2025. Reiss, A. PAMAP2 Physical Activity Monitoring. UCI Machine Learning Repository, 2012. DOI: https://doi.org/10.24432/C5NW2H. Rohrer, B. and Hogan, N. Avoiding spurious submovement decompositions: a globally optimal algorithm. Biological cybernetics , 89(3):190–199, 2003. Rohrer, B. and Hogan, N. Avoiding spurious submovement decompositions ii: a scattershot algorithm. Biological cybernetics , 94(5):409–414, 2006. Rohrer, B., Fasoli, S., Krebs, H. I., Volpe, B., Frontera, W. R., Stein, J., and Hogan, N. Submovements grow larger, fewer, and more blended during stroke recovery. 
+
+Motor control , 8(4):472–483, 2004. Saeed, A., Ozcelebi, T., and Lukkien, J. Multi-task self-supervised learning for human activity detection. CoRR ,abs/1907.11879, 2019. URL http://arxiv.org/ abs/1907.11879 .Shoaib, M., Bosch, S., Incel, O. D., Scholten, H., and Havinga, P. J. M. Complex human activity recog-nition using smartphone and wrist-worn motion sen-sors. Sensors , 16(4):426, 2016. ISSN 1424-8220. doi: 10.3390/s16040426. URL https://pubmed.ncbi. nlm.nih.gov/27023543 .10 Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+Simo, L. S., Piovesan, D., Laczko, J., Ghez, C., and Scheidt, R. S. Submovements during reaching movements after stroke. In 2014 36th Annual International Conference of the IEEE Engineering in Medicine and Biology Society ,pp. 5357–5360. IEEE, 2014. Small, S. R., Bullock, G. S., Khalid, S., Barker, K., Triv-ella, M., and Price, A. J. Current clinical utilisation of wearable motion sensors for the assessment of outcome following knee arthroplasty: a scoping review. BMJ open ,9(12):e033832, 2019. Van Hees, V. T., Gorzelniak, L., Dean Le ´on, E. C., Eder, M., Pias, M., Taherian, S., Ekelund, U., Renstr ¨om, F., Franks, P. W., Horsch, A., et al. Separating movement and gravity components in an acceleration signal and implications for the assessment of human daily physical activity. PloS one , 8(4):e61691, 2013. Wang, R., Lang, C. E., Stoykov, M. E., Bonato, P., and Lee, S. I. Wearable-based digital biomarker provides a valid alternative to traditional clinical measures for post-stroke upper-limb motor recovery. medRxiv , pp. 2025–01, 2025. Weiss, G. WISDM Smartphone and Smartwatch Activity and Biometrics Dataset . UCI Machine Learning Reposi-tory, 2019. DOI: https://doi.org/10.24432/C5HK59. Xu, M. A., Narain, J., Darnell, G., Hallgrimsson, H. T., Jeong, H., Forde, D., Fineman, R. A., Raghuram, K. J., Rehg, J. M., and Ren, S. Y. Relcon: Relative con-trastive learning for a motion foundation model for wear-able data. In The Thirteenth International Conference on Learning Representations , 2025a. URL https: //openreview.net/forum?id=k2uUeLCrQq .Xu, M. A., Narayanswamy, G., Ayush, K., Spathis, D., Liao, S., Tailor, S., Metwally, A. A., Heydari, A. A., Zhang, Y., Garrison, J., Abdel-Ghaffar, S., Xu, X., Gu, K., Sun-shine, J., Poh, M.-Z., Liu, Y., Althoff, T., Narayanan, S., Kohli, P., Malhotra, M., Patel, S. N., Yang, Y., Rehg, J. M., Liu, X., and McDuff, D. Lsm-2: Learning from incomplete wearable sensor data. ArXiv , abs/2506.05321, 2025b. URL https://api.semanticscholar. org/CorpusID:279244242 .Yuan, H., Chan, S., Creagh, A. P., Tong, C., Acquah, A., Clifton, D. A., and Doherty, A. Self-supervised learning for human activity recognition using 700,000 person-days of wearable data. npj Digital Medicine ,7(1), April 2024. ISSN 2398-6352. doi: 10.1038/ s41746-024-01062-3. URL http://dx.doi.org/ 10.1038/s41746-024-01062-3 .Zhang, X., Zhao, Z., Tsiligkaridis, T., and Zitnik, M. Self-supervised contrastive pre-training for time series via time-frequency consistency. ArXiv , abs/2206.08496, 2022. URL https://api.semanticscholar. org/CorpusID:249848167 .11 Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+# A. Tokenization Pipeline 
+
+Figure 5. End-to-end conversion from raw wrist accelerometer signals to fixed-length movement-segment tokens: gravity separation via filtering, zero-crossing boundary detection, segmentation, and resampling to a common token length, along with token metadata used for sequence modeling. 
+
+12 Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+# B. Our Model: Upstream Analysis 
+
+B.0.1. V ARYING UPSTREAM MASKING RATE 
+
+See table 3. We chose the model pretrained on masking rate 50%. 
+
+Table 3. Effect of masking rate on linear-probe Macro-F1 for Bio-PM Masking Rate PAMAP MHealth WHARF HAD Avg 
+
+25% 0.69  
+
+> ±0.12
+
+0.80  
+
+> ±0.08
+
+0.40  
+
+> ±0.02
+
+0.71  
+
+> ±0.06
+
+0.65 
+
+> (n=4)
+
+50% 0.71  
+
+> ±0.12
+
+0.80  
+
+> ±0.08
+
+0.42  
+
+> ±0.03
+
+0.73  
+
+> ±0.06
+
+0.67 
+
+> (n=4)
+
+75% 0.69  
+
+> ±0.13
+
+0.79  
+
+> ±0.10
+
+0.41  
+
+> ±0.05
+
+0.71  
+
+> ±0.07
+
+0.65 
+
+> (n=4)
+
+B.0.2. V ARYING MODEL SIZE .We evaluated whether increasing Bio-PM capacity improves transfer under our largest upstream setting (11k subjects). Across downstream HAR benchmarks, scaling from 1.4M to 6M and 13M parameters yields small consistent gains in linear-probe Macro-F1 (Table 4). However, we use the 1.4M model throughout for three practical reasons: (i) it is the only configuration whose embedding dimension is closest to the Yuan et al.’s ResNet baseline (1.4M: 1028-d; 6M: 1156-d; 13M: 1412-d; ResNet: 1024-d), avoiding improvements attributable to a higher-dimensional probe space; (ii) HAR is commonly deployed on-device, making smaller backbones more suitable for edge inference; and (iii) it substantially reduced training cost and enabled broader ablations internally, while still outperforming prior methods in our main comparisons. Concretely, the 1.4M model uses width D=64 with 5 Transformer layers, while the 6M and 13M variants use D=128 and 
+
+D=256 respectively, each with 10 layers. 
+
+Table 4. Effect of model size on linear-probe Macro-F1 for Bio-PM Model Size PAMAP MHealth WHARF HAD Avg 
+
+1.4M 0.71  
+
+> ±0.12
+
+0.80  
+
+> ±0.08
+
+0.42  
+
+> ±0.03
+
+0.73  
+
+> ±0.06
+
+0.67 
+
+> (n=4)
+
+6M 0.69  
+
+> ±0.13
+
+0.82  
+
+> ±0.1
+
+0.43  
+
+> ±0.05
+
+0.71  
+
+> ±0.08
+
+0.66 
+
+> (n=4)
+
+13M 0.69  
+
+> ±0.13
+
+0.82  
+
+> ±0.09
+
+0.44  
+
+> ±0.05
+
+0.76  
+
+> ±0.04
+
+0.68 
+
+> (n=4)
+
+B.0.3. U PSTREAM DATA SAMPLING 
+
+To efficiently sample informative segments from long, free-living NHANES wrist accelerometer recordings, we use an activity-index–driven window selection strategy inspired by the Activity Index (AI) of Bai et al. (Bai et al., 2016). Continuous streams are segmented into non-overlapping 10 s windows, and each window is assigned a scalar activity score following the AI formulation. Windows with low activity (AI < 50 ) are discarded to remove near-stationary behavior that dominates free-living data. The remaining windows are stratified by activity intensity: household and moderate-intensity activities are subsampled due to their high prevalence, while all high-intensity activity windows are retained given their relative scarcity. This yields a compact yet diverse training set spanning a range of movement intensities. B.0.4. U PSTREAM : R ECONSTRUCTION PERFORMANCE 
+
+For upstream metrics by masking rate, see Figure 6. For examples of reconstruction, see Figure 7. 
+
+# C. Baseline Upstream Performances 
+
+AugPred. Pretext accuracies: permutation 89.5%, time reversal 89.2%, and time warp 95.8% (comparable to the converged values reported by Yuan et al. (2024)). 13 Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+(a) MR25 
+
+(b) MR50 
+
+(c) MR75 
+
+Figure 6. Upstream masked-region reconstruction quality under different masking rates. Violin plots show the distribution of reconstruction performance evaluated only on masked regions for MR25/50/75 using MSE, RMSE, MAE, Pearson r, and NRMSE. Boxes indicate median and interquartile range (whiskers: 1.5 ×IQR). Numbers below each subplot report mean μ, standard deviation 
+
+σ, and outlier fraction. Increasing masking increases error (MSE 0.085 → 0.145 , MAE 0.128 → 0.177 ) and reduces correlation (r = 0 .760 → 0.518 ), while NRMSE stays roughly constant ( ≈ 0.081 –0.083 ). 
+
+TF-C. Validation contrastive losses: Ltt =5.4298, Lf f =5.4208, Ltf =4.8183 (total 15.6689). 
+
+Masked reconstruction (equal-chunk). Masked-token MAE: 0.35. For each baseline, we select the checkpoint that maximizes validation Macro-F1 under the linear-probing protocol. Additional training for TF-C led to degraded validation upstream performance. 14 Bio-Inspired Self-Supervised Learning for Wrist-worn IMU                             
+
+> (a) Best case (Subject 62172; Pearson r= 0 .991 ). (b) High-quality example (Subject 62439; Pearson r= 0 .868 ).
+> (c) Representative example (Subject 62439). (d) Failure case (Subject 62305; Pearson r= 0 .123 ).
+> Figure 7. Qualitative masked-region reconstruction examples. Each panel visualizes the masked-imputation pretraining task on a representative 1D channel: the top subplot shows the input with masked spans removed (gray bands denote masked regions), and the
+> bottom subplot overlays the ground-truth signal with the model reconstruction. Pearson r(shown in titles where available) summarizes agreement between reconstruction and ground truth on masked regions. These examples illustrate the range of outcomes from near-perfect recovery (e.g., r≈0.99 ) to clear failure modes ( r≈0.12 ), where the model under-reconstructs sharp transients and high-amplitude bursts within masked segments.
+
+# D. Implementation Details 
+
+Training setup. Unless otherwise stated, all models are implemented in PyTorch. We pretrain all SSL methods on the same NHANES corpus with matched windowing and sampling. 
+
+Masked reconstruction baselines (capacity-matched). For masked reconstruction, our method and the equal-chunk baseline use the same Transformer-based architecture and identical optimization settings (Adam, learning rate 10 −4, batch size 512). This isolates the effect of tokenization while holding objective, optimizer, and model capacity fixed. 
+
+AugPred replication (Yuan et al.). For AugPred, we replicate the objective and augmentation pipeline of Yuan et al. (2024) and use the same backbone architecture as in their work: an 18-layer ResNet-V2 with 1D convolutions (approximately 10M parameters), producing a 1024-dimensional representation. We follow Yuan et al. (2024) with two small implementation adjustments for our matched-upstream setting—retaining 80 Hz (no 40 Hz downsampling) and omitting weighted sampling due to our existing upstream filtering (see Sec. B.0.3). Nevertheless, we get comparable pretext accuracies as reported by Yuan et al. (2024) (Appendix C). 
+
+TF-C architecture and parameter budgeting. TF-C uses two encoders (temporal and frequency branches). To keep the total parameter budget comparable to the single-encoder baselines, we reduce the per-encoder width such that the combined TF-C model has approximately 8.4M parameters. 
+
+Bio-PM model size. Our default Bio-PM model has approximately 1.4M parameters. We also experimented with larger variants (e.g., 6M and 13M parameters) and observed similar downstream trends; we report the 1.4M model to prioritize efficiency and practical deployment considerations. 15 Bio-Inspired Self-Supervised Learning for Wrist-worn IMU                                          
+
+> Table 5. Summary of downstream HAR datasets. Dataset Setting #Sub #Classes Hz References NHANES IMU Free-living ≈11k –80 (CDC & NCHS, 2011-2012; CDC & NCHS, 2013-2014) UMH Semi-natural 25 29 100 (Casilari et al., 2024) PAMAP2 Lab protocol 88100 (Reiss, 2012) WISDM (Actitracker) Semi-natural 51 18 20 (Weiss, 2019) MHealth Scripted protocol 10 11 50 (Banos et al., 2014b;a; 2015) WHARF In-home scripted 17 14 32 (Bruno et al., 2014) UTD-MHAD Lab multimodal 827 50 (Chen et al., 2015)
+
+# E. Datasets and Preprocessing 
+
+Wrist-only sensor. For multi-sensor datasets, we retain only the wrist/hand accelerometer stream and discard other body locations/modalities. 
+
+Filtering We compute (i) voluntary acceleration using a 6th-order Butterworth highpass filter (0.5Hz), and (ii) gravity using a 6th-order Butterworth low-pass filter (cutoff 0.5 Hz). 
+
+Unit normalization. All datasets were converted from m/s 2 to g (divide by 9.80665). 
+
+Labeling. For each 10 s window, labels are assigned by majority vote within each window; windows dominated by transition/unknown labels are discarded. 
+
+Resampling. To ensure a consistent temporal resolution across datasets, all accelerometer signals are resampled to a common sampling rate using interpolation-based resampling. This step standardizes window lengths and frequency content across subjects and recording setups. 
+
+Windowing. The preprocessed signals are segmented into fixed-length sliding windows of 10 s with overlap. Windowing enables learning from short, locally stationary motion segments while increasing the effective number of training samples. 
+
+Quality control. Windows containing insufficient valid samples or dominated by null, transition, or excluded activity labels are removed. This filtering step reduces label noise and ensures that retained windows represent coherent activities. 
+
+Motion magnitude normalization. For each window, motion intensity is characterized using the mean absolute deviation (MAD) of the filtered acceleration magnitude. This statistic provides a robust, scale-invariant measure of movement variability and is used for downstream analysis and dataset characterization. 
+
+# F. Miscellaneous 
+
+F.1. Sanity Checks and Ablations 
+
+Experiments conducted on all datasets except WISDM because of its size. 
+
+Does the transformer use temporal information? As a sanity check, we ablate positional information at transfer time by disabling positional encodings in the frozen pretrained encoder and retraining only the linear probe. Removing positional encodings reduces Macro-F1 by ≈3 points on average, with the largest drop on HAD ( 8.2 points). This suggests that the learned representations exploit token timing in addition to token content, particularly for order-dependent activities. 
+
+F.2. Zero-crossing hysteresis for movement-segment extraction 
+
+We extract candidate segment boundaries as sign changes in the 1D gravity-free acceleration signal. To reduce noise-induced crossings when the signal hovers near zero, we apply two heuristics: 16 Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+Figure 8. Bio-PM vs TF-C on Mhealth. 
+
+Temporal hysteresis. Enforce a minimum inter-crossing interval of 50 ms. Candidate crossings within 50 ms of the last accepted crossing are discarded. 
+
+Amplitude hysteresis. For each provisional segment S between consecutive accepted crossings, compute peak amplitude 
+
+max t∈S |x(t)|. If two consecutive segments both have peak amplitude below 0.01, we remove their intermediate crossing and merge the two segments. After hysteresis, each segment is resampled to a fixed length L=32 via linear interpolation. 
+
+# G. Linear Probing Parameter Comparison 
+
+Table 6. Number of learned parameters in linear probing. Only logistic regression weights are trained; encoder weights remain frozen. 
+
+Dataset Classes AugPred TF-C Transformer Bio-PM 
+
+(K) (1024-d) (512-d) (128-d) (1028-d) UMH 29 29,725 14,877 3,741 29,841 PAMAP2 8 8,200 4,104 1,032 8,232 MHEALTH 11 11,275 5,643 1,419 11,319 MHAD 27 27,675 13,851 3,483 27,783 
+
+# H. Confusion Matrices 
+
+17 Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+Figure 9. Bio-PM vs TF-C on WISDM. 
+
+Figure 10. Bio-PM vs TF-C on UMAHand. 
+
+18 Bio-Inspired Self-Supervised Learning for Wrist-worn IMU 
+
+Figure 11. Bio-PM vs TF-C on HAD. 
+
+Figure 12. Bio-PM vs TF-C on WHARF. 
+
+19
