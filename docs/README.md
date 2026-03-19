@@ -6,79 +6,68 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-03-18
-- 运行时间：2026-03-18 20:27:02 UTC
+- 最新运行日期：2026-03-19
+- 运行时间：2026-03-19 20:04:24 UTC
 - 运行状态：成功
-- 本次总论文数：19
-- 精读区：7
+- 本次总论文数：16
+- 精读区：4
 - 速读区：12
 
 ### 今日简报（AI）
-今日精选 19 篇前沿论文，深度聚焦贝叶斯层级分割算法与短视频虚假信息检测。
-重点推荐 `BayesBreak` 框架解决复杂数据分割难题，以及利用跨模态一致性精准识别短视频谣言的新突破。
-建议关注多模态技术在金融、电力等垂直领域的落地实践，探索复杂场景下的数据治理与检索优化。
-- 详情：[/202603/18/README](/202603/18/README)
+今日聚焦 AI 图像鉴伪前沿，深度研读了 EvoGuard 等结合强化学习与大模型的 16 篇最新成果
+- 详情：[/202603/19/README](/202603/19/README)
 
 ### 精读区论文标签
-1. [\texttt{BayesBreak}: Generalized Hierarchical Bayesian Segmentation with Irregular Designs, Multi-Sample Hierarchies, and Grouped/Latent-Group Designs](/202603/18/2603.14681v1-textttbayesbreak-generalized-hierarchical-bayesian-segmentation-with-irregular-designs-multi-sample-hierarchies-and-groupedlatent-group-designs)  
-   标签：评分：10.0/10、query:tsds
-   evidence：针对有序数据的通用贝叶斯分割框架
-2. [Exposing Cross-Modal Consistency for Fake News Detection in Short-Form Videos](/202603/18/2603.14992v1-exposing-cross-modal-consistency-for-fake-news-detection-in-short-form-videos)  
-   标签：评分：10.0/10、query:mmfnd
-   evidence：短视频虚假新闻检测中的跨模态一致性
-3. [Multiple change-point detection on the circle via isolation using permutation testing](/202603/18/2603.10772v1-multiple-change-point-detection-on-the-circle-via-isolation-using-permutation-testing)  
-   标签：评分：9.0/10、query:tsds
-   evidence：圆形信号的多变点检测
-4. [Consistent and powerful CUSUM change-point test for panel data with changes in variance](/202603/18/2603.12561v1-consistent-and-powerful-cusum-change-point-test-for-panel-data-with-changes-in-variance)  
-   标签：评分：9.0/10、query:tsds
-   evidence：针对时间序列面板数据的CUSUM变点检测
-5. [Training-free Detection of Generated Videos via Spatial-Temporal Likelihoods](/202603/18/2603.15026v1-training-free-detection-of-generated-videos-via-spatial-temporal-likelihoods)  
+1. [EvoGuard: An Extensible Agentic RL-based Framework for Practical and Evolving AI-Generated Image Detection](/202603/19/2603.17343v1-evoguard-an-extensible-agentic-rl-based-framework-for-practical-and-evolving-ai-generated-image-detection)  
    标签：评分：9.0/10、query:mmfnd
+   evidence：利用多模态大语言模型进行AI生成图像检测以对抗虚假信息
+2. [Evidence Packing for Cross-Domain Image Deepfake Detection with LVLMs](/202603/19/2603.17761v1-evidence-packing-for-cross-domain-image-deepfake-detection-with-lvlms)  
+   标签：评分：9.0/10、query:mmfnd
+   evidence：利用大视觉语言模型进行跨域图像深度伪造检测
+3. [MER-Bench: A Comprehensive Benchmark for Multimodal Meme Reappraisal](/202603/19/2603.15020v1-mer-bench-a-comprehensive-benchmark-for-multimodal-meme-reappraisal)  
+   标签：评分：8.0/10、query:mmfnd
+   evidence：多模态模因理解与转换基准
+4. [Training-free Detection of Generated Videos via Spatial-Temporal Likelihoods](/202603/19/2603.15026v2-training-free-detection-of-generated-videos-via-spatial-temporal-likelihoods)  
+   标签：评分：8.0/10、query:mmfnd
    evidence：检测生成视频以应对虚假信息
-6. [What Counts as Real? Speech Restoration and Voice Quality Conversion Pose New Challenges to Deepfake Detection](/202603/18/2603.14033v1-what-counts-as-real-speech-restoration-and-voice-quality-conversion-pose-new-challenges-to-deepfake-detection)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：深度伪造检测与音频防欺骗
-7. [MALicious INTent Dataset and Inoculating LLMs for Enhanced Disinformation Detection](/202603/18/2603.14525v1-malicious-intent-dataset-and-inoculating-llms-for-enhanced-disinformation-detection)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：虚假信息检测与恶意意图分类
 
 ### 速读区论文标签
-1. [CINDI: Conditional Imputation and Noisy Data Integrity with Flows in Power Grid Data](/202603/18/2603.11745v1-cindi-conditional-imputation-and-noisy-data-integrity-with-flows-in-power-grid-data)  
-   标签：评分：8.0/10、query:tsds
-   evidence：时间序列异常检测的无监督概率框架
-2. [AMES: Approximate Multi-modal Enterprise Search via Late Interaction Retrieval](/202603/18/2603.13537v1-ames-approximate-multi-modal-enterprise-search-via-late-interaction-retrieval)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：用于跨模态搜索的多模态延迟交互检索
-3. [Performance-Driven Causal Signal Engineering for Financial Markets under Non-Stationarity](/202603/18/2603.13638v1-performance-driven-causal-signal-engineering-for-financial-markets-under-non-stationarity)  
-   标签：评分：8.0/10、query:tsds
-   evidence：针对非平稳时间序列和状态转换的因果信号工程
-4. [Conflict-Aware Multimodal Fusion for Ambivalence and Hesitancy Recognition](/202603/18/2603.15818v1-conflict-aware-multimodal-fusion-for-ambivalence-and-hesitancy-recognition)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：用于状态识别的跨模态冲突检测
-5. [DEO: Training-Free Direct Embedding Optimization for Negation-Aware Retrieval](/202603/18/2603.09185v1-deo-training-free-direct-embedding-optimization-for-negation-aware-retrieval)  
+1. [Team LEYA in 10th ABAW Competition: Multimodal Ambivalence/Hesitancy Recognition Approach](/202603/19/2603.12848v1-team-leya-in-10th-abaw-competition-multimodal-ambivalencehesitancy-recognition-approach)  
    标签：评分：7.0/10、query:mmfnd
-   evidence：无需训练的否定感知多模态检索方法
-6. [Domain-Adaptive Health Indicator Learning with Degradation-Stage Synchronized Sampling and Cross-Domain Autoencoder](/202603/18/2603.10430v1-domain-adaptive-health-indicator-learning-with-degradation-stage-synchronized-sampling-and-cross-domain-autoencoder)  
-   标签：评分：7.0/10、query:tsds
-   evidence：针对振动信号时间依赖性的退化阶段同步采样
-7. [Bio-Inspired Self-Supervised Learning for Wrist-worn IMU Signals](/202603/18/2603.10961v1-bio-inspired-self-supervised-learning-for-wrist-worn-imu-signals)  
-   标签：评分：7.0/10、query:tsds
-   evidence：针对时间序列中连续手腕运动分段的标记化策略
-8. [FBCIR: Balancing Cross-Modal Focuses in Composed Image Retrieval](/202603/18/2603.11520v1-fbcir-balancing-cross-modal-focuses-in-composed-image-retrieval)  
+   evidence：集成场景、人脸、音频和文本的多模态方法
+2. [FIND: A Simple yet Effective Baseline for Diffusion-Generated Image Detection](/202603/19/2603.14220v1-find-a-simple-yet-effective-baseline-for-diffusion-generated-image-detection)  
    标签：评分：7.0/10、query:mmfnd
-   evidence：平衡多模态模型中的跨模态关注点
-9. [Composed Vision-Language Retrieval for Skin Cancer Case Search via Joint Alignment of Global and Local Representations](/202603/18/2603.09108v1-composed-vision-language-retrieval-for-skin-cancer-case-search-via-joint-alignment-of-global-and-local-representations)  
+   evidence：扩散模型生成的合成图像检测
+3. [DamageArbiter: A CLIP-Enhanced Multimodal Arbitration Framework for Hurricane Damage Assessment from Street-View Imagery](/202603/19/2603.14837v1-damagearbiter-a-clip-enhanced-multimodal-arbitration-framework-for-hurricane-damage-assessment-from-street-view-imagery)  
+   标签：评分：7.0/10、query:mmfnd
+   evidence：基于CLIP的增强型多模态评估框架
+4. [Ultra-Early Prediction of Tipping Points: Integrating Dynamical Measures with Reservoir Computing](/202603/19/2603.14944v1-ultra-early-prediction-of-tipping-points-integrating-dynamical-measures-with-reservoir-computing)  
+   标签：评分：7.0/10、query:tsds
+   evidence：利用观测时间序列数据预测临界点
+5. [PhonemeDF: A Synthetic Speech Dataset for Audio Deepfake Detection and Naturalness Evaluation](/202603/19/2603.15037v1-phonemedf-a-synthetic-speech-dataset-for-audio-deepfake-detection-and-naturalness-evaluation)  
+   标签：评分：7.0/10、query:mmfnd
+   evidence：用于音频深度伪造检测的合成语音数据集，旨在对抗语音虚假信息
+6. [Beyond Distance: Quantifying Point Cloud Dynamics with Persistent Homology and Dynamic Optimal Transport](/202603/19/2603.15683v1-beyond-distance-quantifying-point-cloud-dynamics-with-persistent-homology-and-dynamic-optimal-transport)  
+   标签：评分：7.0/10、query:tsds
+   evidence：分析时间演化点云中的动力学与变换
+7. [One Supervisor, Many Modalities: Adaptive Tool Orchestration for Autonomous Queries](/202603/19/2603.11545v2-one-supervisor-many-modalities-adaptive-tool-orchestration-for-autonomous-queries)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：组合视觉语言检索与联合对齐
-10. [RTFDNet: Fusion-Decoupling for Robust RGB-T Segmentation](/202603/18/2603.09149v1-rtfdnet-fusion-decoupling-for-robust-rgb-t-segmentation)  
+   evidence：自主多模态查询处理与工具编排
+8. [MIBench: Evaluating LMMs on Multimodal Interaction](/202603/19/2603.13427v1-mibench-evaluating-lmms-on-multimodal-interaction)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：跨模态交互与协同特征融合
-11. [CLoE: Expert Consistency Learning for Missing Modality Segmentation](/202603/18/2603.09316v1-cloe-expert-consistency-learning-for-missing-modality-segmentation)  
-   标签：评分：6.0/10、query:tsds
-   evidence：缺失模态下的多模态医学图像分割
-12. [SignalMC-MED: A Multimodal Benchmark for Evaluating Biosignal Foundation Models on Single-Lead ECG and PPG](/202603/18/2603.09940v1-signalmc-med-a-multimodal-benchmark-for-evaluating-biosignal-foundation-models-on-single-lead-ecg-and-ppg)  
-   标签：评分：6.0/10、query:tsds
-   evidence：用于评估心电图和光电容积脉搏波生物信号基础模型的多模态基准
+   evidence：评估大型多模态模型的跨模态交互能力
+9. [Membership Inference for Contrastive Pre-training Models with Text-only PII Queries](/202603/19/2603.14222v1-membership-inference-for-contrastive-pre-training-models-with-text-only-pii-queries)  
+   标签：评分：6.0/10、query:mmfnd
+   evidence：多模态主干网络的跨模态潜空间反演
+10. [Hyperbolic Multimodal Generative Representation Learning for Generalized Zero-Shot Multimodal Information Extraction](/202603/19/2603.16259v1-hyperbolic-multimodal-generative-representation-learning-for-generalized-zero-shot-multimodal-information-extraction)  
+   标签：评分：6.0/10、query:mmfnd
+   evidence：从网页文本和图像中进行多模态信息抽取
+11. [BUSSARD: Normalizing Flows for Bijective Universal Scene-Specific Anomalous Relationship Detection](/202603/19/2603.16645v1-bussard-normalizing-flows-for-bijective-universal-scene-specific-anomalous-relationship-detection)  
+   标签：评分：6.0/10、query:mmfnd
+   evidence：多模态异常关系检测方法
+12. [Towards Motion-aware Referring Image Segmentation](/202603/19/2603.17413v1-towards-motion-aware-referring-image-segmentation)  
+   标签：评分：6.0/10、query:mmfnd
+   evidence：融合嵌入上的多模态径向对比学习
 
 
 <div class="dpr-home-promo-card">

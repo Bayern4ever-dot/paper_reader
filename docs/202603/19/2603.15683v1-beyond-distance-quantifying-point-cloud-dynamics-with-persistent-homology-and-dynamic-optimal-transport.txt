@@ -1,0 +1,1544 @@
+Title: Beyond Distance: Quantifying Point Cloud Dynamics with Persistent Homology and Dynamic Optimal Transport
+
+URL Source: https://arxiv.org/pdf/2603.15683v1
+
+Published Time: Wed, 18 Mar 2026 00:06:05 GMT
+
+Number of Pages: 42
+
+Markdown Content:
+# Beyond Distance: Quantifying Point Cloud Dynamics with Persistent Homology and Dynamic Optimal Transport 
+
+Yixin Wang 1,2,†, Ting Gao 1,2,3∗, Jinqiao Duan 4,5,‡ 
+
+> 1
+
+School of Mathematics and Statistics, Huazhong University of Science and Technology, Wuhan, China  
+
+> 2
+
+Center for Mathematical Science, Huazhong University of Science and Technology, Wuhan, China  
+
+> 3
+
+Steklov-Wuhan Institute for Mathematical Exploration, Huazhong University of Science and Technology, China  
+
+> 4
+
+Department of Mathematics and Department of Physics, Great Bay University, Dongguan, China  
+
+> 5
+
+Guangdong Provincial Key Laboratory of Mathematical and Neural Dynamical Systems, Dongguan, China. 
+
+Abstract 
+
+We introduce a framework for analyzing topological tipping in time evolution-ary point clouds by extending the recently proposed Topological Optimal Transport (TpOT) distance. While TpOT unifies geometric, homological and higher‐order re-lations into one metric, its global scalar distance can obscure transient, localized structural reorganizations during dynamic phase transitions. To overcome this lim-itation, we present a hierarchical dynamic evaluation framework driven by a novel topological and hypergraph reconstruction strategy. Instead of directly interpo-lating abstract network parameters, our method interpolates the underlying spa-tial geometry and rigorously re-computes the valid topological structures, ensuring physical fidelity. Along this geodesic, we introduce a set of multi-scale indicators: macroscopic metrics (Topological Distortion and Persistence Entropy) to capture global shifts, and a novel mesoscopic dual-perspective Hypergraph Entropy (node-perspective and edge-perspective) to detect highly sensitive, asynchronous local rewirings. We further propagate the cycle-level entropy change onto individual vertices to form a point-level topological field. Extensive evaluations on physical dynamical systems (Rayleigh-Van der Pol limit cycles, Double-Well cluster fusion), high-dimensional biological aggregation (D’Orsogna model), and longitudinal stroke fMRI data demonstrate the utility of combining transport‐based alignment with multi‐scale entropy diagnostics for dynamic topological analysis. 
+
+Keywords: Dynamic Topological Optimal Transport, Multiscale Tipping, Per-sistence entropy, Hypergraph entropy, Medical imaging 
+
+# 1 Introduction 
+
+Complex systems (e.g., climate systems, biological networks, financial markets) often exhibit nonlinear phase transitions and critical phenomena [1]. Detecting their tipping 1
+
+> arXiv:2603.15683v1 [stat.ML] 15 Mar 2026
+
+points and structural changes is crucial for predicting systemic collapse and designing early-warning mechanisms [2]. Traditional statistical metrics, such as variance and au-tocorrelation coefficients, are employed to monitor critical transitions and their driving networks [3]; however, they overlook potential topological structural changes in dynam-ical systems. In contrast, dynamical models like bifurcation theory require predefined differential equations and perform poorly on real-world non-stationary systems with un-known couplings [4]. In [5], the authors introduce a novel Schrödinger bridge approach for early warning signals (EWS) in probability measures that align with the entropy pro-duction rate. Nevertheless, aligning disparate distributions in a manner that is both mathematically rigorous and computationally tractable remains a fundamental challenge in interdisciplinary science. Originating from Monge’s 1781 optimal transport problem, optimal transport (OT) theory seeks to find couplings between probability distributions as efficiently as possible with respect to a given cost function [6]. A well-known distance measure, the Wasserstein distance, evaluates the geometric separation between supports, where the cost function is induced by the distance function in a metric space. Recently, extensions of the opti-mal transport problem, such as the Gromov–Wasserstein (GW) distance and its variant, the Fused Gromov–Wasserstein (FGW) distance, have garnered increasing attention due to their applicability in settings where probability distributions are defined on different metric spaces [7–9]. Motivated by the goal of representing relations in complex systems through higher-order networks, recent work has applied a Gromov–Wasserstein variant known as co-optimal transport [10] to hypergraph modeling, demonstrating its effective-ness in both theoretical frameworks and practical applications [11]. Topological Data Analysis (TDA) is a mathematical framework rooted in algebraic topology that extracts multiscale topological features from high-dimensional complex data [12]. Giusti and Lee developed a computable feature map for paths of persistence diagrams [13]. Li et al. introduced a flexible and probabilistic framework for tracking topological features in time-varying scalar fields by employing merge trees and partial optimal trans-port [14]. Numerous researchers have developed innovative methodologies for topological feature tracking and event detection by leveraging diverse tools from TDA, including persistence diagrams, merge trees, Reeb graphs, and Morse–Smale complexes. For exam-ple, Tanweer et al. introduced a TDA-based approach that uses superlevel persistence to mathematically quantify P-type bifurcations in stochastic systems through a ”homo-logical bifurcation plot,” which illustrates the changing ranks of 0th and 1st homology groups via Betti vectors [15]. Shamir et al. proposed a progressive isosurface algorithm that predicts the contour at time step t + 1 based on the contour at time step t[16]. Doraiswamy et al. described a framework for the exploration of cloud systems at multi-ple spatial and temporal scales using infrared(IR) brightness temperature images, which automatically extracts cloud clusters as contours for a given temperature threshold[17]. A comprehensive review of methodologies for topological feature tracking and structural change detection is presented in [18]. In recent years, there has been growing interest in extending classical graph entropy[19– 22] to hypergraphs, as hypergraphs are capable of capturing higher-order interactions that conventional pairwise networks cannot. The concept of hypergraph entropy was first in-troduced by Simonyi (1996) [23] within an information-theoretic framework. Subsequent studies have proposed alternative formulations, including entropy vectors derived from 2partial hypergraphs [24] and tensor-based entropy for uniform hypergraphs [25]. Addi-tionally, entropy-maximization models have been employed to generate random hyper-graphs, serving as useful null models for real-world systems [26]. These developments underscore the versatility of hypergraph entropy as a tool for quantifying uncertainty and complexity in higher-order networks, motivating its application to the analysis of hypergraph structures derived from persistent homology. In this work, we propose a set of dynamic distortion and entropy indicators that integrate optimal transport, topological data analysis, and information theory for hyper-graphs. Our approach builds upon the recently introduced Topological Optimal Trans-port (TpOT) framework [27], which aligns point clouds while jointly optimizing geometric correspondence and topological fidelity through a principled coupling of their persistent homology classes. By incorporating this trade-off between geometric and topological preservation, our metrics enable robust detection of multiscale structural shifts. To sys-tematically capture these multiscale dynamics, our methodology proceeds in four fun-damental stages (Figure 1): computing the initial TpOT spatial coupling, performing geometric interpolation along the underlying geodesic, rigorously reconstructing valid topological and hypergraph structures to ensure physical fidelity, and extracting multi-scale early warning indicators. Driven by this pipeline, our main contributions are listed as follows. First, we propose a dynamic hypergraph reconstruction strategy that integrate interpolation of underlying geometric information. Second, we propose dynamic distor-tion and entropy as early warning indicators for multi-scale tipping detection, notably a novel mesoscopic dual-perspective hypergraph entropy (HE V and HE E ) that uniquely captures asynchronous structural decoupling. We further propagate the cyle-level entropy change onto individual vertices to form a point-level topological field that identifies key local transformations. Third, we provide rigorous theoretical guarantees for these metrics, which are precisely validated across physical dynamical systems, biological aggregations, and clinical stroke fMRI data. The structure of this paper is organized as follows: Section 2 describes our proposed topological & hypergraph reconstruction and dynamic distortions & entropies framework for multiscale tipping detection. Especially, Sections 2.3 to 2.5 detail the dynamic re-construction strategy, the dual-perspective entropy formulations with their theoretical proofs, and the point-level localized mapping, respectively. Section 3 presents compre-hensive experimental validations, finally we summarize conclusions and future work in Section 4. 
+
+# 2 Methodology 
+
+In many applications—from neuroscience and materials science to machine learning— persistent homology (PH) has proven effective for dimension reduction, feature generation, and hypothesis testing. However, standard diagram-based comparisons often disregard the underlying geometry of representative cycles. Recent extensions address this limita-tion by extracting explicit cycles and organizing them into higher-order structures such as PH-hypergraphs, where vertices correspond to data points and hyperedges encode cy-cle memberships [28]. It has also been shown that the Topological Optimal Transport (TpOT) framework not only provides a powerful distance for comparing complex data but also endows the resulting space with rich geometric structure, enabling interpola-3tion, extrapolation, and barycenter computations among measure–topological networks [27]. Detailed mathematical definitions and properties are provided in the Supplementary Material A.1. Before introducing our extensions, we critically assess the properties of the Topolog-ical Optimal Transport (TpOT) framework. This analysis motivates the design choices presented in this section. TpOT simultaneously aligns point–point affinities via a Gromov–Wasserstein term, persistence diagram coordinates via a Wasserstein term, and point–cycle incidences via a co-optimal transport term, thereby integrating geometric, homological, and higher-order relational information within a single optimization. The space of measure topo-logical networks (P/ ∼w, d TpOT ,p 
+
+) admits geodesics that are realized by convex com-binations of kernels, birth–death embeddings, and incidence functions. These geodesics enjoy non‐negative Alexandrov curvature. As a pseudo-metric, dTpOT ,p satisfies symmetry and the triangle inequality. The non-negative curvature property of the geodesic further guarantees convexity of squared‐distance functionals, which enables robust interpolation, barycenter computations, and clustering in the network space. However, the TpOT faces two limitations: • Static distortion loss masks evolution details. The TpOT framework returns only a scalar distance that quantifies the cost of transporting P to P ′ along the optimal geodesic. However, this endpoint‐only value omits the information about the intermediate distortions Lt
+
+> geom
+
+, Lt
+
+> topo
+
+, and Lt 
+
+> hyper
+
+for t ∈ (0 , 1) . As a result, any transient or evolving geometric or topological phenomena occurring between P and 
+
+P ′ are entirely masked, preventing the localization of when—and to what extent —significant structural changes occur along the interpolation path. • Difficulty of detecting abrupt topological changes. Constant-speed interpola-tion yields smoothly varying loss curves. Consequently, abrupt topological changes, such as the sudden birth or death of long-lived cycles, appear only as mild inflec-tions, making them difficult to detect within the aggregated TpOT objective. • Sensitivity of hyperparameters. The choice of the entropic regularization weight 
+
+ε critically influences the trade-off between fidelity and smoothness. Inappropriate settings may result in overly diffuse couplings that obscure salient structure, or in unstable transport plans that are highly sensitive to noise. To address these inherent limitations, we introduce two key extensions in this work: • Dynamic distortion curves. Rather than report only the final scalar distance 
+
+dTpOT ,p , we extract, at each interpolation time t ∈ [0 , 1] , the three dynamic dis-tortion loss functions Lt
+
+> geom
+
+, Lt
+
+> topo
+
+, and Lt
+
+> hyper
+
+. These curves precisely localize the timing and magnitude of geometric, topological, and incidence deformations along the geodesic. • Entropy‐based event detectors. We introduce persistence entropy (PE) and 
+
+hypergraph entropy (HE) as complementary diagnostics. PE quantifies the Shannon entropy of the distribution of barcode lengths, capturing sensitivity to the abrupt appearance or disappearance of significant cycles. HE measures the uniformity 4of vertex–hyperedge incidence, highlighting sudden reorganizations in higher-order connectivity. By integrating these entropy-based indicators, we are able to continuously monitor and detect anomalous topological events in temporally evolving point clouds. In this section, we provide a detailed description of the proposed pipeline for quantifying multi-scale tipping phenomena with geometric/topological/hypergraph distortions in time-evolving point clouds, which is illustrated in Figure 1. The structure of this section is as follow: First, we present the background knowledge of Measure Topology Network and TpOT for optimal coupling in Section 2.1 and Section 2.2. Then, our main contributions on Hypergraph Reconstruction and early warning in-dicators with dynamic distortions are presented in Section 2.3, which explained tipping detection in four-steps aligned with Figure 1. Furthermore, we study various definitions of entropy as early warning indicators in Section 2.4. Our contribution also lies in novel definitions of Vertex-Perspective entropy, Hyperedge-Perspective entropy and Symmetric Hypergraph entropy, with theoretical proofs on sensitivity of abrupt topological transi-tions and topological upper bound. In addition, we also present point-level hypergraph entropy in Section 2.5, as an important evaluation metric in some real data experiment. 
+
+## 2.1 Measure Topological Network 
+
+Given a point cloud i.e., a finite set of points X = {xi}Ni=1 ⊂ Rd, we build its associated 
+
+measure topological network [27] 
+
+P = ((X, k, μ ), (Y, ι, ν ), ω ),
+
+as defined in Section A.3. Concretely: • Geometry: choose a symmetric kernel k(x, x ′) (e.g. Gaussian affinity or Euclidean distance) and uniform measure μ(xi) = 1/ N .• Topology: we use a powerful topological tool Ripserer.jl to compute persistent homology in the desired dimension (e.g. 0D or 1D) to obtain a set of cycle repre-sentatives Y . Record each cycle’s birth–death coordinates via ι : Y → Λ and assign equal mass ν(y) = 1/ |Y |.• Incidence: for each pair (xi, y ), set ω(xi, y ) = 1 if xi lies on the chosen represen-tative cycle y, and 0 otherwise. Analogously, for a second point cloud X′, we construct the corresponding measure topo-logical network P ′ = (( X′, k ′, μ ′), (Y ′, ι ′, ν ′), ω ′) following the same procedure. 
+
+## 2.2 TpOT Distance and Optimal Coupling 
+
+We then compute the TpOT distance of order p = 2 between P and P ′ (23) in which all geodesics in P/∼w are convex. For clarity and efficient implementation, we now express each distortion in purely tensor‐ or matrix‐based summation form. We denote the cardinalities of the point clouds 5Figure 1: Schematic overview of the hypergraph reconstruction and dynamic distortion framework. Row 1 (Initial TpOT): The optimal spatial coupling πv⋆ is computed between the source X0 and target X1 point clouds via solving optimal TpOT problem. Row 2 (Geometric Interpolation): Metric interpolation and Multidimen-sional Scaling (MDS) generate intermediate spatial configurations Xt along the geodesic 
+
+t ∈ [0 , 1] . Row 3 (Topological Structure Reconstruction): Persistent homology is computed based on the interpolated geometric point cloud to extract authentic interme-diate features. Row 4 (Hypergraph Reconstruction: Measure topological networks 
+
+Pt are assembled, where nodes represent regions and colored hulls represent topological hyperedges. Row 5 (Dynamic Distortion as Early Warning Indicators) The dy-namic distortions ( Lt) are rigorously computed by solving the TpOT distances between the global reference source P0 and each intermediate state Pt.6by N = |X| and N ′ = |X′|, and the number of persistent homology generators (cycles) by M = |Y | and M ′ = |Y ′|. With these notations, let: 
+
+Lgeom  
+
+> ii ′jj ′
+
+:= ∣∣ k(xi, x j ) − k′(x′ 
+
+> i′
+
+, x ′ 
+
+> j′
+
+)∣∣p, 1 ≤ i, j ≤ N, 1 ≤ i′, j ′ ≤ N ′,Ltopo  
+
+> uv
+
+:= 
+
+
+
+∥ι(yu) − ι′(y′
+
+> v
+
+)∥p, 1 ≤ u ≤ M, 1 ≤ v ≤ M ′,
+
+∥ι(yu) − ι′(∂Y ′ )∥p, 1 ≤ u ≤ M, v = M ′ + 1 ,
+
+∥ι(∂Y ) − ι′(y′
+
+> v
+
+)∥p, u = M + 1 , 1 ≤ v ≤ M ′,
+
+0, u = M + 1 , v = M ′ + 1 
+
+Lhyper   
+
+> ii ′uu ′
+
+:= 
+
+
+
+> 12
+
+∣∣ωi,u − ω′
+
+> i′,u ′
+
+∣∣p, 1 ≤ u ≤ M, 1 ≤ u′ ≤ M ′,
+
+> 12
+
+∣∣ω′
+
+> i′,u ′
+
+∣∣p, u = M + 1 , 1 ≤ u′ ≤ M ′,
+
+> 12
+
+∣∣ωi,u 
+
+∣∣p, 1 ≤ u ≤ M, u ′ = M ′ + 1 ,
+
+0, u = M + 1 , u ′ = M ′ + 1 .
+
+Let Πv ∈ RN ×N ′
+
+and Πe ∈ R(M +1) ×(M ′+1) be the optimal coupling matrices. Then 
+
+Lgeom (Π v) =  
+
+> N,N ′
+
+∑ 
+
+> i,i ′=1
+> N,N ′
+
+∑
+
+> j,j ′=1
+
+Lgeom  
+
+> ii ′jj ′
+
+Πvii ′ Πvjj ′ , (1) 
+
+Ltopo (Π e) =  
+
+> M+1
+
+∑ 
+
+> u=1
+> M′+1
+
+∑
+
+> v=1
+
+Ltopo  
+
+> uv
+
+Πeuv , (2) 
+
+Lhyper (Π v, Πe) = 
+
+> N
+
+∑ 
+
+> i=1
+> N′
+
+∑ 
+
+> i′=1
+> M+1
+
+∑ 
+
+> u=1
+> M′+1
+
+∑
+
+> v=1
+
+Lhyper  
+
+> ii ′uu ′
+
+Πvii ′ Πeuu ′ . (3) Given a 4-way tensor L and a matrix (Cij )ij , we define tensor-matrix multiplication[29] 
+
+L ⊗ C := 
+
+(∑
+
+> kl
+
+Lijkl Ckl 
+
+)
+
+> ij
+
+.
+
+So the TpOT distance between two measure topological networks P and P ′ with tunable weights can be written as 
+
+LTpOT ,p (Π v, Πe, α, β ) = αLgeom (Π v) + (1 − α)Ltopo (Π e) + βLhyper (Π v, Πe) (4) 
+
+= α⟨Lgeom ⊗ Πv, Πv⟩ + (1 − α)⟨Ltopo , Πe⟩ + β⟨Lhyper ⊗ Πv, Πe⟩
+
+(5) In practice we solve the TpOT problem (23) in its entropic‐regularised form min  
+
+> πv∈Π( μ,μ ′)
+> πe∈Πadm (ν,ν ′)
+
+LTpOT ,p (πv, π e, α, β ) + εv KL (πv | μ ⊗ μ′) + εe KL (πe | ν ⊗ ν′).
+
+Following section3.4 of [27], we solve the entropically regularised TpOT problem by alter-nately updating the two couplings while keeping the other fixed. These two Sinkhorn-style updates are utilized until convergence to (πv⋆ , π e⋆).72.3 Hypergraph Reconstruction and Dynamic Distortion 
+
+Theoretically, the space of measure topological networks admits geodesics defined by convex combinations of their components [27]. Given an optimal coupling (πv⋆ , π e⋆), a the-oretical constant‐speed geodesic Pt for t ∈ [0 , 1] would be defined by linear interpolation: 
+
+Pt =
+
+(
+
+(X × X′, k t, π v⋆ ), (( Y × Y ′) ∪ (Y × ∂Y ′ ) ∪ (∂Y × Y ′), ι t, π e⋆), ω t
+
+)
+
+,
+
+where linear interpolation yields 
+
+kt = (1 − t) k + t k ′, ιt = (1 − t) ι + t ι ′, ωt = (1 − t) ω + t ω ′.
+
+Remark: A direct linear interpolation of the incidence matrix ω raises two funda-mental issues: First, it could inevitably introduce fractional membership values (e.g., 
+
+ωt(x, y ) ∈ (0 , 1) ), which are ill-defined in the context of binary hypergraphs. Second, and more critically, the topological structures generated by such abstract algebraic interpola-tion may become detached from the geometric reality of the data manifold; specifically, the interpolated cycles my fail to correspond to actual loops formed by the interpolated points. To overcome these limitations and preserve physical validity, we propose a hyper-graph reconstruction strategy. Instead of interpolating the parameters of measure topological networks directly, we fist interpolate the underlying geometry, next re-compute 
+
+the topological structure and then reconstruct the measure topological network (Hyper-graph). Specifically, with the optimal geometric coupling πv⋆ , we construct the continuous trajectory as follows: • Step 1: Geometric Interpolation: Following the geodesic construction intro-duced by Han et al. [27, 30], we first obtain an optimal matching from the entropic regularized spatial coupling πv⋆ . For the matched point pairs, we linearly interpo-late their squared Euclidean distance matrices as kt = (1 − t)k + tk ′. The spatial coordinates of the intermediate point cloud Xt are then recovered by applying the Multidimensional Scaling (MDS) algorithm to kt, followed by a rigid transformation step for spatial alignment. • Step 2: Topological Structure Reconstruction: Rather than artificially blend-ing abstract features, we re-compute the persistent homology directly on the newly generated point cloud Xt to extract the authentic topological features (e.g., persis-tence barcodes) that physically exist at time t.• Step 3: Measure Topological Network (Hypergraph) Reconstruction: Us-ing the spatial coordinates Xt and the authentically extracted topological features, we construct the intermediate measure topological network 
+
+Pt = ((Xt, k t, μ t), (Yt, ι t, ν t), ω t
+
+)
+
+following the pipeline outlined in Section 2.1. 8• Step 4: Early Warning Indicator with Dynamic Distortion: Finally, the dynamic structural distortions Lt are evaluated by solving the TpOT problem be-tween the initial reference source P0 and the reconstructed intermediate network Pt
+
+at each time step t ∈ [0 , 1] . That is, at each interpolation step t, we measure the optimal discrepancy between the initial reference network P0 and the reconstructed hypergraph Pt. The three dynamic distortion curves are defined as the minimized costs as follows. Let Lgeom ,t , Ltopo ,t , and Lhyper ,t denote the cost tensors defined between the static source P0 and the dynamic reconstruction Pt. Unlike the theoretical linear interpolation where the coupling remains fixed, here we solve the optimal transport problem at each step t. Let (πvt , π et ) be the optimal couplings achieving the TpOT distance dTpOT (P0, P t).
+
+Lt 
+
+> geom
+
+=
+
+∫ ∫ 
+
+> (X×Xt)2
+
+∣∣k(x, y ) − kt(x′, y ′)∣∣p dπvt (x, x ′) dπvt (y, y ′) (6) 
+
+Lt 
+
+> topo
+
+=
+
+∫  
+
+> ¯Y×¯Yt
+
+∥ι(y) − ιt(y′)∥p dπet (y, y ′) (7) 
+
+Lt 
+
+> hyper
+
+=
+
+∫ 
+
+> X×Xt×Y×Yt
+
+∣∣ω(x, y ) − ωt(x′, y ′)∣∣p dπvt (x, x ′) dπet (y, y ′). (8) These curves Lt quantitatively track the evolution of structural deviations. Specif-ically, πvt and πet adaptively update the matching between the source and the evolving manifold, ensuring that the distortion reflects the true topological difference rather than artifacts of linear interpolation. Similarly, let the time-dependent cost tensors Lgeom ,t ii ′jj ′ , L topo ,t uv , L hyper ,t ii ′uv be computed be-tween the reference network P0 and the reconstructed network Pt (using the re-computed maps kt, ιt, and ωt). Since the topological structure of Pt is re-generated at each step, the optimal correspondence may evolve. Let Πvt and Πet denote the time-specific optimal couplings obtained by solving the TpOT problem between P0 and Pt. The three dynamic distortion curves are then calculated as the minimized transport costs: 
+
+Lt 
+
+> geom
+
+= ∑
+
+> i,i ′,j,j ′
+
+Lgeom ,t ii ′jj ′ Πvt, ii ′ Πvt, jj ′ = 〈Lgeom ,t ⊗ Πvt , Πvt
+
+〉, (9) 
+
+Lt 
+
+> topo
+
+= ∑
+
+> u,v
+
+Ltopo ,t uv Πet, uv = 〈Ltopo ,t , Πet
+
+〉, (10) 
+
+Lt 
+
+> hyper
+
+= ∑
+
+> i,i ′,u,v
+
+Lhyper ,t ii ′uv Πvt, ii ′ Πet, uv = 〈Lhyper ,t ⊗ Πet , Πvt
+
+〉. (11) Figure 1 illustrates this reconstruction-based TpOT inetrpolation and dynamic evaluation framework. These three dynamic distortion curves Lt capture the deformation of geometry, topol-ogy, and cycle incidence as t increases. 
+
+## 2.4 Entropy as Early Warning Indicator 
+
+To detect abrupt topological events along the geodesic, we compute two entropy metrics at each t: persistence entropy and hypergraph entropy. 9First we apply the persistence entropy which is introduced in [31]. Extract the barcode 
+
+Bt = {[bti, d ti]} in ιt(Y, Y ′). Let lti = dti − bti and Lt = ∑ 
+
+> i
+
+lti . Define the Persistence Entropy on geodesic as PE (Bt) = − ∑
+
+> i
+
+lti
+
+Lt
+
+log 
+
+( lti
+
+> Lt
+
+)
+
+. (12) Intuitively, entropy measures how different bars of the barcodes are in length. A barcode with uniform lengths has small entropy. Large changes in PE (Bt) highlight the birth or death of significant homological features. In order to detect abrupt topological transitions along the TpOT geodesic, one may consider Shannon‐type entropies defined on the hypergraph. Let H = ( V, E ) denote the hypergraph associated with a measure topological network, where V is the set of vertices (corresponding to the data points in X) and E is the set of hyperedges (corresponding to the persistent cycles in Y ). A classical proposal (e.g.[24]) proceeds by forming the matrix 
+
+L(H) = I(H) I(H)T
+
+where I(H)is the incidence matrix and then computing the eigenvalues 0 ≤ λ1(L(H)) ≤
+
+λ2(L(H)) ≤ . . . ≤ λm(L(H)) . Then classicaly the Shannon entropy of hypergraph H is defined as 
+
+S(H) = −
+
+> m
+
+∑
+
+> i=1
+
+μi log 2(μi), (13) where μi is defined as 
+
+μi = λi(L(H)) 
+
+∑mi=1 λi(L(H)) = λi(L(H)) 
+
+Tr (L(H)) .
+
+While this Shannon entropy captures global connectivity patterns, it has two draw-backs: • It requires eigen‐decomposition of an m × m matrix (where m = |V |), which can be expensive for large hypergraphs. • It smooths over local vertex–edge redistributions, and thus may fail to react sharply to small but topologically significant changes (e.g. the intersection of several cycles). To address these issues and formulate a mathematically rigorous measure of struc-tural information, we adopt the information-theoretic framework for networks proposed by Dehmer (2008) [21, 22]. Dehmer’s paradigm assigns a probability value to each graph element based on a local structural functional f (·), followed by the computation of Shan-non entropy. Let H = ( V, E ) be the hypergraph formed by the extracted persistent cycles, with incidence matrix ω ∈ { 0, 1}|V |×| E|. Let L(v) = ∑ 
+
+> e∈E
+
+ω(v, e ) be the degree of vertex v,and S(e) = ∑ 
+
+> v∈V
+
+ω(v, e ) be the size of hyperedge e. To rigorously avoid singularities such as 0 · ln (0) or division by zero, we restrict our analysis to the active vertex set 
+
+V ∗ = {v ∈ V | L(v) > 0} and the active hyperedge set E∗ = {e ∈ E | S(e) > 0}. The total incidence of the hypergraph is Itotal = ∑  
+
+> v∈V∗
+
+L(v) = ∑ 
+
+> e∈E∗
+
+S(e).10 Definition 1 (Vertex-Perspective Entropy ). Following the Dehmer framework, we define the structural functional for a vertex as its degree, f (v) = L(v). Normalizing this functional over the active set yields a valid probability distribution p(v) = L(v) 
+
+> Itotal
+
+, which represents the probability that a randomly chosen incidence connection belongs to vertex 
+
+v. The Vertex-Perspective Entropy is defined as: 
+
+HE V (H) = − ∑ 
+
+> v∈V∗
+
+p(v) ln p(v). (14) 
+
+Definition 2 (Hyperedge-Perspective Entropy ). Dually, defining the structural func-tional for a hyperedge as its size f (e) = S(e) yields the probability distribution q(e) = S(e) 
+
+> Itotal
+
+.The Hyperedge-Perspective Entropy is defined as: 
+
+HE E (H) = − ∑
+
+> e∈E∗
+
+q(e) ln q(e). (15) By formulating the entropies as standard Shannon entropies over the discrete proba-bility spaces V ∗ and E∗, we obtain the following rigorous structural properties: 
+
+Property 1 (Bounds and Maximal Assumption ). The entropies are bounded by 
+
+0 ≤ HE V (H) ≤ ln |V ∗| and 0 ≤ HE E (H) ≤ ln |E∗|. The maximum HE V (H) = ln |V ∗| is achieved if and only if H is a regular hypergraph (i.e., L(v) is constant for all v ∈ V ∗). Dually, HE E (H) = ln |E∗| is achieved if and only if H is a uniform hypergraph (i.e., S(e)
+
+is constant for all e ∈ E∗). 
+
+Proofs of this property and subsequent theorems are provided in the Appendix B. With this property, we could normalize ˜HE V (H) = HE V (H)   
+
+> ln |V∗|
+
+, ˜HE E (H) = HE E (H)  
+
+> ln |E∗|
+
+∈
+
+[0 , 1] .
+
+Definition 3 (Symmetric Hypergraph Entropy ). To capture both perspectives simul-taneously, we introduce 
+
+HE sym (G) = α ˜HE V + (1 − α) ˜HE E , α ∈ [0 , 1] . (16) 
+
+By adjusting α, one can emphasize vertex‐level ( α ≈ 1) or hyperedge‐level ( α ≈ 0) changes, or treat both equally ( α = 0 .5). 
+
+Theorem 1 (Sensitivity to Abrupt Topological Transitions ). Let {Ht}t∈T be a sequence of dynamic hypergraphs parameterized by t. Suppose at a critical parameter tc,an abrupt topological transition occurs via the emergence of a new active hyperedge enew 
+
+of size k > 0. Then the vertex-perspective hypergraph entropy strictly changes at tc (i.e., 
+
+lim t→t− 
+
+> c
+
+HE V (Ht)̸ = HE V (H+)), except possibly for a highly restrictive set of hypergraphs whose degree sequences satisfy a specific, rigid Diophantine equation. 
+
+Theorem 2 (Dual Sensitivity to Topological Transitions ). The same conclusion holds for hyperedge-perspective entropy HE E , except for a highly restrictive zero-measure algebraic condition governed by the Fundemental Theorem of Arithmetic. 
+
+11 Theorem 3 (Isomorphism Invariance of Topological Entropy ). Let H1 = ( V1, E 1)
+
+and H2 = ( V2, E 2) be two hypergraphs derived from two measure topological networks. If 
+
+H1 and H2 are isomorphic (i.e., there exist bijections φ : V1 → V2 and ψ : E1 → E2
+
+preserving the incidence relations ω1(v, e ) = ω2(φ(v), ψ (e)) ), then 
+
+HE V (H1) = HE V (H2) and HE E (H1) = HE E (H2).
+
+Theorem 4 (Algebraic Topological Upper Bound ). Let Dk denote the k-th persis-tence diagram obtained from the Vietoris–Rips filtration of the network, and let |Dk| be the number of persistent generators (i.e., topological features with non-zero persistence). And suppose the hypergraph H is constructed using all persistent generators across all dimensions. Then the hyperedge-perspective entropy is strictly bounded by the topological complexity of the manifold: 
+
+HE E (H) ≤ ln 
+
+(∑
+
+> k
+
+|Dk|
+
+)
+
+.
+
+In many practical data analysis scenarios, the measure topological network is con-structed explicitly focusing on a specific homological dimension k (e.g., k = 1 to analyze loops, or k = 2 for voids). 
+
+Corollary 1 (Dimension-Specific Topological Bound ). If the hypergraph H is con-structed exclusively using the k-dimensional persistent generators, the hyperedge-perspective entropy is strictly bounded by the number of k-dimensional topological features : 
+
+HE E (H) ≤ ln (|Dk|). (17) 
+
+Remark: This corollary has significant practical implications. For instance, when tracking the structural dynamics of a 1-dimensional functional network, the maximum possible hyperedge entropy is fundamentally bottlenecked by the total number of k-dimensional persistent features ln (|D1|). This implies that our entropy metric is not only a statistical measure of incidence, but a direct proxy for the 1-dimensional algebraic topological capacity of the system. Our newly proposed hypergraph entropies have following advantages • Computational efficiency: each requires only O(|V | · | E|) operations, avoiding costly eigen‐decompositions. • Theoretical Sensitivity: As proven in Theorem 1, the abrupt appearance or disap-pearance of a topological feature instantaneously forces a non-zero displacement in the probability simplex. This guarantees a mathematically rigorous entropy spike or inflection, making it highly sensitive to critical topological events. • Structural Interpretability: The metrics provide a clear macroscopic interpretation of topological uniformity. Furthermore, their theoretical upper bounds are deeply rooted in algebraic topology: the hyperedge entropy is fundamentally bottlenecked by the topological capacity of the system (i.e., bounded by the p ersistent features, HE E ≤ ln βk, as established in Theorem 3 and Corollary 1), serving as a direct quantitative proxy for the homological complexity of the data manifold. 12 We computeHE sym (t) on the interpolated hypergraph Gt along the TpOT geodesic, and use sudden deviations in these curves to flag discrete topological events. Sudden deviations in HE sym mark structural reorganizations of the cycle hypergraph. In practice, we evaluate the symmetric hypergraph entropy HE sym (Ht) = α HE V (Ht)   
+
+> ln |V∗|
+
++(1 −α)HE E (Ht)  
+
+> ln |E∗|
+
+on the dynamically reconstructed hypergraph Ht at each interpolation step. We then use the sharp discontinuities and sudden deviations in these curves to detect discrete topological phase transitions and structural reorganizations within the evolving point cloud. For clarity, we provide pseudocode below for our method (Algorithm 1). 
+
+## 2.5 Point-Level Hypergraph Entropy Change 
+
+Complex hypergraph networks often contain multiple interdependent cycles that en-code structural relationships at different spatial and topological scales. When such networks evolve—for instance, under temporal deformation, diffusion, or connectivity reorganization—the global hypergraph entropy tends to average out the local transforma-tions, thereby obscuring where the most significant structural changes occur. To resolve this limitation, we introduce a cycle-level entropy decomposition that projects entropy down to the vertex level. This formulation enables identification of local topological vari-ations within complex hypergraph systems. 
+
+Incidence transport via optimal coupling. We define this decomposition generally between a reference hypergraph (with incidence matrix ω ∈ Rn×m 
+
+> ≥0
+
+) and a target hyper-graph (with incidence matrix ω′ ∈ Rn′×m′ 
+
+> ≥0
+
+). Here, ω[i, j ] indicates the participation weight of vertex i in the j-th reference cycle. Because the ordering of topological features gener-ally differs between states, the target matrix ω′ is column-aligned to the reference ω using a permutation (or assignment) matrix A ∈ { 0, 1}m′×m:̂
+
+ω = ω′A. 
+
+This matrix multiplication explicitly permutes the columns of the target incidence matrix, yielding a column-aligned matrix ̂ ω ∈ Rn′×m 
+
+> ≥0
+
+where the j-th column directly corresponds to the j-th reference cycle. 
+
+Column normalization. To compute the entropy, the columns of the incidence ma-trices are normalized to form probability distributions over the vertices. For the reference matrix ω and the aligned target matrix ̂ ω, we explicitly define their normalized counter-parts P and ̂ P as: 
+
+P [i, j ] = ω[i, j ]
+
+∑ni′=1 ω[i′, j ] + ε,̂ P [i, j ] = ̂ ω[i, j ]
+
+∑n′
+
+> i′=1
+
+̂ ω[i′, j ] + ε,
+
+where ε is a sufficiently small constant to ensure numerical stability. 
+
+Cycle-level entropy. Let pj = P [: , j ] denote the normalized vertex distribution of the j-th reference cycle, and ̂ pj =̂ P [: , j ] denote the corresponding distribution from the 13 aligned target matrix. We define the cycle-level entropy for the reference and target states, respectively, as: 
+
+Hj = − 1
+
+log n
+
+> n
+
+∑
+
+> i=1
+
+pij log pij ,̂ Hj = − 1
+
+log n′
+
+> n′
+
+∑
+
+> i=1
+
+̂
+
+pij log ̂ pij , (18) which measures how spatially diffuse (large entropy) or concentrated (small entropy) the participation is within that specific topological cycle. 
+
+Entropy difference and propagation. For each reference cycle j, the change in struc-tural entropy between the two states is defined as: 
+
+∆Hj =̂ Hj − Hj . (19) To localize this structural variation onto the target vertex set, the absolute entropy change 
+
+|∆Hj | is propagated back to the target vertices according to their membership weights in the aligned cycles: 
+
+si =
+
+> m
+
+∑
+
+> j=1
+
+̂
+
+P [i, j ] |∆Hj |. (20) By defining the column vector s = [ s1, . . . , s n′ ]⊤ and the entropy difference vector ∆H =[∆ H1, . . . , ∆Hm]⊤, this back-projection can be compactly written in matrix form as s =̂
+
+P |∆H|. The vector s forms a vertex-level hypergraph-entropy field , which highlights localized regions undergoing the strongest structural transformations. 
+
+Interpretation. Equations (18)–(20) transform the complex structural comparison of high-dimensional hypergraphs into an interpretable scalar field over the vertex domain. Visualizing the field s on the spatial point cloud reveals localized topological deformations that global entropy measures inherently average out. This completes the detailed description of our method. In Section 3 we validate its effectiveness on synthetic and real‐world datasets. 
+
+# 3 Experiments 
+
+We evaluate our method on four distinct settings: two synthetic phenomenological bi-furcation models, a high-dimensional biological aggregation model (D’Orsogna), and a real-world longitudinal fMRI dataset. In each case, we report: (1) the three dynamic distortion curves ( Lgeom , Ltopo , Lhyper ), which track the hierarchical structural evolution, and (2) the entropy indicators, namely Persistence Entropy (PE), Symmetric Hyper-graph Entropy (HE sym ), Vertex-Perspective Entropy(HE V ) and Hyperedge-Perspective Entropy(HE E ). These entropy measures provide complementary, parallel characteriza-tions of topological evolution: PE captures variations in the persistence-diagram domain, while HE sym , HE V , HE E quantify changes in the higher-order hypergraph incidence struc-ture. In addition, the point-level hypergraph-entropy field is used to capture local vertices that contribute most to the observed structural reorganization in the real fMRI data. 14 Algorithm 1 Early warning detection via dynamic distortions and Entropy 
+
+Require: Time-series point clouds {X(i)}Ti=1 , distance kernel k.
+
+Require: TpOT trade-off weights (α, β ), regularization weights (εv, ε e), and symmetric entropy weight γ.
+
+Require: Local geodesic resolution L, forming a uniform partition of the interval [0 , 1] 
+
+denoted by {τℓ}Lℓ=1 .
+
+Ensure: A continuous global trajectory of structural evaluations: distortion curves 
+
+Lgeom (τ ∗), Ltopo (τ ∗), Lhyper (τ ∗) and entropy curves PE (τ ∗), HE sym (τ ∗) parameterized by the global continuous timeline τ ∗ ∈ [0 , 1] . 
+
+> 1:
+
+Initialization:  
+
+> 2:
+
+Construct the global reference network P (1) = ((X(1) , k (1) , μ (1) ), (Y (1) , ι (1) , ν 1), ω (1) ). 
+
+> 3:
+
+for i = 1 to T − 1 do  
+
+> 4:
+
+Construct networks P (i) and P (i+1) via persistent homology.  
+
+> 5:
+
+Compute TpOT between P (i) and P (i+1) using weights (α, β ) and regularization weights (εv, ε e) to obtain the optimal spatial coupling πv⋆ . 
+
+> 6:
+
+for ` = 1 to L do  
+
+> 7:
+
+τ ← τℓ // Local geodesic parameter τ ∈ [0 , 1]  
+
+> 8:
+
+τ ∗ ← (i + τ − 1)/( T − 1) // Mapping to global continuous timeline τ ∗ ∈ [0 , 1]  
+
+> 9:
+
+// Step 1: Geometric Displacement Interpolation  
+
+> 10:
+
+Compute interpolated spatial positions based on matched pairs (x, x ′) ∼ πv⋆ : 
+
+> 11:
+
+Xτ ∗ ← Embed 
+
+({kτ ∗ = (1 − τ )k(i) + τ k (i+1) ∣∣ πv⋆ > 0}) 
+
+> 12:
+
+// Step 2: Topological Reconstruction  
+
+> 13:
+
+Re-compute persistent homology strictly on Xτ ∗ to construct the intermediate network Pτ ∗ . 
+
+> 14:
+
+// Step 3: Dynamic Curve Evaluation (Relative to Global Reference P (1) ) 
+
+> 15:
+
+Solve TpOT between P (1) and Pτ ∗ using weights (α, β, ε v, ε e) to obtain evalu-ation couplings (Π vτ ∗ , Πeτ ∗ ). 
+
+> 16:
+
+Obtain dynamic distortion curves by computing the tensor inner products:  
+
+> 17:
+
+Lgeom (τ ∗) = 〈Lτ ∗
+
+> geom
+
+, Πvτ ∗ ⊗ Πvτ ∗
+
+〉 
+
+> 18:
+
+Ltopo (τ ∗) = 〈Lτ ∗
+
+> topo
+
+, Πeτ ∗
+
+〉 
+
+> 19:
+
+Lhyper (τ ∗) = 〈Lτ ∗
+
+> hyper
+
+, Πvτ ∗ ⊗ Πeτ ∗
+
+〉 
+
+> 20:
+
+Obtain structural entropy curves from the active topology of Pτ ∗ : 
+
+> 21:
+
+PE (τ ∗) = − ∑ lj 
+
+> L
+
+log lj 
+
+> L
+
+// from barcode lengths of Yτ ∗ 
+
+> 22:
+
+HE sym (τ ∗) ← HE sym (Pτ ∗ ; γ) // Evaluated with entropy weight γ 
+
+> 23:
+
+Compute HE V (τ ∗) and HE E (τ ∗) identically following definition equations.  
+
+> 24:
+
+end for  
+
+> 25:
+
+end for 
+
+15 Across all experiments, the entropic TpOT problem is consistently optimized using the Sinkhorn algorithm. We configure the optimization with trade-off parameters α = 0 .5
+
+and β = 1 .0, along with entropic regularization weights εs = 0 .003 for the spatial coupling and εf = 0 .01 for the feature coupling. The symmetric entropy weight is set to γ = 0 .5.
+
+## 3.1 Experiment 1: Topological Phase Transition in Stochastic Oscillators 
+
+Data Generation. To evaluate the proposed dynamic TpOT and structural entropy framework on systems exhibiting complex topological phase transitions, we generate a synthetic dataset based on the stochastic Rayleigh-Van der Pol (RVP) oscillator [15]. Forced by additive white Gaussian noise, the stationary joint probability density function (PDF) of the RVP oscillator’s state space (x1, x 2) is proportional to the exponential of its potential energy: 
+
+p(x1, x 2) ∝ exp 
+
+(
+
+−V (x1, x 2)
+
+T
+
+)
+
+, where V (x1, x 2) = 12(x21 + x22)2 + h(x21 + x22), (21) where h is the critical bifurcation parameter and T controls the effective noise intensity of the system. As theoretically established in stochastic dynamical systems [15], this oscillator un-dergoes a phenomenological bifurcation (P-bifurcation) exactly at h = 0 . For h < 0, the system exhibits limit-cycle oscillations (LCO), and its PDF forms a crater-like geome-try. Topologically, this corresponds to a prominent 1-dimensional persistent loop (i.e., a Betti-1 feature). As h increases past 0, the system shifts to a monostable state, and the geometry structurally collapses into a single dense 0-dimensional connected component. To replicate a real-world discrete data acquisition scenario, we generated a time-varying sequence of point clouds by sampling from this analytical PDF. Since direct sampling from this unnormalized distribution is non-trivial, we employed the Metropolis-Hastings Markov Chain Monte Carlo (MCMC) algorithm. We simulated the dynamical evolution by discretizing the bifurcation parameter h ∈ [−1, 1] into 51 uniformly spaced snapshots. For each snapshot, we set the effective noise T = 0 .001 and extracted N = 200 
+
+samples. This rigorous procedure yields a dynamic point cloud sequence {X(i)}51  
+
+> i=1
+
+that accu-rately captures both the continuous geometric deformation and the abrupt topological phase transition from a ring to a single cluster, serving as the ground truth for our dy-namic evaluation framework. A visualization of the sampled point clouds is showed in the top row of figure 2. 16 Figure 2: Ground truth evolution of the stochastic RVP oscillator. (Top) Scatter plots of the state space showing the transition from a limit cycle to a monostable point. Four sparse snapshots are chosen as our training density samples for topological optimal transport task (illustrated in red boxes ). (Bottom) The corresponding persistence dia-grams tracking the birth and death of the 1-dimensional homological feature. 
+
+Figure 3: Baseline(ground truth) sequential evaluation directly computed between the ref-erence state ( h = −1) and subsequent empirical snapshots. (a) The topological distortion peaks and flattens exactly as the limit cycle collapses. (b) Both persistence entropy and the proposed symmetric hypergraph entropy exhibit a discontinuous jump at the critical point h = 0 . (c) The jump in symmetric entropy is primarily driven by the hyperedge-perspective component (HE E ).To facilitate a direct visual comparison, both perspective entropies are normalized by their respective theoretical upper bounds. 
+
+Baseline Sequential Evaluation Before evaluating our proposed geodesic interpola-tion method, we first apply our framework directly to the fully sampled empirical sequence over the parameter range h ∈ [−1, 1] to establish a ground truth baseline as presented in figure 3. As the bifurcation parameter h increases, the system strictly follows the theo-retical dynamics of the RVP oscillator: the crater-like limit cycle collapses into a dense, 17 monostable cluster at the critical point h = 0 . To quantify this P-bifurcation, we compute the structural distortions relative to the global reference state h = −1.The distortion dynamics show a multi-scale temporal decoupling, corresponding to a ’macro-meso-micro’ structural relaxation sequence. At the macro-scale , the topological distortion ( Ltopo ) peaks drastically just before h = 0 as the global limit cycle contracts, incurring a substantial Wasserstein penalty. Once the macroscopic loop vanishes, Ltopo 
+
+flattens into a constant plateau, as the reference loop can only be matched to diagonal features. Subsequently, at the meso-scale , the incidence distortion ( Lhyper ) peaks and reorganizes. The membership incidence matrix must dissolve and reorganize to accommo-date the collapsed topology. Finally, at the micro-scale , the geometric distortion ( Lgeom )settles last, reflecting the physical diffusion time required for individual stochastic par-ticles to cluster at the new local density peak. Accompanying this multi-scale cascade, the structural entropies (Persistence Entropy and the proposed HE sym ) exhibit a surge near the topological tipping point (h=0). This behavior suggests their potential utility as indicators of the phase transition without relying on predefined thresholds. 
+
+Dynamic Reconstruction of Topological Phase Transitions. To demonstrate the predictive power of our methodology on temporally sparse observations, we artifi-cially subsampled the dataset into merely four equidistant keyframes across the param-eter space (simulating a low-resolution data acquisition scenario). We then applied our reconstruction-based TpOT interpolation framework (Algorithm 1) to generate the con-tinuous trajectory parameterized by τ ∈ [0 , 1] . The results are illustrated in figure 4. The dynamic evaluation along the reconstructed geodesic trajectory approximates the unobserved P-bifurcation, closely aligning with the unobserved ground truth dynamics. As visualized in the interpolation results, the generated intermediate states Pτ capture both the geometric collapse and the progressive deterioration of the Betti-1 barcode. More importantly, the reconstructed distortion and entropy curves along the interpola-tion parameter τ closely aligning with the unobserved ground truth dynamics previously observed along the true parameter h.Our method successfully reproduces the abrupt entropic jumps at the critical transition phase, strictly verifying the theoretical guarantees of Theorem 1(2) on interpolated data. Furthermore, the generated trajectory explicitly preserves the macro-meso-micro temporal decoupling: the interpolated Ltopo curve peaks and flattens well before the stabilization of the geometric component Lgeom . This confirms that our interpolation strategy does not merely blend coordinates linearly, but rigorously reconstructs the authentic, multi-scale process of the underlying stochastic dynamical system from highly sparse observations. 18 (a) Reconstructed spatial geometry and corresponding persistence diagrams 
+
+> (b) Reconstructed structural dynamics
+
+Figure 4: Experimental validation via TpOT geodesic interpolation. We sub-sampled the empirical dataset into merely four equidistant keyframes and reconstructed the continuous topological evolution parameterized by τ ∈ [0 , 1] . (a) The MDS-based isometric embedding interpolates the intermediate spatial geometries between the sparse keyframes, approximating the collapse of the limit cycle. (b) The dynamic evaluation along the reconstructed geodesic reproduces the hierarchical macro-meso-micro distortion sequence and the abrupt entropic jumps at the critical transition point, closely aligning with the unobserved ground truth dynamics. 19 3.2 Experiment 2: Dimension-Specificity and Negative Control in a Double-Well Potential 
+
+Figure 5: Phenomenological bifurcation in the double-well potential model. (Top) Scatter plots of the state space showing the transition from a bistable regime(two distinct clusters) to a monostable regime(a single fused cluster). Four sparse snapshots are chosen as our training density samples for topological optimal transport task (illustrated in red boxes ). (Bottom) The corresponding persistence diagrams tracking the birth and death of the 1-dimensional homological feature. 
+
+Data Generation and Physical Model. To further rigorously evaluate our frame-work, particularly its dimension-specificity and the decoupling of its distortion compo-nents, we construct a second synthetic dataset inspired by the phenomenological bifurca-tions discussed in Appendix A of Tanweer et al. [15]. We simulate a stochastic system governed by a parameterized double-well potential: 
+
+V (x1, x 2; h) = ( x21 − h)2 + x22, (22) where the state space is sampled using a Metropolis-Hastings MCMC sampler with a generalized noise temperature T = 0 .04 . The parameter h decreases from 1.00 to −1.00 
+
+over 51 uniform snapshots. As visualized in the scatter plots of Figure 5, when h > 0, the system is in a bistable regime , forming two distinct connected components ( β0 = 2 ). As h ≤ 0, the two wells merge into a single global minimum, and the point cloud topologically fuses into a single 
+
+monostable cluster ( β0 = 1 ). Unlike the RVP oscillator in Experiment 1, this fusion process strictly involves a 0-dimensional topological transition, completely devoid of any macroscopic 1-dimensional homological features (i.e., no authentic loops or β1 generators are created or destroyed). 
+
+Baseline Evaluation: Specificity and Dimension-Selectivity. To demonstrate the targeted selectivity of our proposed metrics, we explicitly constrained the persistent ho-mology feature extraction exclusively to 1-dimensional homology ( H1) while evaluating this β0-driven dataset. The fully separated state at h = 1 .00 serves as the global reference 
+
+P (1) .The baseline dynamics (computed directly on the full sequence) support the specificity of our framework, as shown in the ground truth curves of Figure 6. Because the two distinct probability masses physically migrate and converge toward the center over time, 20 Figure 6: Ground truth baseline dynamics over parameter h. Because the system only undergoes a 0-dimensional transition, the 1-dimensional structural metrics ( Ltopo , Lhyper ,and Entropies) remain completely suppressed, while the geometric distortion Lgeom rises to capture the spatial convergence. the pure geometric distortion ( Lgeom ) exhibits a continuous, monotonic rise, successfully capturing the macroscopic spatial fusion. However, since our topological hypergraph was strictly configured to monitor H1 fea-tures, it acts as a precise theoretical filter. Because no macroscopic loops exist during the cluster merging, the H1-based topological distortion ( Ltopo ) and incidence distortion (Lhyper ) remain completely suppressed at near-zero levels throughout the entire bifurcation interval. Consequently, the structural entropies (Persistence Entropy and the proposed HE sym ) do not exhibit the stark step-function discontinuities seen in Experiment 1; in-stead, they merely fluctuate stably around baseline noise levels. This serves as a powerful 
+
+negative control , proving that our entropy indicators are not spuriously triggered by mere spatial displacement, but are strictly sensitive only to the designated algebraic topological dimensions. 
+
+Experimental Validation of Dimension-Selective Tracking. We then subsampled this trajectory into four highly sparse keyframes and applied our reconstruction-based TpOT interpolation (Algorithm 1) over τ ∈ [0 , 1] .The interpolated trajectory captures both the spatial dynamics and the dimensional decoupling. As demonstrated in Figure 7(a), the dynamic curves computed along the geodesic τ closely aligning with the ground truth: the interpolated geometric curve Lgeom 
+
+rises to capture the spatial fusion, while the H1-specific topological components and en-tropy indicators remain correctly invariant. This confirms that our interpolation frame-work reliably reconstructs both the presence and the absence of topological phenomena, preserving the strict decoupling between micro-scale geometric diffusion and macro-scale homological persistence across arbitrarily sparse temporal observations. 21 (a) Reconstructed structural dynamics 
+
+> (b) Reconstructed spatial geometry and corresponding persistence diagrams
+
+Figure 7: Dimension-specificity and negative control evaluation. (a)Dynamic reconstruction via geodesic interpolation from only four keyframes successfully reproduces this exact dimension-specific decoupling. (b)The MDS-based isometric embedding and corresponding 1-D persistence diagram. 
+
+## 3.3 Experiment 3: Self-Organization and Dimensionality in Bi-ological Aggregations 
+
+Data Generation and Physical Model. To demonstrate the capability of our frame-work in analyzing higher-dimensional, real-world biological phenomena, we turn to the well-known D’Orsogna model of biological aggregations (e.g., bird flocks and fish schools)[32– 35]. We utilized the publicly available simulation dataset from Topaz’s study, which tracks the complex topological self-organization of N = 500 self-propelled interacting particles. Unlike the previous purely spatial models, the state of this system must be described in a 4-dimensional phase space (x, y, v x, v y), as the particles’ orientations and velocities intrinsically dictate the collective topological state (e.g., distinguishing a single mill from a double mill). The agents obey Newtonian dynamics driven by self-propulsion, friction, and a pairwise attractive-repulsive interaction potential. Over time, the system spontaneously self-organizes from a relatively disorganized, disk-like swarm into a highly structured “mill” or vortex state, characterized by particles rotating around a hollow core. In the 22 4-dimensional phase space, the emergence of this hollow core and the rotational flow corresponds to the birth of prominent 1-dimensional homological features ( H1 topological circles). We extracted a uniformly spaced sequence of 61 snapshots from T = 1 .00 to 
+
+T = 60 .00 to serve as our empirical sequence. 
+
+Figure 8: Ground truth evolution of the D’Orsogna biological aggregation model. (Top) The 2-dimensional spatial projection (x, y ) of the 4-dimensional phase space shows parti-cles self-organizing from a disorganized state into a mill with a hollow core. Four sparse snapshots are chosen as our training density samples for topological optimal transport task (illustrated in red boxes ). (Bottom) The corresponding 1-dimensional persistence diagrams track the emergence of a robust Betti-1 feature representing the rotational vor-tex. 
+
+Baseline Evaluation: Self-Organization and Entropy Drop. We first evaluate the baseline dynamics computed directly on the full 61-frame sequence, using the initial unstructured state at T = 1 .00 as the global reference P (1) . As visualized in Figure 8, the system gradually develops a prominent persistent loop in H1.Quantitatively, the distortion curves in Figure 9(a) effectively capture the multi-scale hierarchical relaxation of this self-organization. At the macro-scale, the topological dis-tortion ( Ltopo ) rises substantially as the initial trivial topology develops a robust Betti-1 vortex. At the meso- and micro-scales, the incidence ( Lhyper ) and geometric ( Lgeom ) dis-tortions track the continuous physical rearrangement of particles entering the annular flow. The structural entropies correlate with the system’s dynamical shifts, suggesting their utility as early-warning indicators for self-organization. As shown in Figure 9(b) and (c), unlike the topological distortion ( Ltopo ) which exhibits a continuous, gradual rise as the physical optimal transport costs accumulate, the Symmetric Hypergraph Entropy experience a sharp, discontinuous drop from a highly entropic state ( ≈ 1.0) to a low-entropy state ( ≈ 0.7). This discrete step-function behavior clearly demonstrates a rapid state-to-state phase transition. Furthermore, a close examination of the temporal timeline reveals a distinct antic-ipatory sensitivity: the proposed Symmetric Hypergraph Entropy (HE sym ) triggers the abrupt entropy drop visibly earlier than both the topological distortion and the Persis-tence Entropy (PE). This temporal precedence is theoretically well-founded within our macro-meso-micro framework. While Ltopo and PE require the global macroscopic loop (H1) to fully mature and achieve a measurable barcode lifespan, HE sym continuously eval-uates the instantaneous mesoscopic incidence distribution. Consequently, it successfully detects the initial localized structural reorganizing—as agents just begin to align into the 23 annular flow—well before the global vortex fully forms. This mathematical behavior reflects the physical transition from a chaotic swarm to a deterministic mill state. 
+
+Figure 9: Baseline dynamic evaluation of the 4D D’Orsogna model. (a) The topological distortion Ltopo rises significantly to capture the formation of the homological loop. (b, c) Unlike previous bifurcation experiments, the structural entropies undergo a significant drop, rigorously quantifying the thermodynamic transition from a disorganized chaotic swarm into a highly self-organized, low-entropy vortex state. 
+
+Dynamic Reconstruction of Topological Phase Transitions. To test our frame-work’s capacity to handle high-dimensional phase spaces with extreme temporal sparsity, we aggressively subsampled the 61-frame sequence into merely four keyframes. We then applied Algorithm 1 to reconstruct the 4-dimensional topological geodesic parameterized by τ ∈ [0 , 1] .24 Figure 10: Reconstructed spatial geometry and persistence diagrams from only four keyframes. While the 2D visual projection exhibits minor alignment artifacts due to the rigid 4-dimensional optimal transport coupling, the 1-dimensional persistent homol-ogy accurately reconstructs the birth of the vortex core. 
+
+Figure 11: Experimental validation of the reconstructed structural dynamics. The TpOT geodesic interpolation tracks the ground truth dynamics from Figure 9, recovering both the the increase in topological distortion and the subsequent entropy drop associated with biological self-organization. As shown in Figure 10, our MDS-based geometric reconstruction interpolates the 4-dimensional phase space. It is worth noting that while the 2-dimensional (x, y ) spatial projections of the interpolated states may exhibit slight visual alignment artifacts, these are purely cosmetic. This visual discrepancy is a natural consequence of projecting and rigidly aligning the full 4-dimensional (x, y, v x, v y) optimal transport coupling into a 2D viewing plane. Thus, these alignment artifacts have no impact on the quantitative re-sults of our framework. Because our dynamic evaluation—including both the persistent 25 homology reconstruction and the TpOT cost computation—relies strictly on the intrinsic pairwise distance function kτ , the mathematical outcomes are invariant to rigid rotational alignments used for visualization. The underlying topological structure and structural en-tropies are highly preserved. This is definitively proven by the dynamic curves computed along the interpolated geodesic τ (Figure 11). The reconstructed trajectories mirror the ground truth sequence: the framework exactly recovers the continuous rise in topological distortion Ltopo and the precise trajectory of the entropy drop. This validates that our algorithm robustly captures complex, high-dimensional biological self-organization from highly sparse observations, maintaining strict mathematical accuracy even when low-dimensional visual projections become challenging. 
+
+## 3.4 Real‐World Data: Stroke fMRI 
+
+3.4.1 Data description and preprocessing 
+
+Let the fMRI data at two time points be denoted as X (M ) ∈ Rnx×ny ×nz ×TM , X (Y ) ∈
+
+Rnx×ny ×nz ×TY , where (i, j, k ) indexes voxel coordinates in the spatial domain Ω, and t
+
+indexes time. To obtain a stable voxel representation, we compute the mean of the BOLD signal: 
+
+¯X (M )(i, j, k ) = 1
+
+TMTM∑
+
+> t=1
+
+X (M )(i, j, k, t ), ¯X (Y )(i, j, k ) = 1
+
+TYTY∑
+
+> t=1
+
+X (Y )(i, j, k, t ).
+
+Each scan is a 4D volume of size 64 × 64 × 34 × 60 . For each time point, we compute the voxel-wise temporal average, producing two 3D volumes of size 64 × 64 × 34 .The human cerebral cortex exhibits highly heterogeneous patterns of functional con-nectivity. To eliminate voxel-level noise and enhance interpretability, we utilize the widely adopted Yeo7 atlas [36] to partition the spatial domain Ω into seven functionally coher-ent regions. After aligning the atlas to the subject’s native space, we obtain a discrete partition Ω = ⋃7 
+
+> v=1
+
+Ωv, where v ∈ { 1, . . . , 7} indexes the large-scale functional networks (e.g., Visual, Somatomotor, Default Mode). Each voxel is represented by a 4-dimensional feature vector incorporating spatial co-ordinates and the BOLD signal: 
+
+x(M ) 
+
+> i,j,k
+
+= ( i, j, k, ¯X (M )(i, j, k ) ) ⊤, x(Y ) 
+
+> i,j,k
+
+= ( i, j, k, ¯X (Y )(i, j, k ) ) ⊤.
+
+The region-specific point clouds for each functional network v are thus defined as: 
+
+P (M ) 
+
+> v
+
+= {x(M ) 
+
+> i,j,k
+
+| (i, j, k ) ∈ Ω(M ) 
+
+> v
+
+}, P (Y ) 
+
+> v
+
+= {x(Y ) 
+
+> i,j,k
+
+| (i, j, k ) ∈ Ω(Y ) 
+
+> v
+
+}.
+
+Finally, we form the full voxel-wise datasets: 
+
+XM =
+
+> 7
+
+⋃
+
+> v=1
+
+P (M ) 
+
+> v
+
+∈ RNM ×4, XY =
+
+> 7
+
+⋃
+
+> v=1
+
+P (Y ) 
+
+> v
+
+∈ RNY ×4,
+
+with corresponding label vectors `M ∈ { 1, ..., 7}NM , `Y ∈ { 1, ..., 7}NY .
+
+26 (a) Raw fMRI volume (3-month) (b) UMAP projections of parcellated networks 
+
+Figure 12: Visualization of the stroke patient’s fMRI data and dimensionality reduction. (a) An exemplary 3D spatial slice of the patient’s raw fMRI volume. (b) 2D UMAP em-beddings of the voxel feature vectors at 3-month (left) and 1-year (right) post-stroke time points. Points are colored by their corresponding Yeo7 functional network assignments. 
+
+3.4.2 Embedding and network construction 
+
+To visualize and analyse the stroke fMRI volumes at 3 months and 12 months, we applied the following dimensionality-reduction pipeline: 
+
+Standardization and UMAP embedding. The voxel-wise datasets XM and XY are standardized to have zero mean and unit variance. Uniform Manifold Approximation and Projection (UMAP) is then applied to map the standardized data from R4 to R2, yielding the respective low-dimensional embeddings ZM , Z Y ⊂ R2. The result is shown in Figure 12(b). Within the embeddings, each Yeo7 network corresponds to a regional subset: 
+
+ZM,v = {zi ∈ ZM | `M [i] = v}, ZY,v = {zi ∈ ZY | `Y [i] = v}.
+
+These subsets are essential for visualizing inter-network geometry and for constructing hypergraphs over the embedded regions in subsequent entropy-based analyses. These 2D embeddings are both resampled to 600 points and then serve as the input point clouds for our TpOT analysis. We then construct 1D persistent homology (retaining the top 20 persistence pairs to represent the dominant topological features), binary incidence matrices, and measure topological networks. 
+
+3.4.3 Multi-Scale Topological Analysis and Findings 
+
+The entropic TpOT problem is solved as before, and distortions are computed on an interpolation grid of 51 points spanning the geodesic between the 3-month and 12-month post-stroke states. To characterize the dynamic reconfiguration of functional brain organization, we eval-uated the embedded voxel sets through a hierarchical set of indicators: the macroscopic metrics (Topological Distortion Ltopo and Persistence Entropy PE), our proposed meso-scopic dual-perspective framework (HE V , HE E , and the aggregated HE sym ), and the base-line Geometric Distortion ( Lgeom ). 27 Figure 13 displays the heatmaps of these six indicators across the seven Yeo brain areas (vertical axis) and the interpolated temporal parameter τ ∈ [0 , 1] (horizontal axis). Acomparative analysis across these heatmaps illustrates the multi-scale structural dynamics of our framework. 
+
+Macroscopic and Mesoscopic Dynamics. The macroscopic indicators, PE and Ltopo 
+
+(Figures 13d, e), follow continuous trajectories and show similar global trends. Both metrics capture the distinct topological evolution (sharply rise at τ ≈ 0.4) in Network 2 (Somatomotor), characterizing structural shifts at a macroscopic scale. At the mesoscopic scale, the three hypergraph entropies (Figures 13a-c) are more sensitive to local and transient topological reorganizations. These metrics reveal region-specific reorganization patterns that are typically obscured by macroscopic measures. Unlike synthetic datasets where transitions are often uniform, the real-world fMRI data shows a clear decoupling between HE V and HE E :• In certain brain networks, such as Network 2 (Somatomotor) and Network 3 (Dorsal Attention), HE V and HE E display opposite temporal trends. • In Network 4 (Ventral Attention), HE V remains stable while HE E decreases around 
+
+τ ≈ 0.9.• Conversely, in others such as Network 7 (Default Mode), HE V and HE E follow synchronized trajectories. This asynchronous behavior suggests that brain functional reorganization is complex, with node participation (HE V ) and functional loop uniformity (HE E ) evolving indepen-dently during stroke recovery. Symmetric Hypergraph Entropy (HE sym ) integrates these variations. As shown in Figure 13a, HE sym combines features from both vertex- and edge-perspective entropies to represent mesoscopic structural transitions. 
+
+Microscopic Geometric Distortion. It is worth noting that the Geometric Distortion (Lgeom , Figure 13f) displays an almost uniform linear growth across all brain regions. This indicates that while pure geometric optimal transport distances reliably track the overall spatial displacement of the point clouds, they are naturally less sensitive to the complex topological phase transitions occurring within the functional networks during the recovery process. 
+
+Vertex-Level Localization. To estimate the spatial distribution of these structural transitions, Figure 14a illustrates the vertex-level hypergraph entropy field on the Dor-sal Attention Network. We mapped the absolute cycle-level entropy variation |∆HE | =
+
+|HE τ − HE 0| back to the vertex domain (as defined in Eq. 20). Each point represents a vertex in the resampled UMAP embedding, and its color encodes the propagated en-tropy change. Regions highlighted in red correspond to vertices that participate in cycles exhibiting the strongest entropy variations, indicating localized structural reorganization within the hypergraph. This spatial map, complemented by the exact embeddings at 3 months and 1 year (Figures 14b and 14c) , demonstrates how our cycle-to-point entropy propagation effectively identifies key local transformations. Additionally, the specific dis-tortion curves on the Dorsal Attention Network is presented in Figure 15 28 (a) Symmetric Entropy (HE sym )
+
+(b) Vertex-perspective En-tropy (HE V )
+
+(c) Edge-perspective Entropy (HE E )
+
+(d) Persistence Entropy (PE) (e) Topological Distortion (Ltopo )
+
+(f) Geometric Distortion (Lgeom )
+
+Figure 13: Dynamic entropy and distortion heatmaps across seven functional brain networks (Yeo7) along the TpOT geodesic. The mesoscopic hypergraph entropies (a-c) capture asynchronous local rewirings and region-specific variations. In contrast, the macroscopic Persistence Entropy (d) and Topological Distortion (e) charac-terize global structural shifts (e.g., in Network 2). The Geometric Distortion (f) exhibits uniform linear growth, tracking overall spatial displacement rather than topological phase transitions. 
+
+(a) Visualization of vertex-level hypergraph entropy change in Dorsal Attention Network de-fined as (20) 
+
+(b) Embeddings of the Dorsal Attention network at 3 month 
+
+(c) Embeddings of the Dorsal Attention network at 1 year 
+
+Figure 14: Vertex-level hypergraph entropy analysis of the Dorsal Attention network. 29 Figure 15: Distortion and entropy trajectories along the TpOT geodesic of the Dorsal Attention network. 
+
+Computational details. All experiments were implemented in Python and using Ripserer.jl for persistent homology. Synthetic runs required approximately 20 seconds per frame on an M3 Pro CPU; the real‐world experiment took approximately 300 seconds. 
+
+Conclusion. Experiments on stochastic models and biological systems show that the TpOT framework recovers topological phase transitions from sparse temporal observa-tions. The dynamic distortion components ( Lgeom , Lhyper , Ltopo ) distinguish continuous physical deformations from discrete structural jumps, identifying a hierarchical critical transition across macro-, meso-, and micro-scales. Our structural entropy indicators serve as threshold-free markers for various topolog-ical events. While Persistence Entropy tracks the lifespan of global homological features, Symmetric Hypergraph Entropy (HE sym ) acts as an early-warning indicator for both bi-furcations (indicated by entropy jumps) and biological self-organization (indicated by en-tropy drops). Furthermore, negative control evaluations confirm the dimension-selectivity and specificity of these metrics. Finally, application to stroke fMRI data illustrates the utility of the dual-perspective framework. The decoupling between vertex- and edge-perspective entropies reveals asym-metric cortical reorganization. Combined with the point-level hypergraph-entropy field to localize the structural origins of these transitions, our method provides a multi-scale approach for analyzing dynamic topological phenomena in complex systems. 
+
+# 4 Summary and Future Work 
+
+In this paper, we introduced a rigorous mathematical framework for tracking dynamic structural transitions in time-varying point clouds. By utilizing a topological and hy-pergraph reconstruction strategy instead of direct abstract network interpolation, our 30 method yields continuous topological trajectories from sparse temporal snapshots. Along these trajectories, we proposed a hierarchical evaluation framework. We demonstrated that macroscopic metrics (such as PE and Topological Distortion) are well-fitted for cap-turing global evolutions, whereas our proposed mesoscopic dual-perspective Hypergraph Entropy (HE V and HE E ) provides a highly sensitive lens for detecting transient, asyn-chronous local rewirings. Our validation across physical, biological, and neuroimaging datasets confirms the specificity and complementarity of these multi-scale indicators. The real-world stroke fMRI experiment in this study served primarily as a methodolog-ical proof-of-concept to demonstrate the computational sensitivity of our mathematical framework. Looking ahead, our future work will focus on extending this framework to large-scale longitudinal clinical cohorts, statistically correlating our dynamic hypergraph entropy curves with cognitive and motor recovery scores to establish robust topological biomarkers for post-stroke rehabilitation. Our future work will explore the underlying bio-logical mechanisms and information geometry driving the entropy decoupling observed in these functional brain networks. We aim to mathematically explain how geometric defor-mations of probability support sets drive this asynchronous structural evolution. Finally, developing scalable approximations for TpOT and topological extraction on massive, un-parcellated graphs remains a crucial computational direction. 
+
+# Acknowledgements 
+
+We would like to thank Professor Xiaosong Yang for the helpful discussions. This work was supported by the National Natural Science Foundation of China (12401233), NSFC International Creative Research Team (W2541005), National Key Research and Develop-ment Program of China (2021ZD0201300), Guangdong-Dongguan Joint Research Fund (2023A1515140016), Guangdong Provincial Key Laboratory of Mathematical and Neu-ral Dynamical Systems (2024B1212010004), Guangdong Major Project of Basic Research (2025B0303000003), and Hubei Key Laboratory of Engineering Modeling and Scientific Computing. 
+
+# A Supplementary material 
+
+## A.1 Persistent Homology 
+
+Given a finite point cloud X ⊂ Rd, Persistent Homology(PH) constructs a nested sequence of simplicial complexes (e.g., the Vietoris–Rips or Čech complexes) parameterized by a scale parameter ε[37]. As ε increases, simplices are added whenever all pairwise distances among their vertices fall below ε, yielding a filtration 
+
+Kε(X) : Kε0 ↪→ Kε1 ↪→ · · · ↪→ KεM ,
+
+where Kεi ⊆ Kεi+1 . By tracking the appearance (“birth”) and disappearance (“death”) of homology classes (connected components, loops, etc.) throughout this filtration, one obtains a persistence diagram—a multiset of points {(bi, d i)} in the plane, each recording the interval (bi, d i) over which a topological feature exists. 31 The multiset of lifespans {di − bi} serves as a succinct “signature” of the data’s topol-ogy: longer intervals correspond to more prominent features, while short-lived inter-vals often reflect topological noise. Persistence diagrams are stable under perturbations of the input, and admit well-studied metrics such as the bottleneck and Wasserstein distances[38, 39]. 
+
+## A.2 Gromov-Wasserstein and Co-Optimal Transport Distances 
+
+In this subsection we review three fundamental optimal-transport-based metrics that form the building blocks of the Topological Optimal Transport framework. Let (X, d ) be a Polish metric space and μ, μ ′ two Borel probability measures supported on X. For p ∈ 1, ∞), the p-Wasserstein distance is defined by 
+
+dW,p (μ, μ ′) = 
+
+(
+
+inf 
+
+> π∈Π( μ,μ ′)
+
+∫
+
+> X×X
+
+d(x, x ′)pdπ(x, x ′)
+
+)1/ p
+
+,
+
+where Π( μ, μ ′) denotes the set of couplings (joint measures) with marginals μ and μ′, and an optimal coupling π realises this infimum. When comparing persistence diagrams D and D′, one augments the plane with a “diagonal” point ∂Λ to allow unmatched features, and replaces Π( μ, μ ′) by the set of admissible partial matchings Π( D, D ′). The resulting diagram-Wasserstein distance is 
+
+dPD 
+
+> W,p
+
+(D, D ′)p = min 
+
+> π∈Π( D,D ′)
+
+( ∑ 
+
+> (a,b )∈π
+
+∥a − b∥pp + ∑
+
+> s∈Uπ
+
+∥s − Proj ∂Λ( s)∥pp
+
+)
+
+,
+
+where Uπ are unmatched points and Proj ∂Λ projects onto the diagonal[39]. When the two measures live on different metric spaces (X, d, μ ) and (X′, d ′, μ ′), the Gromov–Wasserstein (GW) distance aligns their relational structures by minimizing dif-ferences of pairwise distances. For a coupling π ∈ Π( μ, μ ′), the p-distortion dis GW ,p (π) = 
+
+(∫ ∫ 
+
+> (X×X′)2
+
+∣∣ d(x, y ) − d′(x′, y ′)∣∣p dπ(x, x ′) dπ(y, y ′)
+
+)1/ p
+
+.
+
+The GW distance is then 
+
+dGW ,p 
+
+((X, d, μ ), (X′, d ′, μ ′)) = inf  
+
+> π∈Π( μ,μ ’)
+
+dis GW ,p (π),
+
+which defines a pseudo-metric on the metric-measure spaces[8]. To compare two measure hypernetworks H = ( X, μ, Y, ν, ω ) and H′ = ( X′, μ ′, Y ′, ν ′, ω ′),where ω encodes vertex–hyperedge incidences, one seeks couplings πv ∈ Π( μ, μ ′)(vertices) and πe ∈ Π( ν, ν ′) (hyperedges) that minimise dis COOT ,p (πv, π e) = 
+
+(∫  
+
+> X×X′×Y×Y′
+
+∣∣ω(x, y ) − ω′(x′, y ′)∣∣p dπv(x, x ′) dπe(y, y ′)
+
+)1/ p
+
+.
+
+The co-optimal transport distance is then 
+
+dCOOT ,p (H, H ′) = inf  
+
+> πv∈Π( μ,μ ′)
+> πe∈Π( ν,ν ′)
+
+dis COOT ,p (πv, π e),
+
+inducing a pseudo-metric on the space of measure hypernetworks[11]. 32 A.3 Measure Topological Network 
+
+A measure topological network is defined as the triple 
+
+P = ((X, k, μ ), (Y, ι, ν ), ω ),
+
+which integrates geometric, topological, and incidence information into a unified mea-sure‐theoretic framework[27]. Below we describe each component in detail. 
+
+Geometric Component (X, k, μ ).
+
+• X = {x1, . . . , x N } ⊂ Rd is a finite point cloud representing the raw data samples. • k : X × X → R is a symmetric kernel or similarity function; for example, one may take 
+
+k(x, x ′) = exp (−∥ x − x′∥2/σ2) or k(x, x ′) = ∥x − x′∥,
+
+local geometric affinities or pairwise distances. • μ is a probability measure supported on X, often chosen to be the uniform distribu-tion μ({xi}) = 1/ N . This measure allows us to speak of “mass” at each data point and to transport mass in later constructions. 
+
+Topological Component (Y, ι, ν ).
+
+• Y is a locally compact Polish space whose points correspond to homology generators (e.g. cycles) extracted via persistent homology. • ι : Y → Λ is a continuous map into the persistence‐diagram domain Λ = {(b, d ) ∈
+
+R2 | d > b ≥ 0}. Under ι, each generator y ∈ Y is sent to its birth–death pair 
+
+ι(y) = ( by, d y).• ν is a Radon measure on Y such that the push‐forward ι#ν coincides with the usual persistence‐diagram measure on Λ. In practice one may take ν to assign equal mass to each cycle representative in a given homological dimension. 
+
+Incidence Function ω : X × Y → R. The function ω records the binary membership of points in cycles: 
+
+ω(x, y ) = 
+
+{
+
+1, x is a vertex of the cycle represented by y, 
+
+0, otherwise .
+
+By treating ω as a measurable kernel, we couple the geometric and topological parts: mass transported between two point clouds in X can be coherently matched with transport of their associated cycles in Y .The measure topological network P simultaneously captures: • Metric structure through (X, k, μ ), enabling geometry‐aware transport; • Topological features via (Y, ι, ν ), preserving the birth–death statistics of homology classes; • Higher‐order relation through ω, enforcing consistency between points and the cycles they generate. 33 A.4 Topological Optimal Transport (TpOT) 
+
+Given two measure topological networks 
+
+P = ((X, k, μ ), (Y, ι, ν ), ω ) and P ′ = ((X′, k ′, μ ′), (Y ′, ι ′, ν ′), ω ′),
+
+The Topological Optimal Transport (TpOT) distance of order p then is defined by 
+
+dTpOT ,p (P, P ′) = inf     
+
+> πv∈Π( μ,μ ′)
+> πe∈Πadm (ν,ν ′)
+
+[
+
+Lgeom (πv) + Ltopo (πe) + Lhyper (πv, π e)
+
+]1/ p
+
+, (23) where the infimum is taken over all vertex–vertex couplings πv and admissible topology couplings πe[27]. Intuitively, πv matches data points in X with those in X′, while πe
+
+matches homology generators in Y with those in Y ′. The three distortion terms quantify mismatches of geometry, topology, and incidence structure, respectively. 
+
+Geometric distortion Lgeom . This term generalises the Gromov–Wasserstein dis-crepancy to our kernelized setting: 
+
+Lgeom (πv) = 
+
+∫ ∫ 
+
+> (X×X′)2
+
+∣∣ k(x1, x 2) − k′(x′
+
+> 1
+
+, x ′
+
+> 2
+
+)∣∣p dπv(x1, x ′
+
+> 1
+
+) dπv(x2, x ′
+
+> 2
+
+). (24) By comparing pairwise affinities k versus k′, this term ensures that the global metric relationships among points are preserved under the optimal coupling. 
+
+Topological distortion Ltopo . The TpOT measures distance between persistence diagrams via a classical Wasserstein cost: 
+
+Ltopo (πe) = 
+
+∫   
+
+> ¯Y×¯Y′
+
+∥∥ι(y) − ι′(y′)∥∥pp dπe(y, y ′), (25) where ¯Y = Y ∪ { ∂Y } and likewise for ¯Y ′, with ∂Y the diagonal “null” feature. This term aligns birth–death pairs, penalizing large shifts in feature lifetimes. 
+
+Hypergraph incidence distortion Lhyper . Finally, to couple points and cycles consistently, we have 
+
+Lhyper (πv, π e) = 
+
+∫  
+
+> X×X′×Y×Y′
+
+∣∣ω(x, y ) − ω′(x′, y ′)∣∣p dπv(x, x ′) dπe(y, y ′). (26) Since ω and ω′ are binary incidence functions, this term enforces that matched points participate in matched cycles, thereby preserving higher‐order topological connectivity. In summary, TpOT simultaneously optimizes over correspondences of points and cy-cles, striking a balance between geometric fidelity, topological consistency, and cycle membership preservation. The resulting distance dTpOT ,p defines a pseudo-metric on the space of measure topological networks, suitable for comparing complex data with both geometry and topology. 34 A.5 Geodesic Interpolation in TpOT Space 
+
+An important property of the TpOT framework is that the space of measure topological networks endowed with the distance dTpOT ,p is a (non‐negatively curved) geodesic space. In particular, given two networks P and P ′ and an optimal coupling, one can explicitly construct a constant‐speed geodesic between them via convex combinations of their data. The following result summarises this construction. Let 
+
+P = ((X, k, μ ), (Y, ι, ν ), ω ), P ′ = ((X′, k ′, μ ′), (Y ′, ι ′, ν ′), ω ′),
+
+and let πv ∈ Π( μ, μ ′), πe ∈ Πadm (ν, ν ′) be optimal couplings achieving the infimum in (23). Then for each t ∈ [0 , 1] , the interpolated network is defined as 
+
+Pt =
+
+(
+
+( ˜X, k t, π v), ( ˜Y , ι t, π e), ω t
+
+)
+
+, (27) where: • ˜X = X × X′ is the product of the two point clouds, endowed with the coupling measure πv.• ˜Y = ( Y × Y ′) ∪ (Y × { ∂Y ′ }) ∪ ({∂Y } × Y ′) augments the cycle space with diagonal placeholders to accommodate unmatched generators, carrying the coupling πe.• Geometric kernel interpolation: 
+
+kt
+
+((x1, x ′
+
+> 1
+
+), (x2, x ′
+
+> 2
+
+)) = (1 − t) k(x1, x 2) + t k ′(x′
+
+> 1
+
+, x ′
+
+> 2
+
+).
+
+At t = 0 , this recovers the original kernel k, and at t = 1 it recovers k′, while for intermediate t it provides a linear blend of affinities. • Topological coordinate interpolation: 
+
+ιt(y, y ′) = (1 − t) ι(y) + t ι ′(y′).
+
+Here ι(y) and ι′(y′) lie in the persistence diagram plane, and their convex combina-tion traces a straight line segment between birth–death pairs. • Hyperedge incidence interpolation: 
+
+ωt
+
+((x, x ′), (y, y ′)) = (1 − t) ω(x, y ) + t ω ′(x′, y ′).
+
+This interpolation maintains fractional membership values, ensuring that the binary incidence structure of cycles deforms continuously along the geodesic. Besides, we have the following properties: • Metric geodesicity. The space (P/∼w, d TpOT ,p 
+
+) is a geodesic metric space. • Convexity of geodesics for p = 2 . When p = 2 , every geodesic in this space is convex .• Non‐negative curvature. The metric space (P/∼w, d TpOT ,p 
+
+) has curvature bounded below by zero. This guarantees convexity of the cost functional and stability of interpolation. 35 B Proofs for Section 2.4 
+
+Proof of Property 1. We prove the property for the vertex-perspective entropy HE V (H);the proof for HE E (H) follows symmetrically. By Definition 1, p(v) = L(v) 
+
+> Itotal
+
+constitutes a discrete probability distribution over the finite active vertex set V ∗, satisfying p(v) > 0
+
+for all v ∈ V ∗ and ∑  
+
+> v∈V∗
+
+p(v) = 1 . By Gibbs’ inequality, given two discrete probability distributions P = {p(v)}v∈V ∗ and Q = {q(v)}v∈V ∗ , then 
+
+− ∑ 
+
+> v∈V∗
+
+p(v) ln p(v) ≤ − ∑ 
+
+> v∈V∗
+
+p(v) ln q(v)
+
+with equality if and only if p(v) = q(v), for v ∈ V ∗. Substitute q(v) = 1  
+
+> |V∗|
+
+into the inequality, we obtain that the vertex-perspective entropy is positively strictly bounded: 
+
+0 < − ∑ 
+
+> v∈V∗
+
+p(v) ln p(v) ≤ ln |V ∗|
+
+The upper bound ln |V ∗| is achieved if and only if the probability distribution is uniform, i.e., p(v) = 1  
+
+> |V∗|
+
+for all v ∈ V ∗. Substituting the definition of p(v), this equality holds if and only if 
+
+L(v)
+
+Itotal 
+
+= 1
+
+|V ∗| =⇒ L(v) = Itotal 
+
+|V ∗| ∀v ∈ V ∗
+
+This implies that the degree L(v) is a constant for all active vertices. By definition in graph theory, a hypergraph where all vertices have the identical degree is a regular hypergraph . Dually, HE E (H) = ln |E∗| if and only if S(e) is constant for all e ∈ E∗, which defines a uniform hypergraph .
+
+Proof of Theorem 1. Following the algebraic framework of Hoffman and Singleton[40] for constraining graph topologies via Diophantine equations, our proof analyzes the entropy transition using a number-theoretic approach rather than continuous-limit approxima-tions. Let H− = ( V, E −) denote the hypergraph strictly before tc, with total incidence 
+
+I. Let H+ = ( V, E +) denote the hypergraph at tc with the new edge enew connecting a vertex subset Vnew (|Vnew | = k). The new total incidence is I + k.For notational simplicity, let Σ = ∑  
+
+> v∈V∗
+
+L(v) ln L(v). Using Definition 1, the vertex-perspective entropy before the transition is: HE V (H−) = − ∑ 
+
+> v∈V∗
+
+L(v)
+
+I ln 
+
+(L(v)
+
+I
+
+)
+
+= ln I − Σ
+
+I .
+
+After the transition, the degrees update to L(v) + 1 for v ∈ Vnew , and remain L(v) for 
+
+v /∈ Vnew . The local variation term is defined as ∆Σ = ∑
+
+> v∈Vnew
+
+[(L(v) + 1) ln (L(v) + 1) −
+
+L(v) ln L(v)]. The new entropy is: HE V (H+) = ln (I + k) − Σ + ∆Σ 
+
+I + k .
+
+We proceed by analyzing the exact condition under which the entropy remains un-changed. Assume HE V (H−) = HE V (H+). Equating the two expressions and rearranging yields: ln (I + k) − ln I = Σ + ∆Σ 
+
+I + k − Σ
+
+I = I · ∆Σ − kΣ
+
+I(I + k) .
+
+36 Multiplying both sides by I(I + k) to isolate the terms with integer coefficients, we obtain: 
+
+I(I + k) ln (I + k) − I(I + k) ln I = I · ∆Σ − kΣ.
+
+We expand Σ and ∆Σ into their explicit vertex summations by partitioning V ∗ into affected vertices ( v ∈ Vnew ) and unaffected vertices ( v /∈ Vnew ): 
+
+I · ∆Σ − kΣ = I ∑
+
+> v∈Vnew
+
+[(L(v) + 1) ln (L(v) + 1) − L(v) ln L(v)]
+
+− k
+
+( ∑
+
+> v∈Vnew
+
+L(v) ln L(v) + ∑ 
+
+> v/∈Vnew
+
+L(v) ln L(v)
+
+)
+
+.
+
+Grouping the terms for v ∈ Vnew and v /∈ Vnew separately, and utilizing the logarithmic identity x ln y = ln (yx), the right-hand side becomes: 
+
+∑
+
+> v∈Vnew
+
+ln 
+
+((L(v) + 1) I(L(v)+1) 
+
+L(v)(I+k)L(v)
+
+)
+
+− ∑ 
+
+> v/∈Vnew
+
+ln (L(v)kL (v)) .
+
+Applying the same logarithmic identities to the left-hand side and equating both sides as single logarithms of products , we obtain: ln 
+
+((I + k)I(I+k)
+
+II(I+k)
+
+)
+
+= ln 
+
+( ∏ 
+
+> v∈Vnew
+
+(L(v) + 1) I(L(v)+1) 
+
+∏ 
+
+> v∈Vnew
+
+L(v)(I+k)L(v) · ∏  
+
+> v/∈Vnew
+
+L(v)kL (v)
+
+)
+
+.
+
+Since the logarithmic function is strictly monotonic, we can remove the logarithms, which yields a strict integer multiplicative identity: 
+
+(I + k)I(I+k) ∏ 
+
+> v/∈Vnew
+
+L(v)kL (v) ∏
+
+> v∈Vnew
+
+L(v)(I+k)L(v) = II(I+k) ∏
+
+> v∈Vnew
+
+(L(v) + 1) I(L(v)+1) . (28) Equation (28) represents a highly constrained non-linear Diophantine equation[41, 42]. By the Fundamental Theorem of Arithmetic, both sides must yield the exact same prime factorization. Notice that the addition of enew acts as a local topological perturbation, yet it intro-duces a massive global multiplier shift via the terms (I + k)I(I+k) and II(I+k). Because 
+
+I and I + k generally possess distinct prime factors (e.g., they are coprime if k = 1 ), satisfying this equality demands that the exact missing prime factors be supplied by the degree sequences L(v) of the vertices. In the combinatorial space of hypergraphs, the degree sequence cannot arbitrarily absorb such macroscopic algebraic shifts without fundamentally restructuring the entire graph. A solution requires an exact matching of prime factors between the global size I
+
+and local degrees L(v). Consequently, equality holds only for a trivially small, mathemat-ically contrived class of degree sequences. For generic structural transitions, the prime factorizations strictly diverge, guaranteeing HE V (H−)̸ = HE V (H+).
+
+Proof of Theorem 2. Let H− = ( V, E −) denote the hypergraph strictly before tc, with total incidence I. Let H+ = ( V, E +) denote the hypergraph at tc, where E+ = E− ∪{ enew }
+
+and the size of the new hyperedge is S(enew ) = k. The new total incidence is I + k.37 Note that unlike vertex degrees which update locally, the sizes of the existing hyper-edges remain strictly unchanged: S(e) is constant for all e ∈ E−. Let ΣE = ∑ 
+
+> e∈E−
+
+S(e) ln S(e).Using Definition 2, the hyperedge-perspective entropy before the transition is: HE E (H−) = − ∑
+
+> e∈E−
+
+S(e)
+
+I ln 
+
+(S(e)
+
+I
+
+)
+
+= ln I − ΣE
+
+I .
+
+After the topological transition, the summation expands to include the new hyperedge 
+
+enew , while the global denominator updates to I + k:HE E (H+) = − ∑
+
+> e∈E−
+
+S(e)
+
+I + k ln 
+
+( S(e)
+
+I + k
+
+)
+
+− kI + k ln 
+
+( kI + k
+
+)
+
+= ln (I + k) − ΣE + k ln kI + k .
+
+We analyze the condition for entropy stagnation by assuming HE E (H−) = HE E (H+).Equating the two forms and rearranging yields: ln (I + k) − ln I = I(k ln k) − kΣE
+
+I(I + k) .
+
+Similar to the proof of Theorem 1, we derive a Diophantine equation 
+
+(I + k)I(I+k) ∏
+
+> e∈E−
+
+S(e)kS (e) = II(I+k)kIk . (29) This identity reveals a mathematically rigid algebraic dependency. The right-hand side of Equation (29) is completely determined by the macroscopic variables: the initial total incidence I and the perturbation size k. Conversely, the left-hand side relies heavily on the microscopic topological distribution of all prior existing hyperedge sizes S(e).By the Fundamental Theorem of Arithmetic, this equality holds if and only if both sides share the exact same prime factorization. This condition requires the term ∏ S(e)kS (e)
+
+to exactly offset the difference in prime factors. Such a prime factor alignment be-tween the prior topological state and the global perturbation is combinatorially improb-able. Therefore, for any generic topological transition, the equality fails, confirming that HE E (H−)̸ = HE E (H+).
+
+Proof of Theorem 3. Since the isomorphism preserves incidence, the degree mapping is preserved: 
+
+L1(v) = L2(φ(v)) for all v ∈ V1.S1(e) = S2(ψ(e)) for all e ∈ E1.
+
+Consequently, the total incidence Itotal is identical for both hypergraphs, yielding identical probability distributions up to a permutation of indices. Since the Shannon entropy is permutation-invariant (symmetric with respect to its arguments), the summations yield identical scalar values. 
+
+Proof of Theorem 4. By construction, the active hyperedge set E∗ corresponds exactly to the set of homological generators that have non-zero birth–death persistence in the chosen parameter range. The cardinality of this set is precisely the sum of the number 38 of persistent generators, i.e., |E∗| = ∑ 
+
+> k
+
+|Dk|. Substituting this into Property 1 directly yields HE E (H) ≤ ln (|E∗|) = ln 
+
+(∑
+
+> k
+
+|Dk|
+
+)
+
+.
+
+39 References 
+
+[1] Lingyu Feng, Ting Gao, Wang Xiao, and Jinqiao Duan. Early warning indicators via latent stochastic dynamical systems. Chaos , 34 3, 2023. [2] Peng Zhang, Ting Gao, Jinqiu Guo, Jinqiao Duan, and Sergey Nikolenko. Early warning prediction with automatic labelling in epilepsy patients. The ANZIAM Journal , 2023. [3] R Liu, K Aihara, and L Chen. Dynamical network biomarkers for identifying critical transitions and their driving networks of biologic processes. quant biol 1: 105–114, 2013. [4] Christian Kuehn. A mathematical framework for critical transitions: Bifurcations, fast–slow systems and stochastic dynamics. Physica D: Nonlinear Phenomena ,240(12):1020–1035, 2011. [5] Peng Zhang, Ting Gao, Jinqiu Guo, and Jinqiao Duan. Action functional as an early warning indicator in the space of probability measures via schrödinger bridge. Quant. Biol. , 13, 2024. [6] Cédric Villani et al. Optimal transport: old and new , volume 338. Springer, 2008. [7] Titouan Vayer, Laetitia Chapel, Rémi Flamary, Romain Tavenard, and Nicolas Courty. Fused gromov-wasserstein distance for structured objects. Algorithms ,13(9):212, 2020. [8] Facundo Memoli. On the use of Gromov-Hausdorff Distances for Shape Compar-ison. In M. Botsch, R. Pajarola, B. Chen, and M. Zwicker, editors, Eurographics Symposium on Point-Based Graphics . The Eurographics Association, 2007. [9] Facundo Mémoli. Gromov–wasserstein distances and the metric approach to object matching. Foundations of computational mathematics , 11(4):417–487, 2011. [10] Vayer Titouan, Ievgen Redko, Rémi Flamary, and Nicolas Courty. Co-optimal trans-port. Advances in neural information processing systems , 33:17559–17570, 2020. [11] Samir Chowdhury, Tom Needham, Ethan Semrad, Bei Wang, and Youjia Zhou. Hy-pergraph co-optimal transport: Metric and categorical properties. Journal of Applied and Computational Topology , 8(5):1171–1230, 2024. [12] Larry Wasserman. Topological data analysis. Annual review of statistics and its application , 5(2018):501–532, 2018. [13] Chad Giusti and Darrick Lee. Signatures, lipschitz-free spaces, and paths of per-sistence diagrams. SIAM Journal on Applied Algebra and Geometry , 7(4):828–866, 2023. [14] Mingzhe Li, Xinyuan Yan, Lin Yan, Tom Needham, and Bei Wang. Flexible and probabilistic topology tracking with partial optimal transport. IEEE Transactions on Visualization and Computer Graphics , 2025. 40 [15] Sunia Tanweer, Firas A. Khasawneh, Elizabeth Munch, and Joshua R. Tempelman. A topological framework for identifying phenomenological bifurcations in stochastic dynamical systems. Nonlinear Dynamics , 112(6):4687–4703, 2024. [16] Chandrajit Bajaj, Ariel Shamir, and Bong-Soo Sohn. Progressive tracking of iso-surfaces in time-varying scalar fields . Computer Science Department, University of Texas at Austin, 2002. [17] Harish Doraiswamy, Vijay Natarajan, and Ravi S Nanjundiah. An exploration frame-work to identify and track movement of cloud systems. IEEE Transactions on Visu-alization and Computer Graphics , 19(12):2896–2905, 2013. [18] Lin Yan, Talha Bin Masood, Raghavendra Sridharamurthy, Farhan Rasheed, Vijay Natarajan, Ingrid Hotz, and Bei Wang. Scalar field comparison with topological descriptors: Properties and applications for scientific visualization. In Computer Graphics Forum , volume 40, pages 599–633. Wiley Online Library, 2021. [19] Ernesto Trucco. A note on the information content of graphs. Bulletin of Mathemat-ical Biology , 18:129–135, 1956. [20] Nicolas P. Rashevsky. Life, information theory, and topology. Bulletin of Mathe-matical Biology , 17:229–235, 1955. [21] Matthias Dehmer. A novel method for measuring the structural information content of networks. Cybernetics and Systems: An International Journal , 39(8):825–842, 2008. [22] Matthias Dehmer. Information processing in complex networks: Graph entropy and information functionals. Appl. Math. Comput. , 201:82–94, 2008. [23] Gabor Simonyi. Entropy splitting hypergraphs. journal of combinatorial theory, Series B , 66(2):310–323, 1996. [24] Isabelle Bloch and Alain Bretto. A new entropy for hypergraphs. In International Conference on Discrete Geometry for Computer Imagery , pages 143–154. Springer, 2019. [25] Can Chen and Indika Rajapakse. Tensor entropy for uniform hypergraphs. IEEE Transactions on Network Science and Engineering , 7(4):2889–2900, 2020. [26] Fabio Saracco, Giovanni Petri, Renaud Lambiotte, and Tiziano Squartini. Entropy-based models to randomise real-world hypergraphs. Communications Physics ,8(1):284, 2025. [27] Stephen Y Zhang, Michael PH Stumpf, Tom Needham, and Agnese Barbensi. Topo-logical optimal transport for geometric cycle matching. Journal of Applied and Com-putational Topology , 9(2):11, 2025. [28] Agnese Barbensi, Iris HR Yoon, Christian Degnbol Madsen, Deborah O Ajayi, Michael PH Stumpf, and Heather A Harrington. Hypergraphs for multiscale cycles in structured data. arXiv preprint arXiv:2210.07545 , 2022. 41 [29] Samir Chowdhury and Tom Needham. Gromov-wasserstein averaging in a riemannian framework. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops , pages 842–843, 2020. [30] Yanjun Han, Philippe Rigollet, and George Stepaniants. Covariance alignment: from maximum likelihood estimation to gromov–wasserstein. SIAM Journal on Mathemat-ics of Data Science , 7(3):1491–1513, 2025. [31] Harish Chintakunta, Thanos Gentimis, Rocio Gonzalez-Diaz, Maria-Jose Jimenez, and Hamid Krim. An entropy-based persistence barcode. Pattern Recognition ,48(2):391–401, 2015. [32] Yao-li Chuang, Maria R D’orsogna, Daniel Marthaler, Andrea L Bertozzi, and Lin-coln S Chayes. State transitions and the continuum limit for a 2d interacting, self-propelled particle system. Physica D: Nonlinear Phenomena , 232(1):33–47, 2007. [33] Maria R D’Orsogna, Yao-Li Chuang, Andrea L Bertozzi, and Lincoln S Chayes. Self-propelled particles with soft-core interactions: patterns, stability, and collapse. 
+
+Physical review letters , 96(10):104302, 2006. [34] Herbert Levine, Wouter-Jan Rappel, and Inon Cohen. Self-organization in systems of self-propelled particles. Physical Review E , 63(1):017101, 2000. [35] Chad M Topaz, Lori Ziegelmeier, and Tom Halverson. Topological data analysis of biological aggregation models. PloS one , 10(5):e0126383, 2015. [36] BT Thomas Yeo, Fenna M Krienen, Jorge Sepulcre, Mert R Sabuncu, Danial Lashkari, Marisa Hollinshead, Joshua L Roffman, Jordan W Smoller, Lilla Zöllei, Jonathan R Polimeni, et al. The organization of the human cerebral cortex esti-mated by intrinsic functional connectivity. Journal of neurophysiology , 2011. [37] Afra Zomorodian and Gunnar Carlsson. Computing persistent homology. In Proceed-ings of the twentieth annual symposium on Computational geometry , pages 347–356, 2004. [38] David Cohen-Steiner, Herbert Edelsbrunner, and John Harer. Stability of persistence diagrams. In Proceedings of the twenty-first annual symposium on Computational geometry , pages 263–271, 2005. [39] Théo Lacombe, Marco Cuturi, and Steve Oudot. Large scale computation of means and clusters for persistence diagrams using optimal transport. Advances in Neural Information Processing Systems , 31, 2018. [40] Alan J Hoffman and Robert R Singleton. On moore graphs with diameters 2 and 3. 
+
+IBM Journal of Research and Development , 4(5):497–504, 1960. [41] Tarlok N Shorey and Robert Tijdeman. Exponential diophantine equations , vol-ume 87. Cambridge University Press, 1986. [42] Nobuhiro Terai and T Hibino. On the exponential diophantine equation. Interna-tional Journal of Algebra , 6(23):1135–1146, 2012. 42
