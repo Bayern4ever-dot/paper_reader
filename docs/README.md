@@ -6,47 +6,44 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-03-20
-- 运行时间：2026-03-20 20:00:03 UTC
+- 最新运行日期：2026-03-21
+- 运行时间：2026-03-21 19:05:46 UTC
 - 运行状态：成功
-- 本次总论文数：8
+- 本次总论文数：7
 - 精读区：0
-- 速读区：8
+- 速读区：7
 
 ### 今日简报（AI）
-今日速览 8 篇前沿论文，重点攻克室内动态目标检测、多模态大模型幻觉及遥感图像分割等核心挑战。
-值得关注 FINER 揭示的 MLLM 在细粒度负向查询下的幻觉风险，以及遥感领域中参数高效且模态平衡的对称融合新方案。
-建议深入了解多模态模型在复杂场景下的鲁棒性评估，并尝试将高效融合策略应用于特定垂直领域的感知任务。
-- 详情：[/202603/20/README](/202603/20/README)
+今日精选 7 篇论文，深度解析开放词汇环境下的多模态情感识别与高精度图像分割。
+重点关注结合混合证据演绎推理的情感识别新框架，以及 MoE 架构在指代性分割中的空间语义路由应用。
+建议读者关注开放词汇模型如何通过“由粗到精”的交互策略，实现从宏观语义到微
+- 详情：[/202603/21/README](/202603/21/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Robust Dynamic Object Detection in Cluttered Indoor Scenes via Learned Spatiotemporal Cues](/202603/20/2603.15826v1-robust-dynamic-object-detection-in-cluttered-indoor-scenes-via-learned-spatiotemporal-cues)  
-   标签：评分：7.0/10、query:tsds
-   evidence：基于时间占用网格的运动分割
-2. [FINER: MLLMs Hallucinate under Fine-grained Negative Queries](/202603/20/2603.17662v1-finer-mllms-hallucinate-under-fine-grained-negative-queries)  
+1. [Follow the Clues, Frame the Truth: Hybrid-evidential Deductive Reasoning in Open-Vocabulary Multimodal Emotion Recognition](/202603/21/2603.16463v1-follow-the-clues-frame-the-truth-hybrid-evidential-deductive-reasoning-in-open-vocabulary-multimodal-emotion-recognition)  
    标签：评分：7.0/10、query:mmfnd
-   evidence：多模态大模型幻觉检测与细粒度不匹配分析
-3. [Parameter-Efficient Modality-Balanced Symmetric Fusion for Multimodal Remote Sensing Semantic Segmentation](/202603/20/2603.17705v1-parameter-efficient-modality-balanced-symmetric-fusion-for-multimodal-remote-sensing-semantic-segmentation)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：用于多模态分割的模态平衡对称融合
-4. [Beam Prediction Based on Multimodal Large Language Models](/202603/20/2603.15093v1-beam-prediction-based-on-multimodal-large-language-models)  
+   evidence：多模态推理中的证据驱动原理
+2. [Spatio-Semantic Expert Routing Architecture with Mixture-of-Experts for Referring Image Segmentation](/202603/21/2603.12538v1-spatio-semantic-expert-routing-architecture-with-mixture-of-experts-for-referring-image-segmentation)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：跨模态特征集成与多模态数据集构建
-5. [MMKU-Bench: A Multimodal Update Benchmark for Diverse Visual Knowledge](/202603/20/2603.15117v1-mmku-bench-a-multimodal-update-benchmark-for-diverse-visual-knowledge)  
+   evidence：用于图像分割的多模态视觉语言接地
+3. [DCP-CLIP:A Coarse-to-Fine Framework for Open-Vocabulary Semantic Segmentation with Dual Interaction](/202603/21/2603.13951v1-dcp-clipa-coarse-to-fine-framework-for-open-vocabulary-semantic-segmentation-with-dual-interaction)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：多模态知识更新与跨模态一致性
-6. [Attention-guided Evidence Grounding for Spoken Question Answering](/202603/20/2603.16292v1-attention-guided-evidence-grounding-for-spoken-question-answering)  
+   evidence：文本与视觉空间之间的跨模态通信
+4. [VisBrowse-Bench: Benchmarking Visual-Native Search for Multimodal Browsing Agents](/202603/21/2603.16289v1-visbrowse-bench-benchmarking-visual-native-search-for-multimodal-browsing-agents)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：用于潜空间证据落地的跨模态注意力机制
-7. [A Proposal-Free Query-Guided Network for Grounded Multimodal Named Entity Recognition](/202603/20/2603.17314v1-a-proposal-free-query-guided-network-for-grounded-multimodal-named-entity-recognition)  
+   evidence：多模态证据交叉验证与推理
+5. [VisBrowse-Bench: Benchmarking Visual-Native Search for Multimodal Browsing Agents](/202603/21/2603.16289v2-visbrowse-bench-benchmarking-visual-native-search-for-multimodal-browsing-agents)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：多模态命名实体识别与定位
-8. [PCA-Seg: Revisiting Cost Aggregation for Open-Vocabulary Semantic and Part Segmentation](/202603/20/2603.17520v1-pca-seg-revisiting-cost-aggregation-for-open-vocabulary-semantic-and-part-segmentation)  
+   evidence：多模态证据交叉验证
+6. [Attention-guided Evidence Grounding for Spoken Question Answering](/202603/21/2603.16292v2-attention-guided-evidence-grounding-for-spoken-question-answering)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：用于开放词汇语义分割的视觉语言对齐
+   evidence：用于证据落地的跨模态注意力机制
+7. [Chronos: Temporal-Aware Conversational Agents with Structured Event Retrieval for Long-Term Memory](/202603/21/2603.16862v1-chronos-temporal-aware-conversational-agents-with-structured-event-retrieval-for-long-term-memory)  
+   标签：评分：6.0/10、query:tsds
+   evidence：针对长期记忆的时间感知检索与事件索引
 
 
 <div class="dpr-home-promo-card">
