@@ -1,0 +1,297 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-22T19:56:45.306615+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 0,
+    "deep_cap": 7,
+    "deep_selected": 0,
+    "quick_candidates": 7,
+    "quick_skim_target": 12,
+    "quick_selected": 7
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2603.17838v1",
+      "title": "Event-Centric Human Value Understanding in News-Domain Texts: An Actor-Conditioned, Multi-Granularity Benchmark",
+      "abstract": "Existing human value datasets do not directly support value understanding in factual news: many are actor-agnostic, rely on isolated utterances or synthetic scenarios, and lack explicit event structure or value direction. We present \\textbf{NEVU} (\\textbf{N}ews \\textbf{E}vent-centric \\textbf{V}alue \\textbf{U}nderstanding), a benchmark for \\emph{actor-conditioned}, \\emph{event-centric}, and \\emph{direction-aware} human value recognition in factual news. NEVU evaluates whether models can identify value cues, attribute them to the correct actor, and determine value direction from grounded evidence. Built from 2{,}865 English news articles, NEVU organizes annotations at four semantic unit levels (\\textbf{Subevent}, \\textbf{behavior-based composite event}, \\textbf{story-based composite event}, and \\textbf{Article}) and labels \\mbox{(unit, actor)} pairs for fine-grained evaluation across local and composite contexts. The annotations are produced through an LLM-assisted pipeline with staged verification and targeted human auditing. Using a hierarchical value space with \\textbf{54} fine-grained values and \\textbf{20} coarse-grained categories, NEVU covers 45{,}793 unit--actor pairs and 168{,}061 directed value instances. We provide unified baselines for proprietary and open-source LLMs, and find that lightweight adaptation (LoRA) consistently improves open-source models, showing that although NEVU is designed primarily as a benchmark, it also supports supervised adaptation beyond prompting-only evaluation. Data availability is described in Appendix~\\ref{app:data_code_availability}.",
+      "authors": [
+        "Yao Wang",
+        "Xin Liu",
+        "Zhuochen Liu",
+        "Jiankang Chen",
+        "Adam Jatowt",
+        "Kyoungsook Kim",
+        "Noriko Kando",
+        "Haitao Yu"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-03-18T15:31:33+00:00",
+      "link": "https://arxiv.org/pdf/2603.17838v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "human value understanding in news-domain texts",
+      "llm_evidence_cn": "新闻领域文本中的人类价值观理解",
+      "llm_evidence": "新闻领域文本中的人类价值观理解",
+      "canonical_evidence": "新闻领域文本中的人类价值观理解",
+      "llm_tldr_en": "A benchmark for event-centric human value recognition in news articles to improve factual understanding.",
+      "llm_tldr_cn": "一个针对新闻文章中以事件为中心的人类价值观识别基准，旨在提高事实理解。",
+      "llm_tldr": "一个针对新闻文章中以事件为中心的人类价值观识别基准，旨在提高事实理解。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.14229v1",
+      "title": "Agentic DAG-Orchestrated Planner Framework for Multi-Modal, Multi-Hop Question Answering in Hybrid Data Lakes",
+      "abstract": "Enterprises increasingly need natural language (NL) question answering over hybrid data lakes that combine structured tables and unstructured documents. Current deployed solutions, including RAG-based systems, typically rely on brute-force retrieval from each store and post-hoc merging. Such approaches are inefficient and leaky, and more critically, they lack explicit support for multi-hop reasoning, where a query is decomposed into successive steps (hops) that may traverse back and forth between structured and unstructured sources. We present Agentic DAG-Orchestrated Transformer (A.DOT) Planner, a framework for multi-modal, multi-hop question answering, that compiles user NL queries into directed acyclic graph (DAG) execution plans spanning both structured and unstructured stores. The system decomposes queries into parallelizable sub-queries, incorporates schema-aware reasoning, and applies both structural and semantic validation before execution. The execution engine adheres to the generated DAG plan to coordinate concurrent retrieval across heterogeneous sources, route intermediate outputs to dependent sub-queries, and merge final results in strict accordance with the plan's logical dependencies. Advanced caching mechanisms, incorporating paraphrase-aware template matching, enable the system to detect equivalent queries and reuse prior DAG execution plans for rapid re-execution, while the DataOps System addresses validation feedback or execution errors. The proposed framework not only improves accuracy and latency, but also produces explicit evidence trails, enabling verification of retrieved content, tracing of data lineage, and fostering user trust in the system's outputs. On benchmark dataset, A.DOT achieves 14.8% absolute gain in correctness and 10.7% in completeness over baselines.",
+      "authors": [
+        "Kirushikesh D B",
+        "Manish Kesarwani",
+        "Nishtha Madaan",
+        "Sameep Mehta",
+        "Aldrin Dennis",
+        "Siddarth Ajay",
+        "Rakesh B R",
+        "Renu Rajagopal",
+        "Sudheesh Kairali"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.SE"
+      ],
+      "published": "2026-03-15T05:34:16+00:00",
+      "link": "https://arxiv.org/pdf/2603.14229v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multi-modal multi-hop question answering over hybrid data",
+      "llm_evidence_cn": "混合数据上的多模态多跳问答",
+      "llm_evidence": "混合数据上的多模态多跳问答",
+      "canonical_evidence": "混合数据上的多模态多跳问答",
+      "llm_tldr_en": "Presents A.DOT Planner for multi-modal, multi-hop question answering across structured and unstructured data.",
+      "llm_tldr_cn": "提出A.DOT Planner框架，用于结构化与非结构化数据上的多模态多跳问答。",
+      "llm_tldr": "提出A.DOT Planner框架，用于结构化与非结构化数据上的多模态多跳问答。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.14745v1",
+      "title": "CAMD: Coverage-Aware Multimodal Decoding for Efficient Reasoning of Multimodal Large Language Models",
+      "abstract": "Recent advances in Multimodal Large Language Models (MLLMs) have shown impressive reasoning capabilities across vision-language tasks, yet still face the challenge of compute-difficulty mismatch. Through empirical analyses, we identify that existing decoding methods may waste compute on easy cases while underserving hard ones, affecting both model effectiveness and efficiency. To address this issue, we first develop a theoretical framework that links sampling coverage, instance difficulty, and residual risk. Our analysis reveals that multimodal reasoning exhibits a heavy-tailed difficulty distribution; a small subset of hard or ambiguous samples dominates the residual failure probability. Based on this insight, we propose Coverage-Aware Multimodal Decoding (CAMD), an adaptive inference mechanism that dynamically allocates computation according to estimated uncertainty. CAMD integrates evidence-weighted scoring, posterior coverage estimation, and sequential Bayesian updating to balance efficiency and reliability under a limited token budget. Experiments on various benchmark datasets and baselines demonstrate the effectiveness and advantages of our approach.",
+      "authors": [
+        "Huijie Guo",
+        "Jingyao Wang",
+        "Lingyu Si",
+        "Jiahuan Zhou",
+        "Changwen Zheng",
+        "Wenwen Qiang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-16T02:31:03+00:00",
+      "link": "https://arxiv.org/pdf/2603.14745v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multimodal reasoning and decoding efficiency",
+      "llm_evidence_cn": "多模态推理与解码效率",
+      "llm_evidence": "多模态推理与解码效率",
+      "canonical_evidence": "多模态推理与解码效率",
+      "llm_tldr_en": "Proposes coverage-aware decoding to improve efficiency and reasoning in multimodal models.",
+      "llm_tldr_cn": "提出覆盖感知解码方法，旨在提升多模态大语言模型的推理效率和效果。",
+      "llm_tldr": "提出覆盖感知解码方法，旨在提升多模态大语言模型的推理效率和效果。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.17314v2",
+      "title": "A Proposal-Free Query-Guided Network for Grounded Multimodal Named Entity Recognition",
+      "abstract": "Grounded Multimodal Named Entity Recognition (GMNER) identifies named entities, including their spans and types, in natural language   text and grounds them to the corresponding regions in associated images. Most existing approaches split this task into two steps:   they first detect objects using a pre-trained general-purpose detector and then match named entities to the detected objects.   However, these methods face a major limitation. Because pre-trained general-purpose object detectors operate independently of textual   entities, they tend to detect common objects and frequently overlook specific fine-grained regions required by named entities. This   misalignment between object detectors and entities introduces imprecision and can impair overall system performance. In this paper,   we propose a proposal-free Query-Guided Network (QGN) that unifies multimodal reasoning and decoding through text guidance and cross-   modal interaction. QGN enables accurate grounding and robust performance in open-domain scenarios. Extensive experiments demonstrate   that QGN achieves top performance among compared GMNER models on widely used benchmarks.",
+      "authors": [
+        "Hongbing Li",
+        "Jiamin Liu",
+        "Shuo Zhang",
+        "Bo Xiao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-18T03:16:41+00:00",
+      "link": "https://arxiv.org/pdf/2603.17314v2",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multimodal entity recognition and grounding in images",
+      "llm_evidence_cn": "多模态实体识别与图像定位",
+      "llm_evidence": "多模态实体识别与图像定位",
+      "canonical_evidence": "多模态实体识别与图像定位",
+      "llm_tldr_en": "A query-guided network for multimodal named entity recognition and grounding in associated images.",
+      "llm_tldr_cn": "提出一种查询引导网络，用于多模态命名实体识别及其在相关图像中的定位。",
+      "llm_tldr": "提出一种查询引导网络，用于多模态命名实体识别及其在相关图像中的定位。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.18358v1",
+      "title": "From Noise to Signal: When Outliers Seed New Topics",
+      "abstract": "Outliers in dynamic topic modeling are typically treated as noise, yet we show that some can serve as early signals of emerging topics. We introduce a temporal taxonomy of news-document trajectories that defines how documents relate to topic formation over time. It distinguishes anticipatory outliers, which precede the topics they later join, from documents that either reinforce existing topics or remain isolated. By capturing these trajectories, the taxonomy links weak-signal detection with temporal topic modeling and clarifies how individual articles anticipate, initiate, or drift within evolving clusters. We implement it in a cumulative clustering setting using document embeddings from eleven state-of-the-art language models and evaluate it retrospectively on HydroNewsFr, a French news corpus on the hydrogen economy. Inter-model agreement reveals a small, high-consensus subset of anticipatory outliers, increasing confidence in these labels. Qualitative case studies further illustrate these trajectories through concrete topic developments.",
+      "authors": [
+        "Evangelia Zve",
+        "Gauvain Bourgne",
+        "Benjamin Icard",
+        "Jean-Gabriel Ganascia"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-03-18T23:54:18+00:00",
+      "link": "https://arxiv.org/pdf/2603.18358v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "temporal taxonomy of news trajectories and topic formation over time",
+      "llm_evidence_cn": "新闻轨迹的时间分类学和随时间的话题形成",
+      "llm_evidence": "新闻轨迹的时间分类学和随时间的话题形成",
+      "canonical_evidence": "新闻轨迹的时间分类学和随时间的话题形成",
+      "llm_tldr_en": "Introduces a temporal taxonomy to detect emerging topics from outliers in dynamic news document streams.",
+      "llm_tldr_cn": "引入时间分类法，从动态新闻文档流的离群值中检测新兴话题。",
+      "llm_tldr": "引入时间分类法，从动态新闻文档流的离群值中检测新兴话题。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.18612v1",
+      "title": "DiscoPhon: Benchmarking the Unsupervised Discovery of Phoneme Inventories With Discrete Speech Units",
+      "abstract": "We introduce DiscoPhon, a multilingual benchmark for evaluating unsupervised phoneme discovery from discrete speech units. DiscoPhon covers 6 dev and 6 test languages, chosen to span a wide range of phonemic contrasts. Given only 10 hours of speech in a previously unseen language, systems must produce discrete units that are mapped to a predefined phoneme inventory, through either a many-to-one or a one-to-one assignment. The resulting sequences are evaluated for unit quality, recognition and segmentation. We provide four pretrained multilingual HuBERT and SpidR baselines, and show that phonemic information is available enough in current models for derived units to correlate well with phonemes, though with variations across languages.",
+      "authors": [
+        "Maxime Poli",
+        "Manel Khentout",
+        "Angelo Ortiz Tandazo",
+        "Ewan Dunbar",
+        "Emmanuel Chemla",
+        "Emmanuel Dupoux"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.SD",
+        "eess.AS"
+      ],
+      "published": "2026-03-19T08:31:58+00:00",
+      "link": "https://arxiv.org/pdf/2603.18612v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Unsupervised discovery and segmentation of speech units",
+      "llm_evidence_cn": "语音单元的无监督发现与分割",
+      "llm_evidence": "语音单元的无监督发现与分割",
+      "canonical_evidence": "语音单元的无监督发现与分割",
+      "llm_tldr_en": "A benchmark for evaluating unsupervised phoneme discovery and segmentation from discrete speech units.",
+      "llm_tldr_cn": "建立了一个评估离散语音单元无监督音素发现与分割性能的多语言基准。",
+      "llm_tldr": "建立了一个评估离散语音单元无监督音素发现与分割性能的多语言基准。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.19026v1",
+      "title": "Rethinking MLLM Itself as a Segmenter with a Single Segmentation Token",
+      "abstract": "Recent segmentation methods leveraging Multi-modal Large Language Models (MLLMs) have shown reliable object-level segmentation and enhanced spatial perception. However, almost all previous methods predominantly rely on specialist mask decoders to interpret masks from generated segmentation-related embeddings and visual features, or incorporate multiple additional tokens to assist. This paper aims to investigate whether and how we can unlock segmentation from MLLM itSELF with 1 segmentation Embedding (SELF1E) while achieving competitive results, which eliminates the need for external decoders. To this end, our approach targets the fundamental limitation of resolution reduction in pixel-shuffled image features from MLLMs. First, we retain image features at their original uncompressed resolution, and refill them with residual features extracted from MLLM-processed compressed features, thereby improving feature precision. Subsequently, we integrate pixel-unshuffle operations on image features with and without LLM processing, respectively, to unleash the details of compressed features and amplify the residual features under uncompressed resolution, which further enhances the resolution of refilled features. Moreover, we redesign the attention mask with dual perception pathways, i.e., image-to-image and image-to-segmentation, enabling rich feature interaction between pixels and the segmentation token. Comprehensive experiments across multiple segmentation tasks validate that SELF1E achieves performance competitive with specialist mask decoder-based methods, demonstrating the feasibility of decoder-free segmentation in MLLMs. Project page: https://github.com/ANDYZAQ/SELF1E.",
+      "authors": [
+        "Anqi Zhang",
+        "Xiaokang Ji",
+        "Guangyu Gao",
+        "Jianbo Jiao",
+        "Chi Harold Liu",
+        "Yunchao Wei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-19T15:25:36+00:00",
+      "link": "https://arxiv.org/pdf/2603.19026v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal large language models for segmentation",
+      "llm_evidence_cn": "多模态大语言模型用于分割任务",
+      "llm_evidence": "多模态大语言模型用于分割任务",
+      "canonical_evidence": "多模态大语言模型用于分割任务",
+      "llm_tldr_en": "Enables MLLMs to perform segmentation using a single embedding without external decoders.",
+      "llm_tldr_cn": "使多模态大模型能够通过单个嵌入向量实现分割，无需外部解码器。",
+      "llm_tldr": "使多模态大模型能够通过单个嵌入向量实现分割，无需外部解码器。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

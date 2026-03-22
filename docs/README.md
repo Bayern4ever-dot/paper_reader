@@ -6,44 +6,44 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-03-21
-- 运行时间：2026-03-21 19:05:46 UTC
+- 最新运行日期：2026-03-22
+- 运行时间：2026-03-22 19:57:34 UTC
 - 运行状态：成功
 - 本次总论文数：7
 - 精读区：0
 - 速读区：7
 
 ### 今日简报（AI）
-今日精选 7 篇论文，深度解析开放词汇环境下的多模态情感识别与高精度图像分割。
-重点关注结合混合证据演绎推理的情感识别新框架，以及 MoE 架构在指代性分割中的空间语义路由应用。
-建议读者关注开放词汇模型如何通过“由粗到精”的交互策略，实现从宏观语义到微
-- 详情：[/202603/21/README](/202603/21/README)
+今日聚焦多模态推理与新闻价值观理解，深度解析 7 篇涵盖智能体规划与高效解码的前沿成果。
+重点推荐 actor 条件下的新闻价值观多粒度基准，以及利用 DAG 编排解决复杂数据湖多跳问答的新型智能体框架。
+建议关注如何通过覆盖感知解码（CAMD）优化模型推理，并探索 AI 在理解人类复杂价值观方面的最新进展。
+- 详情：[/202603/22/README](/202603/22/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Follow the Clues, Frame the Truth: Hybrid-evidential Deductive Reasoning in Open-Vocabulary Multimodal Emotion Recognition](/202603/21/2603.16463v1-follow-the-clues-frame-the-truth-hybrid-evidential-deductive-reasoning-in-open-vocabulary-multimodal-emotion-recognition)  
+1. [Event-Centric Human Value Understanding in News-Domain Texts: An Actor-Conditioned, Multi-Granularity Benchmark](/202603/22/2603.17838v1-event-centric-human-value-understanding-in-news-domain-texts-an-actor-conditioned-multi-granularity-benchmark)  
    标签：评分：7.0/10、query:mmfnd
-   evidence：多模态推理中的证据驱动原理
-2. [Spatio-Semantic Expert Routing Architecture with Mixture-of-Experts for Referring Image Segmentation](/202603/21/2603.12538v1-spatio-semantic-expert-routing-architecture-with-mixture-of-experts-for-referring-image-segmentation)  
+   evidence：新闻领域文本中的人类价值观理解
+2. [Agentic DAG-Orchestrated Planner Framework for Multi-Modal, Multi-Hop Question Answering in Hybrid Data Lakes](/202603/22/2603.14229v1-agentic-dag-orchestrated-planner-framework-for-multi-modal-multi-hop-question-answering-in-hybrid-data-lakes)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：用于图像分割的多模态视觉语言接地
-3. [DCP-CLIP:A Coarse-to-Fine Framework for Open-Vocabulary Semantic Segmentation with Dual Interaction](/202603/21/2603.13951v1-dcp-clipa-coarse-to-fine-framework-for-open-vocabulary-semantic-segmentation-with-dual-interaction)  
+   evidence：混合数据上的多模态多跳问答
+3. [CAMD: Coverage-Aware Multimodal Decoding for Efficient Reasoning of Multimodal Large Language Models](/202603/22/2603.14745v1-camd-coverage-aware-multimodal-decoding-for-efficient-reasoning-of-multimodal-large-language-models)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：文本与视觉空间之间的跨模态通信
-4. [VisBrowse-Bench: Benchmarking Visual-Native Search for Multimodal Browsing Agents](/202603/21/2603.16289v1-visbrowse-bench-benchmarking-visual-native-search-for-multimodal-browsing-agents)  
+   evidence：多模态推理与解码效率
+4. [A Proposal-Free Query-Guided Network for Grounded Multimodal Named Entity Recognition](/202603/22/2603.17314v2-a-proposal-free-query-guided-network-for-grounded-multimodal-named-entity-recognition)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：多模态证据交叉验证与推理
-5. [VisBrowse-Bench: Benchmarking Visual-Native Search for Multimodal Browsing Agents](/202603/21/2603.16289v2-visbrowse-bench-benchmarking-visual-native-search-for-multimodal-browsing-agents)  
-   标签：评分：6.0/10、query:mmfnd
-   evidence：多模态证据交叉验证
-6. [Attention-guided Evidence Grounding for Spoken Question Answering](/202603/21/2603.16292v2-attention-guided-evidence-grounding-for-spoken-question-answering)  
-   标签：评分：6.0/10、query:mmfnd
-   evidence：用于证据落地的跨模态注意力机制
-7. [Chronos: Temporal-Aware Conversational Agents with Structured Event Retrieval for Long-Term Memory](/202603/21/2603.16862v1-chronos-temporal-aware-conversational-agents-with-structured-event-retrieval-for-long-term-memory)  
+   evidence：多模态实体识别与图像定位
+5. [From Noise to Signal: When Outliers Seed New Topics](/202603/22/2603.18358v1-from-noise-to-signal-when-outliers-seed-new-topics)  
    标签：评分：6.0/10、query:tsds
-   evidence：针对长期记忆的时间感知检索与事件索引
+   evidence：新闻轨迹的时间分类学和随时间的话题形成
+6. [DiscoPhon: Benchmarking the Unsupervised Discovery of Phoneme Inventories With Discrete Speech Units](/202603/22/2603.18612v1-discophon-benchmarking-the-unsupervised-discovery-of-phoneme-inventories-with-discrete-speech-units)  
+   标签：评分：6.0/10、query:tsds
+   evidence：语音单元的无监督发现与分割
+7. [Rethinking MLLM Itself as a Segmenter with a Single Segmentation Token](/202603/22/2603.19026v1-rethinking-mllm-itself-as-a-segmenter-with-a-single-segmentation-token)  
+   标签：评分：6.0/10、query:mmfnd
+   evidence：多模态大语言模型用于分割任务
 
 
 <div class="dpr-home-promo-card">
