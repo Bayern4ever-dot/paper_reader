@@ -1,0 +1,93 @@
+{
+  "label": "2026-03-23",
+  "date": "2026-03-23",
+  "generated_at": "2026-03-23T20:10:54",
+  "count": 6,
+  "papers": [
+    {
+      "paper_id": "202603/23/2603.17522v1-detecting-the-machine-a-comprehensive-benchmark-of-ai-generated-text-detectors-across-architectures-domains-and-adversarial-conditions",
+      "section": "quick",
+      "title_en": "Detecting the Machine: A Comprehensive Benchmark of AI-Generated Text Detectors Across Architectures, Domains, and Adversarial Conditions",
+      "authors": "Madhav S. Baidya, S. S. Baidya, Chirag Chawla",
+      "date": "2026-03-18",
+      "pdf": "https://arxiv.org/pdf/2603.17522v1",
+      "score": "7.0",
+      "evidence": "检测机器生成的文本以打击虚假信息",
+      "tldr": "随着大语言模型的普及，识别AI生成文本变得至关重要。本研究通过HC3和ELI5两个语料库，对包括Transformer微调、XGBoost特征模型、困惑度及LLM提示在内的多种检测方法进行了全面基准测试。研究发现，虽然Transformer模型在分布内表现优异，但在跨领域和跨模型场景下鲁棒性不足，且目前尚无一种方法能完美应对所有挑战。",
+      "tags": "query:mmfnd",
+      "abstract_en": "The rapid proliferation of large language models (LLMs) has created an urgent need for robust and generalizable detectors of machine-generated text. Existing benchmarks typically evaluate a single detector on a single dataset under ideal conditions, leaving open questions about cross-domain transfer, cross-LLM generalization, and adversarial robustness.   We present a comprehensive benchmark evaluating diverse detection approaches across two corpora: HC3 (23,363 human-ChatGPT pairs) and ELI5 (15,000 human-Mistral-7B pairs). Methods include classical classifiers, fine-tuned transformer encoders (BERT, RoBERTa, ELECTRA, DistilBERT, DeBERTa-v3), a CNN, an XGBoost stylometric model, perplexity-based detectors, and LLM-as-detector prompting.   Results show that transformer models achieve near-perfect in-distribution performance but degrade under domain shift. The XGBoost stylometric model matches performance while remaining interpretable. LLM-based detectors underperform and are affected by generator-detector identity bias. Perplexity-based methods exhibit polarity inversion, with modern LLM outputs showing lower perplexity than human text, but remain effective when corrected. No method generalizes robustly across domains and LLM sources.",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202603/23/2603.19608v1-fb-clip-fine-grained-zero-shot-anomaly-detection-with-foreground-background-disentanglement",
+      "section": "quick",
+      "title_en": "FB-CLIP: Fine-Grained Zero-Shot Anomaly Detection with Foreground-Background Disentanglement",
+      "authors": "Ming Hu, Yongsheng Huo, Mingyu Dou, Jianfu Yin, Peng Zhao, Yao Wang, Cong Hu, Bingliang Hu, Quan Wang",
+      "date": "2026-03-20",
+      "pdf": "https://arxiv.org/pdf/2603.19608v1",
+      "score": "7.0",
+      "evidence": "利用CLIP进行前景-背景解耦的多模态异常检测",
+      "tldr": "针对工业和医疗领域中零样本异常检测面临的前背景特征纠缠及文本语义粗糙问题，本文提出FB-CLIP框架。该框架通过多策略文本表示增强语义，并利用多视图软分离技术实现前背景解耦与背景抑制。结合语义一致性正则化（SCR）对齐图像与文本原型，FB-CLIP在零样本设置下显著提升了细粒度异常定位与检测的准确性。",
+      "tags": "query:mmfnd",
+      "abstract_en": "Fine-grained anomaly detection is crucial in industrial and medical applications, but labeled anomalies are often scarce, making zero-shot detection challenging. While vision-language models like CLIP offer promising solutions, they struggle with foreground-background feature entanglement and coarse textual semantics. We propose FB-CLIP, a framework that enhances anomaly localization via multi-strategy textual representations and foreground-background separation. In the textual modality, it combines End-of-Text features, global-pooled representations, and attention-weighted token features for richer semantic cues. In the visual modality, multi-view soft separation along identity, semantic, and spatial dimensions, together with background suppression, reduces interference and improves discriminability. Semantic Consistency Regularization (SCR) aligns image features with normal and abnormal textual prototypes, suppressing uncertain matches and enlarging semantic gaps. Experiments show that FB-CLIP effectively distinguishes anomalies from complex backgrounds, achieving accurate fine-grained anomaly detection and localization under zero-shot settings.",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202603/23/2603.19681v1-unbiased-dynamic-multimodal-fusion",
+      "section": "quick",
+      "title_en": "Unbiased Dynamic Multimodal Fusion",
+      "authors": "Shicai Wei, Kaijie Zhang, Luyi Chen, Tao He, Guiduo Duan",
+      "date": "2026-03-20",
+      "pdf": "https://arxiv.org/pdf/2603.19681v1",
+      "score": "7.0",
+      "evidence": "无偏动态多模态学习与融合",
+      "tldr": "针对动态多模态融合中噪声评估不准和模态依赖偏差导致难学模态受双重抑制的问题，本文提出无偏动态多模态学习（UDML）框架。该框架引入噪声感知不确定性估计器，通过预测受控噪声强度实现精准的质量评估，并利用模态丢弃量化固有依赖偏差以优化权重分配。实验证明，UDML在多种基准任务上均优于现有动态和静态融合方法，具有极强的通用性。",
+      "tags": "query:mmfnd",
+      "abstract_en": "Traditional multimodal methods often assume static modality quality, which limits their adaptability in dynamic real-world scenarios. Thus, dynamical multimodal methods are proposed to assess modality quality and adjust their contribution accordingly. However, they typically rely on empirical metrics, failing to measure the modality quality when noise levels are extremely low or high. Moreover, existing methods usually assume that the initial contribution of each modality is the same, neglecting the intrinsic modality dependency bias. As a result, the modality hard to learn would be doubly penalized, and the performance of dynamical fusion could be inferior to that of static fusion. To address these challenges, we propose the Unbiased Dynamic Multimodal Learning (UDML) framework. Specifically, we introduce a noise-aware uncertainty estimator that adds controlled noise to the modality data and predicts its intensity from the modality feature. This forces the model to learn a clear correspondence between feature corruption and noise level, allowing accurate uncertainty measure across both low- and high-noise conditions. Furthermore, we quantify the inherent modality reliance bias within multimodal networks via modality dropout and incorporate it into the weighting mechanism. This eliminates the dual suppression effect on the hard-to-learn modality. Extensive experiments across diverse multimodal benchmark tasks validate the effectiveness, versatility, and generalizability of the proposed UDML. The code is available at https://github.com/shicaiwei123/UDML.",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202603/23/2603.14458v1-distilling-reasoning-without-knowledge-a-framework-for-reliable-llms",
+      "section": "quick",
+      "title_en": "Distilling Reasoning Without Knowledge: A Framework for Reliable LLMs",
+      "authors": "Auksarapak Kietkajornrit, Jad Tarifi, Nima Asgharbeygi",
+      "date": "2026-03-15",
+      "pdf": "https://arxiv.org/pdf/2603.14458v1",
+      "score": "6.0",
+      "evidence": "将规划与事实检索分离以减少大模型幻觉",
+      "tldr": "本研究针对大语言模型在处理实时或冲突信息时事实性不可靠及隐式规划效率低下的问题，提出了一种将规划与事实检索、答案合成相分离的模块化框架。通过教师-学生框架训练轻量级学生规划器，使其生成包含抽象推理和事实请求的结构化分解，且训练过程不依赖具体事实答案。实验表明，该方法在SEAL-0基准上显著提升了准确率并降低了延迟，证明了显式规划对提升模型可靠性的重要性。",
+      "tags": "query:mmfnd",
+      "abstract_en": "Fact-seeking question answering with large language models (LLMs) remains unreliable when answers depend on up-to-date or conflicting information. Although retrieval-augmented and tool-using LLMs reduce hallucinations, they often rely on implicit planning, leading to inefficient tool usage. We propose a modular framework that explicitly separates planning from factual retrieval and answer synthesis. A lightweight student planner is trained via a teacher-student framework to generate structured decompositions consisting of abstract reasoning steps and searchable fact requests. The supervision signals contain only planning traces and fact requests, without providing factual answers or retrieved evidence. At inference, the planner produces plans, while prompt-engineered modules perform retrieval and response synthesis. We evaluate the proposed framework on SEAL-0, an extremely challenging benchmark for search-augmented LLMs. Results show that supervised planning improves both accuracy and latency compared to monolithic reasoning models and prompt-based tool-augmented frameworks, demonstrating that explicitly learned planning structures are essential for reliable fact-seeking LLMs.",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202603/23/2603.14719v1-multimodal-deep-learning-for-early-prediction-of-patient-deterioration-in-the-icu-integrating-time-series-ehr-data-with-clinical-notes",
+      "section": "quick",
+      "title_en": "Multimodal Deep Learning for Early Prediction of Patient Deterioration in the ICU: Integrating Time-Series EHR Data with Clinical Notes",
+      "authors": "Binesh Sadanandan",
+      "date": "2026-03-16",
+      "pdf": "https://arxiv.org/pdf/2603.14719v1",
+      "score": "6.0",
+      "evidence": "结合时序EHR数据的多模态深度学习",
+      "tldr": "本研究针对ICU患者病情恶化的早期预测挑战，提出一种融合结构化时间序列数据与非结构化临床文本的多模态深度学习框架。利用MIMIC-IV数据库的大规模样本，通过Bi-LSTM和ClinicalBERT提取特征并利用交叉模态注意力机制进行融合。研究表明，加入临床笔记显著提升了预测性能，为ICU实时监测提供了更全面且可复现的解决方案。",
+      "tags": "query:tsds",
+      "abstract_en": "Early identification of patients at risk for clinical deterioration in the intensive care unit (ICU) remains a critical challenge. Delayed recognition of impending adverse events, including mortality, vasopressor initiation, and mechanical ventilation, contributes to preventable morbidity and mortality. We present a multimodal deep learning approach that combines structured time-series data (vital signs and laboratory values) with unstructured clinical notes to predict patient deterioration within 24 hours. Using the MIMIC-IV database, we constructed a cohort of 74,822 ICU stays and generated 5.7 million hourly prediction samples. Our architecture employs a bidirectional LSTM encoder for temporal patterns in physiologic data and ClinicalBERT embeddings for clinical notes, fused through a cross-modal attention mechanism. We also present a systematic review of existing approaches to ICU deterioration prediction, identifying 31 studies published between 2015 and 2024. Most existing models rely solely on structured data and achieve area under the curve (AUC) values between 0.70 and 0.85. Studies incorporating clinical notes remain rare but show promise for capturing information not present in structured fields. Our multimodal model achieves a test AUROC of 0.7857 and AUPRC of 0.1908 on 823,641 held-out samples, with a validation-to-test gap of only 0.6 percentage points. Ablation analysis validates the multimodal approach: clinical notes improve AUROC by 2.5 percentage points and AUPRC by 39.2% relative to a structured-only baseline, while deep learning models consistently outperform classical baselines (XGBoost AUROC: 0.7486, logistic regression: 0.7171). This work contributes both a thorough review of the field and a reproducible multimodal framework for clinical deterioration prediction.",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202603/23/2603.17872v1-mitigating-llm-hallucinations-through-domain-grounded-tiered-retrieval",
+      "section": "quick",
+      "title_en": "Mitigating LLM Hallucinations through Domain-Grounded Tiered Retrieval",
+      "authors": "Md. Asraful Haque, Aasar Mehdi, Maaz Mahboob, Tamkeen Fatima",
+      "date": "2026-03-18",
+      "pdf": "https://arxiv.org/pdf/2603.17872v1",
+      "score": "6.0",
+      "evidence": "通过领域落地检索和验证减轻幻觉",
+      "tldr": "针对大语言模型在关键领域易产生幻觉的问题，本文提出一种基于LangGraph的领域锚定分层检索与验证架构。该框架通过内在验证、自适应搜索路由、纠错文档分级及原子级声明验证四个阶段，将LLM从随机模式匹配者转变为验证真理寻求者。实验表明，该系统在多个基准测试中显著优于零样本基准，有效提升了事实准确性和可靠性。",
+      "tags": "query:mmfnd",
+      "abstract_en": "Large Language Models (LLMs) have achieved unprecedented fluency but remain susceptible to \"hallucinations\" - the generation of factually incorrect or ungrounded content. This limitation is particularly critical in high-stakes domains where reliability is paramount. We propose a domain-grounded tiered retrieval and verification architecture designed to systematically intercept factual inaccuracies by shifting LLMs from stochastic pattern-matchers to verified truth-seekers. The proposed framework utilizes a four-phase, self-regulating pipeline implemented via LangGraph: (I) Intrinsic Verification with Early-Exit logic to optimize compute, (II) Adaptive Search Routing utilizing a Domain Detector to target subject-specific archives, (III) Corrective Document Grading (CRAG) to filter irrelevant context, and (IV) Extrinsic Regeneration followed by atomic claim-level verification. The system was evaluated across 650 queries from five diverse benchmarks: TimeQA v2, FreshQA v2, HaluEval General, MMLU Global Facts, and TruthfulQA. Empirical results demonstrate that the pipeline consistently outperforms zero-shot baselines across all environments. Win rates peaked at 83.7% in TimeQA v2 and 78.0% in MMLU Global Facts, confirming high efficacy in domains requiring granular temporal and numerical precision. Groundedness scores remained robustly stable between 78.8% and 86.4% across factual-answer rows. While the architecture provides a robust fail-safe for misinformation, a persistent failure mode of \"False-Premise Overclaiming\" was identified. These findings provide a detailed empirical characterization of multi-stage RAG behavior and suggest that future work should prioritize pre-retrieval \"answerability\" nodes to further bridge the reliability gap in conversational AI.",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}

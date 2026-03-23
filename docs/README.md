@@ -6,44 +6,41 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-03-22
-- 运行时间：2026-03-22 19:57:34 UTC
+- 最新运行日期：2026-03-23
+- 运行时间：2026-03-23 20:10:44 UTC
 - 运行状态：成功
-- 本次总论文数：7
+- 本次总论文数：6
 - 精读区：0
-- 速读区：7
+- 速读区：6
 
 ### 今日简报（AI）
-今日聚焦多模态推理与新闻价值观理解，深度解析 7 篇涵盖智能体规划与高效解码的前沿成果。
-重点推荐 actor 条件下的新闻价值观多粒度基准，以及利用 DAG 编排解决复杂数据湖多跳问答的新型智能体框架。
-建议关注如何通过覆盖感知解码（CAMD）优化模型推理，并探索 AI 在理解人类复杂价值观方面的最新进展。
-- 详情：[/202603/22/README](/202603/22/README)
+今日聚焦 AI 文本检测、零样本异常识别及多模态融合，深入探讨 6 篇前沿技术动态。
+重点关注 AI 生成文本检测器在对抗环境下的鲁棒性基准，以及利用 FB-CLIP 前后景解耦实现的精细化异常检测。
+建议开发者关注 AI 内容安全工具的实战表现，并尝试将 CLIP 架构应用于更复杂的视觉监控场景。
+- 详情：[/202603/23/README](/202603/23/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [Event-Centric Human Value Understanding in News-Domain Texts: An Actor-Conditioned, Multi-Granularity Benchmark](/202603/22/2603.17838v1-event-centric-human-value-understanding-in-news-domain-texts-an-actor-conditioned-multi-granularity-benchmark)  
+1. [Detecting the Machine: A Comprehensive Benchmark of AI-Generated Text Detectors Across Architectures, Domains, and Adversarial Conditions](/202603/23/2603.17522v1-detecting-the-machine-a-comprehensive-benchmark-of-ai-generated-text-detectors-across-architectures-domains-and-adversarial-conditions)  
    标签：评分：7.0/10、query:mmfnd
-   evidence：新闻领域文本中的人类价值观理解
-2. [Agentic DAG-Orchestrated Planner Framework for Multi-Modal, Multi-Hop Question Answering in Hybrid Data Lakes](/202603/22/2603.14229v1-agentic-dag-orchestrated-planner-framework-for-multi-modal-multi-hop-question-answering-in-hybrid-data-lakes)  
+   evidence：检测机器生成的文本以打击虚假信息
+2. [FB-CLIP: Fine-Grained Zero-Shot Anomaly Detection with Foreground-Background Disentanglement](/202603/23/2603.19608v1-fb-clip-fine-grained-zero-shot-anomaly-detection-with-foreground-background-disentanglement)  
+   标签：评分：7.0/10、query:mmfnd
+   evidence：利用CLIP进行前景-背景解耦的多模态异常检测
+3. [Unbiased Dynamic Multimodal Fusion](/202603/23/2603.19681v1-unbiased-dynamic-multimodal-fusion)  
+   标签：评分：7.0/10、query:mmfnd
+   evidence：无偏动态多模态学习与融合
+4. [Distilling Reasoning Without Knowledge: A Framework for Reliable LLMs](/202603/23/2603.14458v1-distilling-reasoning-without-knowledge-a-framework-for-reliable-llms)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：混合数据上的多模态多跳问答
-3. [CAMD: Coverage-Aware Multimodal Decoding for Efficient Reasoning of Multimodal Large Language Models](/202603/22/2603.14745v1-camd-coverage-aware-multimodal-decoding-for-efficient-reasoning-of-multimodal-large-language-models)  
-   标签：评分：6.0/10、query:mmfnd
-   evidence：多模态推理与解码效率
-4. [A Proposal-Free Query-Guided Network for Grounded Multimodal Named Entity Recognition](/202603/22/2603.17314v2-a-proposal-free-query-guided-network-for-grounded-multimodal-named-entity-recognition)  
-   标签：评分：6.0/10、query:mmfnd
-   evidence：多模态实体识别与图像定位
-5. [From Noise to Signal: When Outliers Seed New Topics](/202603/22/2603.18358v1-from-noise-to-signal-when-outliers-seed-new-topics)  
+   evidence：将规划与事实检索分离以减少大模型幻觉
+5. [Multimodal Deep Learning for Early Prediction of Patient Deterioration in the ICU: Integrating Time-Series EHR Data with Clinical Notes](/202603/23/2603.14719v1-multimodal-deep-learning-for-early-prediction-of-patient-deterioration-in-the-icu-integrating-time-series-ehr-data-with-clinical-notes)  
    标签：评分：6.0/10、query:tsds
-   evidence：新闻轨迹的时间分类学和随时间的话题形成
-6. [DiscoPhon: Benchmarking the Unsupervised Discovery of Phoneme Inventories With Discrete Speech Units](/202603/22/2603.18612v1-discophon-benchmarking-the-unsupervised-discovery-of-phoneme-inventories-with-discrete-speech-units)  
-   标签：评分：6.0/10、query:tsds
-   evidence：语音单元的无监督发现与分割
-7. [Rethinking MLLM Itself as a Segmenter with a Single Segmentation Token](/202603/22/2603.19026v1-rethinking-mllm-itself-as-a-segmenter-with-a-single-segmentation-token)  
+   evidence：结合时序EHR数据的多模态深度学习
+6. [Mitigating LLM Hallucinations through Domain-Grounded Tiered Retrieval](/202603/23/2603.17872v1-mitigating-llm-hallucinations-through-domain-grounded-tiered-retrieval)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：多模态大语言模型用于分割任务
+   evidence：通过领域落地检索和验证减轻幻觉
 
 
 <div class="dpr-home-promo-card">
