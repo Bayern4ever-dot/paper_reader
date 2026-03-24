@@ -1,0 +1,883 @@
+Title: Deterministic Mode Proposals: An Efficient Alternative to Generative Sampling for Ambiguous Segmentation
+
+URL Source: https://arxiv.org/pdf/2603.20191v1
+
+Published Time: Mon, 23 Mar 2026 01:14:53 GMT
+
+Number of Pages: 27
+
+Markdown Content:
+# Deterministic Mode Proposals: An Efficient Alternative to Generative Sampling for Ambiguous Segmentation 
+
+Sebastian Gerard and Josephine Sullivan 
+
+KTH Royal Institute of Technology, Stockholm, Sweden 
+
+{sgerard, sullivan}@kth.se 
+
+Abstract. Many segmentation tasks, such as medical image segmenta-tion or future state prediction, are inherently ambiguous, meaning that multiple predictions are equally correct. Current methods typically rely on generative models to capture this uncertainty. However, identify the underlying modes of the distribution with these methods is computation-ally expensive, requiring large numbers of samples and post-hoc cluster-ing. In this paper, we shift the focus from stochastic sampling to the direct generation of likely outcomes. We introduce mode proposal mod-els, a deterministic framework that efficiently produces a fixed-size set of proposal masks in a single forward pass. To handle superfluous propos-als, we adapt a confidence mechanism, traditionally used in object detec-tion, to the high-dimensional space of segmentation masks. Our approach significantly reduces inference time while achieving higher ground-truth coverage than existing generative models. Furthermore, we demonstrate that our model can be trained without knowing the full distribution of outcomes, making it applicable to real-world datasets. Finally, we show that by decomposing the velocity field of a pre-trained flow model, we can efficiently estimate prior mode probabilities for our proposals. 
+
+## 1 Introduction 
+
+Irreducible (aleatoric) uncertainty is inherent in many prediction tasks. While traditional modeling often focuses on estimating calibrated outcome probabili-ties, many critical vision tasks face a more fundamental challenge: identifying the set of plausible outcomes within a high-dimensional solution space. For ex-ample, predicting wildfire progression through heterogeneous terrain, identifying potentially malignant areas on a lung scan, or forecasting future locations of a child who is temporarily occluded by a parked vehicle, all require dealing with ambiguity where multiple solutions are equally valid. Previous work [3, 7, 9, 11, 15, 19, 22, 26, 27] has taken a generative perspective, sampling random predictions from learned probability distributions. With this approach, an arbitrary number of predictions can be generated, with good image quality and according to well-calibrated probabilities. However, the downside of this class of approaches is that finding the full set of likely outcomes and their 
+
+> arXiv:2603.20191v1 [cs.CV] 20 Mar 2026
+
+2 S. Gerard and J. Sullivan Problem Setting: Ambiguous Segmentation       
+
+> For input x,multiple masks
+> {yi}are valid outputs. They each have a prior probability p1(yi|x). Example: Wildfire spread
+
+. . .  
+
+> p1(y0|x)
+> p1(yKx |x)
+> Input
+> x
+> Outputs
+> y0
+> yKx
+
+1. Generate Mode Proposals ˆyk      
+
+> Mode Proposal Net
+> d= 1 .00 d= 0 .97
+> d= 0 .92 d= 0 .13
+> x
+
+2. Estimate Mode Probabilities from Generative Model                
+
+> ϵ∼ N (0 , I )
+> Flow Model vθ
+> vθ(y0,0|x)
+> We approximate the prior probabilities p1(yi|x) (first panel) with wiby express-ing the learned velocity of a flow model vθ(y0,0|x) as a function of the proposals.
+
+≈                  
+
+> w1(−)
+> +w2(−)
+> +w3(−)
+> Find wby solving the constrained least squares problem: arg min
+> w
+> ∥∥∥∥vθ−∑
+> k
+> wk(ˆ yk−ϵ)
+> ∥∥∥∥
+> 2
+> , s.t. ∑wk= 1 , w k≥0
+> x
+
+Fig. 1: Method overview: In ambiguous segmentation, multiple segmentation masks are valid solutions for a given input, each associated with a prior probability. Our mode proposal model deterministically produces a fixed-size set of proposals and correspond-ing scores d ∈ [0 , 1] . To select the most promising candidates, we threshold the selection scores. Finally, we use a separate flow model, trained on the same data, to estimate the prior probabilities of each proposed mode. 
+
+probabilities becomes difficult: Large numbers of samples need to be generated and clustered, incurring high cost. In this paper, we take the complimentary approach, focusing on generating the set of plausible outcomes as our primary goal. We argue that achieving this generation efficiently is, for many tasks, more important than modeling the prob-abilities. For example in safety-related applications (wildfires, medical imaging, autonomous driving), knowing possible scenarios allows for risk mitigation and contingency planning, while knowing the exact probabilities is less important. Our mode proposal model is a fully deterministic network that outputs a fixed-size set of segmentation masks in a single forward pass. This avoids the stochastic generation of a large set of samples required by generative models, and the expensive multi-step sampling used by diffusion models. Since the number of unique outcomes, or modes , is unknown a priori, we assume that we can estimate a safe upper bound on this number. To discard redundant proposals, we draw an analogy to object detection, where large sets of object proposals are filtered down. Finally, we show that we the remaining proposals can be combined with a trained flow model to efficiently estimate the probabilities for each proposal. Fig. 1 visualizes the different aspects of our approach. 
+
+Our contributions are as follows: 
+
+– We introduce the mode proposal model , a deterministic model which effi-ciently estimates the set of ground truths in ambiguous segmentation tasks with a fixed-size set of proposals. It greatly decreases inference time com-pared to existing generative models, while achieving a higher coverage. (Tab. 1) Mode proposal models 3
+
+– We transfer the mechanism of selection scores from the low-dimensional proposal space of object detection to the high-dimensional proposal space of segmentation tasks, allowing us to filter redundant proposals. (Tab. 3) 
+
+– We demonstrate that our approach even works if only individual targets are available during each training step, instead of all targets at once, which is a realistic setting for any future prediction tasks. (Tab. 1) 
+
+– We propose a way to decompose the velocity field of a pre-trained flow model to efficiently estimate the mode probabilities, assuming that the modes are sufficiently diverse. (Tabs. 4 and 5) 
+
+## 2 Related Work 
+
+Multiple Choice Learning (MCL) [10,16,25] assumes each ensemble member to be an expert for a data subset. Deep learning variants [16, 25] thus only train the current best-fitting model per input, matching our training approach for the single-label scenario. MCL deals with input -space diversity, while we focus on output -space diversity, for each given input. Thus, while MCL produces a single sample, we produce multiple proposals, evaluate them with multi-modal datasets, and additionally investigate the fully-labeled scenario. The mixture of stochastic experts (MoSE) framework [8] consists of a shared encoder-decoder structure, branching into light-weight (stochastic) ex-perts, similar to our approach. MoSE learns prior probabilities per mode via an optimal transport loss. While this is conceptually more elegant than ours in the fully-labeled case, the optimal transport loss would collapse in the single-label scenario. In contrast, our approach reliably learns proposals and estimate prior probabilities in the single-label scenario, assuming sufficiently diverse modes. Most work on ambiguous segmentation uses generative approach . Early work on the probabilistic U-Net (ProbU-Net) [15] and joint ProbU-Net (JProbU-Net) [27] use conditional variational auto-encoders, generating images based on low-dimensional latent representations, sampled from a learned distribution. To better capture spatial correlations, Stochastic Segmentation Networks (SSN) [19] model the joint distribution over pixels with a low-rank multivariate normal distribution. FlowSSN [7] improves upon this, using flows to estimate covari-ances of arbitrary rank. Many recent methods use the flow-related diffusion models: CIMD [22] combines the ProbU-Net’s approach to learning the latent distribution with the diffusion approach to generation. While BerDiff [3] and CCDM [26] use discrete latent spaces, CIMD and Wildfire Spread Scenarios (WSS) [9] threshold Gaussian diffusion. WSS additionally applies the guidance methods PG [5] and SPELL [12] to increase the mode coverage. P ²SAM [11] learns a distribution over prompts for the Segment Anything (SAM) [13] model. While such stochastic approaches require many Monte Carlo samples and possibly iterative generation to find the set of unique modes for challenging datasets, our approach uses an entirely deterministic single forward-pass. 4 S. Gerard and J. Sullivan 
+
+## 3 Method 
+
+For an image x ∈ X = RC×H×W with C channels and spatial dimension H × W
+
+we want to predict the 0 ≤ Kx ≤ K distinct binary masks consistent with x. In-spired by the work in object detection [2] we view this as a set prediction task. We define a mode proposal network that outputs ˆK proposal masks {yxi , . . . , y x ˆK }
+
+with each yxi ∈ { 0, 1}H×W , where ˆK is chosen such that K ≤ ˆK. To train this network we need to define a loss invariant to permutations of the proposal network’s outputs. This is achieved by finding a bipartite matching between the labeled ground truth masks and the predicted masks via the Hungarian match-ing algorithm. As K will generally be larger than Kx, we also simultaneously train an auxiliary network to automatically identify the minimal set of proposed masks corresponding to the Kx distinct modes. We assume two distinct scenarios for the labeled data available at training: The fully-labeled scenario assumes that all the modes are available when x is encountered, while single-label assumes just one of the labeled masks is available: 
+
+Fully-labeled: (x, y 1, . . . , y Kx ) (1) Single-label: (x, y ) where y ∈ { y1, . . . , y Kx } (2) For real-world future-prediction tasks, the single-label scenario is more real-istic, as in the real world only one future can be observed at a time. We associate each mask with a prior probability p1(yi | x) to model that outcomes are ob-served with different frequencies. In our setup, the model eventually sees all yi
+
+for a given x and thus learns to associate them with each other. For real-world data, we assume that the model may learn to generalize from seeing diverse outputs for similar inputs. We now provide more details for training our mode proposal network where we adapt the DETR loss [2] to our problem. 
+
+3.1 Mode Proposal Network 
+
+We construct a mode proposal network as a convolutional segmentation net-work with K heads, each one outputting a binary segmentation mask. Let the function gψ0 , parameterized by ψ0, represent these heads and fϕ represent the network prior to these heads. The mode proposal network then maps input x to 
+
+K predictions, or proposals :
+
+gψ0 (fϕ(x)) = {ˆyx 
+
+> 1
+
+, . . . , ˆyxK } ∈ { 0, 1}K . (3) As K ≥ Kx, some of the proposals output by the network may be duplicates or have low quality. To identify the best proposals, we follow DETR and produce a selection score for each of the K proposals. More formally, we define one more network head hψ1 that produces the selection scores dxk :
+
+hψ1 (fϕ(x)) = ( dx 
+
+> 1
+
+, . . . , d xK ) ∈ [0 , 1] K . (4) Mode proposal models 5
+
+Each dxk can be seen as the probability that the kth proposal is the best repre-sentative for a distinct mode. Ideally, after training PKk=1 1[dxk >0.5] = Kx.
+
+Training in the fully labeled scenario To train, we need to find an optimal bipartite matching between the proposals and the labeled modes. This requires finding the best assignment of the Kx labeled masks to a Kx sized subset of the predicted masks. Let π be a Kx partial permutation of integers 1, . . . , K , then 
+
+π∗ = arg min 
+
+> π
+
+1
+
+KxKxX
+
+> i=1
+
+lmask (yi, ˆyxπ(i)) (5) where we define lmask (y, ˆy) to be 1-IoU score between the binary masks y and ˆy.This assignment can be computed efficiently with Hungarian matching. 
+
+The proposal mask head loss Given the optimal assignment π∗ we can now define the loss for all the matched mask proposal heads 
+
+Lmask (x, ϕ, ψ 0) = 1
+
+KxKxX
+
+> i=1
+
+lmask (yi, ˆyxπ∗(i)) (6) 
+
+Selection head loss Now we turn our attention to training the selection head. Let J be the indices of the proposals not matched to a labeled mask ( i.e .J =
+
+> {1, . . . , K }\{ π∗(1) , . . . , π ∗(Kx)}
+
+). We then define the loss to train hψ1 as: 
+
+Lselect (x, ϕ, ψ 1) = 1
+
+K
+
+
+
+> Kx
+
+X
+
+> i=1
+
+lselect (1 , d xπ∗(i)) + X
+
+> j∈J
+
+lselect (0 , d xj )
+
+ (7) where we define lselect (t, d ), with t ∈ { 0, 1}, to the binary cross-entropy loss. 
+
+The total loss The complete loss used for training is defined for λ ∈ R+ as 
+
+Ltotal (x, ϕ, ψ 0, ψ 1) = Lmask (x, ϕ, ψ 0) + λ Lselect (x, ϕ, ψ 1) (8) 
+
+Training in the single-label scenario Now we assume each training example just has one labeled mask that is (x, y ) ∈ D = X ×{ 0, 1}H×W . In this case, if the proposal network produces proposals that correspond to a mode not represented by y, we refer to these as unlabeled positive proposals. Because of these unlabeled positives, the selection loss in Eq. (7) cannot be used as is and must be amended to train the selection head. We can make use of existing methods from positive-unlabeled learning [6, 17] and in particular the non-negative PU loss [14]. This requires a batch, B ⊂ D , of training examples where |B| = nb. Before defining the PU loss we need to introduce two separate quantities. The first is the mean 6 S. Gerard and J. Sullivan 
+
+loss of all positive examples in B when evaluated against positive (or negative) targets, 
+
+LP (t, B, ϕ, ψ 1) = 1
+
+nb
+
+X
+
+> (x,y )∈B
+
+lselect (t, d xπ∗
+
+> x(1)
+
+) (9) where t ∈ { 0, 1} is the target and π∗
+
+> x
+
+(1) is the index of the proposed mask which is closest to the labeled mask y. The second quantity is the mean loss of all unlabeled examples in the current batch evaluated against negative targets. With Jx = {1, . . . , K }\{ π∗
+
+> x
+
+(1) }, this loss is defined as: 
+
+LU (B, ϕ, ψ 1) = 1
+
+nb(K − 1) 
+
+X
+
+> (x,y )∈B
+
+X
+
+> j∈J x
+
+lselect (0 , d xj ) . (10) The PU loss that replaces Eq. (7) for single-labeled data is then: 
+
+LPU select (B, ϕ, ψ 1) = 
+
+πpLP (1 , B, ϕ, ψ 1) + max {0, LU (B, ϕ, ψ 1) − ηpLP (0 , B, ϕ, ψ 1)} , (11) where ηp is the prior probability of a proposal being positive. The total loss used for training in the single labeled case is then: 
+
+LPU total (B, ϕ, ψ 0, ψ 1) = 1
+
+nb
+
+X
+
+> (x,y )∈B
+
+lmask (y, ˆyx
+
+> ˆπx(1)
+
+) + λ LPU select (B, ϕ, ψ 1) (12) 
+
+3.2 Estimating Mode Probabilities from Generative Models 
+
+The approach above efficiently produces a set of candidate modes, but does not assign probabilities to the selected proposals. In principle, a generative seg-mentation diffusion model trained on single-label data can estimate mode fre-quencies by repeated sampling, but this requires extensive sampling to recover low-probability modes and also clustering to associate samples with a mode. But a trained diffusion model already implicitly encodes information about the relative prevalence of different modes. We show how to extract these mode probabilities directly, avoiding extensive sampling and clustering. For clarity our derivation uses a flow-matching formulation with Gaussian conditional prob-ability paths [18]. This corresponds to the probability paths used by denoising diffusion models. Therefore our results can be adapted to networks trained under a generative diffusion formulation [18, 23]. 
+
+Flow-matching setup Following a standard flow matching setup, a segmentation mask y = y1 is generated from an initial Gaussian noise sample y0 ∼ N (0 , I ),conditioned on image x, by solving the following ODE: 
+
+ddt yt = v(yt, t | x) with t ∈ [0 , 1] , (13) Mode proposal models 7
+
+where v(yt, t | x) is the velocity field. For 0 < t < 1, yt is a noised version of the clean mask y. The ODE transports p0(y0 | x) = N (0 , I ) to the target density 
+
+p1(y | x) through intermediate distributions pt(yt | x).Following Lipman et al . [18], the velocity field is written as an aggregation over y of the conditional velocity fields v(yt, t | y):
+
+v(yt, t | x) Bayes 
+
+=
+
+Z
+
+v(yt, t | y) p1|t(y | yt, x ) dy (14) 
+
+> Bayes
+
+= 1
+
+pt(yt | x)
+
+Z
+
+v(yt, t | y) pt|1(yt | y) p1(y | x) dy.  (15) For fixed y, the conditional velocity field defines the ODE ddt yt = v(yt, t | y)
+
+which transports the noise distribution to that mask via the intermediate distri-butions pt|1(yt | y). As in diffusion models, we parameterize 
+
+yt = αty + βty0, (16) with a differentiable, monotonic noise scheduler satisfying α0 = 0 , β0 = 1 ,
+
+α1 = 1 , and β1 = 0 , so that pt|1(yt | y) is Gaussian. This definition ensures 
+
+v(yt, t | y) has a simple analytic form defined by differentiating the interpolation: 
+
+v(yt, t | y) = ˙αt − ˙βt
+
+βt
+
+αt
+
+!
+
+y + ˙βt
+
+βt
+
+yt. (17) 
+
+Simple approximation of the segmentation mask distribution We assume the distribution p1(y | x), conditioned on an input image x, is discrete and only supported on the set of proposed modes {ˆyx 
+
+> 1
+
+, . . . , ˆyxKx } that is 
+
+p1(y | x) = 
+
+> Kx
+
+X
+
+> k=1
+
+wxk δ(y − ˆyxk ), (18) where wxk ≥ 0, PKx 
+
+> k=1
+
+wxk = 1 , and δ(·) represents the dirac-delta function. Our objective is to estimate the mode probabilities wx 
+
+> 1
+
+, . . . , w xKx .
+
+Simplification of the velocity field Substituting the discrete distribution from eqn. (18) into eqn. (15), the integral simplifies to: 
+
+v(yt, t | x) = 1
+
+pt(yt | x)
+
+> Kx
+
+X
+
+> k=1
+
+wxk v(yt, t | ˆyxk ) pt|1(yt | ˆyxk ) (19) The marginal velocity field is therefore a mixture of the mode-induced condi-tional velocity fields v(yt, t | ˆyxk ). Eqn. (19) simplifies even further if we assume 
+
+t = 0 , substitute eqn. (17) into eqn. (19) and choose one of the common noise schedulers s.t. ˙α0 = 1 and ˙β0 = −1:
+
+v(y0, 0 | x) = 
+
+> Kx
+
+X
+
+> k=1
+
+wxk ( ˙ α0 ˆyxk + ˙β0 y0) = 
+
+> Kx
+
+X
+
+> k=1
+
+wxk (ˆ yxk − y0) (20) 8 S. Gerard and J. Sullivan Wind : 0 °                    
+
+> Wind : 45 °
+> Wind : 90 °
+> Wind : 135 °
+> Wind : 180 °
+> Wind : 225 °
+> Wind : 270 °
+> Wind : 315 °
+> Initial fire
+> Ground
+> truths
+> y1
+> d= 0 .55
+> Matching
+> proposals
+> d= 0 .22
+> Additional
+> proposals
+> y2
+> d= 0 .58
+> d= 0 .44
+> y3
+> d= 0 .82
+> d= 1 .00
+> y4
+> d= 0 .95
+> d= 1 .00
+> y5
+> d= 1 .00
+> d= 1 .00
+> y6
+> d= 0 .97
+> d= 0 .31
+> y7
+> d= 1 .00
+> d= 0 .99
+> y8
+> d= 1 .00
+> d= 0 .00
+> Matched Unmatched Discarded (d <0.5)
+
+Fig. 2: MMFire proposals: MMFire contains multiple simulated wildfire spread out-comes, differing by wind direction. Our mode proposal network successfully produces proposals covering all modes. This model was trained in the single-label scenario, only seeing a single label yi per input at each training step, sampled according to a highly-skewed distribution with probabilities ranging from 0.4% for 0 ° to 50 .2% for 315 °.
+
+Estimating mode probabilities via constrained linear least squares We assume we have access to a neural network vθ (yt, t | x) accurately estimating the velocity field. Then eqn. (20) imposes this constraint on {wk}:
+
+vθ (y0, 0 | x) ≈
+
+> Kx
+
+X
+
+> k=1
+
+wxk (ˆ yxk − y0) (21) We can estimate {wxk } by solving the following constrained linear least squares problem. Given n noise samples y(i)0 ∼ N (0 , I ) then solve this constrained opti-mization problem. 
+
+arg min  
+
+> {wxk}
+> n
+
+X
+
+> i=1
+
+vθ (y(i)0 , 0 | x) −
+
+> Kx
+
+X
+
+> k=1
+
+wxk (ˆ yxk − y(i)0 )
+
+> 2
+
+s.t. wxk ≥ 0,
+
+> Kx
+
+X
+
+> k=1
+
+wxk = 1 .
+
+(22) 
+
+## 4 Experiments 
+
+4.1 Datasets 
+
+We evaluate on MMFire [9] (wildfire spread prediction), binary ambiguous City-scapes [9], and LIDC [1] (medical imaging). Each dataset has multiple segmen-tation masks per input. Each mask has a prior probability. These distributions are highly skewed for MMFire and Cityscapes, imitating real-life datasets where similar inputs yield diverse outcomes of varying frequencies. In the single-label scenario masks are sampled according to these probabili-ties. For duplicate masks, probability mass is summed ( e.g . two identical anno-tations in LIDC are seen as a single mask with probability 25% + 25% = 50% ). These summed probabilities also serve as targets during probability estimation. Mode proposal models 9Input             
+
+> Ground
+> truths
+> y1
+> d= 0 .99
+> Matching
+> proposals
+> d= 1 .00
+> Additional
+> proposals
+> y2
+> d= 0 .98
+> d= 0 .92
+> y3
+> d= 0 .90
+> d= 0 .94
+> y4
+> d= 0 .99
+> d= 0 .01
+> Matched Unmatched Discarded (d <0.5)
+
+Fig. 3: LIDC proposals: LIDC consists of expert annotations of lung CT images. Ground truths are usually white round shapes in the center of the image, making it very difficult for the model to discard implausible proposals. This model was trained in the single-label scenario. The bottom-right proposal likely did not receive many gradient updates, resulting in a bad value range, making it easy to discard. 
+
+4.2 Experimental Setup 
+
+We use the NSCN++ U-Net [24], diffusion-pretrained in WSS [9] (made available upon request by the authors), both as the starting point for the model proposal model, only replacing the final convolutional layer, and as the flow model for velocity decomposition. The selection head hψ1 has a DCGAN [21] discriminator architecture and is trained from scratch. When computing the scores dj , all proposals {ˆyxi }i are considered at once, allowing for the detection of duplicates. See the supplementary material for further experimental details. Ablations use MMFire. The main results (Tabs. 1 and 2) use the test sets, all others use the validation sets. All metrics are the mean over five runs. To evaluate mode coverage, we use the HM IoU* [9] metric, which is the Hungarian-matched IoU (HM IoU) without duplicate ground truth masks. We only measure mode coverage, not the ability to correctly duplicate masks. When estimating probability distributions via velocity decomposition, we evaluate the results via the Brier Skill Score (BSS): 
+
+BSS = 1 − BS( ˆw, wtrue )BS( wuniform , wtrue ) + ϵ ∈ [−∞ , 1] , (23) where the Brier Score BS( ˆw, wtrue ) is the mean squared error between es-timated and ground truth probabilities, BS( wuniform , wtrue ) is obtained by pre-dicting the uniform distribution, and ϵ = 10 −8 prevents division by zero. 
+
+4.3 Learning Strong Proposals Fully-labeled training The mode proposal model achieves a high performance of 92.7% HM IoU* on MMFire. Retaining features from diffusion pre-training, by 10 S. Gerard and J. Sullivan                                                              
+
+> Table 1: Main results across datasets: Runtimes should be taken as a rough measure, since they represent the total runtime, measured on shared infrastructure. Dataset Method Proposals HM IoU* Runtime MMFire ProbU-Net [9] 16 0.637 0h12m ProbU-Net [9] 32 0.687 0h27m Diffusion + SPELL [9] 16 0.784 0h55m Diffusion + SPELL [9] 32 0.830 2h17m ModeProposalNet (Single) 16 0.909 0h2m ModeProposalNet (Full) 16 0.923 0h2m Cityscapes ProbU-Net [9] 32 0.427 0h12m ProbU-Net [9] 64 0.479 0h27m Diffusion + PG [9] 32 0.696 1h37m Diffusion + PG [9] 64 0.738 3h40m ModeProposalNet (Single) 32 0.813 0h3m ModeProposalNet (Full) 32 0.832 0h3m LIDC ProbU-Net [9] 80.715 0h7m ProbU-Net [9] 16 0.785 0h13m Diffusion + SPELL [9] 80.697 1h41m Diffusion + SPELL [9] 16 0.751 3h31m ModeProposalNet (Single) 80.814 0h5m ModeProposalNet (Full) 80.818 0h5m
+
+freezing the encoder, increases the selection F1 score by 4.2% (Tab. 7, suppl.), compared to training all parameters, with little change in HM IoU*. Conse-quently, we freeze the encoder and only train the decoder. 
+
+Single-label training The performance stays within 2% HM IoU* of the fully-labeled model (Tab. 1), even though each training step only adjusts a single proposal per batch item. Example proposals are shown in Fig. 2 (MMFire), Fig. 3 (LIDC) and Fig. 4 (Cityscapes, suppl.). 
+
+Comparison to WSS Mode proposal models greatly increase the HM IoU* compared to diversity-guided diffusion (Tab. 1). While ProbUNet may match our performance on LIDC by more exhaustive sampling, MMFire’s highly skewed distribution would require > 300 samples to cover all modes. To generate 32 samples for each point in the test set, ProbUNet takes tens of minutes, while the diffusion samplers take hours due to the iterative denoising. In contrast, our models reach a higher mode coverage within minutes. 
+
+Comparison to LIDC literature The default metric for LIDC is HM IoU, measuring whether ground truth masks are reproduced accurately and according to their relative frequency. This creates a mismatch with our approach, which is explicitly trained to produce unique modes instead of duplicates. Despite this, Tab. 2 shows that our model with eight proposals and single-label training out-performs most competing generative methods. By removing the selection loss Mode proposal models 11                                         
+
+> Table 2: Comparison to LIDC literature: We compare performances on the LIDC test set. HM IoU is the standard metric, i.e . without deduplication of ground truths. In HM IoU multi , duplicate ground truths are matched to the same proposal, removing the need to produce duplicate proposals. This is a more appropriate measure for our approach, since our training does not encourage duplicate proposals in any way. Method Proposals HM IoU HM IoU multi
+> CIMD [22], reported in [26] 32 0.592 BerDiff [3] 16 0.596 CCDM [26] 32 0.631 MoSE [8] 100 0.638 JProbU-Net [27] 32 0.647 P2SAM [11] 16 0.679 FlowSSN [7] 16 0.879
+> ModeProposalNet (Single) 80.652 0.846 ModeProposalNet (Full) 80.654 0.848 ModeProposalNet (Full, λ= 0 )16 0.712 0.855 ModeProposalNet (Full, λ= 0 )32 0.810 0.866 ModeProposalNet (Full, λ= 0 )64 0.871 0.875
+
+in training ( λ = 0 ) and increasing the proposal count, we achieve performance within 0.8% of the best competing method, using only a single deterministic for-ward pass. While increasing the number of proposals greatly boosts our HM IoU score, the HM IoU multi score reveals that this essentially only adds duplicates, confirming the ability of our method to learn the primary modes of a distribution even with a low number of proposals. 
+
+4.4 Selecting the Best Proposals 
+
+While the HM IoU* metric is unimpeded by superfluous proposals, any real-life application would likely benefit from reducing the number of proposals that need to processed for downstream tasks. To achieve this, we have adopted the mechanism of per-proposal selection scores from DETR [2]. In the fully-labeled scenario, all models have learned to discard the correct number of proposals via selection scores (Tab. 3). Since Hungarian matching always picks the best-matching proposals from those available, discarding pro-posals can only reduce the segmentation performance. For MMFire, we only lose 
+
+2.3% HM IoU*, for Cityscapes 2.6% . This strong result confirms the practical utility of the selection scores, given that half of the proposals are discarded at inference time, solely based on the learned scores. In the single-labeled scenario, the MMFire model only discards two propos-als on average, at a cost of 1.6% HM IoU*, while the Cityscapes model still dis-cards 8.6, costing 0.7% . For Cityscapes, some proposal heads are under-trained, likely not being matched often enough during training. They are correctly dis-carded by the selection scores. Fig. 4 (suppl.) shows an example batch. 12 S. Gerard and J. Sullivan                                              
+
+> Table 3: MMFire: Filtering superfluous proposals by selection scores. Scenario Filter duplicates Selection F1 HM IoU* Proposals MMFire - 8 modes Full ✗0.994 0.923 16.0 Full ✓0.920 7.9
+> Single ✗0.692 0.910 16.0 Single ✓0.894 14.0 Cityscapes - 16 modes Full ✗0.901 0.842 32.0 Full ✓0.816 15.8
+> Single ✗0.760 0.820 32.0 Single ✓0.813 21.4 LIDC - 4 modes Full ✗0.504 0.812 8.0 Full ✓0.582 4.1
+> Single ✗0.579 0.807 8.0 Single ✓0.805 7.8
+
+These results demonstrate that the PU loss allows models to learn sensible scores in this very weakly-labeled scenario. However, near-duplicates are not reliably discarded anymore ( e.g . Fig. 2). In the fully-labeled scenario, they are easily detected because Hungarian matching with all ground truths provides a selection label for every proposal. However, in the single-label scenario, we only have a single positive selection label, while all others are treated as soft negatives by the PU loss, which does not provide any de-duplication signal. 
+
+Special case: LIDC Selection scores perform badly on LIDC, with F1 scores of 50.4% (full) and 57.9% (single), likely because of low intra-modal variance. Modes in MMFire and Cityscapes differ strongly, making it easy to detect both ill-fitting and duplicate proposals. In contrast, LIDC’s modes tend to be circular shapes in the image center, varying only slightly in their extent, which makes this distinction inherently difficult. Fig. 3 visualizes this. 
+
+4.5 Estimating Prior Mode Probabilities 
+
+After producing a filtered-down set of proposals, we now try to additionally estimate the prior probability of each proposal. This way, we would be able to replace generative models for ambiguous segmentation, but at a fraction of the inference cost. See Sec. 3.2 for method details. 
+
+Upper bound using ground truth We decompose the learned velocity into a weighted sum using the ground truth modes of the distribution, instead of imperfect proposals. Tab. 4 shows that the probabilities estimated for MMFire Mode proposal models 13                                       
+
+> Table 4: Ablation: Velocity de-composition into sum over ground truths instead of proposals. Dataset BSS ↑Runtime MMFire 0.919 10m CS (underconstrained) 0.443 09m CS (structure-aware) 0.870 14m LIDC <0 33m
+> Table 5: Filter duplicate MMFire pro-posals to remove undesired solutions from ve-locity decomposition. Scenario Filter scores Filter dup. BSS ↑
+> Full ✗✗0.924
+> ✓✗0.940
+> ✓✓0.939 Single ✗✗0.205
+> ✓✗0.199
+> ✓✓0.821
+> Ground truths 0.919
+
+are close to correct ( 91 .9% BSS). For Cityscapes, the specific structure underly-ing the modes leads to the least squares problem being underconstrained, result-ing in a BSS of 44 .3% . Integrating knowledge about this underlying structure (Sec. B.2, suppl.) resolves this issue ( 87 .0% BSS). These results demonstrate that velocity decomposition can work well in principle. For LIDC, our approach is inferior to the uniform baseline. The reasons are two-fold: 1. LIDC’s segmentation masks mostly consist of round centered shapes, making it difficult to decompose the velocity into a sum over distinct shapes. 2. For LIDC-images without duplicate ground truth masks, the uniform distribution is the ground truth distribution. 
+
+Fully-labeled scenario Models trained in the fully-labeled scenario achieve a high BSS of 92 .4% , even without filtering proposals (Tab. 5). Using the selec-tion scores adds 1.6% , reaffirming their utility. Manual inspection of the success without filtering shows that many of the proposals are very low quality, likely because the training quickly focused on updating a subset of proposals, leaving the others untrained and thus not useful for the least squares problem. For Cityscapes, we demonstrate in Sec. B.2 (suppl.) that the structure-aware approach also produces strong estimates from mode proposals (single- or fully-labeled). However, since this approach requires a manual thresholding step for each set of proposals, we only show it exemplarily for one set of proposals. 
+
+Single-label scenario Probability estimates perform badly (BSS of ≤ 20 .5% ), both for the full set of proposals, and the subset filtered by selection scores, consistent with the low selection F1 of 69 .2% (Tab. 3). However, removing near-duplicates (IoU ≥ 0.95 ) increases the BSS by +61 .6% . Manual inspection reveals that the numerical solver spreads mass across similar proposals. De-duplication removes this ambiguity. These results on MMFire confirm that, for sufficiently distinct modes, velocity decomposition can approximate prior probabilities from imperfect proposals, without the high sampling cost of generative models. 14 S. Gerard and J. Sullivan 
+
+## 5 Discussion and Limitations 
+
+Limitation of velocity decomposition While velocity decomposition suc-ceeds on MMFire and Cityscapes, it fails on LIDC, suggesting that the approach is limited to datasets where modes exhibit sufficient diversity. We observed that the solver distributes the probability mass across similar-looking proposals, in-stead of deciding on one, which supports the conclusion that this method requires distinct masks to work well. Furthermore, we found that the structure underly-ing Cityscapes’ modes led to the least squares problem being underdetermined, resulting in undesired solutions. However, we showed that if the underlying struc-ture is known, it can potentially be integrated, allowing velocity decomposition to resolve the underdetermination and find the desired prior distribution. 
+
+Datasets Our experiments are limited by the available datasets. Ambigu-ous segmentation is mostly discussed in the medical imaging literature, where dataset characteristics like intra-mode diversity are similar to LIDC. However, the fundamental problem of aleatoric uncertainty in segmentation occurs outside of medical imaging as well, e.g . in future predictions related to Earth observa-tion: wildfire spread, land slides, or flooding. The number of public datasets addressing the ambiguity aspect of these tasks is unfortunately very limited. 
+
+Utility of generative models Our modeling approach implicitly assumes that the ambiguity in the predictions can essentially be characterized as a cate-gorical distribution over a low number of discrete modes. This assumption fails when the output distribution is more continuous, such that a low fixed number of proposals can not capture the underlying diversity appropriately. Furthermore, if the generation itself is challenging, iterative sampling approaches employed by diffusion or flow matching models may produce higher quality predictions. 
+
+## 6 Conclusion 
+
+In this work, we introduced mode proposal models, an efficient alternative to generative models for ambiguous segmentation. We demonstrated that proposal heads, trained with Hungarian-matched loss, can often achieve a better mode coverage than generative models, using fewer samples and less compute. Fur-thermore, we showed that these diverse proposals can even be learned in the single-label scenario, which is common in real-world observational data. To dis-card redundant proposals, we adopted a selection mechanism from object detec-tion and demonstrated that it can discard up to half of the proposals with only a small impact on mode coverage. Finally, we introduced and validated veloc-ity decomposition as an approach to estimate prior mode probabilities without high-volume sampling, assuming the underlying modes are sufficiently distinct. Future work will focus on applying these advances to observational real-world datasets and evaluating their impact. Mode proposal models 15 
+
+## Acknowledgements 
+
+This work is funded by Digital Futures in the project EO-AI4GlobalChange. The computations were enabled by resources provided by the National Academic Infrastructure for Supercomputing in Sweden (NAISS) at C3SE partially funded by the Swedish Research Council through grant agreement no. 2022-06725. 
+
+## References 
+
+1. Armato III, S.G., McLennan, G., Bidaut, L., McNitt-Gray, M.F., Meyer, C.R., Reeves, A.P., Zhao, B., Aberle, D.R., Henschke, C.I., Hoffman, E.A., Kazerooni, E.A., MacMahon, H., van Beek, E.J.R., Yankelevitz, D., Biancardi, A.M., Bland, P.H., Brown, M.S., Engelmann, R.M., Laderach, G.E., Max, D., Pais, R.C., Qing, D.P.Y., Roberts, R.Y., Smith, A.R., Starkey, A., Batra, P., Caligiuri, P., Farooqi, A., Gladish, G.W., Jude, C.M., Munden, R.F., Petkovska, I., Quint, L.E., Schwartz, L.H., Sundaram, B., Dodd, L.E., Fenimore, C., Gur, D., Petrick, N., Freymann, J., Kirby, J., Hughes, B., Vande Casteele, A., Gupte, S., Sallam, M., Heath, M.D., Kuhn, M.H., Dharaiya, E., Burns, R., Fryd, D.S., Salganicoff, M., Anand, V., Shreter, U., Vastagh, S., Croft, B.Y., Clarke, L.P.: The Lung Image Database Consortium (LIDC) and Image Database Resource Initiative (IDRI): A Completed Reference Database of Lung Nodules on CT Scans. Medical Physics 38 (2), 915–931 (2011). https://doi.org/10.1118/1.3528204 , https://onlinelibrary.wiley. com/doi/abs/10.1118/1.3528204 
+
+2. Carion, N., Massa, F., Synnaeve, G., Usunier, N., Kirillov, A., Zagoruyko, S.: End-to-end object detection with transformers. In: European conference on computer vision. pp. 213–229. Springer (2020) 3. Chen, T., Wang, C., Shan, H.: Berdiff: Conditional bernoulli diffusion model for medical image segmentation. In: International Conference on Medical Image Com-puting and Computer-Assisted Intervention. pp. 491–501. Springer (2023) 4. Cordts, M., Omran, M., Ramos, S., Rehfeld, T., Enzweiler, M., Benenson, R., Franke, U., Roth, S., Schiele, B.: The Cityscapes Dataset for Semantic Urban Scene Understanding. pp. 3213–3223 (2016), https://www.cv-foundation.org/ openaccess/content_cvpr_2016/html/Cordts_The_Cityscapes_Dataset_CVPR_ 2016_paper.html 
+
+5. Corso, G., Xu, Y., Bortoli, V.D., Barzilay, R., Jaakkola, T.: Particle Guidance: non-I.I.D. Diverse Sampling with Diffusion Models (Nov 2023), https://openreview. net/forum?id=hEyIHsyZ9F 
+
+6. De Comité, F., Denis, F., Gilleron, R., Letouzey, F.: Positive and Unlabeled Exam-ples Help Learning. In: Watanabe, O., Yokomori, T. (eds.) Algorithmic Learning Theory. pp. 219–230. Springer, Berlin, Heidelberg (1999). https://doi.org/10. 1007/3-540-46769-6_18 
+
+7. De Sousa Ribeiro, F., Todd, O., Jones, C., Kori, A., Mehta, R., Glocker, B.: Flow stochastic segmentation networks. In: Proceedings of the IEEE/CVF international conference on computer vision. pp. 14754–14765 (2025) 8. Gao, Z., Chen, Y., Zhang, C., He, X.: Modeling multimodal aleatoric uncertainty in segmentation with mixture of stochastic experts. In: The eleventh international conference on learning representations (2023), https://openreview.net/forum? id=KE_wJD2RK4 16 S. Gerard and J. Sullivan 9. Gerard, S., Sullivan, J.: Wildfire Spread Scenarios: Increasing Sample Diversity of Segmentation Diffusion Models with Training-Free Methods (Nov 2025), https: //openreview.net/forum?id=E44d5hzEV0#discussion 
+
+10. Guzmán-rivera, A., Batra, D., Kohli, P.: Multiple Choice Learning: Learn-ing to Produce Multiple Structured Outputs. In: Advances in Neural In-formation Processing Systems. vol. 25. Curran Associates, Inc. (2012), 
+
+https : / / proceedings . neurips . cc / paper _ files / paper / 2012 / hash / cfbce4c1d7c425baf21d6b6f2babe6be-Abstract.html 
+
+11. Huang, Y., Li, C., Lin, Z., Liu, H., Xu, H., Liu, Y., Huang, Y., Ding, X., Tu, X., Yuan, Y.: P2SAM: Probabilistically Prompted SAMs Are Efficient Segmentator for Ambiguous Medical Images. In: Proceedings of the 32nd ACM International Conference on Multimedia. pp. 9779–9788. MM ’24, Association for Computing Machinery, New York, NY, USA (Oct 2024). https://doi.org/10.1145/3664647. 3680628 , https://dl.acm.org/doi/10.1145/3664647.3680628 
+
+12. Kirchhof, M., Thornton, J., Béthune, L., Ablin, P., Ndiaye, E., Cuturi, M.: Shielded Diffusion: Generating Novel and Diverse Images using Sparse Repellency (Jun 2025), https://openreview.net/forum?id=XAckVo0iNj 
+
+13. Kirillov, A., Mintun, E., Ravi, N., Mao, H., Rolland, C., Gustafson, L., Xiao, T., Whitehead, S., Berg, A.C., Lo, W.Y., Dollár, P., Girshick, R.: Segment Any-thing. In: 2023 IEEE/CVF International Conference on Computer Vision (ICCV). pp. 3992–4003. IEEE, Paris, France (Oct 2023). https://doi.org/10.1109/ ICCV51070.2023.00371 , https://ieeexplore.ieee.org/document/10378323/ 
+
+14. Kiryo, R., Niu, G., du Plessis, M.C., Sugiyama, M.: Positive-unlabeled learning with non-negative risk estimator. In: Proceedings of the 31st International Confer-ence on Neural Information Processing Systems. pp. 1674–1684. NIPS’17, Curran Associates Inc., Red Hook, NY, USA (Dec 2017), https://dl.acm.org/doi/10. 5555/3294771.3294931 
+
+15. Kohl, S., Romera-Paredes, B., Meyer, C., De Fauw, J., Ledsam, J.R., Maier-Hein, K., Eslami, S.M.A., Jimenez Rezende, D., Ronneberger, O.: A Probabilistic U-Net for Segmentation of Ambiguous Images. In: Advances in Neural Information Pro-cessing Systems. vol. 31. Curran Associates, Inc. (2018), https://proceedings. neurips.cc/paper/2018/hash/473447ac58e1cd7e96172575f48dca3b-Abstract. html 
+
+16. Lee, S., Purushwalkam Shiva Prakash, S., Cogswell, M., Ranjan, V., Crandall, D., Batra, D.: Stochastic Multiple Choice Learning for Training Diverse Deep En-sembles. In: Advances in Neural Information Processing Systems. vol. 29. Curran Associates, Inc. (2016), https://proceedings.neurips.cc/paper_files/paper/ 2016/hash/20d135f0f28185b84a4cf7aa51f29500-Abstract.html 
+
+17. Letouzey, F., Denis, F., Gilleron, R.: Learning From Positive and Unlabeled Ex-amples. In: Arimura, H., Jain, S., Sharma, A. (eds.) Algorithmic Learning Theory. pp. 71–85. Springer, Berlin, Heidelberg (2000). https://doi.org/10.1007/3-540-40992-0_6 
+
+18. Lipman, Y., Havasi, M., Holderrieth, P., Shaul, N., Le, M., Karrer, B., Chen, R.T.Q., Lopez-Paz, D., Ben-Hamu, H., Gat, I.: Flow Matching Guide and Code (Dec 2024). https://doi.org/10.48550/arXiv.2412.06264 , http://arxiv.org/ abs/2412.06264 , arXiv:2412.06264 [cs] 19. Monteiro, M., Le Folgoc, L., Coelho de Castro, D., Pawlowski, N., Marques, B., Kamnitsas, K., van der Wilk, M., Glocker, B.: Stochastic Segmentation Networks: Modelling Spatially Correlated Aleatoric Uncertainty. In: Advances in Neural Information Processing Systems. vol. 33, pp. 12756–12767. Curran Mode proposal models 17 Associates, Inc. (2020), https://proceedings.neurips.cc/paper/2020/hash/ 95f8d9901ca8878e291552f001f67692-Abstract.html 
+
+20. Otsu, N.: A Threshold Selection Method from Gray-Level Histograms. IEEE Transactions on Systems, Man, and Cybernetics 9(1), 62–66 (Jan 1979). https: //doi.org/10.1109/TSMC.1979.4310076 , conference Name: IEEE Transactions on Systems, Man, and Cybernetics 21. Radford, A., Metz, L., Chintala, S.: Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks. CoRR (Nov 2015), https: //www.semanticscholar.org/paper/Unsupervised-Representation-Learning-with-Deep-Radford-Metz/8388f1be26329fa45e5807e968a641ce170ea078 
+
+22. Rahman, A., Valanarasu, J.M.J., Hacihaliloglu, I., Patel, V.M.: Ambiguous Medical Image Segmentation Using Diffusion Models. In: Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). pp. 11536– 11546 (Jun 2023) 23. Schusterbauer, J., Gui, M., Fundel, F., Ommer, B.: Diff2Flow: Training Flow Matching Models via Diffusion Model Alignment. In: 2025 IEEE/CVF Confer-ence on Computer Vision and Pattern Recognition (CVPR). pp. 28347–28357 (Jun 2025). https://doi.org/10.1109/CVPR52734.2025.02640 , https://ieeexplore. ieee.org/document/11092660 , iSSN: 2575-7075 24. Song, Y., Sohl-Dickstein, J., Kingma, D.P., Kumar, A., Ermon, S., Poole, B.: Score-based generative modeling through stochastic differential equations. In: Interna-tional conference on learning representations (2021), https://openreview.net/ forum?id=PxTIG12RRHS 
+
+25. Tian, K., Xu, Y., Zhou, S., Guan, J.: Versatile Multiple Choice Learning and Its Application to Vision Computing. In: 2019 IEEE/CVF Conference on Com-puter Vision and Pattern Recognition (CVPR). pp. 6342–6350. IEEE, Long Beach, CA, USA (Jun 2019). https://doi.org/10.1109/CVPR.2019.00651 , https: //ieeexplore.ieee.org/document/8953986/ 
+
+26. Zbinden, L., Doorenbos, L., Pissas, T., Huber, A.T., Sznitman, R., Márquez-Neila, P.: Stochastic Segmentation with Conditional Categorical Diffusion Models. In: 2023 IEEE/CVF International Conference on Computer Vision (ICCV). pp. 1119– 1129. IEEE, Paris, France (Oct 2023). https://doi.org/10.1109/ICCV51070. 2023.00109 , https://ieeexplore.ieee.org/document/10376866/ 
+
+27. Zhang, W., Zhang, X., Huang, S., Lu, Y., Wang, K.: A Probabilistic Model for Controlling Diversity and Accuracy of Ambiguous Medical Image Segmentation. In: Proceedings of the 30th ACM International Conference on Multimedia. pp. 4751–4759. MM ’22, Association for Computing Machinery, New York, NY, USA (Oct 2022). https://doi.org/10.1145/3503161.3548115 , https://dl.acm.org/ doi/10.1145/3503161.3548115 18 S. Gerard and J. Sullivan 
+
+## A Experimental Details 
+
+We use PyTorch and PyTorch Lightning as the basis for our experiments, build-ing on WildfireSpreadScenarios (WSS) [9] and its public code. All reported met-rics are the mean over five models, trained with different random seeds. For velocity decomposition in Tab. 4, the parameters of the proposal model are not used, since these experiment use the ground truth instead of the proposals. Thus, only the underlying diffusion model is of relevance, of which we only have ac-cess to one per dataset, pretrained in [9] (provided to us upon request by the authors). Therefore, these results are the mean over five runs with different ran-dom seeds, which determine at which points the velocity field is evaluated and decomposed. 
+
+A.1 Datasets MMFire is a simulated wildfire spread dataset. [9] It consists of 9608 scenar-ios, comprising of seven fire-spread-related variables, including the initial state of the fire, and represented as images of shape 7 × 64 × 64 . For each of these ini-tial conditions, eight outcomes were simulated, differing only by wind direction. For training and evaluating models with this dataset, each wind direction, and thereby their resulting outcomes, is assigned a prior probability. This probabil-ity distribution is highly skewed, with probabilities ranging from 0.4% to 50 .2% .While these skewed probabilities can be challenging to model, the mapping be-tween input and output is easy to learn for this dataset, since the underlying simulator is relatively simple. Duplicate modes can occur in this dataset if terrain conditions impede wildfire spread in certain directions, e.g . a lake or a fuel-free area, such that multiple wind directions lead to the same burned area. See Fig. 2 (left) for a set of example outcomes. 
+
+Cityscapes [4] is a widely-used segmentation benchmark. We use the binary ambiguous segmentation variant introduced in WSS [9], which is down-scaled to resolution 64 × 128 . To create ambiguous labels, the four classes road , sidewalk ,
+
+vegetation , and car are flipped to either be part of the negative or the positive class, following per-class Bernoulli distributions with probabilities 5% , 25% , 75% , 95% .Any pixels not belonging to these four semantic classes are always assigned to the negative class. This setup results in a highly-skewed distribution over the 
+
+24 = 16 modes. Duplicate modes can occur when a semantic class is missing in an image, such that flipping its associated pixels between positive and negative has no impact. See Fig. 4 for an input image and its associated set of outcomes. The WSS paper [9] performed both hyperparameter selection and evaluation on the Cityscapes validation dataset, because the test set does not have any public labels that could be transferred to the ambiguous segmentation task. We instead split off 500 random images from the training set and use this for valida-tion and hyperparameter selection. We keep the original Cityscapes validation set intact and treat it as a test set. This way, our final results are computed Mode proposal models 19 
+
+on the same data as the previous works’, but independent of the parameter selection. 
+
+LIDC [1] consists of computed tomography lung images, each with four annota-tions of lung nodules, created by medical experts, displaying real-life annotation ambiguity. We follow the instructions in MoSE [8] to download the preprocessed dataset, sometimes referred to [26] as LIDCv1, containing 9794 training images, 2314 validation images, and 2988 test images, each of size 128 × 128 pixels. Since there is no structure within the annotations, each annotated mask is assigned a probability of 25% . Duplicate annotations occur often in this dataset, when an-notators agreed with each other. See Fig. 3 for an example input and associated expert annotations. 
+
+A.2 Model initialization 
+
+We initialize fϕ with the weights of the diffusion model trained on the respective dataset, excluding the final convolutional layer. This essentially acts as a feature extractor. The final convolutional layer that used to output a single-channel im-age is replaced with one that outputs ˆK images, and becomes our set of proposal heads gψ0 . We initialize ψ0 by duplicating the pretrained convolution weights ˆK
+
+times, only slightly scaling each weight by a random scaling factor sampled from 
+
+U (0 .975 , 1.025) to break the symmetry. Since diffusion models also take a noisy image and time step input, we fix those to t = σmax = 80 .0 and a noise input 
+
+n ∼ N  0, σ 2max 1 that is sampled and set fixed at model initialization, before training. The selection scores are produced by ψ1, which receives the features extracted by fϕ as input. It uses a DCGAN decoder architecture, but is trained from scratch. For Cityscapes, we use a different split than WSS. Therefore, we retrain the Cityscapes diffusion model with our alternate split, using μtrain = 1 .5 as the result of hyperparameter selection. This diffusion model is then taken as the starting point for our mode proposal models. The metrics reported in Tab. 1 for the Cityscapes diffusion model are taken directly from WSS [9], not from our retrained model. 
+
+A.3 Hungarian matching 
+
+During training, lmask in Eqs. (5) and (6) is not the IoU, but the respective loss function used by the model, to avoid having to compute both IoU and loss for all image pairs. This is also used for model selection on the validation set during training. When evaluating the model afterwards, we always use IoU for matching, to have a consistent evaluation method across all models. 
+
+A.4 Hyperparameters 
+
+Unless specified otherwise, we choose the number of proposals to be twice the number of ground truth masks provided by the respective dataset, i.e . ˆKMMFire =20 S. Gerard and J. Sullivan 
+
+16 , ˆKCityscapes = 32 , ˆKLIDC = 8 . For the single-label scenario, we use the positive-unlabeled loss with the expected relative frequency of positive samples ηp = 0 .5.When increasing the number of proposals in Tab. 10, we decrease ηp accordingly. The hyperparameters for training mode proposal models were chosen based on short grid searches, one for each dataset and choice of single-label or fully-labeled scenario. As loss functions for the proposals, we considered the mean squared error (MSE, as used in the diffusion models that we use as the starting point for our proposal models), Dice and a 1:1 combination of Dice and Focal loss ( γ = 2 , no per-class prior α). The best-performing configuration was chosen based on the achieved HM IoU* on the validation set. Tab. 6 shows the chosen hyperparameters. 
+
+Table 6: Training hyperparameters , mostly determined via hyperparameter search. The number of proposals is instead set to be twice the number of ground truth masks that each dataset provides. Dataset Epochs Proposals Scenario Loss function Learning rate λ
+
+MMFire 100 16 Single MSE 1e-3 1e-2 MMFire 100 16 Full DiceFocal 1e-3 1e-2 Cityscapes 400 32 Single MSE 1e-4 1e-1 Cityscapes 400 32 Full MSE 1e-4 1e-1 LIDC 100 8 Single DiceFocal 1e-3 1e-3 LIDC 100 8 Full DiceFocal 1e-3 1e-1 
+
+## B Further Experimental Results 
+
+Tab. 7 shows that diffusion-pretraining is not necessary to achieve a high mode coverage, but that freezing the pretrained encoder seems to help with achieving a good selection score. Consequently, we use this setup for all of our experiments. 
+
+Table 7: Training with frozen weights - fully-labeled: The proposal model is initialized with the pretrained diffusion model weights. Varying parts of the model are kept frozen during training. We find that preserving the diffusion-pretrained weights in the encoder leads to greatly increased selection performance . Training regime Pretrained Frozen weights HM IoU* Selection F1 From scratch ✗ ✗ 0.927 0.948 All weights ✓ ✗ 0.927 0.952 Decoder only ✓ ✓ 0.923 0.994 
+
+Last conv. only ✓ ✓ 0.752 0.933 Mode proposal models 21 Input  
+
+> Ground
+> truths
+> y1
+> d = 1 .00
+> Matching
+> proposals
+> d = 0 .00
+> Additional
+> proposals
+> y2
+> d = 1 .00
+> d = 0 .00
+> y3
+> d = 1 .00
+> d = 0 .00
+> y4
+> d = 1 .00
+> d = 0 .00
+> y5
+> d = 1 .00
+> d = 1 .00
+> y6
+> d = 1 .00
+> d = 1 .00
+> y7
+> d = 1 .00
+> d = 0 .00
+> y8
+> d = 1 .00
+> d = 1 .00
+> y9
+> d = 1 .00
+> d = 0 .00
+> y10
+> d = 1 .00
+> d = 0 .00
+> y11
+> d = 1 .00
+> d = 0 .00
+> y12
+> d = 1 .00
+> d = 1 .00
+> y13
+> d = 0 .00
+> d = 0 .02
+> y14
+> d = 1 .00
+> d = 0 .00
+> y15
+> d = 1 .00
+> d = 0 .00
+> y16
+> d = 1 .00
+> d = 0 .00
+> Matched  Unmatched  Discarded (d  < 0.5)
+> Fig. 4: Cityscapes proposals:  The binary ambiguous Cityscapes dataset creates diverse modes for a given input image by flipping each of four classes independently either to the positive or negative class, following fixed probabilities. The model used here was trained in the single-label scenario. Proposals displayed are thresholded. The model can confidently discard many redundant proposals, because the non-thresholded value ranges of those proposals are unusual, indicating that they have not been trained well. Given that only a single proposal per input is updated at each training step, this is unsurprising. Some modes correctly specialize and will often be the best-matching ones and thus receive further gradient updates, while others are too far from the correct outputs to be chosen in Hungarian matching, and thus barely receive gradient updates. 22 S. Gerard and J. Sullivan
+
+B.1 LIDC - Training with and without Selection Loss 
+
+Given the large gap of > 20% in standard HM IoU between FlowSSN and our results with 8 samples (Tab. 2) on LIDC, as well as the low selection F1 scores of < 60% , we investigate whether the selection loss might negatively impact our model’s performance. An F1 score near 50% could indicate that the selection task is ill-posed for this dataset, likely due to the small differences between modes that make it hard to distinguish between correct and incorrect proposals. Forcing the model to optimize the corresponding loss would likely add gradient noise that might impede the optimization of the proposals. 
+
+Selection Loss vs. HM IoU The results in Tab. 8 confirm our suspicion that including the selection loss ( λ > 0) negatively impacts HM IoU, especially for proposals ˆK ≥ 32 . However, both with and without the selection loss, the standard HM IoU grows strongly as the number of proposals grows. In contrast, the two metrics focused on unique ground truth masks (HM IoU multi and HM IoU*) grow very slowly as proposals increase. We interpret this as evidence that the model already covers the principal modes of the underlying distribution quite well with only 8 proposals. Adding more proposals mostly seems to add redundant proposals that can then be matched with duplicate proposals and thus greatly increase the HM IoU, without increasing the captured aleatoric uncertainty. Thus we chose to include several models trained with λ = 0 in the comparison in Tab. 2. 
+
+Model Selection and Shorter Training Our training objective does not encourage the production of duplicate proposals in any way. Thus, the model selection during training, based on validation loss, is not necessarily good at selecting a model that optimizes the standard HM IoU. By observing the val-idation HM IoU during training, we found that the maximum performance is achieved during the first few epochs, while further training lead to the HM IoU converging towards a lower value. To illustrate the difference: model checkpoints selected for ˆK ∈ { 16 , 32 } proposals, when trained over 100 epochs with λ = 0 ,achieved only 65.9% HM IoU (-3.1%) and 73.8% (-5.9%), with values in brack-ets indicating the distance from their 10-epoch counterparts. Thus, the results in Tab. 8 and Tab. 2 for λ = 0 are based on training for 10 epochs instead of 100. 
+
+B.2 Estimating Class-Flip Probabilities on Cityscapes 
+
+Decomposing the velocity over the full set of Cityscapes ground truths results in a relatively low Brier Skill Score of 0.443 (Tab. 4). This is caused by the specific mode structure underlying the ambiguous Cityscapes dataset. The modes of this dataset are constructed as the Cartesian product of four binary decisions: each of the four classes road , sidewalk , vegetation , and car are independently flipped to either the positive or negative class following a per-class Bernoulli distribution with probabilities {pci }1≤i≤4 (see Fig. 4 for an example set of modes). Let αi ∈ { 0, 1} be the outcome of that decision for class i, and yci the mask in which only the pixels belonging to class i are set to positive ( e.g . all road Mode proposal models 23                                              
+
+> Table 8: LIDC validation: Selection loss reduces HM IoU. We vary the number of proposals, training with selection loss ( λ > 0) or without ( λ= 0 ). HM IoU is the standard metric, matching against the full set of ground truth masks. HM IoU multi
+> modifies this by matching all duplicate ground truth masks to the same proposal. HM IoU* removes duplicate ground truth masks, matching proposals with the set of unique ground truths. Models were trained using only 10 epochs instead of 100.
+> λProposals HM IoU HM IoU multi HM IoU* 0.0 80.624 0.834 0.799 0.0 16 0.690 0.852 0.818 0.0 32 0.797 0.863 0.832 0.0 64 0.868 0.872 0.844
+> 0.0 128 0.869 0.869 0.840 0.1 80.622 0.831 0.794 0.1 16 0.676 0.851 0.818 0.1 32 0.712 0.849 0.815 0.1 64 0.686 0.833 0.796 0.1 128 0.815 0.859 0.828
+
+pixels are positive, all others are negative). We call yci the template for class i.
+
+yci indicates where class i could appear, while αi decides whether it does appear. A mode yj with associated flip decisions {αij }i would then be computed as: 
+
+yj =
+
+> 4
+
+X
+
+> i=1
+
+αij yci , (24) which results in a binary mask, since all pixels are exclusively assigned to one class and each pixel only takes binary values. Iterating over all possible combina-tions of Bernoulli outcomes results in 24 = 16 modes, including the completely empty image when αi = 0 for all i. Formally, all of the mode-specific variables mentioned above should also be conditioned on the input image x. In this section, we choose to omit this additional index for increased readability. As a result of this specific mode structure, the correct mode distribution is not the unique solution to the constrained least squares problem in Eq. (22), which explains the BSS of 0.443. However, by integrating knowledge about this lower-dimensional structure in the numerical optimization, decomposing the problem further into per-class flip probabilities, we recover the pci via velocity decom-position and achieve a high BSS of 0.870 over the full validation set (measured against the class-flip probabilities, not per-mode probabilities; see below for de-tails). Our general idea is to take a hierarchical probability estimation approach: First, we compute a solution to the underconstrained least squares problem. Then, we use that solution as part of a second optimization problem, which uses the knowledge of the class-flipping structure, to find the Bernoulli probabilities 
+
+pc.24 S. Gerard and J. Sullivan 
+
+The ground truth probability of mode yj resulting from the class-flip proba-bilities is computed as follows: 
+
+p1(yj | x, p c) = 
+
+> 4
+
+Y
+
+> i=1
+
+pαij  
+
+> ci
+
+(1 − pci )(1 −αij ). (25) These are exactly the probabilities that the initial least squares problem in Eq. (22) tries to estimate. Let ˆw be a solution found by this initial velocity decomposition. If we assume that for a set of {yj }j the {αij }ij are known, we can then take ˆw as fixed target values and approximate it with Eq. (25), iterating over values for pc to estimate class-flip probabilities that best explain the ˆw. We measure the approximation error via KL divergence: 
+
+DKL ( ˆ w || p1 (y | x, ˆpc)) (26) 
+
+= X
+
+> j
+
+ˆwj log 
+
+ ˆwj
+
+p1 (y | x, ˆpc)
+
+
+
+(27) 
+
+= X
+
+> j
+
+ˆwj log ˆ wj − X
+
+> j
+
+ˆwj log p1 (y | x, ˆpc) . (28) In contrast to the initial least squares problem, the desired probabilities {ˆpci }i
+
+are now independent Bernoulli probabilities. Thus, they are not constrained to sum to one, but only required to be non-negative. When minimizing this term, the first sum is constant wrt. ˆpc and can therefore be omitted: 
+
+arg min 
+
+> ˆpc
+
+DKL ( ˆ w || p1 (y | x, ˆpc)) (29) 
+
+= arg min 
+
+> ˆpc
+
+X
+
+> j
+
+ˆwj log ˆ wj
+
+| {z }
+
+> const.
+
+− X
+
+> j
+
+ˆwj log p1 (y | x, ˆpc) (30) 
+
+= arg min 
+
+> ˆpc
+
+− X
+
+> j
+
+ˆwj log p1 (yj | x, ˆpc) (31) 
+
+= arg min 
+
+> ˆpc
+
+− X
+
+> j
+
+ˆwj log 
+
+> 4
+
+Y
+
+> i=1
+
+ˆpαij  
+
+> ci
+
+(1 − ˆpci )(1 −αij )
+
+!
+
+. (32) This minimization problem can be solved numerically, provided we have access to {αij }ij . When using the set of ground truth masks as {yj }j , we know {αij }ij by construction. The resulting estimated per-class probabilities 
+
+ˆpc achieve a high BSS of 0.870 on our Cityscapes validation set. Note that this BSS is now measured against the per-class flip probabilities, while the BSS of 0.443 was measured against the per-mode probabilities. This improved approx-imation result proves that velocity decomposition can also successfully be used on this more challenging dataset, if the underlying structure is known and can be integrated in the optimization procedure. Next, we show why moving beyond this baseline computed with access to the ground truths is difficult. Mode proposal models 25 
+
+Velocity decomposition using proposals When using proposals instead of ground truth masks, we can still use Eq. (22) to compute ˆw. However, the flip decisions {αij }ij are not available anymore, so Eq. (32) can not be evaluated right away. If we had access to the class templates yci , these α values could be estimated by thresholding the overlap between proposals yj and templates yci :
+
+ˆαij = 1( 1
+
+L
+
+> L
+
+X
+
+> l=1
+
+ylj · ylci > 0.5) , (33) where 1 is the indicator function and the index l iterates over the L pixels of the respective mask. With this, the class i is estimated to be ’flipped on’ if at least half of its pixels are ’on’ in the proposal. To estimate the required class templates yci from proposals, we now take the following approach: We compute a principal component analysis (PCA) of the set of proposals, and threshold the four first principal components to binary masks. These serve as the class templates. Because the ground truth modes only differ by flipping the whole area associated with a class i, exactly these areas should emerge as the main directions of variation that the PCA computes. With access to these estimated binary class templates, we can then estimate {αij }ij for the proposals {yj }j via Eq. (33), and finally estimate the class-flip probabilities 
+
+ˆpc via Eq. (32). Fig. 5 shows the resulting first four principal components for an example im-age. Automatic thresholding via Otsu’s method [20] fails to separate the vegeta-tion and car classes, preventing us from correctly estimating the αij . However, by applying manual thresholding, we are able to separate all four classes and compute sensible ˆαij for each proposal j and class i. Subsequently, we compute 
+
+ˆpc, achieving a BSS of 0.983 for this image. Tab. 9 compares the estimated prob-abilities for this image, using either manually thresholded principal components as class templates, or the ground truth masks. While the need for manual thresholding makes an evaluation for the whole validation set infeasible, the successful prior estimation is a proof of concept. It demonstrates the principal utility of the velocity decomposition approach, even for special cases in which the dataset has a complex underlying structure.                    
+
+> Table 9: Cityscapes: Estimated probabilities for the image in Fig. 5. Both the manually thresholded principal components, computed from proposals, as well as the ground truth masks, lead to very good estimates of the target distribution, though both underestimate the sidewalk class by about 0.11. Method proad psidewalk pvegetation pcar BSS Target distribution 0.050 0.250 0.750 0.950 -Proposals (manual) 0.050 0.142 0.762 0.910 0.983
+> GT masks 0.053 0.145 0.706 0.921 0.982 26 S. Gerard and J. Sullivan
+
+Input 
+
+> PC 0
+
+Principal 
+
+Components 
+
+Otsu 
+
+Thresholded 
+
+Manually 
+
+Thresholded 
+
+Corresponding 
+
+Ground truth  
+
+> PC 1
+> PC 2
+> PC 3
+> Fig. 5: Cityscapes: Estimating class templates from proposals First, proposals are filtered according to their selection scores (for this picture: from 32 to 22, not pictured). Second, principal components are computed based on these proposals (first column, one row per component) and then thresholded into binary masks that are supposed to represent one class each (second and third column). Otsu’s method does not separate the vegetation and car class in the first component (marked by the dashed ellipse), making it impossible to correctly estimate the underlying probabilities, though this is possible with a manually chosen threshold.
+
+B.3 Varying the Number of Proposals 
+
+Since the mode proposal models are deterministic convolutional networks, we have to choose ˆK, the number of proposals to output, at training time. For this paper, we always choose twice the number of ground truth masks that the respec-tive dataset provides, unless indicated otherwise. However, in a practical setting, this number would be unknown, such that we might vastly over-estimate the re-quired number of proposals. Tab. 10 luckily shows that even having three times more proposals than necessary does not degrade segmentation performance. For the single-labeled setting, increasing ˆK from the ground truth 8 to 32 even leads to a gain of 3.1% HM IoU*. The fully-labeled scenario always matches the ground truth masks to the Kx best proposals, and thus allows for parallel specializa-tion of proposals. In contrast, when only one proposal is updated at each point, multiple different ground truth masks might be matched to the same proposal. Increasing the number of proposals to choose from makes it more likely that different ground truth masks are matched to different proposals, thus reducing conflicting training signals and improving performance. In Tab. 10, we see that the selection F1 score is not impacted in the fully-labeled scenario. However, in the single-label scenario, the positive-unlabeled loss does not seem to have enough information to train the selection scores if the number of proposals becomes too big. On the other hand, it can also be seen as a success that we reach 69 .2% F1 Score when only a single target out of 16 is Mode proposal models 27 
+
+Table 10: Ablation - Redundant proposals, fully labeled: We investigate how different choices for the number of proposals ˆK influences the model performance. Note that the selection scores for eight proposals are trivial (marked in italic), since the number of proposals equals the number of ground truth masks, unless duplicate ground truth masks occur. Dataset: MMFire validation Training targets Proposals HM IoU* Selection F1 Full 8 0.923 0.997 
+
+Full 16 0.923 0.994 Full 32 0.924 0.978 Single 8 0.883 0.995 
+
+Single 16 0.910 0.692 Single 32 0.914 0.306 
+
+Table 11: Ablation: Vary number of Monte Carlo samples in mode prob-ability estimation. We vary the number of initial samples yt to approximate the expectation in Eq. (22). Samples Brier Skill Score 8 0.913 16 0.910 32 0.916 64 0.919 
+
+labeled, and several modes occur with less than 1% probability. Unlike for the proposals, all selection scores are updated at each step. 
+
+## C Monte Carlo Samples in Velocity Decomposition 
+
+When estimating the mode probabilities via velocity decomposition, we have to choose a number of prior noise samples for which to compute the velocity, which are then decomposed into a weighted sum via a numerical solver. In Tab. 11, we see that increasing the number of samples increases the Brier Skill Score. We use 64 samples for all of our experiments. More samples might provide slightly higher scores still, but also increase computation times further, since each sample requires an evaluation of the flow model.
