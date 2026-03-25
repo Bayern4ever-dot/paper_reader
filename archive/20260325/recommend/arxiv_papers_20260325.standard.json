@@ -1,0 +1,636 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-25T19:25:46.301883+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 4,
+    "deep_cap": 7,
+    "deep_selected": 4,
+    "quick_candidates": 12,
+    "quick_skim_target": 12,
+    "quick_selected": 12
+  },
+  "deep_dive": [
+    {
+      "id": "2603.22453v1",
+      "title": "Towards Automated Community Notes Generation with Large Vision Language Models for Combating Contextual Deception",
+      "abstract": "Community Notes have emerged as an effective crowd-sourced mechanism for combating online deception on social media platforms. However, its reliance on human contributors limits both the timeliness and scalability. In this work, we study the automated Community Notes generation method for image-based contextual deception, where an authentic image is paired with misleading context (e.g., time, entity, and event). Unlike prior work that primarily focuses on deception detection (i.e., judging whether a post is true or false in a binary manner), Community Notes-style systems need to generate concise and grounded notes that help users recover the missing or corrected context. This problem remains underexplored due to three reasons: (i) datasets that support the research are scarce; (ii) methods must handle the dynamic nature of contextual deception; (iii) evaluation is difficult because standard metrics do not capture whether notes actually improve user understanding. To address these gaps, we curate a real-world dataset, XCheck, comprising X posts with associated Community Notes and external contexts. We further propose the Automated Context-Corrective Note generation method, named ACCNote, which is a retrieval-augmented, multi-agent collaboration framework built on large vision-language models. Finally, we introduce a new evaluation metric, Context Helpfulness Score (CHS), that aligns with user study outcomes rather than relying on lexical overlap. Experiments on our XCheck dataset show that the proposed ACCNote improves both deception detection and note generation performance over baselines, and exceeds a commercial tool GPT5-mini. Together, our dataset, method, and metric advance practical automated generation of context-corrective notes toward more responsible online social networks.",
+      "authors": [
+        "Jin Ma",
+        "Jingwen Yan",
+        "Mohammed Aldeen",
+        "Ethan Anderson",
+        "Taran Kavuru",
+        "Jinkyung Katie Park",
+        "Feng Luo",
+        "Long Cheng"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.SI"
+      ],
+      "published": "2026-03-23T18:21:23+00:00",
+      "link": "https://arxiv.org/pdf/2603.22453v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "combating contextual deception using multimodal vision-language models",
+      "llm_evidence_cn": "使用多模态视觉语言模型对抗上下文欺骗",
+      "llm_evidence": "使用多模态视觉语言模型对抗上下文欺骗",
+      "canonical_evidence": "使用多模态视觉语言模型对抗上下文欺骗",
+      "llm_tldr_en": "Explores automated Community Notes generation to combat image-based contextual deception.",
+      "llm_tldr_cn": "探索自动生成社区笔记的方法，以对抗基于图像的上下文欺骗。",
+      "llm_tldr": "探索自动生成社区笔记的方法，以对抗基于图像的上下文欺骗。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.22368v1",
+      "title": "When Visuals Aren't the Problem: Evaluating Vision-Language Models on Misleading Data Visualizations",
+      "abstract": "Visualizations help communicate data insights, but deceptive data representations can distort their interpretation and propagate misinformation. While recent Vision Language Models (VLMs) perform well on many chart understanding tasks, their ability to detect misleading visualizations, especially when deception arises from subtle reasoning errors in captions, remains poorly understood. Here, we evaluate VLMs on misleading visualization-caption pairs grounded in a fine-grained taxonomy of reasoning errors (e.g., Cherry-picking, Causal inference) and visualization design errors (e.g., Truncated axis, Dual axis, inappropriate encodings). To this end, we develop a benchmark that combines real-world visualization with human-authored, curated misleading captions designed to elicit specific reasoning and visualization error types, enabling controlled analysis across error categories and modalities of misleadingness. Evaluating many commercial and open-source VLMs, we find that models detect visual design errors substantially more reliably than reasoning-based misinformation, and frequently misclassify non-misleading visualizations as deceptive. Overall, our work fills a gap between coarse detection of misleading content and the attribution of the specific reasoning or visualization errors that give rise to it.",
+      "authors": [
+        "Harsh Nishant Lalai",
+        "Raj Sanjay Shah",
+        "Hanspeter Pfister",
+        "Sashank Varma",
+        "Grace Guo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-23T05:34:47+00:00",
+      "link": "https://arxiv.org/pdf/2603.22368v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Evaluating Vision-Language Models on misleading data visualizations and misinformation",
+      "llm_evidence_cn": "评估视觉语言模型对误导性数据可视化和虚假信息的识别能力",
+      "llm_evidence": "评估视觉语言模型对误导性数据可视化和虚假信息的识别能力",
+      "canonical_evidence": "评估视觉语言模型对误导性数据可视化和虚假信息的识别能力",
+      "llm_tldr_en": "Benchmarks VLMs on detecting misinformation arising from deceptive visualizations and reasoning errors in captions.",
+      "llm_tldr_cn": "评估视觉语言模型识别由误导性图表和错误描述引起的虚假信息的能力。",
+      "llm_tldr": "评估视觉语言模型识别由误导性图表和错误描述引起的虚假信息的能力。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.22977v1",
+      "title": "DariMis: Harm-Aware Modeling for Dari Misinformation Detection on YouTube",
+      "abstract": "Dari, the primary language of Afghanistan, is spoken by tens of millions of people yet remains largely absent from the misinformation detection literature. We address this gap with DariMis, the first manually annotated dataset of 9,224 Dari-language YouTube videos, labeled across two dimensions: Information Type (Misinformation, Partly True, True) and Harm Level (Low, Medium, High). A central empirical finding is that these dimensions are structurally coupled, not independent: 55.9 percent of Misinformation carries at least Medium harm potential, compared with only 1.0 percent of True content. This enables Information Type classifiers to function as implicit harm-triage filters in content moderation pipelines.   We further propose a pair-input encoding strategy that represents the video title and description as separate BERT segment inputs, explicitly modeling the semantic relationship between headline claims and body content, a key signal of misleading information. An ablation study against single-field concatenation shows that pair-input encoding yields a 7.0 percentage point gain in Misinformation recall (60.1 percent to 67.1 percent), the safety-critical minority class, despite modest overall macro F1 differences (0.09 percentage points). We benchmark a Dari/Farsi-specialized model (ParsBERT) against XLM-RoBERTa-base; ParsBERT achieves the best test performance with accuracy of 76.60 percent and macro F1 of 72.77 percent. Bootstrap 95 percent confidence intervals are reported for all metrics, and we discuss both the practical significance and statistical limitations of the results.",
+      "authors": [
+        "Jawid Ahmad Baktash",
+        "Mosa Ebrahimi",
+        "Mohammad Zarif Joya",
+        "Mursal Dawodi"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-03-24T09:13:40+00:00",
+      "link": "https://arxiv.org/pdf/2603.22977v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Misinformation detection in YouTube videos using information type and harm level",
+      "llm_evidence_cn": "针对YouTube视频的虚假信息检测，结合信息类型与危害程度建模",
+      "llm_evidence": "针对YouTube视频的虚假信息检测，结合信息类型与危害程度建模",
+      "canonical_evidence": "针对YouTube视频的虚假信息检测，结合信息类型与危害程度建模",
+      "llm_tldr_en": "Introduces DariMis, a dataset and model for detecting misinformation and harm in Dari-language YouTube videos.",
+      "llm_tldr_cn": "发布了DariMis数据集和模型，用于检测达里语YouTube视频中的虚假信息和危害等级。",
+      "llm_tldr": "发布了DariMis数据集和模型，用于检测达里语YouTube视频中的虚假信息和危害等级。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.22854v1",
+      "title": "Avoiding Over-smoothing in Social Media Rumor Detection with Pre-trained Propagation Tree Transformer",
+      "abstract": "Deep learning techniques for rumor detection typically utilize Graph Neural Networks (GNNs) to analyze post relations. These methods, however, falter due to over-smoothing issues when processing rumor propagation structures, leading to declining performance. Our investigation into this issue reveals that over-smoothing is intrinsically tied to the structural characteristics of rumor propagation trees, in which the majority of nodes are 1-level nodes. Furthermore, GNNs struggle to capture long-range dependencies within these trees. To circumvent these challenges, we propose a Pre-Trained Propagation Tree Transformer (P2T3) method based on pure Transformer architecture. It extracts all conversation chains from a tree structure following the propagation direction of replies, utilizes token-wise embedding to infuse connection information and introduces necessary inductive bias, and pre-trains on large-scale unlabeled datasets. Experiments indicate that P2T3 surpasses previous state-of-the-art methods in multiple benchmark datasets and performs well under few-shot conditions. P2T3 not only avoids the over-smoothing issue inherent in GNNs but also potentially offers a large model or unified multi-modal scheme for future social media research.",
+      "authors": [
+        "Chaoqun Cui",
+        "Caiyan Jia"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-03-24T06:45:02+00:00",
+      "link": "https://arxiv.org/pdf/2603.22854v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "social media rumor detection using propagation tree transformer",
+      "llm_evidence_cn": "使用传播树 Transformer 进行社交媒体谣言检测",
+      "llm_evidence": "使用传播树 Transformer 进行社交媒体谣言检测",
+      "canonical_evidence": "使用传播树 Transformer 进行社交媒体谣言检测",
+      "llm_tldr_en": "Proposes a Transformer-based method to detect rumors by analyzing conversation chains in propagation trees.",
+      "llm_tldr_cn": "提出了一种基于 Transformer 的方法，通过分析传播树中的对话链来检测谣言。",
+      "llm_tldr": "提出了一种基于 Transformer 的方法，通过分析传播树中的对话链来检测谣言。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2603.17765v1",
+      "title": "Grounded Multimodal Retrieval-Augmented Drafting of Radiology Impressions Using Case-Based Similarity Search",
+      "abstract": "Automated radiology report generation has gained increasing attention with the rise of deep learning and large language models. However, fully generative approaches often suffer from hallucinations and lack clinical grounding, limiting their reliability in real-world workflows. In this study, we propose a multimodal retrieval-augmented generation (RAG) system for grounded drafting of chest radiograph impressions. The system combines contrastive image-text embeddings, case-based similarity retrieval, and citation-constrained draft generation to ensure factual alignment with historical radiology reports. A curated subset of the MIMIC-CXR dataset was used to construct a multimodal retrieval database. Image embeddings were generated using CLIP encoders, while textual embeddings were derived from structured impression sections. A fusion similarity framework was implemented using FAISS indexing for scalable nearest-neighbor retrieval. Retrieved cases were used to construct grounded prompts for draft impression generation, with safety mechanisms enforcing citation coverage and confidence-based refusal. Experimental results demonstrate that multimodal fusion significantly improves retrieval performance compared to image-only retrieval, achieving Recall@5 above 0.95 on clinically relevant findings. The grounded drafting pipeline produces interpretable outputs with explicit citation traceability, enabling improved trustworthiness compared to conventional generative approaches. This work highlights the potential of retrieval-augmented multimodal systems for reliable clinical decision support and radiology workflow augmentation",
+      "authors": [
+        "Himadri Samanta"
+      ],
+      "primary_category": "q-bio.QM",
+      "categories": [
+        "q-bio.QM",
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-03-18T14:25:50+00:00",
+      "link": "https://arxiv.org/pdf/2603.17765v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multimodal retrieval-augmented generation for factual alignment",
+      "llm_evidence_cn": "用于事实对齐的多模态检索增强生成",
+      "llm_evidence": "用于事实对齐的多模态检索增强生成",
+      "canonical_evidence": "用于事实对齐的多模态检索增强生成",
+      "llm_tldr_en": "A multimodal RAG system for radiology that ensures factual grounding using image-text embeddings.",
+      "llm_tldr_cn": "一种用于放射科的多模态 RAG 系统，利用图文嵌入确保事实依据。",
+      "llm_tldr": "一种用于放射科的多模态 RAG 系统，利用图文嵌入确保事实依据。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.17547v1",
+      "title": "Deep Learning-Based Airway Segmentation in Systemic Lupus Erythematosus Patients with Interstitial Lung Disease (SLE-ILD): A Comparative High-Resolution CT Analysis",
+      "abstract": "To characterize lobar and segmental airway volume differences between systemic lupus erythematosus (SLE) patients with interstitial lung disease (ILD) and those without ILD (non-ILD) using a deep learning-based approach on non-contrast chest high-resolution CT (HRCT). Methods: A retrospective analysis was conducted on 106 SLE patients (27 SLE-ILD, 79 SLE-non-ILD) who underwent HRCT. A customized deep learning framework based on the U-Net architecture was developed to automatically segment airway structures at the lobar and segmental levels via HRCT. Volumetric measurements of lung lobes and segments derived from the segmentations were statistically compared between the two groups using two-sample t-tests (significance threshold: p < 0.05). Results: At lobar level, significant airway volume enlargement in SLE-ILD patients was observed in the right upper lobe (p=0.009) and left upper lobe (p=0.039) compared to SLE-non-ILD. At the segmental level, significant differences were found in segments including R1 (p=0.016), R3 (p<0.001), and L3 (p=0.038), with the most marked changes in the upper lung zones, while lower zones showed non-significant trends. Conclusion: Our study demonstrates that an automated deep learning-based approach can effectively quantify airway volumes on HRCT scans and reveal significant, region-specific airway dilation in patients with SLE-ILD compared to those without ILD. The pattern of involvement, predominantly affecting the upper lobes and specific segments, highlights a distinct topographic phenotype of SLE-ILD and implicates airway structural alterations as a potential biomarker for disease presence. This AI-powered quantitative imaging biomarker holds promise for enhancing the early detection and monitoring of ILD in the SLE population, ultimately contributing to more personalized patient management.",
+      "authors": [
+        "Sirong Piao",
+        "Ying Ming",
+        "Ruijie Zhao",
+        "Jiaru Wang",
+        "Ran Xiao",
+        "Rui Zhao",
+        "Zicheng Liao",
+        "Qiqi Xu",
+        "Shaoze Luo",
+        "Bing Li",
+        "Lin Li",
+        "Zhuangfei Ma",
+        "Fuling Zheng",
+        "Wei Song"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV",
+        "cs.CV"
+      ],
+      "published": "2026-03-18T09:52:17+00:00",
+      "link": "https://arxiv.org/pdf/2603.17547v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "deep learning-based airway segmentation",
+      "llm_evidence_cn": "基于深度学习的气道分割",
+      "llm_evidence": "基于深度学习的气道分割",
+      "canonical_evidence": "基于深度学习的气道分割",
+      "llm_tldr_en": "Uses U-Net for automatic airway segmentation in CT scans of SLE-ILD patients.",
+      "llm_tldr_cn": "使用U-Net对SLE-ILD患者的CT扫描进行自动气道分割。",
+      "llm_tldr": "使用U-Net对SLE-ILD患者的CT扫描进行自动气道分割。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.21584v1",
+      "title": "SSAM: Singular Subspace Alignment for Merging Multimodal Large Language Models",
+      "abstract": "Multimodal large language models (MLLMs) achieve strong performance by jointly processing inputs from multiple modalities, such as vision, audio, and language. However, building such models or extending them to new modalities often requires large paired datasets and substantial computational resources. Since many pretrained MLLMs (e.g., vision-language or audio-language) are publicly available, we ask whether we can merge them into a single MLLM that can handle multiple modalities? Merging MLLMs with different input modalities remains challenging, partly because of differences in the learned representations and interference between their parameter spaces. To address these challenges, we propose Singular Subspace Alignment and Merging (SSAM), a training-free model merging framework that unifies independently trained specialist MLLMs into a single model capable of handling any combination of input modalities. SSAM maintains modality-specific parameter updates separately and identifies a shared low-rank subspace for language-related parameter updates, aligns them within this subspace, and merges them to preserve complementary knowledge while minimizing parameter interference. Without using any multimodal training data, SSAM achieves state-of-the-art performance across four datasets, surpassing prior training-free merging methods and even jointly trained multimodal models. These results demonstrate that aligning models in parameter space provides a scalable and resource-efficient alternative to conventional joint multimodal training.",
+      "authors": [
+        "Md Kaykobad Reza",
+        "Ameya Patil",
+        "Edward Ayrapetian",
+        "M. Salman Asif"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-03-23T05:24:52+00:00",
+      "link": "https://arxiv.org/pdf/2603.21584v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Merging multimodal large language models across different input modalities",
+      "llm_evidence_cn": "跨不同输入模态合并多模态大语言模型",
+      "llm_evidence": "跨不同输入模态合并多模态大语言模型",
+      "canonical_evidence": "跨不同输入模态合并多模态大语言模型",
+      "llm_tldr_en": "Proposes SSAM to merge pretrained MLLMs of different modalities into a single unified model.",
+      "llm_tldr_cn": "提出SSAM方法，将不同模态的预训练多模态大模型合并为一个统一模型。",
+      "llm_tldr": "提出SSAM方法，将不同模态的预训练多模态大模型合并为一个统一模型。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.18086v1",
+      "title": "SSP-SAM: SAM with Semantic-Spatial Prompt for Referring Expression Segmentation",
+      "abstract": "The Segment Anything Model (SAM) excels at general image segmentation but has limited ability to understand natural language, which restricts its direct application in Referring Expression Segmentation (RES). Toward this end, we propose SSP-SAM, a framework that fully utilizes SAM's segmentation capabilities by integrating a Semantic-Spatial Prompt (SSP) encoder. Specifically, we incorporate both visual and linguistic attention adapters into the SSP encoder, which highlight salient objects within the visual features and discriminative phrases within the linguistic features. This design enhances the referent representation for the prompt generator, resulting in high-quality SSPs that enable SAM to generate precise masks guided by language. Although not specifically designed for Generalized RES (GRES), where the referent may correspond to zero, one, or multiple objects, SSP-SAM naturally supports this more flexible setting without additional modifications. Extensive experiments on widely used RES and GRES benchmarks confirm the superiority of our method. Notably, our approach generates segmentation masks of high quality, achieving strong precision even at strict thresholds such as Pr@0.9. Further evaluation on the PhraseCut dataset demonstrates improved performance in open-vocabulary scenarios compared to existing state-of-the-art RES methods. The code and checkpoints are available at: https://github.com/WayneTomas/SSP-SAM.",
+      "authors": [
+        "Wei Tang",
+        "Xuejing Liu",
+        "Yanpeng Sun",
+        "Zechao Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-18T08:26:07+00:00",
+      "link": "https://arxiv.org/pdf/2603.18086v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Semantic-spatial prompt for referring expression segmentation",
+      "llm_evidence_cn": "用于指代指称分割的语义空间提示",
+      "llm_evidence": "用于指代指称分割的语义空间提示",
+      "canonical_evidence": "用于指代指称分割的语义空间提示",
+      "llm_tldr_en": "Integrates semantic-spatial prompts into SAM to enable precise image segmentation guided by natural language.",
+      "llm_tldr_cn": "将语义空间提示集成到SAM中，实现由自然语言引导的精确图像分割。",
+      "llm_tldr": "将语义空间提示集成到SAM中，实现由自然语言引导的精确图像分割。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.23125v1",
+      "title": "From Questions to Trust Reports: A LLM-IR Framework for the TREC 2025 DRAGUN Track",
+      "abstract": "The DRAGUN Track at TREC 2025 targets the growing need for effective support tools that help users evaluate the trustworthiness of online news. We describe the UR_Trecking system submitted for both Task 1 (critical question generation) and Task 2 (retrieval-augmented trustworthiness reporting). Our approach combines LLM-based question generation with semantic filtering, diversity enforcement using clustering, and several query expansion strategies (including reasoning-based Chain-of-Thought expansion) to retrieve relevant evidence from the MS MARCO V2.1 segmented corpus. Retrieved documents are re-ranked using a monoT5 model and filtered using an LLM relevance judge together with a domain-level trustworthiness dataset. For Task 2, selected evidence is synthesized by an LLM into concise trustworthiness reports with citations. Results from the official evaluation indicate that Chain-of-Thought query expansion and re-ranking substantially improve both relevance and domain trust compared to baseline retrieval, while question-generation performance shows moderate quality with room for improvement. We conclude by outlining key challenges encountered and suggesting directions for enhancing robustness and trustworthiness assessment in future iterations of the system.",
+      "authors": [
+        "Ignacy Alwasiak",
+        "Kene Nnolim",
+        "Jaclyn Thi",
+        "Samy Ateia",
+        "Markus Bink",
+        "Gregor Donabauer",
+        "David Elsweiler",
+        "Udo Kruschwitz"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR"
+      ],
+      "published": "2026-03-24T12:22:27+00:00",
+      "link": "https://arxiv.org/pdf/2603.23125v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Focuses on evaluating the trustworthiness of online news using LLM-IR frameworks.",
+      "llm_evidence_cn": "专注于使用大语言模型检索增强框架评估在线新闻的可信度。",
+      "llm_evidence": "专注于使用大语言模型检索增强框架评估在线新闻的可信度。",
+      "canonical_evidence": "专注于使用大语言模型检索增强框架评估在线新闻的可信度。",
+      "llm_tldr_en": "Describes a system for generating critical questions and retrieving evidence to report news trustworthiness.",
+      "llm_tldr_cn": "描述了一个用于生成批判性问题并检索证据以报告新闻可信度的系统。",
+      "llm_tldr": "描述了一个用于生成批判性问题并检索证据以报告新闻可信度的系统。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.19008v1",
+      "title": "Hypothesis-Conditioned Query Rewriting for Decision-Useful Retrieval",
+      "abstract": "Retrieval-Augmented Generation (RAG) improves Large Language Models (LLMs) by grounding generation in external, non-parametric knowledge. However, when a task requires choosing among competing options, simply grounding generation in broadly relevant context is often insufficient to drive the final decision. Existing RAG methods typically rely on a single initial query, which often favors topical relevance over decision-relevant evidence, and therefore retrieves background information that can fail to discriminate among answer options. To address this issue, here we propose Hypothesis-Conditioned Query Rewriting (HCQR), a training-free pre-retrieval framework that reorients RAG from topic-oriented retrieval to evidence-oriented retrieval. HCQR first derives a lightweight working hypothesis from the input question and candidate options, and then rewrites retrieval into three targeted queries that seek evidence to: (1) support the hypothesis, (2) distinguish it from competing alternatives, and (3) verify salient clues in the question. This approach enables context retrieval that is more directly aligned with answer selection, allowing the generator to confirm or overturn the initial hypothesis based on the retrieved evidence. Experiments on MedQA and MMLU-Med show that HCQR consistently outperforms single-query RAG and re-rank/filter baselines, improving average accuracy over Simple RAG by 5.9 and 3.6 points, respectively. Code is available at https://anonymous.4open.science/r/HCQR-1C2E.",
+      "authors": [
+        "Hangeol Chang",
+        "Changsun Lee",
+        "Seungjoon Rho",
+        "Junho Yeo",
+        "Jong Chul Ye"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-03-19T15:15:58+00:00",
+      "link": "https://arxiv.org/pdf/2603.19008v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Evidence-oriented retrieval for discriminating among options",
+      "llm_evidence_cn": "面向证据的检索以区分不同选项",
+      "llm_evidence": "面向证据的检索以区分不同选项",
+      "canonical_evidence": "面向证据的检索以区分不同选项",
+      "llm_tldr_en": "Proposes HCQR to reorient RAG from topic-oriented to evidence-oriented retrieval for better decision making.",
+      "llm_tldr_cn": "提出HCQR框架，将RAG从主题检索转向证据检索，提升决策支持能力。",
+      "llm_tldr": "提出HCQR框架，将RAG从主题检索转向证据检索，提升决策支持能力。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.21488v1",
+      "title": "Learning Trajectory-Aware Multimodal Large Language Models for Video Reasoning Segmentation",
+      "abstract": "The prosperity of Multimodal Large Language Models (MLLMs) has stimulated the demand for video reasoning segmentation, which aims to segment video objects based on human instructions. Previous studies rely on unidirectional and implicit text-trajectory alignment, which struggles with trajectory perception when faced with severe video dynamics. In this work, we propose TrajSeg, a simple and unified framework built upon MLLMs. Concretely, we introduce bidirectional text-trajectory alignment, where MLLMs accept grounding-intended (text-to-trajectory) and captioning-intended (trajectory-to-text) instructions. This way, MLLMs can benefit from enhanced correspondence and better perceive object trajectories in videos. The mask generation from trajectories is achieved via a frame-level content integration (FCI) module and a unified mask decoder. The former adapts the MLLM-parsed trajectory-level token to frame-specific information. The latter unifies segmentation for all frames into a single structure, enabling the proposed framework to be simplified and end-to-end trainable. Extensive experiments on referring and reasoning video segmentation datasets demonstrate the effectiveness of TrajSeg, which outperforms all video reasoning segmentation methods on all metrics. The code will be publicly available at https://github.com/haodi19/TrajSeg.",
+      "authors": [
+        "Jingnan Luo",
+        "Mingqi Gao",
+        "Jun Liu",
+        "Bin-Bin Gao",
+        "Feng Zheng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-23T02:25:51+00:00",
+      "link": "https://arxiv.org/pdf/2603.21488v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multimodal Large Language Models for video reasoning and object segmentation",
+      "llm_evidence_cn": "用于视频推理和对象分割的多模态大语言模型",
+      "llm_evidence": "用于视频推理和对象分割的多模态大语言模型",
+      "canonical_evidence": "用于视频推理和对象分割的多模态大语言模型",
+      "llm_tldr_en": "Proposes TrajSeg, a framework for video reasoning segmentation using bidirectional text-trajectory alignment.",
+      "llm_tldr_cn": "提出TrajSeg框架，通过双向文本-轨迹对齐实现视频推理分割。",
+      "llm_tldr": "提出TrajSeg框架，通过双向文本-轨迹对齐实现视频推理分割。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "state of the art multimodal fake news detection models",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.21829v1",
+      "title": "Multi-View Deformable Convolution Meets Visual Mamba for Coronary Artery Segmentation",
+      "abstract": "Accurate segmentation of coronary arteries from computed tomography angiography (CTA) images is of paramount clinical importance for the diagnosis and treatment planning of cardiovascular diseases. However, coronary artery segmentation remains challenging due to the inherent multi-branching and slender tubular morphology of the vasculature, compounded by severe class imbalance between foreground vessels and background tissue. Conventional convolutional neural network (CNN)-based approaches struggle to capture long-range dependencies among spatially distant vascular structures, while Vision Transformer (ViT)-based methods incur prohibitive computational overhead that hinders deployment in resource-constrained clinical settings. Motivated by the recent success of state space models (SSMs) in efficiently modeling long-range sequential dependencies with linear complexity, we propose MDSVM-UNet, a novel two-stage coronary artery segmentation framework that synergistically integrates multidirectional snake convolution (MDSConv) with residual visual Mamba (RVM). In the encoding stage, we introduce MDSConv, a deformable convolution module that learns adaptive offsets along three orthogonal anatomical planes -- sagittal, coronal, and axial -- thereby enabling comprehensive multi-view feature fusion that faithfully captures the elongated and tortuous geometry of coronary vessels. In the decoding stage, we design an RVM-based upsampling decoder block that leverages selective state space mechanisms to model inter-slice long-range dependencies while preserving linear computational complexity. Furthermore, we propose a progressive two-stage segmentation strategy: the first stage performs coarse whole-image segmentation to guide intelligent block extraction, while the second stage conducts fine-grained block-level segmentation to recover vascular details and suppress false positives..",
+      "authors": [
+        "Xiaochan Yuan",
+        "Pai Zeng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-23T11:15:53+00:00",
+      "link": "https://arxiv.org/pdf/2603.21829v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "segmentation of coronary arteries from CTA images",
+      "llm_evidence_cn": "从CTA图像中进行冠状动脉分割",
+      "llm_evidence": "从CTA图像中进行冠状动脉分割",
+      "canonical_evidence": "从CTA图像中进行冠状动脉分割",
+      "llm_tldr_en": "Combines multi-view deformable convolution and Visual Mamba for vascular segmentation.",
+      "llm_tldr_cn": "结合多视图可变形卷积和Visual Mamba进行血管分割。",
+      "llm_tldr": "结合多视图可变形卷积和Visual Mamba进行血管分割。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.22002v1",
+      "title": "SegMaFormer: A Hybrid State-Space and Transformer Model for Efficient Segmentation",
+      "abstract": "The advent of Transformer and Mamba-based architectures has significantly advanced 3D medical image segmentation by enabling global contextual modeling, a capability traditionally limited in Convolutional Neural Networks (CNNs). However, state-of-the-art Transformer models often entail substantial computational complexity and parameter counts, which is particularly prohibitive for volumetric data and further exacerbated by the limited availability of annotated medical imaging datasets. To address these limitations, this work introduces SegMaFormer, a lightweight hybrid architecture that synergizes Mamba and Transformer modules within a hierarchical volumetric encoder for efficient long-range dependency modeling. The model strategically employs Mamba-based layers in early, high-resolution stages to reduce computational overhead while capturing essential spatial context, and reserves self-attention mechanisms for later, lower-resolution stages to refine feature representation. This design is augmented with generalized rotary position embeddings to enhance spatial awareness. Despite its compact structure, SegMaFormer achieves competitive performance on three public benchmarks (Synapse, BraTS, and ACDC), matching the Dice coefficient of significantly larger models. Empirically, our approach reduces parameters by up to 75x and substantially decreases FLOPs compared to current state-of-the-art models, establishing an efficient and high-performing solution for 3D medical image segmentation.",
+      "authors": [
+        "Duy D. Nguyen",
+        "Phat T. Tran-Truong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-23T14:08:40+00:00",
+      "link": "https://arxiv.org/pdf/2603.22002v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "hierarchical volumetric encoder for efficient segmentation",
+      "llm_evidence_cn": "用于高效分割的分层体积编码器",
+      "llm_evidence": "用于高效分割的分层体积编码器",
+      "canonical_evidence": "用于高效分割的分层体积编码器",
+      "llm_tldr_en": "A hybrid Mamba-Transformer model for efficient 3D medical image segmentation.",
+      "llm_tldr_cn": "一种结合Mamba和Transformer的混合模型，用于高效的3D医学图像分割。",
+      "llm_tldr": "一种结合Mamba和Transformer的混合模型，用于高效的3D医学图像分割。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.22074v1",
+      "title": "MIHT: A Hoeffding Tree for Time Series Classification using Multiple Instance Learning",
+      "abstract": "Due to the prevalence of temporal data and its inherent dependencies in many real-world problems, time series classification is of paramount importance in various domains. However, existing models often struggle with series of variable length or high dimensionality. This paper introduces the MIHT (Multi-instance Hoeffding Tree) algorithm, an efficient model that uses multi-instance learning to classify multivariate and variable-length time series while providing interpretable results. The algorithm uses a novel representation of time series as \"bags of subseries,\" together with an optimization process based on incremental decision trees that distinguish relevant parts of the series from noise. This methodology extracts the underlying concept of series with multiple variables and variable lengths. The generated decision tree is a compact, white-box representation of the series' concept, providing interpretability insights into the most relevant variables and segments of the series. Experimental results demonstrate MIHT's superiority, as it outperforms 11 state-of-the-art time series classification models on 28 public datasets, including high-dimensional ones. MIHT offers enhanced accuracy and interpretability, making it a promising solution for handling complex, dynamic time series data.",
+      "authors": [
+        "Aurora Esteban",
+        "Amelia Zafra",
+        "Sebastián Ventura"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-23T15:06:43+00:00",
+      "link": "https://arxiv.org/pdf/2603.22074v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "time series representation as bags of subseries for classification",
+      "llm_evidence_cn": "将时间序列表示为子序列包进行分类",
+      "llm_evidence": "将时间序列表示为子序列包进行分类",
+      "canonical_evidence": "将时间序列表示为子序列包进行分类",
+      "llm_tldr_en": "Introduces MIHT, a Hoeffding Tree using multi-instance learning for time series classification.",
+      "llm_tldr_cn": "引入 MIHT，一种使用多示例学习进行时间序列分类的 Hoeffding 树算法。",
+      "llm_tldr": "引入 MIHT，一种使用多示例学习进行时间序列分类的 Hoeffding 树算法。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.22624v1",
+      "title": "Toward Faithful Segmentation Attribution via Benchmarking and Dual-Evidence Fusion",
+      "abstract": "Attribution maps for semantic segmentation are almost always judged by visual plausibility. Yet looking convincing does not guarantee that the highlighted pixels actually drive the model's prediction, nor that attribution credit stays within the target region. These questions require a dedicated evaluation protocol. We introduce a reproducible benchmark that tests intervention-based faithfulness, off-target leakage, perturbation robustness, and runtime on Pascal VOC and SBD across three pretrained backbones. To further demonstrate the benchmark, we propose Dual-Evidence Attribution (DEA), a lightweight correction that fuses gradient evidence with region-level intervention signals through agreement-weighted fusion. DEA increases emphasis where both sources agree and retains causal support when gradient responses are unstable. Across all completed runs, DEA consistently improves deletion-based faithfulness over gradient-only baselines and preserves strong robustness, at the cost of additional compute from intervention passes. The benchmark exposes a faithfulness-stability tradeoff among attribution families that is entirely hidden under visual evaluation, providing a foundation for principled method selection in segmentation explainability. Code is available at https://github.com/anmspro/DEA.",
+      "authors": [
+        "Abu Noman Md Sakib",
+        "OFM Riaz Rahman Aranya",
+        "Kevin Desai",
+        "Zijie Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-23T22:52:00+00:00",
+      "link": "https://arxiv.org/pdf/2603.22624v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "benchmarking and dual-evidence fusion for segmentation",
+      "llm_evidence_cn": "分割任务的基准测试与双证据融合",
+      "llm_evidence": "分割任务的基准测试与双证据融合",
+      "canonical_evidence": "分割任务的基准测试与双证据融合",
+      "llm_tldr_en": "A benchmark and fusion method for evaluating the faithfulness of semantic segmentation attribution.",
+      "llm_tldr_cn": "一种用于评估语义分割归因忠实度的基准和融合方法。",
+      "llm_tldr": "一种用于评估语义分割归因忠实度的基准和融合方法。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.22922v1",
+      "title": "Quality Over Clicks: Intrinsic Quality-Driven Iterative Reinforcement Learning for Cold-Start E-Commerce Query Suggestion",
+      "abstract": "Existing dialogue systems rely on Query Suggestion (QS) to enhance user engagement. Recent efforts typically employ large language models with Click-Through Rate (CTR) model, yet fail in cold-start scenarios due to their heavy reliance on abundant online click data for effective CTR model training. To bridge this gap, we propose Cold-EQS, an iterative reinforcement learning framework for Cold-Start E-commerce Query Suggestion (EQS). Specifically, we leverage answerability, factuality, and information gain as reward to continuously optimize the quality of suggested queries. To continuously optimize our QS model, we estimate uncertainty for grouped candidate suggested queries to select hard and ambiguous samples from online user queries lacking click signals. In addition, we provide an EQS-Benchmark comprising 16,949 online user queries for offline training and evaluation. Extensive offline and online experiments consistently demonstrate a strong positive correlation between online and offline effectiveness. Both offline and online experimental results demonstrate the superiority of our Cold-EQS, achieving a significant +6.81% improvement in online chatUV.",
+      "authors": [
+        "Qi Sun",
+        "Kejun Xiao",
+        "Huaipeng Zhao",
+        "Tao Luo",
+        "Xiaoyi Zeng"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-03-24T08:11:39+00:00",
+      "link": "https://arxiv.org/pdf/2603.22922v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Factuality and information gain as rewards for query suggestion",
+      "llm_evidence_cn": "将事实性和信息增益作为查询建议的奖励",
+      "llm_evidence": "将事实性和信息增益作为查询建议的奖励",
+      "canonical_evidence": "将事实性和信息增益作为查询建议的奖励",
+      "llm_tldr_en": "Uses reinforcement learning to optimize e-commerce query suggestions based on factuality and answerability.",
+      "llm_tldr_cn": "利用强化学习，基于事实性和可回答性优化电商搜索查询建议。",
+      "llm_tldr": "利用强化学习，基于事实性和可回答性优化电商搜索查询建议。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}
