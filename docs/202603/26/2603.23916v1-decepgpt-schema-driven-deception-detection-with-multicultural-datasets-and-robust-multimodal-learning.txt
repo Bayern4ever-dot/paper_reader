@@ -1,0 +1,326 @@
+Title: DecepGPT: Schema-Driven Deception Detection with Multicultural Datasets and Robust Multimodal Learning
+
+URL Source: https://arxiv.org/pdf/2603.23916v1
+
+Published Time: Thu, 26 Mar 2026 00:39:42 GMT
+
+Number of Pages: 13
+
+Markdown Content:
+# DecepGPT: Schema-Driven Deception Detection with Multicultural Datasets and Robust Multimodal Learning 
+
+Jiajian Huang 1, Dongliang Zhu 2, Zitong YU 1, Hui Ma 1, Jiayu Zhang 1, Chunmei Zhu 2, and Xiaochun Cao 2 
+
+> 1
+
+Great Bay University  
+
+> 2
+
+Wuhan University  
+
+> 3
+
+Sun Yat-sen University 
+
+Abstract. Multimodal deception detection aims to identify deceptive behavior by analyz-ing audiovisual cues for forensics and security. In these high-stakes settings, investigators need verifiable evidence connecting audiovisual cues to final decisions, along with reliable generalization across domains and cultural contexts. However, existing benchmarks provide only binary labels without intermediate reasoning cues. Datasets are also small with limited scenario coverage, leading to shortcut learning. We address these issues through three con-tributions. First, we construct reasoning datasets by augmenting existing benchmarks with structured cue-level descriptions and reasoning chains, enabling model output auditable re-ports. Second, we release T4-Deception, a multicultural dataset based on the unified “To Tell The Truth” television format implemented across four countries. With 1695 samples, it is the largest non-laboratory deception detection dataset. Third, we propose two modules for robust learning under small-data conditions. Stabilized Individuality-Commonality Syn-ergy (SICS) refines multimodal representations by synergizing learnable global priors with sample-adaptive residuals, followed by a polarity-aware adjustment that bi-directionally re-calibrates representations. Distilled Modality Consistency (DMC) aligns modality-specific predictions with the fused multimodal predictions via knowledge distillation to prevent uni-modal shortcut learning. Experiments on three established benchmarks and our novel dataset demonstrate that our method achieves state-of-the-art performance in both in-domain and cross-domain scenarios, while exhibiting superior transferability across diverse cultural con-texts. The datasets and codes will be released. 
+
+Keywords: Multimodal Deception Detection · Auditable Reasoning · Multicultural Dataset 
+
+· Stabilized Representation · Modality Consistency 
+
+## 1 Introduction 
+
+Multimodal deception detection(MDD) aims to identify deceptive behavior by analyzing audio and visual cues [1, 2], which provide objective decision support in high-stakes social analysis, such as forensic investigation and security screening [3], where human judgment is often subject to cognitive bias [4]. Recent progress in MDD has evolved from handcrafted behavioral descriptors [5] to end-to-end audiovisual deep learning models [6].However, as illustrated in Fig. 1a, traditional MDD method is predominantly label-centric, focusing on optimizing binary classification accuracy. While achieving competitive performance, these method typically provide only a final binary prediction. In forensic and legal contexts, a standalone label is insufficient. Investigators need to understand why a sample is flagged as deceptive, with evidence connecting behavioral cues such as micro-expressions and voice prosody to the final decision. Furthermore, MDD methods must demonstrate generalization across diverse complex cultural contexts to satisfy the requirements of real-world applications [7]. Existing benchmarks [3, 8] provide only binary labels without intermediate reasoning cues, preventing models from producing verifiable evidence. Moreover, existing datasets have limited scenario coverage. Important factors, such as identity pretense and cross-cultural variations, are still not well studied, which limits the generalization ability of MDD methods. In addition, the small scale of available data often causes models to learn spurious correlations [9] during training.   
+
+> arXiv:2603.23916v1 [cs.CV] 25 Mar 2026 2Huang et al.
+> Fig. 1: Comparison between traditional and our auditable method. (a) Traditional methods map behavioral signals directly to binary labels, providing no explanation for the decision. (b) Our method generates structured reports with explicit audiovisual cues and reasoning, creating an audit trail from raw data to final prediction.
+
+We address these issues through three contributions. First, we construct a reasoning dataset by augmenting existing benchmarks with structured cue-level descriptions and reasoning chains, enabling the generation of auditable reports as shown in Fig. 1b. Second, we release T4-Deception, a multicultural dataset covering identity pretense across four countries (the U.S., Germany, Vietnam, and Bulgaria) under a unified ’To Tell The Truth’ television format. With 1695 samples, it is the largest non-laboratory deception benchmark to date. Third, we propose two modules for robust learning under small-data conditions. Stabilized Individuality-Commonality Synergy (SICS) refines multimodal features through a polarity-aware adjustment mechanism, which synergizes a learnable global prior with sample-adaptive residuals to enhance or suppress specific feature dimensions. Meanwhile, Distilled Modality Consistency (DMC) introduces a consistency regularizer that aligns unimodal predictions with multimodal teacher predictions via knowledge distillation to mitigate shortcut learning. In summary, the main contributions of this article are as follows: 
+
+– Reasoning Dataset. We provide a standardized pipeline to enrich existing benchmarks with structured audio-visual cues and reasoning chains, enabling the generation of auditable reports for verifiable decision-making. 
+
+– Multicultural Dataset. We release T4-Deception (To Tell The Truth across 4 cultures), a large-scale dataset covering identity pretense across four countries under a unified television format. With 1695 samples, it is currently the largest non-laboratory dataset in the field. 
+
+– Robust Multimodal Learning Modules. We propose Stabilized Individuality-Commonality Synerg (SICS) for polarity-aware feature refinement and Distilled Modality Consistenc (DMC) for modality consistency distillation, which effectively improve both in-domain and cross-domain performance. 
+
+## 2 Related Work 
+
+Multimodal Deception Detection. Early MDD method relied on handcrafted behavioral cues [5], later evolving into deep end-to-end audiovisual models [2]. Recent benchmarks such as DOLOs highlight the challenges of cross-domain transfer in deception scenarios [3, 10]. While Multimodal Large Language Models (MLLMs) [11] offer new potential for semantic reasoning, they struggle to exploit subtle audiovisual cues in deception contexts and are prone to post-hoc hallucinations in rationales [12]. We address this by enforcing a schema-constrained audit report to standardize evidence extraction. 
+
+Behavioral Decoupling and Stabilized Refinement. High-stakes deception analysis is often confounded by idiosyncratic identity noise that masks universal deceptive markers [13]. While conventional decomposition [14, 15] and modulation paradigms [16] focus on feature separation or sample-dependent weighting, they rarely consider the synergistic stabilization of global priors and individual residuals. Unlike conventional disentanglement, SICS explicitly decouples volatile persona-driven noise from behavioral commonalities to anchor representations in a stabilized latent space for auditable reasoning. 
+
+Mitigating Unimodal Dominance. Multimodal optimization often suffers from imbalanced gra-dients, leading to unimodal shortcuts [17]. Existing methods use modality dropout [18] or adaptive Abbreviated paper title 3
+
+Fig. 2: Overview of reasoning dataset generation pipeline. The pipeline adopts a Human-in-the-Loop (HITL) framework to ensure high-quality, auditable structured report. It begins with AI-driven audiovi-sual cue extraction, followed by human-guided rectification of hallucinations. A reasoning assistant then synthesizes these cues into forensic judgments. The data is further enriched through semantic augmenta-tion and a multi-tiered filtering stage (comprising AI, rules-based, and CLIP-similarity checks) to produce the final high-fidelity benchmark. 
+
+Table 1: Comparison of multimodal deception detection datasets. T4-Deception (To Tell The Truth across 4 cultures) dataset is the largest non-laboratory benchmark, featuring a unified identity pretense task across multiple cultural contexts.                                                              
+
+> Dataset Total Deceptive Truthful Setting Deceptive Task
+> Real Life Trials [1] 121 61 60 Courtroom False Testimony Bag of Lies [8] 325 162 163 Laboratory False Image-Narration MU3D [20] 320 160 160 Laboratory False Social-Evaluation Deception Det. [21] 1680 630 1050 Laboratory False Interview-Anecdotes Box of Lies [22] 1049 862 187 Game Show False Object-Description DOLOs [3] 1675 899 776 Game Show False Story-Telling
+> T4-Deception (Ours) 1695 1130 565 Game Show False Professional-Identity
+> —U.S. Edition 876 584 292 Game Show (Unified Multi-Culture) —German Edition 702 468 234 Game Show —Vietnam Edition 66 44 22 Game Show —Bulgarian Edition 51 34 17 Game Show
+
+reweighting [19]. In contrast, we regularize prediction distributions via cross-modal consistency constraints. This reduces shortcut reliance while maintaining full inference efficiency. 
+
+## 3 Method 
+
+To provide the transparency required for sensitive decision-making, we propose an auditable paradigm. As illustrated in Fig. 2, this paradigm is realized through a standardization pipeline that enriches existing benchmarks with the fine-grained behavioral descriptions and reasoning logic necessary for structured reporting. To address the performance instability inherent in small-data regimes and the lack of cross-cultural benchmarks designed under a unified scenario protocol, we construct and release a dataset (Table 1 and Fig. 3) that increases total data volume while filling critical gaps in identity pretense and multicultural scenarios. In parallel, we introduce two robust encoding modules (Fig. 4) to further stabilize optimization: Stabilized Individuality-Commonality Synergy (SICS), which enhances representation robustness by suppressing noise, and Distilled Modality Consistency (DMC), which prevents unimodal shortcuts through consistency distillation. Together, these components ensure that the generated audit reports are grounded in balanced and verifiable auditable evidence. 
+
+3.1 Data Construction: Structured Multi-Cue Reasoning Supervision Schema Design. We use a structured output format: [Audio Cues; Visual Cues; Reasoning; Prediction] . The model first identifies deception-related audio and visual cues, then performs 4 Huang et al.       
+
+> (a) Identity (b) Gender (c) Duration
+> Fig. 3: Dataset statistics of T4-Deception. We illustrate: (a) distribution of identities, where each one of total 565 identities is shared by one truthful and two deceptive participants; (b) balanced gender distribu-tion; and (c) numerous short-term deceptive segments with an an average temporal duration of 3.65s.
+
+cross-modal reasoning based on these cues to derive the final prediction. This enforces an evidence-to-conclusion inference flow, where the prediction is derived from explicit behavioral observations through intermediate reasoning steps. 
+
+HITL Generation Pipeline. As shown in Fig. 2, our pipeline uses multiple specialized assistants. The Audio Assistant (Qwen-Omni) extracts audio cues such as prosody and speech patterns. The Video Assistant (GPT-4o) extracts visual cues including facial dynamics and body language. A Reasoning Assistant (GPT-4o) then synthesizes these cues into a cross-modal judgment. Human annotators review the outputs from these three assistants to correct hallucinations or logical in-consistencies. An Augmentation Assistant (GPT-4o) then paraphrases the text to increase lexical variation. The augmented samples pass through automated filters before a final human review. 
+
+Multi-stage Filtering. After the data augmentation process, we apply three rigorous filtering stages to the augmented samples. First, AI-based checks automatically remove contradictory cue-reasoning pairs to ensure logical consistency. Second, rule-based filtering strictly ensures full format compliance across all entries. Third, similarity filtering effectively prevents data redundancy by eliminating near-duplicate samples. Finally, the filtered samples undergo a comprehensive final human review to confirm overall data quality and reliability. 
+
+3.2 T4-Deception (To Tell The Truth across 4 cultures) Dataset 
+
+To address data scarcity in deception detection, we present the T4-Deception (To Tell The Truth across 4 cultures) Dataset, the largest non-laboratory benchmark for multimodal deception detec-tion. Prior datasets are limited to a single cultural background, as data collection was restricted to one geographic or linguistic region per task. In contrast, T4-Deception covers a consistent high-stakes scenario—identity pretense—across diverse populations from the United States, Germany, Vietnam, and Bulgaria. As detailed in Table 1, our dataset distinguishes itself from prior work on deceptive tasks and cross culture contexts. While existing game-show datasets primarily focus on object fabri-cation (e.g., Box of Lies [22]) or story fabrication (e.g., DOLOs [3]), T4-Deception necessitates that subjects maintain a fully fabricated persona—encompassing professional skills and personal backgrounds—throughout intense interpersonal confrontations. This rigorous setting elicits com-plex visual and acoustic behavioral markers, such as subtle facial dynamics reflecting emotional shifts. Comprising 1,695 samples from four countries, the dataset facilitates a robust analysis of behavioral variance across cultural contexts. Furthermore, as illustrated in Fig. 3, T4-Deception exhibits high diversity in professional identities. With an average duration of 3.65s and a maximum of 11.89s, these concise segments enable models to concentrate on immediate deceptive cues and micro-expression transitions critical to interpersonal confrontation. 
+
+3.3 Stabilized Individuality-Commonality Synergy (SICS) 
+
+The SICS adapter refines input features through polarity-aware adjustment (visualized in the left of Fig. 4). It generates sample-adaptive weights by fusing a learnable global vector with context-derived residuals. Two independent transformations then produce positive and negative adjustment Abbreviated paper title 5
+
+Fig. 4: Overview of our auditable audiovisual deception detection framework. A video encoder and an audio encoder extract modality features, followed by a fusion module that produces a robust represen-tation. Inside the encoder/fusion stage, we integrate two mechanisms: (1) Stabilized Individuality-Commonality Synergy (SICS) that combines a shared baseline with a sample-specific residual via gated fusion (with a light stability regularizer); (2) Distilled Modality Consistency (DMC) that discourages unimodal dominance by penalizing high-confidence cross-modal conflict through agreement regularization on modality-specific predictive distributions. A report generator then produces a single-line, schema-constrained report ( Video Cues; Audio Cues; Reasoning; Prediction ), which serves as a stan-dardized audit artifact. 
+
+coefficients to enhance or suppress feature dimensions. The adjusted features are combined with the original input via residual connection. The details are described below: Given an input feature xi ∈ RL×d, the module first calculates the temporal mean to obtain a context vector ci ∈ Rd, which is then processed by a two-layer fully connected network to generate the sample-adaptive residual ∆z i ∈ Rd:
+
+ci = 1
+
+L
+
+> L
+
+X
+
+> j=1
+
+xi,j , ∆z i = W2
+
+  tanh( W1ci + b1) + b2, (1) where L denotes the sequence length, and W, b are learnable weights and biases. Subsequently, a gating coefficient gi is computed to determine the fusion ratio between a learn-able global vector bglobal ∈ Rd and the generated residual ∆z i:
+
+gi = σ(Wg ∆z i + bg ), wi = tanh  gi · bglobal + (1 − gi) · ∆z i
+
+. (2) The module then applies two learnable transformations produce positive and negative adjustment weights: 
+
+w+ 
+
+> i
+
+= W+wi + b+, w− 
+
+> i
+
+= W−wi + b−, (3) where W+, W−, b+, and b− are independent learnable parameters. The input features are refined as: 
+
+x′ 
+
+> i
+
+= xi ⊙ ReLU (w+ 
+
+> i
+
+) − xi ⊙ ReLU (w− 
+
+> i
+
+), (4) where ⊙ denotes element-wise multiplication. Finally, the output is calculated as a weighted sum of the refined features and the original input: 
+
+Output i = λ · x′ 
+
+> i
+
++ (1 − λ) · xi, (5) where λ is a balancing hyperparameter and we empirically set λ = 0 .2.6 Huang et al. 
+
+3.4 Distilled Modality Consistency (DMC) 
+
+To mitigate unimodal shortcut learning, we introduce the DMC regularizer(visualized in the bottom-right inset of Fig. 4), which encourages visual and audio modalities to produce consis-tent predictions during training. As shown in Fig. 4, the DMC module consists of modality-specific Causal Projectors followed by a shared distillation head. These components map the frozen visual and audio tokens to the label space Y = {deceptive , truthful }. Specifically, the unimodal prediction pm is generated as: 
+
+pm(y) = softmax  Φdistill (Proj m(hm)) (y), m ∈ { v, a }, y ∈ Y , (6) where hm represents the modality tokens, Proj m is the Causal Projector, and Φdistill denotes the distillation head. The MLLM decoder produces a teacher distribution q(y) at the final Prediction position when conditioning on the full multimodal context and the schema constraint. We minimize the KL divergence between the unimodal predictions from the shared distillation head and this MLLM decoder teacher: 
+
+Ldistill = X
+
+> m∈{ v,a }
+
+KL  q ∥ pm
+
+. (7) DMC regularizer encourages both modality projection heads to function effectively, which is dis-carded during inference. 
+
+3.5 Auditable Report Generation with Schema Constraint 
+
+We generate the auditable report directly with an MLLM. Given video Vi and audio Ai, the MLLM encoder produces modality-specific hidden states and a fused audiovisual representation: 
+
+Hv,i , H a,i , H va,i = Enc MLLM (Vi, A i), (8) where Hv,i and Ha,i capture modality-specify feature for visual and acoustic signals, respectively. 
+
+Hva,i captures the cross-modal interactions between them. Conditioned on these representations, the MLLM decoder then generates a structured, single-line schema-constrained report that provides the essential behavioral evidence required for a com-prehensive and auditable deception analysis: 
+
+Ri = Dec MLLM 
+
+ Hv,i , H a,i , H va,i ; schema . (9) The schema enforces a fixed field order and semicolon delimiters: Video Cues; Audio Cues; Reasoning; Prediction . We supervise the MLLM to match the target report text, and require the final Prediction field to match the ground-truth label ( deceptive /truthful ). 
+
+3.6 Training Objective 
+
+We jointly optimize the schema-constrained report generation task alongside regularizers. The overall objective function is defined as: 
+
+L = Lrep + αLdistill , (10) where Lrep denotes the token-level cross-entropy loss for generating the structured audit report. The term Ldistill represents the consistency distillation loss derived from our DMC module. We empirically set α = 0 .1 to balance the accuracy of the generated reports and the mitigation of unimodality reliance. 
+
+## 4 Experiments 
+
+We evaluate our method on six aspects:(i) in-domain effectiveness across diverse deceptive tasks, (ii) cross-domain generalization under dataset shift, (iii) cross-cultural robustness in identity pre-tense, (iv) component contributions via ablation studies, (v) visualization analysis of SICS adapter and DMC regularizer, (vi) reasoning capability analysis. Core code, reasoning samples, and T4-Deception subsets are in the supplement; full release follows acceptance. Abbreviated paper title 7
+
+4.1 Implementation Details 
+
+We build on AffectGPT [23], an emotion-centric MLLM integrating Qwen-7B, Whisper-large-v2 [24], and CLIP-ViT-L/14 [25], with projectors pre-trained on the MER2023 emotion dataset [26]. During fine-tuning, the encoders remain frozen; we apply LoRA to the LLM while fully training the projectors and our proposed components. Optimization is performed for 200 epochs using AdamW (LR = 5 × 10 −5). Training is conducted on a single NVIDIA H100 (80GB) with a batch size of 4, sampling 8 frames per video at 224 × 224 resolution. 
+
+4.2 Datasets and Protocols 
+
+To verify the effectiveness of our method, we evaluate our model on three established benchmarks and our newly introduced dataset, T4-Deception: 
+
+– Bag-of-Lies (BoL) [8]: 325 lab-collected samples on false image-narration. 
+
+– MU3D [20]: 320 lab-collected samples on false social-evaluation. 
+
+– DOLOs [3]: 1,675 game show samples on false story-telling. 
+
+– T4-Deception (Ours) : 1695 samples across four cultural contexts: U.S. (876), Germany (760), Vietnam (66), and Bulgaria (51), collected under a unified false professional-identity task. For the established benchmarks, we conduct in-domain evaluations following official protocols (3-fold for BoL and DOLOs; 4-fold for MU3D), alongside cross-domain assessments. We also per-form in-cultural evaluations via 3-fold cross-validation and pairwise cross-cultural tests. 
+
+4.3 MLLM Configuration 
+
+We compare our method against two types of MLLMs: 
+
+Commercial MLLMs (Zero-shot). Commercial models, including GPT-4o [27] and so on, are evaluated via API calls in a zero-shot setting due to limited parameter access. These represent the reasoning capabilities of general-purpose models without task-specific training. 
+
+Open-source MLLMs (Fine-tuned). We fine-tune representative open-source MLLMs, includ-ing Qwen3-Omni [28], VideoLLaMA2 [29] and so on. These models are trained using LoRA on the same training sets as our method. 
+
+Unified Prompting and Output Schema. All models use the same schema-constrained prompt format. Models output a single-line structured record: Video Cues; Audio Cues; Reasoning; Prediction .
+
+4.4 In-Domain Evaluation 
+
+Table 2: Comprehensive In-domain Benchmark. We evaluate performance across three datasets: DO-LOs, Bag-of-Lies (BoL), and MU3D. Set. : ZS=Zero-shot, LoRA=Fine-tuning, Full=Full Training. Mod. :A=Audio, V=Video, T=Text, AV=Audio-Visual.                                                                                                                                                 
+
+> DOLOs BoL MU3D Method/Model Source Set. Mod. Acc. F1 Acc. F1 Acc. F1
+> Task-specific Deep Learning Methods
+> LieNet [30] TCDS’22 Full AV 56.50 69.72 59.78 58.14 53.48 33.62 FacialCueNet [6] AI’23 Full V60.98 68.65 56.23 63.26 57.64 59.13 PECL [3] ICCV’23 Full AV 64.75 71.20 59.51 51.06 55.31 60.07 AFFAKT [31] AAAI’25 Full AV 68.10 70.73 ––––
+> Large Multimodal Models (LMMs)
+> GPT-4o [27] Comm. ZS V66.38 64.21 57.14 56.35 54.12 52.47 Qwen-Omni [28] Comm. ZS AV 51.72 49.56 45.27 35.82 50.23 41.38 VideoLLaMA2 [29] Open LoRA AV 53.48 56.12 47.65 49.34 51.84 54.62 SALMONN2 [32] Open LoRA AV 52.63 55.44 46.82 48.51 51.06 53.79 Qwen2.5-7B-VL [28] Open LoRA AV 46.10 52.37 44.24 41.15 53.86 56.24
+> DecepGPT ours LoRA AV 73.23 76.13 63.46 63.72 61.25 67.22 8Huang et al.
+> Table 3: Cross-Domain Evaluation on DOLOs (D), Bag-of-Lies (B), and MU3D (M). “X&Y →Z” denotes training on X and Y, testing on Z. Method M&B →DD&M →BD&B →MAverage Acc. F1 ACC F1 Acc. F1 Acc. F1 LieNet [30] 54.40 68.23 54.69 50.51 51.08 59.75 53.39 59.50 PECL [3] 54.51 69.55 51.25 66.95 55.38 52.46 53.71 62.99
+> Ours 63.46 61.79 59.62 72.00 57.24 60.38 60.11 64.72
+
+As shown in Table 2, our method achieves state-of-the-art performance across all three bench-marks. First, compared to zero-shot commercial giants (e.g., GPT-4o [27]), our method yields consistent accuracy gains of +6.85% on DOLOs, +6.32% on BoL, and +7.13% on MU3D. Second, compared to fine-tuned open-source MLLMs (e.g., VideoLLaMA2 [29]), our method yields con-sistent accuracy gains of +19.75% on DOLOs, +15.81% on BoL, and +7.39% on MU3D. Finally, our approach even surpasses specialized task-specific models (e.g., PECL [3], AFFAKT [31]) by margins of +5.13% (DOLOs), +3.68% (BoL), and +3.61% (MU3D). These results are achieved via efficient LoRA fine-tuning while generating structured audit reports, offering both higher accuracy and better interpretability than baselines that output simple labels. 
+
+4.5 Cross-Domain Evaluation 
+
+We evaluate generalization ability of our method under dataset shift by training on source datasets and directly testing on target domains without target-domain fine-tuning. Table 3 demonstrates that our method consistently outperform task-specific methods (e.g., PECL) on all transfer paths in accuracy: +8.95% (M&B → D), +4.93% (D&M → B), and +1.86% (D&B → M), with a +6.40% average gain. Regarding F1 score, our method also achieves improvements: +5.05% (D&M → B) and +0.63% (D&B → M), with a +1.73% average gain. 
+
+4.6 Evaluation on T4-Deception 
+
+We conduct a comprehensive evaluation on the T4-Deception dataset, including both in-cultural 
+
+and cross-cultural assessments across four distinct regions: U.S., Germany, Vietnam, and Bul-garia. As shown in Table 4, we train models on each source culture and evaluate them on all four targets (including the source itself) in a zero-shot manner. In-cultural Performance: When trained and tested on the same culture (diagonal entries), our method achieves stable baseline performance, with an average accuracy of 62.58% (e.g., 64.65% for U.S. and 61.11% for Germany). This confirms the model’s ability to capture culture-specific deception markers effectively. More importantly, the model demonstrates strong generalization capabilities when transferred to unseen cultures (off-diagonal entries). For instance, the model trained on the U.S. region retains 59.50% accuracy when tested on Germany, showing only a marginal drop compared to the in-domain setting. Across all 12 cross-cultural transfer pairs, the average performance remains stable at 57.69%, with an average relative degradation of only 4.89% compared to in-cultural results. Further comparative analysis of cross-cultural deception is provided in Appendix A. 
+
+4.7 Ablation Study Main Ablation Study. We evaluate the contribution of each core component across all three datasets , as detailed in Table 5. Both SICS and DMC consistently improve over the baseline, though their impact varies by dataset. On DOLOs, SICS provides a significant accuracy gain of +5.44%, while DMC adds a further +1.53%. Similarly, on Bag-of-Lies, SICS boosts accuracy by +4.81%, with DMC contributing an additional +1.93%. For MU3D, we observe a substantial improvement of +6.40% from SICS and +1.25% from DMC. The full model, combining both modules, achieves the best performance across all benchmarks, yielding an average accuracy gain of +6.42% over the baseline. These results confirm that SICS and DMC address complementary aspects of robust multimodal learning. The cross-domain transfer performance of these ablated variants is provided in Appendix B. Abbreviated paper title 9  
+
+> Table 4: Comprehensive Evaluation on T4-Deception. We report Accuracy (Acc) and F1 Score for both in-cultural (diagonal, bold ) and cross-cultural (off-diagonal) settings. Models are trained on the row culture and tested on the column culture.
+
+## Train ↓ / Test → U.S. Germany Vietnam Bulgaria Acc F1 Acc F1 Acc F1 Acc F1 U.S. 64.65 73.28 59.50 52.14 57.58 61.20 63.00 71.62 
+
+## Germany 57.00 57.26 61.11 53.33 56.06 59.14 60.78 62.45 
+
+## Vietnam 55.48 61.05 54.87 48.92 63.10 68.42 58.82 64.10 
+
+## Bulgaria 58.19 63.38 56.45 50.18 54.55 58.76 61.46 66.25                                  
+
+> Table 5: Main ablation study across three datasets. Base refers to the model without the SICS adapter and DMC regularization.
+> DOLOs Bag-of-Lies MU3D Variant Acc. F1 Acc. F1 Acc. F1
+> Base (no SICS/DMC) 67.24 71.18 57.69 54.26 53.75 65.34 Base + DMC 68.77 71.94 59.62 58.15 55.00 66.27 Base + SICS 72.68 76.02 62.50 61.43 60.15 67.08
+> Full (SICS + DMC) 73.23 76.13 63.46 63.72 61.25 67.22
+
+Component Analysis and Backbone Comparison. To further validate the effectiveness of the internal mechanisms, we conduct detailed ablation studies on the SICS adapter components and compare different backbone networks. Due to space limitations, we report the results on the 
+
+DOLOs dataset here as a representative example; the complete results for Bag-of-Lies and MU3D are detailed in Appendix C. As shown in Table 6, removing any component of the SICS adapter (global prior, polarity-aware adjustment, or gating mechanism) leads to a clear drop in performance, confirming their necessity. Furthermore, we investigate the impact of the backbone architecture (Table 7). Replacing the LLM backbone with simpler structures (MLP or Transformer) results in significantly lower performance. This suggests that the LLM backbone provides superior semantic reasoning capabilities essential for this task. 
+
+## 5 Visualization and Interpretability Analysis 
+
+We analyzes the internal mechanisms of the SICS Adapter and DMC Regularizer from two aspects: (i) unimodal shortcut mitigation in the DMC Regularizer. and (ii) representation stabilization in the SICS Adapter; We also assess the fidelity of the generated auditable evidence, verifying that it is grounded in the extracted behavioral cues to provide a transparent audit trail for the final prediction. 
+
+5.1 Visualization Analysis of the DMC Regularizer 
+
+Fig. 5 illustrates how the DMC Regularizer affects cross-modal feature utilization. Fig. 5a tracks the gradient norms backpropagated to the modality-specific projectors. In the base setting, the visual projector receives larger gradients, indicating a bias toward visual cues. With the DMC Regularizer, visual-side gradients are initially higher as the consistency constraint activates, followed by gradual strengthening of acoustic-side gradients. This suggests that the DMC Regularizer helps the model incorporate audio evidence. Fig. 5b shows the dynamics via the ratio r = ∥∇ θP v ∥/∥∇ θP a ∥. The base model shows visual dominance ( r > 1), while the DMC Regularizer reduces this ratio closer to unity. These results indicate that the DMC Regularizer helps balance gradient flow across modalities, supporting more balanced multimodal learning. 10 Huang et al. 
+
+Table 6: Ablation on SICS components. 
+
+Variant Acc. F1 
+
+w/o bglobal 71.42 74.31 w/o Polarity 72.06 75.28 w/o Gating 71.85 74.94 
+
+Full SICS 73.23 76.13 Table 7: Comparison of backbones. 
+
+Backbone Acc. F1 
+
+MLP [33] 58.42 60.17 Transformer [34] 64.75 68.34 
+
+Ours (LLM) 73.23 76.13 Fig. 5: Projector gradient dynamics analysis during training. 0 50 100 150 200               
+
+> Epoch
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> 1.2
+> 1.4
+> Total grad norm
+> Base: ‖∇ θP v‖
+> Base: ‖∇ θP a‖
+> w/ Anti-UMD: ‖∇ θP v‖
+> w/ Anti-UMD: ‖∇ θP a‖
+> (a) Gradient on Projector 050 100 150 200
+> Epoch
+> 1.0
+> 1.2
+> 1.4
+> 1.6
+> 1.8
+> 2.0
+> 2.2
+> Ratio ‖∇ θP v‖/‖∇ θP a‖
+> Base w/ Anti-UMD (b) Gradient Ratio on Projector
+> (a) Gating distribution σ(g).(b) SICS feature stabilization. (c) Polarity-aware weights.
+
+Fig. 6: Visualization analysis of the SICS Adapter. (a) Dynamic variation of gating values on the fusion of global priors and local residuals. (b) Comparison between volatile raw features and stabilized features pro-cessed by SICS. (c) Adjustment where positive weights enhance informative feature and negative weights suppress noise feature. 
+
+5.2 Visualization Analysis of the SICS Adapter 
+
+We visualize the adaptive gating distribution, the denoising effect, and the polarity-aware weights to illustrate the SICS Adapter as shown in Fig. 6. 
+
+Dynamic gating behavior. Fig. 6a shows the gating coefficient σ(g) varies across samples (mostly within [0 .443 , 0.493] ). This indicates that the fusion is not a static offset but adapts to each sample. This supports the individuality–commonality synergy: the adapter maintains stable features for typical cases while allowing flexibility to model persona-specific residuals for outliers. 
+
+Feature stabilization and noise suppression. In small-data regimes, audiovisual learning can be affected by high-magnitude persona-driven noise (e.g., individual behaviors or recording con-ditions). Fig. 6b compares feature magnitudes before and after SICS Adapter: raw features show spiky, volatile dimensions, while refined features are smoother and more centered. This suggests that the SICS Adapter reduces such variations, improving numerical stability. 
+
+Polarity-aware enhancement vs. suppression. Fig. 6c visualize the learned positive (enhance-ment) and negative (suppression) weights. The adjustment from polarity-aware may help produce more discriminative features for the MLLM. 
+
+5.3 Auditable Reasoning: Validity and Case Study 
+
+We use structured, schema-constrained reports ( Cues; Reasoning; Prediction ) as audit artifacts to identify hallucinations and shortcut rationales. We audit these reports along two axes with an error taxonomy:(i) Visual/Acoust Cues, categorized as Correct, Counterfactual, or Non-existent (hallucinated); (ii) Reasoning Quality, classified as Correct, False-cue (logical but counterfactual), Incoherent, or Single-cue (modal collapse). Abbreviated paper title 11    
+
+> (a) Audit taxonomy distribution. (b) Response length distributions.
+
+Fig. 7: Quantitative audit analysis. (a) distribution of cue correctness and reasoning quality categories; (b) text length distribution of reasoning. 
+
+Fig. 8: Qualitative comparison of a success case vs. failure case with human audit tags. 
+
+Quantitative distributions and answer length statistics (Fig. 7) demonstrate that our framework significantly enhances behavioral understanding. Qualitative analysis in Fig. 8 further contrasts success and failure cases, highlighting how the generated schema-constrained reasoning chains explicitly reveal the evidentiary basis for each prediction. These artifacts collectively enable post-hoc human verification of model logic without requiring access to internal black-box states. 
+
+## 6 Conclusion 
+
+We present an auditable framework for multimodal deception detection, transitioning from opaque binary classification to structured evidentiary reasoning. Our pipeline enriches existing benchmarks with multimodal cues and reasoning data. To address data scarcity and cultural bias, we introduce T4-Deception, the largest non-laboratory dataset comprising 1,695 samples across four cultural contexts. Furthermore, the SICS Adapter and DMC Regularizer are proposed to stabilize repre-sentations and suppress shortcut learning in small-data regimes. Experiments demonstrate that our approach achieves state-of-the-art performance while providing verifiable evidence for high-stakes behavioral analysis. 
+
+## References 
+
+1. Verónica Pérez-Rosas, Mohamed Abouelenien, Rada Mihalcea, and Mihai Burzo. Deception detection using real-life trial data. In Proceedings of the 2015 ACM on international conference on multimodal interaction , pages 59–66, 2015. 2. Zhe Wu, Bharat Singh, Larry Davis, and V Subrahmanian. Deception detection in videos. In Proceed-ings of the AAAI conference on artificial intelligence , volume 32, 2018. 3. Xiaobao Guo, Nithish Muthuchamy Selvaraj, Zitong Yu, Adams Wai-Kin Kong, Bingquan Shen, and Alex Kot. Audio-visual deception detection: Dolos dataset and parameter-efficient crossmodal learning. In Proceedings of the IEEE/CVF International Conference on Computer Vision , pages 22135–22145, 2023. 12 Huang et al. 4. Charles F Bond Jr and Bella M DePaulo. Accuracy of deception judgments. Personality and social psychology Review , 10(3):214–234, 2006. 5. Verónica Pérez-Rosas, Mohamed Abouelenien, Rada Mihalcea, Yao Xiao, CJ Linton, and Mihai Burzo. Verbal and nonverbal clues for real-life deception detection. In Proceedings of the 2015 conference on empirical methods in natural language processing , pages 2336–2346, 2015. 6. Borum Nam, Joo Young Kim, Beomjun Bark, Yeongmyeong Kim, Jiyoon Kim, Soon Won So, Hyung Youn Choi, and In Young Kim. Facialcuenet: unmasking deception-an interpretable model for criminal interrogation using facial expressions: Iy kim et al. Applied Intelligence , 53(22):27413– 27427, 2023. 7. Verónica Pérez-Rosas and Rada Mihalcea. Cross-cultural deception detection. In Proceedings of the 52nd Annual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers) ,pages 440–445, 2014. 8. Viresh Gupta, Mohit Agarwal, Manik Arora, Tanmoy Chakraborty, Richa Singh, and Mayank Vatsa. Bag-of-lies: A multimodal dataset for deception detection. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition workshops , pages 1–8, 2019. 9. Robert Geirhos, Jörn-Henrik Jacobsen, Claudio Michaelis, Richard Zemel, Wieland Brendel, Matthias Bethge, and Felix A Wichmann. Shortcut learning in deep neural networks. Nature Machine Intelli-gence , 2(11):665–673. 10. Xiaobao Guo, Zitong Yu, Nithish Muthuchamy Selvaraj, Bingquan Shen, Adams Wai-Kin Kong, and Alex C Kot. Benchmarking cross-domain audio-visual deception detection. arXiv preprint arXiv:2405.06995 , 2024. 11. Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. Visual instruction tuning. volume 36, pages 34892–34916, 2023. 12. Md Messal Monem Miah, Adrita Anika, Xi Shi, and Ruihong Huang. Hidden in plain sight: Evaluation of the deception detection capabilities of llms in multimodal settings. In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 31013–31034, 2025. 13. Devamanyu Hazarika, Roger Zimmermann, and Soujanya Poria. Misa: Modality-invariant and-specific representations for multimodal sentiment analysis. In Proceedings of the 28th ACM international conference on multimedia , pages 1122–1131, 2020. 14. Konstantinos Bousmalis, George Trigeorgis, Nathan Silberman, Dilip Krishnan, and Dumitru Erhan. Domain separation networks. Advances in neural information processing systems , 29, 2016. 15. Zemin Tang, Qi Xiao, Xu Zhou, Yangfan Li, Cen Chen, and Kenli Li. Learning discriminative multi-relation representations for multimodal sentiment analysis. Information Sciences , 641:119125, 2023. 16. John Arevalo, Thamar Solorio, Manuel Montes-y Gómez, and Fabio A González. Gated multimodal units for information fusion. arXiv preprint arXiv:1702.01992 , 2017. 17. Xiaokang Peng, Yake Wei, Andong Deng, Dong Wang, and Di Hu. Balanced multimodal learning via on-the-fly gradient modulation. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , pages 8238–8247, 2022. 18. Natalia Neverova, Christian Wolf, Graham Taylor, and Florian Nebout. Moddrop: adaptive multi-modal gesture recognition. IEEE Transactions on Pattern Analysis and Machine Intelligence ,38(8):1692–1706, 2015. 19. Chengxiang Huang, Yake Wei, Zequn Yang, and Di Hu. Adaptive unimodal regulation for balanced multimodal information acquisition. In Proceedings of the Computer Vision and Pattern Recognition Conference , pages 25854–25863, 2025. 20. E Paige Lloyd, Jason C Deska, Kurt Hugenberg, Allen R McConnell, Brandon T Humphrey, and Jonathan W Kunstman. Miami university deception detection database. Behavior research methods ,51(1):429–439, 2019. 21. Jeremy Speth, Nathan Vance, Adam Czajka, Kevin W Bowyer, Diane Wright, and Patrick Flynn. Deception detection and remote physiological monitoring: A dataset and baseline experimental results. In 2021 IEEE International Joint Conference on Biometrics , pages 1–8, 2021. 22. Felix Soldner, Verónica Pérez-Rosas, and Rada Mihalcea. Box of lies: Multimodal deception detection in dialogues. In Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers) ,pages 1768–1777, 2019. 23. Zheng Lian, Haiyang Sun, Licai Sun, Jiangyan Yi, Bin Liu, and Jianhua Tao. Affectgpt: Dataset and framework for explainable multimodal emotion recognition. arXiv preprint arXiv:2407.07653 , 2024. 24. Alec Radford, Jong Wook Kim, Tao Xu, Greg Brockman, Christine McLeavey, and Ilya Sutskever. Robust speech recognition via large-scale weak supervision. In International conference on machine learning , pages 28492–28518, 2023. Abbreviated paper title 13 25. Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learning transferable visual models from natural language supervision. In International conference on machine learning , pages 8748–8763, 2021. 26. Zheng Lian, Haiyang Sun, Licai Sun, Zhuofan Wen, Siyuan Zhang, Shun Chen, Hao Gu, Jinming Zhao, Ziyang Ma, Xie Chen, et al. Mer 2024: Semi-supervised learning, noise robustness, and open-vocabulary multimodal emotion recognition. In Proceedings of the 2nd International Workshop on Multimodal and Responsible Affective Computing , pages 41–48, 2024. 27. Aaron Hurst, Adam Lerer, Adam P Goucher, Adam Perelman, Aditya Ramesh, Aidan Clark, AJ Os-trow, Akila Welihinda, Alan Hayes, Alec Radford, et al. Gpt-4o system card. arXiv preprint arXiv:2410.21276 , 2024. 28. Jin Xu, Zhifang Guo, Hangrui Hu, Yunfei Chu, Xiong Wang, Jinzheng He, Yuxuan Wang, Xian Shi, Ting He, Xinfa Zhu, et al. Qwen3-omni technical report. arXiv preprint arXiv:2509.17765 , 2025. 29. Zesen Cheng, Sicong Leng, Hang Zhang, Yifei Xin, Xin Li, Guanzheng Chen, Yongxin Zhu, Wenqi Zhang, Ziyang Luo, Deli Zhao, et al. Videollama 2: Advancing spatial-temporal modeling and audio understanding in video-llms. arXiv preprint arXiv:2406.07476 , 2024. 30. Mohan Karnati, Ayan Seal, Anis Yazidi, and Ondrej Krejcar. Lienet: a deep convolution neural network framework for detecting deception. IEEE transactions on cognitive and developmental systems ,14(3):971–984, 2021. 31. Zihan Ji, Xuetao Tian, and Ye Liu. Affakt: A hierarchical optimal transport based method for affective facial knowledge transfer in video deception detection. In Proceedings of the AAAI Conference on Artificial Intelligence , volume 39, pages 1336–1344, 2025. 32. Changli Tang, Yixuan Li, Yudong Yang, Jimin Zhuang, Guangzhi Sun, Wei Li, Zejun Ma, and Chao Zhang. video-salmonn 2: Caption-enhanced audio-visual large language models. arXiv preprint arXiv:2506.15220 , 2025. 33. Ilya O Tolstikhin, Neil Houlsby, Alexander Kolesnikov, Lucas Beyer, Xiaohua Zhai, Thomas Un-terthiner, Jessica Yung, Andreas Steiner, Daniel Keysers, Jakob Uszkoreit, et al. Mlp-mixer: An all-mlp architecture for vision. Advances in neural information processing systems , 34:24261–24272, 2021. 34. Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. Attention is all you need. Advances in neural information processing systems , 30, 2017.

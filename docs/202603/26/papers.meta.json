@@ -1,0 +1,65 @@
+{
+  "label": "2026-03-26",
+  "date": "2026-03-26",
+  "generated_at": "2026-03-26T19:50:38",
+  "count": 4,
+  "papers": [
+    {
+      "paper_id": "202603/26/2603.23916v1-decepgpt-schema-driven-deception-detection-with-multicultural-datasets-and-robust-multimodal-learning",
+      "section": "deep",
+      "title_en": "DecepGPT: Schema-Driven Deception Detection with Multicultural Datasets and Robust Multimodal Learning",
+      "authors": "Jiajian Huang, Dongliang Zhu, Zitong YU, Hui Ma, Jiayu Zhang, Chunmei Zhu, Xiaochun Cao",
+      "date": "2026-03-25",
+      "pdf": "https://arxiv.org/pdf/2603.23916v1",
+      "score": "9.0",
+      "evidence": "多模态欺骗检测与推理",
+      "tldr": "本研究针对多模态欺骗检测中缺乏可解释性、数据集规模小及跨文化泛化差等问题，提出了DecepGPT框架。作者首先构建了包含推理链的增强数据集以实现可审计报告，并发布了目前最大的非实验室跨文化数据集T4-Deception。技术上，通过SICS模块优化多模态表示，并利用DMC模块通过知识蒸馏抑制单模态捷径学习。实验证明该方法在多个基准测试中达到SOTA，并具有极强的跨文化迁移能力。",
+      "tags": "query:mmfnd",
+      "abstract_en": "Multimodal deception detection aims to identify deceptive behavior by analyzing audiovisual cues for forensics and security. In these high-stakes settings, investigators need verifiable evidence connecting audiovisual cues to final decisions, along with reliable generalization across domains and cultural contexts. However, existing benchmarks provide only binary labels without intermediate reasoning cues. Datasets are also small with limited scenario coverage, leading to shortcut learning. We address these issues through three contributions. First, we construct reasoning datasets by augmenting existing benchmarks with structured cue-level descriptions and reasoning chains, enabling model output auditable reports. Second, we release T4-Deception, a multicultural dataset based on the unified ``To Tell The Truth'' television format implemented across four countries. With 1695 samples, it is the largest non-laboratory deception detection dataset. Third, we propose two modules for robust learning under small-data conditions. Stabilized Individuality-Commonality Synergy (SICS) refines multimodal representations by synergizing learnable global priors with sample-adaptive residuals, followed by a polarity-aware adjustment that bi-directionally recalibrates representations. Distilled Modality Consistency (DMC) aligns modality-specific predictions with the fused multimodal predictions via knowledge distillation to prevent unimodal shortcut learning. Experiments on three established benchmarks and our novel dataset demonstrate that our method achieves state-of-the-art performance in both in-domain and cross-domain scenarios, while exhibiting superior transferability across diverse cultural contexts. The datasets and codes will be released.",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202603/26/2603.21686v2-is-ai-ready-for-multimodal-hate-speech-detection-a-comprehensive-dataset-and-benchmark-evaluation",
+      "section": "deep",
+      "title_en": "Is AI Ready for Multimodal Hate Speech Detection? A Comprehensive Dataset and Benchmark Evaluation",
+      "authors": "Rui Xing, Qi Chai, Jie Ma, Jing Tao, Pinghui Wang, Shuming Zhang, Xinping Wang, Hao Wang",
+      "date": "2026-03-23",
+      "pdf": "https://arxiv.org/pdf/2603.21686v2",
+      "score": "8.0",
+      "evidence": "针对模因（Meme）的图像文本多模态仇恨言论检测",
+      "tldr": "本研究针对多模态仇恨言论（尤其是模因）检测中标签粗糙且缺乏语境信息的问题，提出了一个由七个专业智能体组成的代理标注框架，并构建了包含2455个样本的多平台、多语言数据集M^3。通过对主流多模态大模型的评估发现，现有模型在利用帖子上下文进行推理方面存在显著不足，甚至会出现性能下降，强调了开发上下文感知架构的必要性。",
+      "tags": "query:mmfnd",
+      "abstract_en": "Hate speech online targets individuals or groups based on identity attributes and spreads rapidly, posing serious social risks. Memes, which combine images and text, have emerged as a nuanced vehicle for disseminating hate speech, often relying on cultural knowledge for interpretation. However, existing multimodal hate speech datasets suffer from coarse-grained labeling and a lack of integration with surrounding discourse, leading to imprecise and incomplete assessments. To bridge this gap, we propose an agentic annotation framework that coordinates seven specialized agents to generate hierarchical labels and rationales. Based on this framework, we construct M^3 (Multi-platform, Multi-lingual, and Multimodal Meme), a dataset of 2,455 memes collected from X, 4chan, and Weibo, featuring fine-grained hate labels and human-verified rationales. Benchmarking state-of-the-art Multimodal Large Language Models reveals that these models struggle to effectively utilize surrounding post context, which often fails to improve or even degrades detection performance. Our finding highlights the challenges these models face in reasoning over memes embedded in real-world discourse and underscores the need for a context-aware multimodal architecture. Our dataset and code are available at https://github.com/mira-ai-lab/M3.",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202603/26/2603.22345v1-dynamic-fusion-aware-graph-convolutional-neural-network-for-multimodal-emotion-recognition-in-conversations",
+      "section": "quick",
+      "title_en": "Dynamic Fusion-Aware Graph Convolutional Neural Network for Multimodal Emotion Recognition in Conversations",
+      "authors": "Tao Meng, Weilun Tang, Yuntao Shou, Yilong Tan, Jun Zhou, Wei Ai, Keqin Li",
+      "date": "2026-03-22",
+      "pdf": "https://arxiv.org/pdf/2603.22345v1",
+      "score": "7.0",
+      "evidence": "使用图卷积网络对多模态特征（文本、音频、图像）进行动态融合",
+      "tldr": "针对多模态对话情感识别中固定参数无法适应不同情感类别融合动态的问题，本文提出DF-GCN模型。该模型通过将常微分方程（ODE）引入图卷积网络（GCN）来捕捉动态情感依赖，并利用全局信息向量生成的提示引导多模态特征的动态融合。实验证明，该方法能根据不同情感类别动态调整参数，显著提升了模型的灵活性和泛化能力。",
+      "tags": "query:mmfnd",
+      "abstract_en": "Multimodal emotion recognition in conversations (MERC) aims to identify and understand the emotions expressed by speakers during utterance interaction from multiple modalities (e.g., text, audio, images, etc.). Existing studies have shown that GCN can improve the performance of MERC by modeling dependencies between speakers. However, existing methods usually use fixed parameters to process multimodal features for different emotion types, ignoring the dynamics of fusion between different modalities, which forces the model to balance performance between multiple emotion categories, thus limiting the model's performance on some specific emotions. To this end, we propose a dynamic fusion-aware graph convolutional neural network (DF-GCN) for robust recognition of multimodal emotion features in conversations. Specifically, DF-GCN integrates ordinary differential equations into graph convolutional networks (GCNs) to {capture} the dynamic nature of emotional dependencies within utterance interaction networks and leverages the prompts generated by the global information vector (GIV) of the utterance to guide the dynamic fusion of multimodal features. This allows our model to dynamically change parameters when processing each utterance feature, so that different network parameters can be equipped for different emotion categories in the inference stage, thereby achieving more flexible emotion classification and enhancing the generalization ability of the model. Comprehensive experiments conducted on two public multimodal conversational datasets {confirm} that the proposed DF-GCN model delivers superior performance, benefiting significantly from the dynamic fusion mechanism introduced.",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "paper_id": "202603/26/2603.24295v1-rs-ssm-refining-forgotten-specifics-in-state-space-model-for-video-semantic-segmentation",
+      "section": "quick",
+      "title_en": "RS-SSM: Refining Forgotten Specifics in State Space Model for Video Semantic Segmentation",
+      "authors": "Kai Zhu, Zhenyu Cui, Zehua Zang, Jiahuan Zhou",
+      "date": "2026-03-25",
+      "pdf": "https://arxiv.org/pdf/2603.24295v1",
+      "score": "6.0",
+      "evidence": "具有时空建模的视频语义分割",
+      "tldr": "针对状态空间模型（SSM）在视频语义分割中因固定状态空间压缩而导致细节信息丢失的问题，本文提出了RS-SSM模型。该模型通过设计通道振幅感知器（CwAP）提取特定信息分布，并利用遗忘门信息精炼器（FGIR）自适应反转遗忘门矩阵，从而补偿压缩过程中丢失的时空细节。实验证明，RS-SSM在四个主流基准测试上达到了SOTA性能，且保持了极高的计算效率。",
+      "tags": "query:tsds",
+      "abstract_en": "Recently, state space models have demonstrated efficient video segmentation through linear-complexity state space compression. However, Video Semantic Segmentation (VSS) requires pixel-level spatiotemporal modeling capabilities to maintain temporal consistency in segmentation of semantic objects. While state space models can preserve common semantic information during state space compression, the fixed-size state space inevitably forgets specific information, which limits the models' capability for pixel-level segmentation. To tackle the above issue, we proposed a Refining Specifics State Space Model approach (RS-SSM) for video semantic segmentation, which performs complementary refining of forgotten spatiotemporal specifics. Specifically, a Channel-wise Amplitude Perceptron (CwAP) is designed to extract and align the distribution characteristics of specific information in the state space. Besides, a Forgetting Gate Information Refiner (FGIR) is proposed to adaptively invert and refine the forgetting gate matrix in the state space model based on the specific information distribution. Consequently, our RS-SSM leverages the inverted forgetting gate to complementarily refine the specific information forgotten during state space compression, thereby enhancing the model's capability for spatiotemporal pixel-level segmentation. Extensive experiments on four VSS benchmarks demonstrate that our RS-SSM achieves state-of-the-art performance while maintaining high computational efficiency. The code is available at https://github.com/zhoujiahuan1991/CVPR2026-RS-SSM.",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "errors": []
+}
