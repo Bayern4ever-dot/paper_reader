@@ -1,0 +1,404 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-27T19:53:45.855441+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 4,
+    "deep_cap": 7,
+    "deep_selected": 4,
+    "quick_candidates": 6,
+    "quick_skim_target": 12,
+    "quick_selected": 6
+  },
+  "deep_dive": [
+    {
+      "id": "2603.25203v1",
+      "title": "Probabilistic Concept Graph Reasoning for Multimodal Misinformation Detection",
+      "abstract": "Multimodal misinformation poses an escalating challenge that often evades traditional detectors, which are opaque black boxes and fragile against new manipulation tactics. We present Probabilistic Concept Graph Reasoning (PCGR), an interpretable and evolvable framework that reframes multimodal misinformation detection (MMD) as structured and concept-based reasoning. PCGR follows a build-then-infer paradigm, which first constructs a graph of human-understandable concept nodes, including novel high-level concepts automatically discovered and validated by multimodal large language models (MLLMs), and then applies hierarchical attention over this concept graph to infer claim veracity. This design produces interpretable reasoning chains linking evidence to conclusions. Experiments demonstrate that PCGR achieves state-of-the-art MMD accuracy and robustness to emerging manipulation types, outperforming prior methods in both coarse detection and fine-grained manipulation recognition.",
+      "authors": [
+        "Ruichao Yang",
+        "Wei Gao",
+        "Xiaobin Zhu",
+        "Jing Ma",
+        "Hongzhan Lin",
+        "Ziyang Luo",
+        "Bo-Wen Zhang",
+        "Xu-Cheng Yin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-03-26T09:08:31+00:00",
+      "link": "https://arxiv.org/pdf/2603.25203v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Interpretable framework for multimodal misinformation detection using concept graphs",
+      "llm_evidence_cn": "使用概念图的多模态虚假信息检测可解释框架",
+      "llm_evidence": "使用概念图的多模态虚假信息检测可解释框架",
+      "canonical_evidence": "使用概念图的多模态虚假信息检测可解释框架",
+      "llm_tldr_en": "Presents PCGR, a framework that uses probabilistic concept graphs and MLLMs for multimodal misinformation detection.",
+      "llm_tldr_cn": "提出了PCGR框架，利用概率概念图和多模态大模型进行可解释的虚假信息检测。",
+      "llm_tldr": "提出了PCGR框架，利用概率概念图和多模态大模型进行可解释的虚假信息检测。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.25423v1",
+      "title": "From Manipulation to Mistrust: Explaining Diverse Micro-Video Misinformation for Robust Debunking in the Wild",
+      "abstract": "The rise of micro-videos has reshaped how misinformation spreads, amplifying its speed, reach, and impact on public trust. Existing benchmarks typically focus on a single deception type, overlooking the diversity of real-world cases that involve multimodal manipulation, AI-generated content, cognitive bias, and out-of-context reuse. Meanwhile, most detection models lack fine-grained attribution, limiting interpretability and practical utility. To address these gaps, we introduce WildFakeBench, a large-scale benchmark of over 10,000 real-world micro-videos covering diverse misinformation types and sources, each annotated with expert-defined attribution labels. Building on this foundation, we develop FakeAgent, a Delphi-inspired multi-agent reasoning framework that integrates multimodal understanding with external evidence for attribution-grounded analysis. FakeAgent jointly analyzes content and retrieved evidence to identify manipulation, recognize cognitive and AI-generated patterns, and detect out-of-context misinformation. Extensive experiments show that FakeAgent consistently outperforms existing MLLMs across all misinformation types, while WildFakeBench provides a realistic and challenging testbed for advancing explainable micro-video misinformation detection. Data and code are available at: https://github.com/Aiyistan/FakeAgent.",
+      "authors": [
+        "Zhi Zeng",
+        "Yifei Yang",
+        "Jiaying Wu",
+        "Xulang Zhang",
+        "Xiangzheng Kong",
+        "Herun Wan",
+        "Zihan Ma",
+        "Minnan Luo"
+      ],
+      "primary_category": "cs.SI",
+      "categories": [
+        "cs.SI",
+        "cs.AI"
+      ],
+      "published": "2026-03-26T13:15:33+00:00",
+      "link": "https://arxiv.org/pdf/2603.25423v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "multimodal manipulation and misinformation detection in micro-videos",
+      "llm_evidence_cn": "短视频中的多模态篡改与虚假信息检测",
+      "llm_evidence": "短视频中的多模态篡改与虚假信息检测",
+      "canonical_evidence": "短视频中的多模态篡改与虚假信息检测",
+      "llm_tldr_en": "A large-scale benchmark and agent for explaining and detecting diverse real-world micro-video misinformation.",
+      "llm_tldr_cn": "一个用于解释和检测多样化真实世界短视频虚假信息的大规模基准和智能体。",
+      "llm_tldr": "一个用于解释和检测多样化真实世界短视频虚假信息的大规模基准和智能体。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "state of the art multimodal fake news detection models",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.25501v1",
+      "title": "An Experimental Comparison of the Most Popular Approaches to Fake News Detection",
+      "abstract": "In recent years, fake news detection has received increasing attention in public debate and scientific research. Despite advances in detection techniques, the production and spread of false information have become more sophisticated, driven by Large Language Models (LLMs) and the amplification power of social media. We present a critical assessment of 12 representative fake news detection approaches, spanning traditional machine learning, deep learning, transformers, and specialized cross-domain architectures. We evaluate these methods on 10 publicly available datasets differing in genre, source, topic, and labeling rationale. We address text-only English fake news detection as a binary classification task by harmonizing labels into \"Real\" and \"Fake\" to ensure a consistent evaluation protocol. We acknowledge that label semantics vary across datasets and that harmonization inevitably removes such semantic nuances. Each dataset is treated as a distinct domain. We conduct in-domain, multi-domain and cross-domain experiments to simulate real-world scenarios involving domain shift and out-of-distribution data. Fine-tuned models perform well in-domain but struggle to generalize. Cross-domain architectures can reduce this gap but are data-hungry, while LLMs offer a promising alternative through zero- and few-shot learning. Given inherent dataset confounds and possible pre-training exposure, results should be interpreted as robustness evaluations within this English, text-only protocol.",
+      "authors": [
+        "Pietro Dell'Oglio",
+        "Alessandro Bondielli",
+        "Francesco Marcelloni",
+        "Lucia C. Passaro"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-03-26T14:39:35+00:00",
+      "link": "https://arxiv.org/pdf/2603.25501v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Experimental comparison of fake news detection approaches including cross-domain architectures",
+      "llm_evidence_cn": "虚假新闻检测方法的实验比较，包括跨领域架构",
+      "llm_evidence": "虚假新闻检测方法的实验比较，包括跨领域架构",
+      "canonical_evidence": "虚假新闻检测方法的实验比较，包括跨领域架构",
+      "llm_tldr_en": "Evaluates 12 fake news detection methods across 10 datasets to assess performance in modern social media contexts.",
+      "llm_tldr_cn": "在10个数据集上评估了12种虚假新闻检测方法，以评估其在现代社交媒体环境中的表现。",
+      "llm_tldr": "在10个数据集上评估了12种虚假新闻检测方法，以评估其在现代社交媒体环境中的表现。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.25269v1",
+      "title": "When Hate Meets Facts: LLMs-in-the-Loop for Check-worthiness Detection in Hate Speech",
+      "abstract": "Hateful content online is often expressed using fact-like, not necessarily correct information, especially in coordinated online harassment campaigns and extremist propaganda. Failing to jointly address hate speech (HS) and misinformation can deepen prejudice, reinforce harmful stereotypes, and expose bystanders to psychological distress, while polluting public debate. Moreover, these messages require more effort from content moderators because they must assess both harmfulness and veracity, i.e., fact-check them. To address this challenge, we release WSF-ARG+, the first dataset which combines hate speech with check-worthiness information. We also introduce a novel LLM-in-the-loop framework to facilitate the annotation of check-worthy claims. We run our framework, testing it with 12 open-weight LLMs of different sizes and architectures. We validate it through extensive human evaluation, and show that our LLM-in-the-loop framework reduces human effort without compromising the annotation quality of the data. Finally, we show that HS messages with check-worthy claims show significantly higher harassment and hate, and that incorporating check-worthiness labels improves LLM-based HS detection up to 0.213 macro-F1 and to 0.154 macro-F1 on average for large models.",
+      "authors": [
+        "Nicolás Benjamín Ocampo",
+        "Tommaso Caselli",
+        "Davide Ceolin"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-03-26T10:07:00+00:00",
+      "link": "https://arxiv.org/pdf/2603.25269v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "jointly address hate speech and misinformation with LLM-in-the-loop",
+      "llm_evidence_cn": "通过LLM在环框架共同处理仇恨言论和虚假信息",
+      "llm_evidence": "通过LLM在环框架共同处理仇恨言论和虚假信息",
+      "canonical_evidence": "通过LLM在环框架共同处理仇恨言论和虚假信息",
+      "llm_tldr_en": "Introduces a dataset and LLM framework for detecting check-worthy claims in hateful misinformation.",
+      "llm_tldr_cn": "引入了一个数据集和LLM框架，用于检测仇恨虚假信息中具有查证价值的断言。",
+      "llm_tldr": "引入了一个数据集和LLM框架，用于检测仇恨虚假信息中具有查证价值的断言。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2603.22208v2",
+      "title": "Identification of physiological shock in intensive care units via Bayesian regime switching models",
+      "abstract": "Detection of occult hemorrhage (i.e., internal bleeding) in patients in intensive care units (ICUs) can pose significant challenges for critical care workers. Because blood loss may not always be clinically apparent, clinicians rely on monitoring vital signs for specific trends indicative of a hemorrhage event. The inherent difficulties of diagnosing such an event can lead to late intervention by clinicians which has catastrophic consequences. Therefore, a methodology for early detection of hemorrhage has wide utility. We develop a Bayesian regime switching model (RSM) that analyzes trends in patients' vitals and labs to provide a probabilistic assessment of the underlying physiological state that a patient is in at any given time. This article is motivated by a comprehensive dataset we curated from Mayo Clinic of 33,924 real ICU patient encounters. Longitudinal response measurements are modeled as a vector autoregressive process conditional on all latent states up to the current time point, and the latent states follow a Markov process. We present a novel Bayesian sampling routine to learn the posterior probability distribution of the latent physiological states, as well as develop an approach to account for pre-ICU-admission physiological changes. A simulation and real case study illustrate the effectiveness of our approach.",
+      "authors": [
+        "Emmett B. Kendall",
+        "Jonathan P. Williams",
+        "Curtis B. Storlie",
+        "Misty A. Radosevich",
+        "Erica D. Wittwer",
+        "Matthew A. Warner"
+      ],
+      "primary_category": "stat.AP",
+      "categories": [
+        "stat.AP",
+        "stat.ME",
+        "stat.ML",
+        "stat.OT"
+      ],
+      "published": "2026-03-23T17:03:07+00:00",
+      "link": "https://arxiv.org/pdf/2603.22208v2",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Bayesian regime switching for physiological state segmentation",
+      "llm_evidence_cn": "用于生理状态分割的贝叶斯机制切换模型",
+      "llm_evidence": "用于生理状态分割的贝叶斯机制切换模型",
+      "canonical_evidence": "用于生理状态分割的贝叶斯机制切换模型",
+      "llm_tldr_en": "Uses Bayesian regime switching to segment physiological states from vital sign time series.",
+      "llm_tldr_cn": "使用贝叶斯机制切换模型从生命体征时间序列中分割生理状态。",
+      "llm_tldr": "使用贝叶斯机制切换模型从生命体征时间序列中分割生理状态。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.24636v1",
+      "title": "DyMRL: Dynamic Multispace Representation Learning for Multimodal Event Forecasting in Knowledge Graph",
+      "abstract": "Accurate representation of multimodal knowledge is crucial for event forecasting in real-world scenarios. However, existing studies have largely focused on static settings, overlooking the dynamic acquisition and fusion of multimodal knowledge. 1) At the knowledge acquisition level, how to learn time-sensitive information of different modalities, especially the dynamic structural modality. Existing dynamic learning methods are often limited to shallow structures across heterogeneous spaces or simple unispaces, making it difficult to capture deep relation-aware geometric features. 2) At the knowledge fusion level, how to learn evolving multimodal fusion features. Existing knowledge fusion methods based on static coattention struggle to capture the varying historical contributions of different modalities to future events. To this end, we propose DyMRL, a Dynamic Multispace Representation Learning approach to efficiently acquire and fuse multimodal temporal knowledge. 1) For the former issue, DyMRL integrates time-specific structural features from Euclidean, hyperbolic, and complex spaces into a relational message-passing framework to learn deep representations, reflecting human intelligences in associative thinking, high-order abstracting, and logical reasoning. Pretrained models endow DyMRL with time-sensitive visual and linguistic intelligences. 2) For the latter concern, DyMRL incorporates advanced dual fusion-evolution attention mechanisms that assign dynamic learning emphases equally to different modalities at different timestamps in a symmetric manner. To evaluate DyMRL's event forecasting performance through leveraging its learned multimodal temporal knowledge in history, we construct four multimodal temporal knowledge graph benchmarks. Extensive experiments demonstrate that DyMRL outperforms state-of-the-art dynamic unimodal and static multimodal baseline methods.",
+      "authors": [
+        "Feng Zhao",
+        "Kangzheng Liu",
+        "Teng Peng",
+        "Yu Yang",
+        "Guandong Xu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-03-25T09:45:16+00:00",
+      "link": "https://arxiv.org/pdf/2603.24636v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multimodal event forecasting and knowledge fusion",
+      "llm_evidence_cn": "多模态事件预测与知识融合",
+      "llm_evidence": "多模态事件预测与知识融合",
+      "canonical_evidence": "多模态事件预测与知识融合",
+      "llm_tldr_en": "Explores dynamic multispace representation learning for multimodal event forecasting in knowledge graphs.",
+      "llm_tldr_cn": "探索了知识图谱中多模态事件预测的动态多空间表示学习。",
+      "llm_tldr": "探索了知识图谱中多模态事件预测的动态多空间表示学习。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.22459v1",
+      "title": "LLM-guided headline rewriting for clickability enhancement without clickbait",
+      "abstract": "Enhancing reader engagement while preserving informational fidelity is a central challenge in controllable text generation for news media. Optimizing news headlines for reader engagement is often conflated with clickbait, resulting in exaggerated or misleading phrasing that undermines editorial trust. We frame clickbait not as a separate stylistic category, but as an extreme outcome of disproportionate amplification of otherwise legitimate engagement cues. Based on this view, we formulate headline rewriting as a controllable generation problem, where specific engagement-oriented linguistic attributes are selectively strengthened under explicit constraints on semantic faithfulness and proportional emphasis. We present a guided headline rewriting framework built on a large language model (LLM) that uses the Future Discriminators for Generation (FUDGE) paradigm for inference-time control. The LLM is steered by two auxiliary guide models: (1) a clickbait scoring model that provides negative guidance to suppress excessive stylistic amplification, and (2) an engagement-attribute model that provides positive guidance aligned with target clickability objectives. Both guides are trained on neutral headlines drawn from a curated real-world news corpus. At the same time, clickbait variants are generated synthetically by rewriting these original headlines using an LLM under controlled activation of predefined engagement tactics. By adjusting guidance weights at inference time, the system generates headlines along a continuum from neutral paraphrases to more engaging yet editorially acceptable formulations. The proposed framework provides a principled approach for studying the trade-off between attractiveness, semantic preservation, and clickbait avoidance, and supports responsible LLM-based headline optimization in journalistic settings.",
+      "authors": [
+        "Yehudit Aperstein",
+        "Linoy Halifa",
+        "Sagiv Bar",
+        "Alexander Apartsin"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-03-23T18:25:48+00:00",
+      "link": "https://arxiv.org/pdf/2603.22459v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "headline rewriting to prevent clickbait and preserve semantic faithfulness",
+      "llm_evidence_cn": "标题重写以防止标题党并保持语义忠实度",
+      "llm_evidence": "标题重写以防止标题党并保持语义忠实度",
+      "canonical_evidence": "标题重写以防止标题党并保持语义忠实度",
+      "llm_tldr_en": "Uses LLMs to rewrite news headlines for engagement while strictly avoiding misleading clickbait phrasing.",
+      "llm_tldr_cn": "利用大模型重写新闻标题以提高参与度，同时严格避免误导性的标题党措辞。",
+      "llm_tldr": "利用大模型重写新闻标题以提高参与度，同时严格避免误导性的标题党措辞。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.25103v1",
+      "title": "Layer-Specific Lipschitz Modulation for Fault-Tolerant Multimodal Representation Learning",
+      "abstract": "Modern multimodal systems deployed in industrial and safety-critical environments must remain reliable under partial sensor failures, signal degradation, or cross-modal inconsistencies. This work introduces a mathematically grounded framework for fault-tolerant multimodal representation learning that unifies self-supervised anomaly detection and error correction within a single architecture. Building upon a theoretical analysis of perturbation propagation, we derive Lipschitz- and Jacobian-based criteria that determine whether a neural operator amplifies or attenuates localized faults. Guided by this theory, we propose a two-stage self-supervised training scheme: pre-training a multimodal convolutional autoencoder on clean data to preserve localized anomaly signals in the latent space, and expanding it with a learnable compute block composed of dense layers for correction and contrastive objectives for anomaly identification. Furthermore, we introduce layer-specific Lipschitz modulation and gradient clipping as principled mechanisms to control sensitivity across detection and correction modules. Experimental results on multimodal fault datasets demonstrate that the proposed approach improves both anomaly detection accuracy and reconstruction under sensor corruption. Overall, this framework bridges the gap between analytical robustness guarantees and practical fault-tolerant multimodal learning.",
+      "authors": [
+        "Diyar Altinses",
+        "Andreas Schwung"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-03-26T07:22:51+00:00",
+      "link": "https://arxiv.org/pdf/2603.25103v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "fault-tolerant multimodal representation learning and anomaly detection",
+      "llm_evidence_cn": "容错多模态表示学习与异常检测",
+      "llm_evidence": "容错多模态表示学习与异常检测",
+      "canonical_evidence": "容错多模态表示学习与异常检测",
+      "llm_tldr_en": "Develops a Lipschitz-based framework for reliable multimodal representation learning under signal degradation.",
+      "llm_tldr_cn": "开发了一个基于Lipschitz的框架，用于在信号退化下进行可靠的多模态表示学习。",
+      "llm_tldr": "开发了一个基于Lipschitz的框架，用于在信号退化下进行可靠的多模态表示学习。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.24295v2",
+      "title": "RS-SSM: Refining Forgotten Specifics in State Space Model for Video Semantic Segmentation",
+      "abstract": "Recently, state space models have demonstrated efficient video segmentation through linear-complexity state space compression. However, Video Semantic Segmentation (VSS) requires pixel-level spatiotemporal modeling capabilities to maintain temporal consistency in segmentation of semantic objects. While state space models can preserve common semantic information during state space compression, the fixed-size state space inevitably forgets specific information, which limits the models' capability for pixel-level segmentation. To tackle the above issue, we proposed a Refining Specifics State Space Model approach (RS-SSM) for video semantic segmentation, which performs complementary refining of forgotten spatiotemporal specifics. Specifically, a Channel-wise Amplitude Perceptron (CwAP) is designed to extract and align the distribution characteristics of specific information in the state space. Besides, a Forgetting Gate Information Refiner (FGIR) is proposed to adaptively invert and refine the forgetting gate matrix in the state space model based on the specific information distribution. Consequently, our RS-SSM leverages the inverted forgetting gate to complementarily refine the specific information forgotten during state space compression, thereby enhancing the model's capability for spatiotemporal pixel-level segmentation. Extensive experiments on four VSS benchmarks demonstrate that our RS-SSM achieves state-of-the-art performance while maintaining high computational efficiency. The code is available at https://github.com/zhoujiahuan1991/CVPR2026-RS-SSM.",
+      "authors": [
+        "Kai Zhu",
+        "Zhenyu Cui",
+        "Zehua Zang",
+        "Jiahuan Zhou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-25T13:33:18+00:00",
+      "link": "https://arxiv.org/pdf/2603.24295v2",
+      "tags": [
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "video semantic segmentation with spatiotemporal modeling and temporal consistency",
+      "llm_evidence_cn": "具有时空建模和时间一致性的视频语义分割",
+      "llm_evidence": "具有时空建模和时间一致性的视频语义分割",
+      "canonical_evidence": "具有时空建模和时间一致性的视频语义分割",
+      "llm_tldr_en": "Refines State Space Models for video semantic segmentation to maintain temporal consistency and pixel-level detail.",
+      "llm_tldr_cn": "改进视频语义分割的状态空间模型，以保持时间一致性和像素级细节。",
+      "llm_tldr": "改进视频语义分割的状态空间模型，以保持时间一致性和像素级细节。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.24981v1",
+      "title": "Exons-Detect: Identifying and Amplifying Exonic Tokens via Hidden-State Discrepancy for Robust AI-Generated Text Detection",
+      "abstract": "The rapid advancement of large language models has increasingly blurred the boundary between human-written and AI-generated text, raising societal risks such as misinformation dissemination, authorship ambiguity, and threats to intellectual property rights. These concerns highlight the urgent need for effective and reliable detection methods. While existing training-free approaches often achieve strong performance by aggregating token-level signals into a global score, they typically assume uniform token contributions, making them less robust under short sequences or localized token modifications. To address these limitations, we propose Exons-Detect, a training-free method for AI-generated text detection based on an exon-aware token reweighting perspective. Exons-Detect identifies and amplifies informative exonic tokens by measuring hidden-state discrepancy under a dual-model setting, and computes an interpretable translation score from the resulting importance-weighted token sequence. Empirical evaluations demonstrate that Exons-Detect achieves state-of-the-art detection performance and exhibits strong robustness to adversarial attacks and varying input lengths. In particular, it attains a 2.2\\% relative improvement in average AUROC over the strongest prior baseline on DetectRL.",
+      "authors": [
+        "Xiaowei Zhu",
+        "Yubing Ren",
+        "Fang Fang",
+        "Shi Wang",
+        "Yanan Cao",
+        "Li Guo"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-03-26T03:12:19+00:00",
+      "link": "https://arxiv.org/pdf/2603.24981v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "AI-generated text detection for misinformation dissemination",
+      "llm_evidence_cn": "针对虚假信息传播的AI生成文本检测",
+      "llm_evidence": "针对虚假信息传播的AI生成文本检测",
+      "canonical_evidence": "针对虚假信息传播的AI生成文本检测",
+      "llm_tldr_en": "Proposes Exons-Detect to identify AI-generated text by analyzing hidden-state discrepancies in tokens.",
+      "llm_tldr_cn": "提出Exons-Detect方法，通过分析隐藏状态差异来识别AI生成的文本，以应对虚假信息风险。",
+      "llm_tldr": "提出Exons-Detect方法，通过分析隐藏状态差异来识别AI生成的文本，以应对虚假信息风险。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
