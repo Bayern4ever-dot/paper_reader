@@ -1,0 +1,291 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-28T20:00:49.147624+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 0,
+    "deep_cap": 7,
+    "deep_selected": 0,
+    "quick_candidates": 7,
+    "quick_skim_target": 12,
+    "quick_selected": 7
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2603.22872v1",
+      "title": "ForeSea: AI Forensic Search with Multi-modal Queries for Video Surveillance",
+      "abstract": "Despite decades of work, surveillance still struggles to find specific targets across long, multi-camera video. Prior methods -- tracking pipelines, CLIP based models, and VideoRAG -- require heavy manual filtering, capture only shallow attributes, and fail at temporal reasoning. Real-world searches are inherently multimodal (e.g., \"When does this person join the fight?\" with the person's image), yet this setting remains underexplored. Also, there are no proper benchmarks to evaluate those setting - asking video with multimodal queries. To address this gap, we introduce ForeSeaQA, a new benchmark specifically designed for video QA with image-and-text queries and timestamped annotations of key events. The dataset consists of long-horizon surveillance footage paired with diverse multimodal questions, enabling systematic evaluation of retrieval, temporal grounding, and multimodal reasoning in realistic forensic conditions. Not limited to this benchmark, we propose ForeSea, an AI forensic search system with a 3-stage, plug-and-play pipeline. (1) A tracking module filters irrelevant footage; (2) a multimodal embedding module indexes the remaining clips; and (3) during inference, the system retrieves top-K candidate clips for a Video Large Language Model (VideoLLM) to answer queries and localize events. On ForeSeaQA, ForeSea improves accuracy by 3.5% and temporal IoU by 11.0 over prior VideoRAG models. To our knowledge, ForeSeaQA is the first benchmark to support complex multimodal queries with precise temporal grounding, and ForeSea is the first VideoRAG system built to excel in this setting.",
+      "authors": [
+        "Hyojin Park",
+        "Yi Li",
+        "Janghoon Cho",
+        "Sungha Choi",
+        "Jungsoo Lee",
+        "Taotao Jing",
+        "Shuai Zhang",
+        "Munawar Hayat",
+        "Dashan Gao",
+        "Ning Bi",
+        "Fatih Porikli"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-24T07:15:28+00:00",
+      "link": "https://arxiv.org/pdf/2603.22872v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multimodal queries and timestamped event detection",
+      "llm_evidence_cn": "多模态查询与带时间戳的事件检测",
+      "llm_evidence": "多模态查询与带时间戳的事件检测",
+      "canonical_evidence": "多模态查询与带时间戳的事件检测",
+      "llm_tldr_en": "Presents ForeSea for forensic video search using multimodal queries and temporal reasoning.",
+      "llm_tldr_cn": "提出ForeSea框架，利用多模态查询和时间推理进行视频取证搜索。",
+      "llm_tldr": "提出ForeSea框架，利用多模态查询和时间推理进行视频取证搜索。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.21528v1",
+      "title": "PEARL: Geometry Aligns Semantics for Training-Free Open-Vocabulary Semantic Segmentation",
+      "abstract": "Training-free open-vocabulary semantic segmentation (OVSS) promises rapid adaptation to new label sets without retraining. Yet, many methods rely on heavy post-processing or handle text and vision in isolation, leaving cross-modal geometry underutilized. Others introduce auxiliary vision backbones or multi-model pipelines, which increase complexity and latency while compromising design simplicity. We present PEARL, \\textbf{\\underline{P}}rocrust\\textbf{\\underline{e}}s \\textbf{\\underline{a}}lignment with text-awa\\textbf{\\underline{r}}e \\textbf{\\underline{L}}aplacian propagation, a compact two-step inference that follows an align-then-propagate principle. The Procrustes alignment step performs an orthogonal projection inside the last self-attention block, rotating keys toward the query subspace via a stable polar iteration. The text-aware Laplacian propagation then refines per-pixel logits on a small grid through a confidence-weighted, text-guided graph solve: text provides both a data-trust signal and neighbor gating, while image gradients preserve boundaries. In this work, our method is fully training-free, plug-and-play, and uses only fixed constants, adding minimal latency with a small per-head projection and a few conjugate-gradient steps. Our approach, PEARL, sets a new state-of-the-art in training-free OVSS without extra data or auxiliary backbones across standard benchmarks, achieving superior performance under both with-background and without-background protocols.",
+      "authors": [
+        "Gensheng Pei",
+        "Xiruo Jiang",
+        "Xinhao Cai",
+        "Tao Chen",
+        "Yazhou Yao",
+        "Byeungwoo Jeon"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-23T03:40:47+00:00",
+      "link": "https://arxiv.org/pdf/2603.21528v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "cross-modal semantic alignment for segmentation",
+      "llm_evidence_cn": "用于分割的跨模态语义对齐",
+      "llm_evidence": "用于分割的跨模态语义对齐",
+      "canonical_evidence": "用于分割的跨模态语义对齐",
+      "llm_tldr_en": "Proposes PEARL for training-free open-vocabulary semantic segmentation using cross-modal geometry alignment.",
+      "llm_tldr_cn": "提出PEARL框架，利用跨模态几何对齐实现无需训练的开放词汇语义分割。",
+      "llm_tldr": "提出PEARL框架，利用跨模态几何对齐实现无需训练的开放词汇语义分割。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.22985v1",
+      "title": "Beyond Hate: Differentiating Uncivil and Intolerant Speech in Multimodal Content Moderation",
+      "abstract": "Current multimodal toxicity benchmarks typically use a single binary hatefulness label. This coarse approach conflates two fundamentally different characteristics of expression: tone and content. Drawing on communication science theory, we introduce a fine-grained annotation scheme that distinguishes two separable dimensions: incivility (rude or dismissive tone) and intolerance (content that attacks pluralism and targets groups or identities) and apply it to 2,030 memes from the Hateful Memes dataset. We evaluate different vision-language models under coarse-label training, transfer learning across label schemes and a joint learning approach that combines the coarse hatefulness label with our fine-grained annotations. Our results show that fine-grained annotations complement existing coarse labels and, when used jointly, improve overall model performance. Moreover, models trained with the fine-grained scheme exhibit more balanced moderation-relevant error profiles and are less prone to under-detection of harmful content than models trained on hatefulness labels alone (FNR-FPR, the difference between false negative and false positive rates: 0.74 to 0.42 for LLaVA-1.6-Mistral-7B; 0.54 to 0.28 for Qwen2.5-VL-7B). This work contributes to data-centric approaches in content moderation by improving the reliability and accuracy of moderation systems through enhanced data quality. Overall, combining both coarse and fine-grained labels provides a practical route to more reliable multimodal moderation.",
+      "authors": [
+        "Nils A. Herrmann",
+        "Tobias Eder",
+        "Jingyi He",
+        "Georg Groh"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.CY"
+      ],
+      "published": "2026-03-24T09:22:36+00:00",
+      "link": "https://arxiv.org/pdf/2603.22985v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multimodal content moderation and vision-language models",
+      "llm_evidence_cn": "多模态内容审核与视觉语言模型",
+      "llm_evidence": "多模态内容审核与视觉语言模型",
+      "canonical_evidence": "多模态内容审核与视觉语言模型",
+      "llm_tldr_en": "Introduces fine-grained multimodal content moderation to distinguish incivility from intolerance.",
+      "llm_tldr_cn": "引入细粒度的多模态内容审核方案，区分粗鲁言论与不宽容内容。",
+      "llm_tldr": "引入细粒度的多模态内容审核方案，区分粗鲁言论与不宽容内容。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.23906v1",
+      "title": "GenMask: Adapting DiT for Segmentation via Direct Mask",
+      "abstract": "Recent approaches for segmentation have leveraged pretrained generative models as feature extractors, treating segmentation as a downstream adaptation task via indirect feature retrieval. This implicit use suffers from a fundamental misalignment in representation. It also depends heavily on indirect feature extraction pipelines, which complicate the workflow and limit adaptation. In this paper, we argue that instead of indirect adaptation, segmentation tasks should be trained directly in a generative manner. We identify a key obstacle to this unified formulation: VAE latents of binary masks are sharply distributed, noise robust, and linearly separable, distinct from natural image latents. To bridge this gap, we introduce timesteps sampling strategy for binary masks that emphasizes extreme noise levels for segmentation and moderate noise for image generation, enabling harmonious joint training. We present GenMask, a DiT trains to generate black-and-white segmentation masks as well as colorful images in RGB space under the original generative objective. GenMask preserves the original DiT architecture while removing the need of feature extraction pipelines tailored for segmentation tasks. Empirically, GenMask attains state-of-the-art performance on referring and reasoning segmentation benchmarks and ablations quantify the contribution of each component.",
+      "authors": [
+        "Yuhuan Yang",
+        "Xianwei Zhuang",
+        "Yuxuan Cai",
+        "Chaofan Ma",
+        "Shuai Bai",
+        "Jiangchao Yao",
+        "Ya Zhang",
+        "Junyang Lin",
+        "Yanfeng Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-25T03:52:05+00:00",
+      "link": "https://arxiv.org/pdf/2603.23906v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "direct generative manner for segmentation tasks",
+      "llm_evidence_cn": "分割任务的直接生成方式",
+      "llm_evidence": "分割任务的直接生成方式",
+      "canonical_evidence": "分割任务的直接生成方式",
+      "llm_tldr_en": "Adapts Diffusion Transformers for direct mask generation in segmentation tasks.",
+      "llm_tldr_cn": "将扩散Transformer应用于分割任务中的直接掩码生成。",
+      "llm_tldr": "将扩散Transformer应用于分割任务中的直接掩码生成。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.24048v1",
+      "title": "Human Factors in Detecting AI-Generated Portraits: Age, Sex, Device, and Confidence",
+      "abstract": "Generative AI now produces photorealistic portraits that circulate widely in social and newslike contexts. Human ability to distinguish real from synthetic faces is time-sensitive because image generators continue to improve while public familiarity with synthetic media also changes. Here, we provide a time-stamped snapshot of human ability to distinguish real from AI-generated portraits produced by models available in July 2025. In a large-scale web experiment conducted from August 2025 to January 2026, 1,664 participants aged 20-69 years (mobile n = 1,330; PC n = 334) completed a two-alternative forced-choice task (REAL vs AI). Each participant judged 20 trials sampled from a 210-image pool comprising real FFHQ photographs and AI-generated portraits from ChatGPT-4o and Imagen 3. Overall accuracy was high (mean 85.2%, median 90%) but varied across groups. PC participants outperformed mobile participants by 3.65 percentage points. Accuracy declined with age in both device cohorts and more steeply on mobile than on PC (-0.607 vs -0.230 percentage points per year). Self-rated AI-detection confidence and AI exposure were positively associated with accuracy and statistically accounted for part of the age-related decline, with confidence accounting for the larger share. In the mobile cohort, an age-related sex divergence emerged among participants in their 50s and 60s, with female participants performing worse. Trial-level reaction-time models showed that correct AI judgments were faster than correct real judgments, whereas incorrect AI judgments were slower than incorrect real judgments. ChatGPT-4o portraits were harder and slower to classify than Imagen 3 portraits and were associated with a steeper age-related decline in performance. These findings frame AI portrait detection as a human-factors problem shaped by age, sex, device context, and confidence, not image realism alone.",
+      "authors": [
+        "Sunwhi Kim",
+        "Sunyul Kim"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC"
+      ],
+      "published": "2026-03-25T07:56:26+00:00",
+      "link": "https://arxiv.org/pdf/2603.24048v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "detecting AI-generated portraits in social contexts",
+      "llm_evidence_cn": "在社交语境中检测AI生成的肖像",
+      "llm_evidence": "在社交语境中检测AI生成的肖像",
+      "canonical_evidence": "在社交语境中检测AI生成的肖像",
+      "llm_tldr_en": "Evaluates human ability to distinguish real from AI-generated portraits, relevant to misinformation detection.",
+      "llm_tldr_cn": "评估人类区分真实与AI生成肖像的能力，与虚假信息检测相关。",
+      "llm_tldr": "评估人类区分真实与AI生成肖像的能力，与虚假信息检测相关。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.24115v1",
+      "title": "Retinal Layer Segmentation in OCT Images With 2.5D Cross-slice Feature Fusion Module for Glaucoma Assessment",
+      "abstract": "For accurate glaucoma diagnosis and monitoring, reliable retinal layer segmentation in OCT images is essential. However, existing 2D segmentation methods often suffer from slice-to-slice inconsistencies due to the lack of contextual information across adjacent B-scans. 3D segmentation methods are better for capturing slice-to-slice context, but they require expensive computational resources. To address these limitations, we propose a 2.5D segmentation framework that incorporates a novel cross-slice feature fusion (CFF) module into a U-Net-like architecture. The CFF module fuses inter-slice features to effectively capture contextual information, enabling consistent boundary detection across slices and improved robustness in noisy regions. The framework was validated on both a clinical dataset and the publicly available DUKE DME dataset. Compared to other segmentation methods without the CFF module, the proposed method achieved an 8.56% reduction in mean absolute distance and a 13.92% reduction in root mean square error, demonstrating improved segmentation accuracy and robustness. Overall, the proposed 2.5D framework balances contextual awareness and computational efficiency, enabling anatomically reliable retinal layer delineation for automated glaucoma evaluation and potential clinical applications.",
+      "authors": [
+        "Hyunwoo Kim",
+        "Heesuk Kim",
+        "Wungrak Choi",
+        "Jae-Sang Hyun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-25T09:23:33+00:00",
+      "link": "https://arxiv.org/pdf/2603.24115v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Cross-slice feature fusion for consistent boundary detection in sequences",
+      "llm_evidence_cn": "跨切片特征融合用于序列中一致的边界检测",
+      "llm_evidence": "跨切片特征融合用于序列中一致的边界检测",
+      "canonical_evidence": "跨切片特征融合用于序列中一致的边界检测",
+      "llm_tldr_en": "A 2.5D framework using cross-slice fusion to improve consistency in retinal layer segmentation.",
+      "llm_tldr_cn": "一种利用跨切片融合提高视网膜分层分割一致性的2.5D框架。",
+      "llm_tldr": "一种利用跨切片融合提高视网膜分层分割一致性的2.5D框架。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.25092v1",
+      "title": "AuthorityBench: Benchmarking LLM Authority Perception for Reliable Retrieval-Augmented Generation",
+      "abstract": "Retrieval-Augmented Generation (RAG) enhances Large Language Models (LLMs) with external knowledge but remains vulnerable to low-authority sources that can propagate misinformation. We investigate whether LLMs can perceive information authority - a capability extending beyond semantic understanding. To address this, we introduce AuthorityBench, a comprehensive benchmark for evaluating LLM authority perception comprising three datasets: DomainAuth (10K web domains with PageRank-based authority), EntityAuth (22K entities with popularity-based authority), and RAGAuth (120 queries with documents of varying authority for downstream evaluation). We evaluate five LLMs using three judging methods (PointJudge, PairJudge, ListJudge) across multiple output formats. Results show that ListJudge and PairJudge with PointScore output achieve the strongest correlation with ground-truth authority, while ListJudge offers optimal cost-effectiveness. Notably, incorporating webpage text consistently degrades judgment performance, suggesting authority is distinct from textual style. Downstream experiments on RAG demonstrate that authority-guided filtering largely improves answer accuracy, validating the practical importance of authority perception for reliable knowledge retrieval. Code and benchmark are available at: https://github.com/Trustworthy-Information-Access/AuthorityBench.",
+      "authors": [
+        "Zhihui Yao",
+        "Hengran Zhang",
+        "Keping Bi"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR"
+      ],
+      "published": "2026-03-26T06:58:22+00:00",
+      "link": "https://arxiv.org/pdf/2603.25092v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Benchmarking LLM authority to prevent misinformation propagation",
+      "llm_evidence_cn": "评估大模型权威感知能力以防止虚假信息传播",
+      "llm_evidence": "评估大模型权威感知能力以防止虚假信息传播",
+      "canonical_evidence": "评估大模型权威感知能力以防止虚假信息传播",
+      "llm_tldr_en": "Evaluates LLM ability to perceive source authority to mitigate misinformation in RAG systems.",
+      "llm_tldr_cn": "评估大模型感知来源权威性的能力，以减轻 RAG 系统中的虚假信息传播。",
+      "llm_tldr": "评估大模型感知来源权威性的能力，以减轻 RAG 系统中的虚假信息传播。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
