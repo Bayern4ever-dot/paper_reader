@@ -1,6 +1,9 @@
 * <a class="dpr-sidebar-root-link" href="#/">首页</a>
 * <a class="dpr-sidebar-root-link dpr-sidebar-noactive-link" href="javascript:void(0)" data-dpr-hash="#/tutorial/README">使用教程</a>
 * Daily Papers
+  * 2026-03-29 <!--dpr-date:20260329-->
+    * 速读区
+      * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202603/29/2603.24322v1-heuristic-self-paced-learning-for-domain-adaptive-semantic-segmentation-under-adverse-conditions" data-sidebar-item="{&quot;title&quot;: &quot;Heuristic Self-Paced Learning for Domain Adaptive Semantic Segmentation under Adverse Conditions&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2603.24322v1-heuristic-self-paced-learning-for-domain-adaptive-semantic-segmentation-under-adverse-conditions&quot;, &quot;score&quot;: &quot;6.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;tsds&quot;}], &quot;evidence&quot;: &quot;使用自适应学习的领域自适应语义分割&quot;}">Heuristic Self-Paced Learning for Domain Adaptive Semantic Segmentation under Adverse Conditions</a>
   * 2026-03-28 <!--dpr-date:20260328-->
     * 速读区
       * <a class="dpr-sidebar-item-link dpr-sidebar-item-structured" href="#/202603/28/2603.22872v1-foresea-ai-forensic-search-with-multi-modal-queries-for-video-surveillance" data-sidebar-item="{&quot;title&quot;: &quot;ForeSea: AI Forensic Search with Multi-modal Queries for Video Surveillance&quot;, &quot;link&quot;: &quot;https://arxiv.org/abs/2603.22872v1-foresea-ai-forensic-search-with-multi-modal-queries-for-video-surveillance&quot;, &quot;score&quot;: &quot;7.0&quot;, &quot;tags&quot;: [{&quot;kind&quot;: &quot;query&quot;, &quot;label&quot;: &quot;mmfnd&quot;}], &quot;evidence&quot;: &quot;多模态查询与带时间戳的事件检测&quot;}">ForeSea: AI Forensic Search with Multi-modal Queries for Video Surveillance</a>

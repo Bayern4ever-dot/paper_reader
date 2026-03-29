@@ -1,0 +1,59 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-29T19:38:59.710345+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 0,
+    "deep_cap": 7,
+    "deep_selected": 0,
+    "quick_candidates": 1,
+    "quick_skim_target": 12,
+    "quick_selected": 1
+  },
+  "deep_dive": [],
+  "quick_skim": [
+    {
+      "id": "2603.24322v1",
+      "title": "Heuristic Self-Paced Learning for Domain Adaptive Semantic Segmentation under Adverse Conditions",
+      "abstract": "The learning order of semantic classes significantly impacts unsupervised domain adaptation for semantic segmentation, especially under adverse weather conditions. Most existing curricula rely on handcrafted heuristics (e.g., fixed uncertainty metrics) and follow a static schedule, which fails to adapt to a model's evolving, high-dimensional training dynamics, leading to category bias. Inspired by Reinforcement Learning, we cast curriculum learning as a sequential decision problem and propose an autonomous class scheduler. This scheduler consists of two components: (i) a high-dimensional state encoder that maps the model's training status into a latent space and distills key features indicative of progress, and (ii) a category-fair policy-gradient objective that ensures balanced improvement across classes. Coupled with mixed source-target supervision, the learned class rankings direct the network's focus to the most informative classes at each stage, enabling more adaptive and dynamic learning. It is worth noting that our method achieves state-of-the-art performance on three widely used benchmarks (e.g., ACDC, Dark Zurich, and Nighttime Driving) and shows generalization ability in synthetic-to-real semantic segmentation.",
+      "authors": [
+        "Shiqin Wang",
+        "Haoyang Chen",
+        "Huaizhou Huang",
+        "Yinkan He",
+        "Dongfang Sun",
+        "Xiaoqing Chen",
+        "Xingyu Liu",
+        "Zheng Wang",
+        "Kaiyan Zhao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-25T14:01:55+00:00",
+      "link": "https://arxiv.org/pdf/2603.24322v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Domain adaptive semantic segmentation using self-paced learning",
+      "llm_evidence_cn": "使用自适应学习的领域自适应语义分割",
+      "llm_evidence": "使用自适应学习的领域自适应语义分割",
+      "canonical_evidence": "使用自适应学习的领域自适应语义分割",
+      "llm_tldr_en": "Proposes an autonomous class scheduler for domain adaptive semantic segmentation under adverse conditions.",
+      "llm_tldr_cn": "提出一种自主类别调度器，用于恶劣条件下的领域自适应语义分割。",
+      "llm_tldr": "提出一种自主类别调度器，用于恶劣条件下的领域自适应语义分割。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

@@ -6,42 +6,26 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-03-28
-- 运行时间：2026-03-28 20:01:28 UTC
+- 最新运行日期：2026-03-29
+- 运行时间：2026-03-29 19:39:17 UTC
 - 运行状态：成功
-- 本次总论文数：7
+- 本次总论文数：1
 - 精读区：0
-- 速读区：7
+- 速读区：1
 
 ### 今日简报（AI）
-今日速读 7 篇论文，聚焦 AI 视频取证、多模态内容审核及人类识别 AI 肖像的局限
-- 详情：[/202603/28/README](/202603/28/README)
+今日聚焦恶劣天气下的域自适应语义分割，探索启发式自步学习新方案。
+该研究通过启发式策略优化自步学习，显著提升了模型在雨雾等极端环境下的分割鲁棒性。
+建议关注自动驾驶等户外视觉任务的开发者，重点参考其应对复杂气象条件的泛化技巧。
+- 详情：[/202603/29/README](/202603/29/README)
 
 ### 精读区论文标签
 - 本次无精读推荐。
 
 ### 速读区论文标签
-1. [ForeSea: AI Forensic Search with Multi-modal Queries for Video Surveillance](/202603/28/2603.22872v1-foresea-ai-forensic-search-with-multi-modal-queries-for-video-surveillance)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：多模态查询与带时间戳的事件检测
-2. [Beyond Hate: Differentiating Uncivil and Intolerant Speech in Multimodal Content Moderation](/202603/28/2603.22985v1-beyond-hate-differentiating-uncivil-and-intolerant-speech-in-multimodal-content-moderation)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：多模态内容审核与视觉语言模型
-3. [Human Factors in Detecting AI-Generated Portraits: Age, Sex, Device, and Confidence](/202603/28/2603.24048v1-human-factors-in-detecting-ai-generated-portraits-age-sex-device-and-confidence)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：在社交语境中检测AI生成的肖像
-4. [AuthorityBench: Benchmarking LLM Authority Perception for Reliable Retrieval-Augmented Generation](/202603/28/2603.25092v1-authoritybench-benchmarking-llm-authority-perception-for-reliable-retrieval-augmented-generation)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：评估大模型权威感知能力以防止虚假信息传播
-5. [PEARL: Geometry Aligns Semantics for Training-Free Open-Vocabulary Semantic Segmentation](/202603/28/2603.21528v1-pearl-geometry-aligns-semantics-for-training-free-open-vocabulary-semantic-segmentation)  
+1. [Heuristic Self-Paced Learning for Domain Adaptive Semantic Segmentation under Adverse Conditions](/202603/29/2603.24322v1-heuristic-self-paced-learning-for-domain-adaptive-semantic-segmentation-under-adverse-conditions)  
    标签：评分：6.0/10、query:tsds
-   evidence：用于分割的跨模态语义对齐
-6. [GenMask: Adapting DiT for Segmentation via Direct Mask](/202603/28/2603.23906v1-genmask-adapting-dit-for-segmentation-via-direct-mask)  
-   标签：评分：6.0/10、query:tsds
-   evidence：分割任务的直接生成方式
-7. [Retinal Layer Segmentation in OCT Images With 2.5D Cross-slice Feature Fusion Module for Glaucoma Assessment](/202603/28/2603.24115v1-retinal-layer-segmentation-in-oct-images-with-25d-cross-slice-feature-fusion-module-for-glaucoma-assessment)  
-   标签：评分：6.0/10、query:tsds
-   evidence：跨切片特征融合用于序列中一致的边界检测
+   evidence：使用自适应学习的领域自适应语义分割
 
 
 <div class="dpr-home-promo-card">
