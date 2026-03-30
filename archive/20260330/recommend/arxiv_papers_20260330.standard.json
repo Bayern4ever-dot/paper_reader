@@ -1,0 +1,491 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-30T19:57:16.582170+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 4,
+    "deep_cap": 7,
+    "deep_selected": 4,
+    "quick_candidates": 8,
+    "quick_skim_target": 12,
+    "quick_selected": 8
+  },
+  "deep_dive": [
+    {
+      "id": "2603.26052v1",
+      "title": "Bridging Pixels and Words: Mask-Aware Local Semantic Fusion for Multimodal Media Verification",
+      "abstract": "As multimodal misinformation becomes more sophisticated, its detection and grounding are crucial. However, current multimodal verification methods, relying on passive holistic fusion, struggle with sophisticated misinformation. Due to 'feature dilution,' global alignments tend to average out subtle local semantic inconsistencies, effectively masking the very conflicts they are designed to find. We introduce MaLSF (Mask-aware Local Semantic Fusion), a novel framework that shifts the paradigm to active, bidirectional verification, mimicking human cognitive cross-referencing. MaLSF utilizes mask-label pairs as semantic anchors to bridge pixels and words. Its core mechanism features two innovations: 1) a Bidirectional Cross-modal Verification (BCV) module that acts as an interrogator, using parallel query streams (Text-as-Query and Image-as-Query) to explicitly pinpoint conflicts; and 2) a Hierarchical Semantic Aggregation (HSA) module that intelligently aggregates these multi-granularity conflict signals for task-specific reasoning. In addition, to extract fine-grained mask-label pairs, we introduce a set of diverse mask-label pair extraction parsers. MaLSF achieves state-of-the-art performance on both the DGM4 and multimodal fake news detection tasks. Extensive ablation studies and visualization results further verify its effectiveness and interpretability.",
+      "authors": [
+        "Zizhao Chen",
+        "Ping Wei",
+        "Ziyang Ren",
+        "Huan Li",
+        "Xiangru Yin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-27T03:38:38+00:00",
+      "link": "https://arxiv.org/pdf/2603.26052v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "multimodal misinformation detection and verification",
+      "llm_evidence_cn": "多模态误导信息检测与验证",
+      "llm_evidence": "多模态误导信息检测与验证",
+      "canonical_evidence": "多模态误导信息检测与验证",
+      "llm_tldr_en": "Introduces a mask-aware local semantic fusion framework for multimodal media verification.",
+      "llm_tldr_cn": "引入了一种用于多模态媒体验证的掩码感知局部语义融合框架。",
+      "llm_tldr": "引入了一种用于多模态媒体验证的掩码感知局部语义融合框架。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.26064v1",
+      "title": "MuDD: A Multimodal Deception Detection Dataset and GSR-Guided Progressive Distillation for Non-Contact Deception Detection",
+      "abstract": "Non-contact automatic deception detection remains challenging because visual and auditory deception cues often lack stable cross-subject patterns. In contrast, galvanic skin response (GSR) provides more reliable physiological cues and has been widely used in contact-based deception detection. In this work, we leverage stable deception-related knowledge in GSR to guide representation learning in non-contact modalities through cross-modal knowledge distillation. A key obstacle, however, is the lack of a suitable dataset for this setting. To address this, we introduce MuDD, a large-scale Multimodal Deception Detection dataset containing recordings from 130 participants over 690 minutes. In addition to video, audio, and GSR, MuDD also provides Photoplethysmography, heart rate, and personality traits, supporting broader scientific studies of deception. Based on this dataset, we propose GSR-guided Progressive Distillation (GPD), a cross-modal distillation framework for mitigating the negative transfer caused by the large modality mismatch between GSR and non-contact signals. The core innovation of GPD is the integration of progressive feature-level and digit-level distillation with dynamic routing, which allows the model to adaptively determine how teacher knowledge should be transferred during training, leading to more stable cross-modal knowledge transfer. Extensive experiments and visualizations show that GPD outperforms existing methods and achieves state-of-the-art performance on both deception detection and concealed-digit identification.",
+      "authors": [
+        "Peiyuan Jiang",
+        "Yao Liu",
+        "Yanglei Gan",
+        "Jiaye Yang",
+        "Lu Liu",
+        "Daibing Yao",
+        "Qiao Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-27T04:11:02+00:00",
+      "link": "https://arxiv.org/pdf/2603.26064v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multimodal deception detection using cross-modal knowledge distillation",
+      "llm_evidence_cn": "利用跨模态知识蒸馏进行多模态欺骗检测",
+      "llm_evidence": "利用跨模态知识蒸馏进行多模态欺骗检测",
+      "canonical_evidence": "利用跨模态知识蒸馏进行多模态欺骗检测",
+      "llm_tldr_en": "Introduces a multimodal deception dataset and a distillation method for non-contact detection.",
+      "llm_tldr_cn": "引入多模态欺骗检测数据集和一种用于非接触式检测的蒸馏方法。",
+      "llm_tldr": "引入多模态欺骗检测数据集和一种用于非接触式检测的蒸馏方法。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.25883v1",
+      "title": "Beyond Disinformation: Strategic Misrepresentation across Content, Actors, Processes, and Covertness",
+      "abstract": "This article revisits the widely studied problem of disinformation and related phenomena in online social networks (OSNs) by reframing it as a broader problem of misrepresentation. While disinformation is commonly understood as the intentional spread of false content, its meaning is applied inconsistently and often remains narrowly content-focused. This obscures other forms of manipulation, such as coordinated behavior that distorts the visibility, popularity or perceived legitimacy of actors and discourses without altering content itself. We argue that such limitations hinder a coherent and operational understanding of information campaigning in OSNs. To address this, we introduce strategic misrepresentation as a unifying concept capturing the interplay between content, actors and processes in shaping collective sensemaking. We formalize this concept through a four-dimensional framework encompassing content distortion, actor distortion, process distortion and covertness, reflecting how information campaigns unfold in practice and emphasizing observable behavioral signals. Building on this conceptualization, we conduct an integrative survey of state-of-the-art detection techniques across machine learning, network science and visual analytics. By synthesizing these approaches, we demonstrate how they jointly operationalize strategic misrepresentation in a data-driven manner. Our work provides a novel pragmatic foundation for detecting, classifying, and evaluating legitimate and illegitimate information campaigns within and across OSNs.",
+      "authors": [
+        "Arttu Malkamäki",
+        "Daniel Balinhas",
+        "Letizia Iannucci",
+        "Megan Vine",
+        "Frederik Temmermans",
+        "Adrien Coppen",
+        "Nikos Deligiannis",
+        "Mikko Kivelä",
+        "Michael Quayle",
+        "Onur Varol",
+        "Fintan McGee"
+      ],
+      "primary_category": "cs.SI",
+      "categories": [
+        "cs.SI"
+      ],
+      "published": "2026-03-26T20:14:21+00:00",
+      "link": "https://arxiv.org/pdf/2603.25883v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "reframes disinformation as strategic misrepresentation in social networks",
+      "llm_evidence_cn": "将虚假信息重新定义为社交网络中的战略性误导",
+      "llm_evidence": "将虚假信息重新定义为社交网络中的战略性误导",
+      "canonical_evidence": "将虚假信息重新定义为社交网络中的战略性误导",
+      "llm_tldr_en": "Revisits disinformation by introducing strategic misrepresentation as a unifying framework for OSN manipulation.",
+      "llm_tldr_cn": "通过引入战略性误导作为统一框架，重新审视社交网络中的虚假信息问题。",
+      "llm_tldr": "通过引入战略性误导作为统一框架，重新审视社交网络中的虚假信息问题。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.26097v1",
+      "title": "Dynamic Tokenization via Reinforcement Patching: End-to-end Training and Zero-shot Transfer",
+      "abstract": "Efficiently aggregating spatial or temporal horizons to acquire compact representations has become a unifying principle in modern deep learning models, yet learning data-adaptive representations for long-horizon sequence data, especially continuous sequences like time series, remains an open challenge. While fixed-size patching has improved scalability and performance, discovering variable-sized, data-driven patches end-to-end often forces models to rely on soft discretization, specific backbones, or heuristic rules. In this work, we propose Reinforcement Patching (ReinPatch), the first framework to jointly optimize a sequence patching policy and its downstream sequence backbone model using reinforcement learning. By formulating patch boundary placement as a discrete decision process optimized via Group Relative Policy Gradient (GRPG), ReinPatch bypasses the need for continuous relaxations and performs dynamic patching policy optimization in a natural manner. Moreover, our method allows strict enforcement of a desired compression rate, freeing the downstream backbone to scale efficiently, and naturally supports multi-level hierarchical modeling. We evaluate ReinPatch on time-series forecasting datasets, where it demonstrates compelling performance compared to state-of-the-art data-driven patching strategies. Furthermore, our detached design allows the patching module to be extracted as a standalone foundation patcher, providing the community with visual and empirical insights into the segmentation behaviors preferred by a purely performance-driven neural patching strategy.",
+      "authors": [
+        "Yulun Wu",
+        "Sravan Kumar Ankireddy",
+        "Samuel Sharpe",
+        "Nikita Seleznev",
+        "Dehao Yuan",
+        "Hyeji Kim",
+        "Nam H. Nguyen"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "stat.ML"
+      ],
+      "published": "2026-03-27T06:08:30+00:00",
+      "link": "https://arxiv.org/pdf/2603.26097v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "data-adaptive representations for long-horizon time series",
+      "llm_evidence_cn": "长时序数据的自适应表示学习",
+      "llm_evidence": "长时序数据的自适应表示学习",
+      "canonical_evidence": "长时序数据的自适应表示学习",
+      "llm_tldr_en": "Proposes ReinPatch to jointly optimize sequence patching and backbones for time series representation.",
+      "llm_tldr_cn": "提出ReinPatch框架，通过强化学习优化时序数据的分块策略与骨干模型。",
+      "llm_tldr": "提出ReinPatch框架，通过强化学习优化时序数据的分块策略与骨干模型。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2603.26033v1",
+      "title": "Knowledge is Power: Advancing Few-shot Action Recognition with Multimodal Semantics from MLLMs",
+      "abstract": "Multimodal Large Language Models (MLLMs) have propelled the field of few-shot action recognition (FSAR). However, preliminary explorations in this area primarily focus on generating captions to form a suboptimal feature->caption->feature pipeline and adopt metric learning solely within the visual space. In this paper, we propose FSAR-LLaVA, the first end-to-end method to leverage MLLMs (such as Video-LLaVA) as a multimodal knowledge base for directly enhancing FSAR. First, at the feature level, we leverage the MLLM's multimodal decoder to extract spatiotemporally and semantically enriched representations, which are then decoupled and enhanced by our Multimodal Feature-Enhanced Module into distinct visual and textual features that fully exploit their semantic knowledge for FSAR. Next, we leverage the versatility of MLLMs to craft input prompts that flexibly adapt to diverse scenarios, and use their aligned outputs to drive our designed Composite Task-Oriented Prototype Construction, effectively bridging the distribution gap between meta-train and meta-test sets. Finally, to enable multimodal features to guide metric learning jointly, we introduce a training-free Multimodal Prototype Matching Metric that adaptively selects the most decisive cues and efficiently leverages the decoupled feature representations produced by MLLMs. Extensive experiments demonstrate superior performance across various tasks with minimal trainable parameters.",
+      "authors": [
+        "Jiazheng Xing",
+        "Chao Xu",
+        "Hangjie Yuan",
+        "Mengmeng Wang",
+        "Jun Dan",
+        "Hangwei Qian",
+        "Yong Liu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-27T03:05:56+00:00",
+      "link": "https://arxiv.org/pdf/2603.26033v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Multimodal semantics from MLLMs for action recognition",
+      "llm_evidence_cn": "利用多模态大语言模型语义进行动作识别",
+      "llm_evidence": "利用多模态大语言模型语义进行动作识别",
+      "canonical_evidence": "利用多模态大语言模型语义进行动作识别",
+      "llm_tldr_en": "Leverages MLLMs as a knowledge base to enhance few-shot action recognition through multimodal features.",
+      "llm_tldr_cn": "利用多模态大语言模型作为知识库，通过多模态特征增强少样本动作识别。",
+      "llm_tldr": "利用多模态大语言模型作为知识库，通过多模态特征增强少样本动作识别。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.21077v2",
+      "title": "CoVFT: Context-aware Visual Fine-tuning for Multimodal Large Language Models",
+      "abstract": "Multimodal large language models (MLLMs) achieve remarkable progress in cross-modal perception and reasoning, yet a fundamental question remains unresolved: should the vision encoder be fine-tuned or frozen? Despite the success of models such as LLaVA and Qwen-VL, inconsistent design choices and heterogeneous training setups hinder a unified understanding of visual fine-tuning (VFT) in MLLMs. Through a configuration-aligned benchmark, we find that existing VFT methods fail to consistently outperform the frozen baseline across multimodal tasks. Our analysis suggests that this instability arises from visual preference conflicts, where the context-agnostic nature of vision encoders induces divergent parameter updates under diverse multimodal context. To address this issue, we propose the Context-aware Visual Fine-tuning (CoVFT) framework, which explicitly incorporates multimodal context into visual adaptation. By integrating a Context Vector Extraction (CVE) and a Contextual Mixture-of-Experts (CoMoE) module, CoVFT decomposes conflicting optimization signals and enables stable, context-sensitive visual updates. Extensive experiments on 12 multimodal benchmarks demonstrate that CoVFT achieves state-of-the-art performance with superior stability. Notably, fine-tuning a 7B MLLM with CoVFT surpasses the average performance of its 13B counterpart, revealing substantial untapped potential in visual encoder optimization within MLLMs.",
+      "authors": [
+        "Nan Zhou",
+        "Huiqun Wang",
+        "Yaoyan Zheng",
+        "Di Huang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-22T06:04:44+00:00",
+      "link": "https://arxiv.org/pdf/2603.21077v2",
+      "tags": [
+        "keyword:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "visual fine-tuning for multimodal large language models",
+      "llm_evidence_cn": "多模态大语言模型的视觉微调",
+      "llm_evidence": "多模态大语言模型的视觉微调",
+      "canonical_evidence": "多模态大语言模型的视觉微调",
+      "llm_tldr_en": "Analyzes visual fine-tuning strategies in MLLMs to improve cross-modal perception and reasoning.",
+      "llm_tldr_cn": "分析了多模态大模型中的视觉微调策略，以提升跨模态感知和推理能力。",
+      "llm_tldr": "分析了多模态大模型中的视觉微调策略，以提升跨模态感知和推理能力。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.26387v1",
+      "title": "Rethinking Feature Conditioning for Robust Forged Media Detection in Edge AI Sensing Systems",
+      "abstract": "Generalization under manipulation and dataset shift remains a core challenge in forged media detection for AI-driven edge sensing systems. Frozen vision foundation models with linear probes are strong baselines, but most pipelines use default backbone outputs without testing conditioning at the frozen feature interface. We present the first controlled probing study on DINOv3 ConvNeXt and show that, without task-specific fine-tuning, linear probing alone yields competitive forged-media detection performance, indicating that ViT-7B self-supervised distillation transfers to security-critical vision workloads at edge-compatible inference cost. Backbone, head, data, and optimization are fixed while conditioning is varied; LN-Affine, the default ConvNeXt head output, is the natural baseline. On FaceForensics++ c23, five conditioning variants are evaluated under in-distribution testing, leave-one-manipulation-out (LOMO), and cross-dataset transfer to Celeb-DF v2 and DeepFakeDetection. In ConvNeXt-Tiny, conditioning alone changes LOMO mean AUC by 6.1 points and reverses ID-vs-OOD ranking: LN-Affine is strongest on external datasets, while LayerNorm is strongest in-distribution. In ConvNeXt-Base replication, the OOD winner becomes protocol-dependent, and ID-optimal selection still fails as a robust deployment rule. Results show that feature conditioning is a first-order design variable and should be selected with robustness-oriented validation, not ID accuracy alone.",
+      "authors": [
+        "Izaldein Al-Zyoud",
+        "Abdulmotaleb El Saddik"
+      ],
+      "primary_category": "eess.IV",
+      "categories": [
+        "eess.IV"
+      ],
+      "published": "2026-03-27T13:14:54+00:00",
+      "link": "https://arxiv.org/pdf/2603.26387v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "forged media detection using vision foundation models",
+      "llm_evidence_cn": "使用视觉基础模型进行伪造媒体检测",
+      "llm_evidence": "使用视觉基础模型进行伪造媒体检测",
+      "canonical_evidence": "使用视觉基础模型进行伪造媒体检测",
+      "llm_tldr_en": "Evaluates feature conditioning in frozen vision models for robust forged media detection at the edge.",
+      "llm_tldr_cn": "评估了边缘端视觉基础模型在伪造媒体检测中的特征调节性能。",
+      "llm_tldr": "评估了边缘端视觉基础模型在伪造媒体检测中的特征调节性能。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.21519v1",
+      "title": "Triangulating Temporal Dynamics in Multilingual Swiss Online News",
+      "abstract": "Analyzing news coverage in multilingual societies can offer valuable insights into the dynamics of public discourse and the development of collective narratives, yet comprehensive studies that account for linguistic and cultural diversity within national media ecosystems remain limited, particularly in complex contexts such as Switzerland. This paper studies temporal trends in Swiss digital media across the country's three main linguistic regions, French, German, and Italian, using a triangulated methodology that combines quantitative analyses with qualitative insights. We collected and processed over 1.7 million news articles, applying lexical metrics, named entity recognition and Wikidata-based linking, targeted sentiment analysis, and consensus-based change-point detection. To enable principled cross-language comparisons and to connect to theories of domestication and cultural proximity, we derive domestication profiles together with a proximity salience ratio. Our analysis spans thematic, recurrent, and singular events. By integrating quantitative data with qualitative interpretation, we provide new insights into the dynamics of Swiss digital media and demonstrate the usefulness of triangulation in media studies. The findings reveal distinct temporal patterns and highlight how linguistic and cultural contexts influence reporting. Our approach offers a framework applicable to other multilingual or culturally diverse media environments, contributing to a deeper understanding of how news is shaped by linguistic and cultural factors.",
+      "authors": [
+        "Bros Victor",
+        "Dufraisse Evan",
+        "Popescu Adrian",
+        "Gatica-Perez Daniel"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.CY"
+      ],
+      "published": "2026-03-23T03:27:00+00:00",
+      "link": "https://arxiv.org/pdf/2603.21519v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "temporal trends and consensus-based change point detection in news",
+      "llm_evidence_cn": "新闻中的时间趋势和基于共识的变点检测",
+      "llm_evidence": "新闻中的时间趋势和基于共识的变点检测",
+      "canonical_evidence": "新闻中的时间趋势和基于共识的变点检测",
+      "llm_tldr_en": "Analyzes temporal dynamics in multilingual news using quantitative metrics and change point detection.",
+      "llm_tldr_cn": "利用定量指标和变点检测分析多语言新闻中的时间动态。",
+      "llm_tldr": "利用定量指标和变点检测分析多语言新闻中的时间动态。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.23030v1",
+      "title": "Looking Beyond the Window: Global-Local Aligned CLIP for Training-free Open-Vocabulary Semantic Segmentation",
+      "abstract": "A sliding-window inference strategy is commonly adopted in recent training-free open-vocabulary semantic segmentation methods to overcome limitation of the CLIP in processing high-resolution images. However, this approach introduces a new challenge: each window is processed independently, leading to semantic discrepancy across windows. To address this issue, we propose Global-Local Aligned CLIP~(GLA-CLIP), a framework that facilitates comprehensive information exchange across windows. Rather than limiting attention to tokens within individual windows, GLA-CLIP extends key-value tokens to incorporate contextual cues from all windows. Nevertheless, we observe a window bias: outer-window tokens are less likely to be attended, since query features are produced through interactions within the inner window patches, thereby lacking semantic grounding beyond their local context. To mitigate this, we introduce a proxy anchor, constructed by aggregating tokens highly similar to the given query from all windows, which provides a unified semantic reference for measuring similarity across both inner- and outer-window patches. Furthermore, we propose a dynamic normalization scheme that adjusts attention strength according to object scale by dynamically scaling and thresholding the attention map to cope with small-object scenarios. Moreover, GLA-CLIP can be equipped on existing methods and broad their receptive field. Extensive experiments validate the effectiveness of GLA-CLIP in enhancing training-free open-vocabulary semantic segmentation performance. Code is available at https://github.com/2btlFe/GLA-CLIP.",
+      "authors": [
+        "ByeongCheol Lee",
+        "Hyun Seok Seong",
+        "Sangeek Hyun",
+        "Gilhan Park",
+        "WonJun Moon",
+        "Jae-Pil Heo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-24T10:10:12+00:00",
+      "link": "https://arxiv.org/pdf/2603.23030v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "open-vocabulary semantic segmentation with window alignment",
+      "llm_evidence_cn": "带窗口对齐的开放词汇语义分割",
+      "llm_evidence": "带窗口对齐的开放词汇语义分割",
+      "canonical_evidence": "带窗口对齐的开放词汇语义分割",
+      "llm_tldr_en": "A training-free framework for semantic segmentation that aligns global and local window information.",
+      "llm_tldr_cn": "一种对齐全局和局部窗口信息的免训练语义分割框架。",
+      "llm_tldr": "一种对齐全局和局部窗口信息的免训练语义分割框架。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.25333v1",
+      "title": "Adaptive Chunking: Optimizing Chunking-Method Selection for RAG",
+      "abstract": "The effectiveness of Retrieval-Augmented Generation (RAG) is highly dependent on how documents are chunked, that is, segmented into smaller units for indexing and retrieval. Yet, commonly used \"one-size-fits-all\" approaches often fail to capture the nuanced structure and semantics of diverse texts. Despite its central role, chunking lacks a dedicated evaluation framework, making it difficult to assess and compare strategies independently of downstream performance. We challenge this paradigm by introducing Adaptive Chunking, a framework that selects the most suitable chunking strategy for each document based on a set of five novel intrinsic, document-based metrics: References Completeness (RC), Intrachunk Cohesion (ICC), Document Contextual Coherence (DCC), Block Integrity (BI), and Size Compliance (SC), which directly assess chunking quality across key dimensions. To support this framework, we also introduce two new chunkers, an LLM-regex splitter and a split-then-merge recursive splitter, alongside targeted post-processing techniques. On a diverse corpus spanning legal, technical, and social science domains, our metric-guided adaptive method significantly improves downstream RAG performance. Without changing models or prompts, our framework increases RAG outcomes, raising answers correctness to 72% (from 62-64%) and increasing the number of successfully answered questions by over 30% (65 vs. 49). These results demonstrate that adaptive, document-aware chunking, guided by a complementary suite of intrinsic metrics, offers a practical and effective path to more robust RAG systems. Code available at https://github.com/ekimetrics/adaptive-chunking.",
+      "authors": [
+        "Paulo Roberto de Moura Júnior",
+        "Jean Lelong",
+        "Annabelle Blangero"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.IR"
+      ],
+      "published": "2026-03-26T11:20:52+00:00",
+      "link": "https://arxiv.org/pdf/2603.25333v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "document segmentation and adaptive chunking strategies",
+      "llm_evidence_cn": "文档分割与自适应分块策略",
+      "llm_evidence": "文档分割与自适应分块策略",
+      "canonical_evidence": "文档分割与自适应分块策略",
+      "llm_tldr_en": "A framework for optimizing document chunking strategies based on intrinsic semantic metrics.",
+      "llm_tldr_cn": "一种基于内在语义指标优化文档分块策略的框架。",
+      "llm_tldr": "一种基于内在语义指标优化文档分块策略的框架。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.25752v1",
+      "title": "Relational graph-driven differential denoising and diffusion attention fusion for multimodal conversation emotion recognition",
+      "abstract": "In real-world scenarios, audio and video signals are often subject to environmental noise and limited acquisition conditions, resulting in extracted features containing excessive noise. Furthermore, there is an imbalance in data quality and information carrying capacity between different modalities. These two issues together lead to information distortion and weight bias during the fusion phase, impairing overall recognition performance. Most existing methods neglect the impact of noisy modalities and rely on implicit weighting to model modality importance, thereby failing to explicitly account for the predominant contribution of the textual modality in emotion understanding. To address these issues, we propose a relation-aware denoising and diffusion attention fusion model for MCER. Specifically, we first design a differential Transformer that explicitly computes the differences between two attention maps, thereby enhancing temporally consistent information while suppressing time-irrelevant noise, which leads to effective denoising in both audio and video modalities. Second, we construct modality-specific and cross-modality relation subgraphs to capture speaker-dependent emotional dependencies, enabling fine-grained modeling of intra- and inter-modal relationships. Finally, we introduce a text-guided cross-modal diffusion mechanism that leverages self-attention to model intra-modal dependencies and adaptively diffuses audiovisual information into the textual stream, ensuring more robust and semantically aligned multimodal fusion.",
+      "authors": [
+        "Ying Liu",
+        "Yuntao Shou",
+        "Wei Ai",
+        "Tao Meng",
+        "Keqin Li"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.SD",
+        "eess.AS"
+      ],
+      "published": "2026-03-22T01:27:22+00:00",
+      "link": "https://arxiv.org/pdf/2603.25752v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal fusion and denoising for recognition",
+      "llm_evidence_cn": "多模态融合与去噪识别",
+      "llm_evidence": "多模态融合与去噪识别",
+      "canonical_evidence": "多模态融合与去噪识别",
+      "llm_tldr_en": "Proposes a graph-driven fusion method for multimodal emotion recognition in noisy environments.",
+      "llm_tldr_cn": "提出一种用于噪声环境下多模态情感识别的图驱动融合方法。",
+      "llm_tldr": "提出一种用于噪声环境下多模态情感识别的图驱动融合方法。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.26186v1",
+      "title": "Progressive Learning with Anatomical Priors for Reliable Left Atrial Scar Segmentation from Late Gadolinium Enhancement MRI",
+      "abstract": "Cardiac MRI late gadolinium enhancement (LGE) enables non-invasive identification of left atrial (LA) scar, whose spatial distribution is strongly associated with atrial fibrillation (AF) severity and recurrence. However, automatic LA scar segmentation remains challenging due to low contrast, annotation variability, and the lack of anatomical constraints, often leading to non-reliable predictions. Accordingly, our aim was to propose a progressive learning strategy to segment LA scar from LGE images inspired from a clinical workflow. A 3-stage framework based on SwinUNETR was implemented, comprising: 1) a first LA cavity pre-learning model, 2) dual-task model which further learns spatial relationship between LA geometry and scar patterns, and 3) fine-tuning on precise segmentation of the scar. Furthermore, we introduced an anatomy-aware spatially weighted loss that incorporates prior clinical knowledge by constraining scar predictions to anatomically plausible LA wall regions while mitigating annotation bias. Our preliminary results obtained on validation LGE volumes from LASCARQS public dataset after 5-fold cross validation, LA segmentation had Dice score of 0.94, LA scar segmentation achieved Dice score of 0.50, Hausdorff Distance of 11.84 mm, Average Surface Distance of 1.80 mm, outperforming only a one-stage scar segmentation with 0.49, 13.02 mm, 1.96 mm, repectively. By explicitly embedding clinical anatomical priors and diagnostic reasoning into deep learning, the proposed approach improved the accuracy and reliability of LA scar segmentation from LGE, revealing the importance of clinically informed model design.",
+      "authors": [
+        "Jing Zhang",
+        "Bastien Bergere",
+        "Emilie Bollache",
+        "Jonas Leite",
+        "Mikaël Laredo",
+        "Alban Redheuil",
+        "Nadjia Kachenoura"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-03-27T08:58:36+00:00",
+      "link": "https://arxiv.org/pdf/2603.26186v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Progressive learning strategy for medical image segmentation",
+      "llm_evidence_cn": "医学图像分割的渐进式学习策略",
+      "llm_evidence": "医学图像分割的渐进式学习策略",
+      "canonical_evidence": "医学图像分割的渐进式学习策略",
+      "llm_tldr_en": "Implements a 3-stage framework for reliable left atrial scar segmentation from MRI images.",
+      "llm_tldr_cn": "实现了一个三阶段框架，用于从MRI图像中可靠地分割左心房疤痕。",
+      "llm_tldr": "实现了一个三阶段框架，用于从MRI图像中可靠地分割左心房疤痕。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    }
+  ]
+}

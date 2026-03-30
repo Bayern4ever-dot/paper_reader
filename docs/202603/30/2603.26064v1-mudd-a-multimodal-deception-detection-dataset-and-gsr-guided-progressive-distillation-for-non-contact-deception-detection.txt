@@ -1,0 +1,416 @@
+Title: MuDD: A Multimodal Deception Detection Dataset and GSR-Guided Progressive Distillation for Non-Contact Deception Detection
+
+URL Source: https://arxiv.org/pdf/2603.26064v1
+
+Published Time: Mon, 30 Mar 2026 00:33:31 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# MuDD: A Multimodal Deception Detection Dataset and GSR-Guided Progressive Distillation for Non-Contact Deception Detection 
+
+# Peiyuan Jiang 
+
+School of Computer Science and Engineering, University of Electronic Science and Technology of China Chengdu, Sichuan, China darcy981020@gmail.com 
+
+# Yao Liu ∗
+
+School of Information and Software Engineering, University of Electronic Science and Technology of China Chengdu, Sichuan, China liuyao@uestc.edu.cn 
+
+# Yanglei Gan 
+
+School of Computer Science and Engineering, University of Electronic Science and Technology of China Chengdu, Sichuan, China yangleigan@std.uestc.edu.cn 
+
+# Jiaye Yang 
+
+School of Computer Science and Engineering, University of Electronic Science and Technology of China Chengdu, Sichuan, China 202411081710@std.uestc.edu.cn 
+
+# Lu Liu 
+
+School of Computer Science and Engineering, University of Electronic Science and Technology of China Chengdu, Sichuan, China 202522080827@std.uestc.edu.cn 
+
+# Daibing Yao 
+
+Yizhou Prison, Sichuan Province Chengdu, Sichuan, China 357497551@qq.com 
+
+# Qiao Liu 
+
+School of Computer Science and Engineering, University of Electronic Science and Technology of China Chengdu, Sichuan, China qliu@uestc.edu.cn 
+
+## Abstract 
+
+Non-contact automatic deception detection remains challenging because visual and auditory deception cues often lack stable cross-subject patterns. In contrast, galvanic skin response (GSR) pro-vides more reliable physiological cues and has been widely used in contact-based deception detection. In this work, we leverage stable deception-related knowledge in GSR to guide representation learning in non-contact modalities through cross-modal knowledge distillation. A key obstacle, however, is the lack of a suitable dataset for this setting. To address this, we introduce MuDD, a large-scale Multimodal Deception Detection dataset containing recordings from 130 participants over 690 minutes. In addition to video, audio, and GSR, MuDD also provides Photoplethysmography, heart rate, and personality traits, supporting broader scientific studies of de-ception. Based on this dataset, we propose GSR-guided Progressive Distillation (GPD), a cross-modal distillation framework for miti-gating the negative transfer caused by the large modality mismatch between GSR and non-contact signals. The core innovation of GPD is the integration of progressive feature-level and digit-level distil-lation with dynamic routing, which allows the model to adaptively determine how teacher knowledge should be transferred during training, leading to more stable cross-modal knowledge transfer. Extensive experiments and visualizations show that GPD outper-forms existing methods and achieves state-of-the-art performance on both deception detection and concealed-digit identification. 
+
+> *Corresponding author: Yao Liu.
+
+## CCS Concepts 
+
+• Computing methodologies → Neural networks ; Learning latent representations .
+
+## Keywords 
+
+Non-contact Deception Detection, Multimodal Dataset, Cross-Modal Distillation, Galvanic Skin Response, Representation Learning 
+
+## 1 INTRODUCTION 
+
+Deception is pervasive in human social interactions, yet human ac-curacy in detecting deception is only slightly above chance level [ 2,6 ]. To improve the objectivity and accuracy of lie detection, early studies mainly focused on traditional contact-based polygraph methods, which identify deception by collecting physiological sig-nals related to autonomic nervous activity, such as respiration, heart rate (HR), and galvanic skin response (GSR), and combin-ing them with standardized testing paradigms and analytical pro-cedures [ 1, 41 ]. According to a report from the American Poly-graph Association (APA), under single-issue conditions, traditional contact-based polygraph examinations using multiple physiological signals, such as GSR, respiration, and HR, achieve an accuracy of about 89%, thus indicating relatively high reliability [ 10 ]. Among these signals, GSR has long been regarded as one of the most sensi-tive and reliable channels in polygraph examinations [39]. While contact-based polygraph methods have demonstrated rel-atively high reliability, their practical use remains limited because they require specialized equipment and standardized procedures. Non-contact deception detection aims to infer deceptive behavior  
+
+> arXiv:2603.26064v1 [cs.CV] 27 Mar 2026 Conference’17, July 2017, Washington, DC, USA Jiang et al.
+
+Figure 1: Motivation of this work. (a) Visual deception cues are often weak, subtle, and subject-specific, making it diffi-cult to identify stable cross-subject patterns, whereas GSR exhibits more consistent deception-related responses across individuals. (b) We illustrate two possible directions for im-proving non-contact deception detection: scaling up data collection and annotation, or transferring more stable dis-criminative knowledge from GSR to non-contact modalities via knowledge distillation. This work investigates the latter direction, especially under limited-data conditions. 
+
+from overt, non-invasive signals such as facial and linguistic cues, thereby alleviating the deployment constraints of contact-based methods [ 7, 8 , 21 ]. However, despite recent progress, the perfor-mance of existing non-contact methods on public datasets remains limited and inconsistent across benchmarks. For example, prior studies reported 63.9% F1 score on the Columbia X-Cultural Decep-tion (CXD) corpus [ 33 ], 69% accuracy on Box of Lies [ 35 ], 64.87% accuracy on MDPE [ 4], and 73.79% unweighted average recall (UAR) on the Southeast University Multimodal Lie Detection (SEUMLD) dataset [ 45 ]. These results, although not directly comparable be-cause of differences in datasets and evaluation metrics, suggest that non-contact automatic deception detection remains less reliable and less mature than contact-based physiological approaches. A key reason is that deception cues in audio-visual modalities are often subtle, controllable, and highly subject-dependent, making it difficult to capture stable and generalizable patterns across subjects. As illustrated in Fig. 1(a), deception cues in visual modality are often weak and highly subject-dependent, making it difficult to identify a stable pattern that generalizes across individuals. For example, one subject may exhibit noticeable changes around the mouth corners and eye muscles when lying, whereas another may show no such fa-cial changes and only subtle variations in gaze direction. In contrast, GSR signals exhibit relatively more consistent deception-related responses across subjects, such as stronger fluctuations under de-ceptive conditions than under truthful ones. Fig. 1(b) presents two potential directions for improving non-contact deception detec-tion. One is to enlarge the training set through additional data collection and annotation, but this is costly and difficult to scale. The other is cross-modal knowledge distillation (CMKD), whose core mechanism follows a teacher–student learning framework: the student network is trained with distillation losses to mimic the teacher’s outputs, thereby transferring discriminative knowledge from an auxiliary modality to the target modality and improving test performance when only the target modality is available [43]. Although CMKD has demonstrated effectiveness in other do-mains [ 26 , 42 , 47 ], its application to non-contact deception detec-tion still faces two core challenges. First, there is a lack of a large-scale dataset for studying how GSR can be leveraged to improve non-contact deception detection. Second, existing CMKD meth-ods [ 22 , 42 , 43 , 47 ] may still face a risk of negative transfer under large modality discrepancy, as they are generally based on rela-tively static distillation strategies and do not explicitly adapt either the transferred knowledge or the transfer process to the evolving teacher–student compatibility during training. To address these issues, we first construct a large-scale Multimodal Deception De-tection Dataset (MuDD), containing 130 subjects and 690 minutes of recordings. In addition to the task-required video, audio, and GSR modalities, the dataset also provides Photoplethysmography (PPG), heart rate, and personality trait information, supporting a wide range of deception-related research. Based on this dataset, we further propose GSR-guided Progressive Distillation (GPD), a cross-modal distillation framework for non-contact deception de-tection. GPD combines feature-level and logit-level distillation to exploit complementary teacher supervision. To account for the fact that the most suitable transfer strategy may vary across training stages, GPD introduces dynamic routing to adaptively select the appropriate distillation configuration, and further applies progres-sive weighting to dynamically balance the contributions of the two distillation signals within the selected configuration, thereby allevi-ating negative transfer under large modality discrepancy. The main contributions of this work are summarized as follows: 
+
+• We construct MuDD, a large-scale multimodal deception de-tection dataset that synchronizes GSR with audio and video under the classical Guilty Knowledge Test (GKT) paradigm, providing a new testbed for studying GSR-enhanced non-contact deception detection. 
+
+• We propose GPD, a GSR-guided progressive CMKD frame-work that adaptively selects distillation configurations and reweights feature-level and logit-level distillation signals across training stages to mitigate negative transfer. 
+
+• Extensive experiments and visualizations demonstrate the effectiveness of GPD and the value of leveraging GSR for enhancing non-contact deception detection. 
+
+## 2 RELATED WORK 2.1 Multimodal Deception Detection Datasets 
+
+Most existing deception detection datasets are designed for specific research questions, which limits their applicability to other research problems. For example, [ 15 ] introduced the Columbia–SRI–Colorado Deceptive Speech dataset to investigate the role of acoustic, prosodic, and lexical cues in deception recognition. Building on this, [ 20 ]further incorporated textual information and cross-cultural fac-tors to explore the potential of joint modeling of language and MuDD: A Multimodal Deception Detection Dataset and GSR-Guided Progressive Distillation for Non-Contact Deception Detection Conference’17, July 2017, Washington, DC, USA 
+
+speech under cross-cultural conditions. [ 32 ] introduced the Real-life Trial (RTL) dataset based on real courtroom videos to investi-gate visual and linguistic cues to deception in real-world settings. [ 3 , 11 , 27 , 28 , 36 ] introduced datasets such as Truth-Tellers, MU3D, Box of Lies, DOLOS, and MDPE under diverse settings, including simulated interviews, social narratives, game-based interactions, and reward–penalty paradigms, providing important support for multimodal deception detection research. However, the absence of physiological signals limits their utility for studying the rela-tionship between physiological arousal and overt behavioral cues during deception. Some datasets have introduced physiological signals such as EEG and ECG for cross-modal deception detec-tion [ 13 , 45 ], but they still lack GSR, a widely used and relatively reliable indicator in deception research [ 39 ]. The GSR Deception Dataset [ 29 ] was designed to examine whether GSR can capture deception- and suspicion-related states, while CogniModal-D [ 18 ]further extended this line of research by incorporating both GSR and overt behavioral signals. However, the former is limited to single-modality physiological data. The latter is not collected under classical polygraph-style paradigms such as the Control Question Test (CQT) or Guilty Knowledge Test (GKT), which are designed to induce deception-related autonomic arousal. As a result, these datasets remain limited for studying the relationship between GSR and non-contact modalities. In contrast, MuDD synchronously ac-quires GSR and non-contact modalities, including audio and video, under the classical GKT paradigm, thereby better supporting the study of GSR–overt modality relationships while also accommo-dating multimodal deception detection research. A comparison between MuDD and existing deception-related datasets is provided in Table 1. 
+
+## 2.2 Cross-Modal Knowledge Distillation 
+
+Knowledge distillation (KD) is an effective technique for transfer-ring knowledge from one neural network to another [ 9 ]. Its core mechanism is a teacher–student framework, in which the student is trained to mimic the teacher by aligning teacher knowledge at dif-ferent distillation locations, such as logits and intermediate features, under various objectives including divergence-based, regression-based, and relation-preserving losses [ 14 , 30 , 31 , 40 ]. Cross-modal knowledge distillation (CMKD) extends KD to the setting where the teacher and student receive inputs from different modalities [ 12 ]. A long-standing challenge in CMKD is that the large discrepancy between modalities often makes conventional KD methods less effective when directly applied to heterogeneous teacher–student pairs [ 16 ]. Existing CMKD methods can be broadly understood from two complementary perspectives: the design of transferred knowledge and the design of the transfer process. The former fo-cuses on what teacher knowledge should be transferred, aiming to reshape it into forms that are more transferable across hetero-geneous modalities. Representative strategies include decoupling target and non-target information in logits [ 49 ], standardizing logit distributions to alleviate scale mismatch [ 37 ], and distilling rela-tional or prototype-level structures [ 23 ]. The underlying idea is that, in cross-modal settings, not all teacher knowledge is equally learnable by the student; instead, effective transfer should focus on knowledge that is shared across modalities, relevant to the task, and easier for the student to absorb [ 26 , 46 ]. The design of the transfer process, in contrast, focuses on how teacher knowledge is transferred to the student, aiming to ease direct cross-modal trans-fer by introducing better matched transfer paths or intermediate mechanisms. Representative strategies include intermediate feature alignment [ 47 ], proxy or assistant models [ 17 , 44 ], adaptive teacher selection [ 22 , 43 ], and dynamic teacher–student matching [ 42 ]. The underlying idea is to turn difficult cross-modal transfer into a smoother and better matched process, so that the student can absorb teacher knowledge more effectively. Different from the above two lines of work, we argue that ef-fective cross-modal transfer under large modality discrepancy is inherently dynamic. As training progresses, the teacher–student gap evolves, which changes both the learnability of different forms of teacher knowledge and the suitability of different transfer paths. Therefore, effective transfer should not be determined in a static manner, but should adapt to the student’s evolving state during training. Motivated by this observation, we propose a progressive CMKD framework that adaptively regulates both what knowledge to transfer and how it is transferred according to the evolving teacher–student gap. Specifically, our method combines feature-level and logit-level distillation to exploit complementary teacher supervision, while using dynamic routing and progressive weight-ing to adaptively choose the more suitable route configuration and regulate the contribution of different distillation signals over training. 
+
+## 3 MuDD Dataset 
+
+Multimodal Deception Detection (MuDD) dataset is collected un-der the Guilty Knowledge Test (GKT) paradigm, a well-established polygraph protocol widely used in deception-related psychophysio-logical research and real-world investigations. GKT is based on the premise that concealed information elicits stronger physiological responses to probe stimuli than to irrelevant stimuli. Following this principle, we formulate the task as a concealed-number identifi-cation paradigm. In each trial, a participant privately selects one target number from 1 to 10 as the concealed item. During the test phase, the ten candidate numbers are presented across two rounds in randomized order, with each round containing one probe corre-sponding to the concealed number and nine irrelevant numbers. To standardize stimulus delivery, all questions are presented through pre-recorded professional interrogation audio, which helps simplify the procedure, reduce unintended interference, and improve recog-nition accuracy [ 19 ]. After each question, a 10-second interval is introduced to capture the complete rise-and-recovery dynamics of the electrodermal response. Participants respond deceptively only to the selected number and truthfully to all others. This procedure yields 20 dialogue clips per participant, including 2 deceptive clips and 18 truthful clips, while providing both clip-level binary decep-tion labels and trial-level 10-class concealed-number labels. Facial and upper-body behaviors are recorded using a DJI Action 5 Pro camera at 30 fps, and speech is recorded using a BOYA Mini wireless microphone at 48 kHz. Physiological signals, including galvanic skin response (GSR), photoplethysmography (PPG), and heart rate (HR), are synchronously collected using a Shimmer3 GSR+ device at 256 Hz. In addition, Big-Five personality scores are collected Conference’17, July 2017, Washington, DC, USA Jiang et al. 
+
+Table 1: Comparison of MuDD with existing deception-related datasets. Abbreviations: V = video, A = audio, T = text, Bin. = binary label, and T-10cls = trial-level 10-class label. 
+
+Dataset Subs. Dur. Setting Modalities Labels 
+
+Without physiological signals 
+
+CSC Deceptive Speech [15] 32 7920 min Interview A Bin. CXD Corpus [20] 340 7200 min False interview A+T Bin. Real-life Trial [32] 56 <60 min Courtroom V+T Bin. MU3D [27] 80 <200 min Social interview V+T Bin. Truth-Tellers [28] 60 <480 min Simulated interview V Bin. Box of Lies [36] 26 144 min Bluffing game V+T Bin. DOLOS [11] 213 ≈530 min Daily deception game V+A Bin. MDPE [3] 193 6209 min Simulated interview V+A+T+Pers. Bin. 
+
+With physiological signals 
+
+GSR Deception Dataset [29] 20 <320 min Bluffing game GSR Bin. Bag of Lies [13] 35 ≈110 min Daily lying V+A+EEG+Gaze Bin. SEUMLD [45] 76 ≈366 min Simulated interview V+A+ECG Bin. CogniModal-D [18] ≈110 – Scenario task EEG+ECG+Gaze+GSR+A+T Bin. 
+
+MuDD (ours) 130 690 min GKT V+A+GSR+PPG+HR+Pers. Bin.+T-10cls 
+
+as subject-level trait annotations. In total, MuDD comprises valid data from 130 participants and 690 minutes of synchronized multi-modal recordings. All participants were recruited from a university student population. The study protocol was approved by the in-stitutional ethics review board, and written informed consent was obtained from all participants prior to data collection. 
+
+## 4 Methodology 4.1 Problem formulation 
+
+For each subject, MuDD contains 𝑄 = 20 aligned question segments. We denote the student input sequence as X = {𝑥 𝑞 }𝑄 𝑞 =1, where each 
+
+𝑥 𝑞 comprises the visual and audio features of segment 𝑞 , and the teacher GSR sequence as G = {𝑔 𝑞 }𝑄 𝑞 =1. Each segment is labeled with 𝑦 𝑞 ∈ { 0, 1}, where 1 indicates denial of the concealed item and 0 indicates denial of an irrelevant item. At the trial level, each subject has a concealed digit label 𝑑 ★ ∈ { 1, . . . , 10 }. Accordingly, our goal is to jointly learn two tasks: (1) question-level deception detection from non-contact signals, and (2) trial-level concealed-digit identification by aggregating evidence across the 20 questions. 
+
+## 4.2 Overview of GPD 
+
+An overview of the proposed GPD framework is shown in Fig. 2. GPD consists of four key components: a teacher network, a student network, a progressive knowledge distillation module, and a digit-level evidence aggregation module. The teacher network takes GSR as input, while the student network takes visual and audio features as input. For each question segment, both networks produce feature representations and deception logits, which serve as the basis for cross-modal knowledge transfer. The progressive knowledge dis-tillation module organizes cross-modal teacher guidance through four route configurations, each of which coordinates the transfer of feature-level and digit-level knowledge. During training, dynamic routing first selects the more suitable configuration for the current stage, and progressive weighting then adjusts the relative impor-tance of the two forms of teacher knowledge within the selected configuration, allowing teacher guidance to adapt dynamically as training proceeds. The digit-level evidence aggregation module aggregates question-level predictions into digit-level evidence for concealed-digit identification, providing label-aligned supervision beyond direct teacher imitation. 
+
+## 4.3 Teacher and student networks 
+
+The teacher and student networks share a similar prediction pipeline but operate on different modalities. For each segment 𝑞 , the teacher network T takes the GSR input 𝑔 𝑞 , while the student network S
+
+takes the non-contact multimodal input 𝑥 𝑞 (including visual and audio features). They produce two-dimensional logit vectors and intermediate representations as 
+
+(𝑧 𝑇 𝑞 , 𝑓 𝑇 𝑞 ) = T ( 𝑔 𝑞 ), (𝑧 𝑆 𝑞 , ℎ 𝑆 𝑞 ) = S( 𝑥 𝑞 ), (1) where 𝑧 𝑇 𝑞 , 𝑧 𝑆 𝑞 ∈ R2, 𝑓 𝑇 𝑞 ∈ R𝐷 𝑇 , and ℎ𝑆 𝑞 ∈ R𝐷 𝑆 . The teacher and student deceptive-class probabilities are defined as 
+
+𝑡 𝑞 = softmax (𝑧 𝑇 𝑞 )1, 𝑝 𝑞 = softmax (𝑧 𝑆 𝑞 )1, (2) where 𝑡 𝑞 and 𝑝 𝑞 denote the teacher and student probabilities of the deceptive class, respectively, and class label 1 denotes deception. Further implementation details are given in the Appendix. 
+
+## 4.4 Progressive knowledge distillation 
+
+GPD distills two types of teacher knowledge: feature-level physi-ological representations and digit-level concealed-item evidence. Their transfer order defines four route configurations, R = {0, 1, 2, 3},corresponding to no-feature, digit-first, joint, and feature-first dis-tillation, respectively. Specifically, Route 0 disables feature-level distillation, Route 1 applies digit-level distillation before feature-level distillation, Route 2 applies both jointly, and Route 3 applies feature-level distillation before digit-level distillation. Dynamic MuDD: A Multimodal Deception Detection Dataset and GSR-Guided Progressive Distillation for Non-Contact Deception Detection Conference’17, July 2017, Washington, DC, USA 
+
+Figure 2: Overview of the proposed GSR-guided Progressive Distillation (GPD) framework. 
+
+routing selects the route configuration, and progressive weighting determines the relative contributions of the two knowledge types. 
+
+Gap-aware dynamic routing. The routing gate at epoch 𝑒 is the teacher–student gap 𝑔 𝑒 , computed from the Centered Kernel Align-ment (CKA) similarity between 𝐻 𝑆 𝑒 and 𝐹 𝑇 𝑒 as 
+
+˜𝑔 𝑒 = 1 − CKA (𝐻 𝑆 𝑒 , 𝐹 𝑇 𝑒 ), (3) 
+
+ˆ𝑔 𝑒 = clip (𝑎 ˜𝑔 𝑒 + 𝑏, 0, 1), (4) 
+
+𝑔 𝑒 = 𝜇𝑔 𝑒 −1 + ( 1 − 𝜇 ) ˆ𝑔 𝑒 , (5) where ˜𝑔 𝑒 and ˆ𝑔 𝑒 denote the raw and calibrated gaps, respectively, 
+
+clip (𝑥, 0, 1) = min (max (𝑥, 0), 1), 𝑎, 𝑏 are calibration constants, and 
+
+𝜇 ∈ [ 0, 1) is the EMA momentum. Given the gate signal 𝑔 𝑒 , the route state is updated by a hysteretic threshold rule. Intuitively, a larger gap favors more conservative distillation, while a smaller gap allows stronger feature-level transfer. Let 𝑟 𝑒 −1 ∈ R denote the previous route state. We define the threshold set 
+
+𝜂 =  𝜂 𝑖𝑛 𝑛𝑓 , 𝜂 𝑜𝑢𝑡 𝑛𝑓 , 𝜂 𝑖𝑛 𝑑 , 𝜂 𝑜𝑢𝑡 𝑑 , 𝜂 𝑜𝑢𝑡 𝑓 , 𝜂 𝑖𝑛 𝑓 
+
+, (6) with 
+
+𝜂 𝑖𝑛 𝑛𝑓 ≤ 𝜂 𝑜𝑢𝑡 𝑛𝑓 ≤ 𝜂 𝑖𝑛 𝑑 ≤ 𝜂 𝑜𝑢𝑡 𝑑 ≤ 𝜂 𝑜𝑢𝑡 𝑓 ≤ 𝜂 𝑖𝑛 𝑓 . (7) Let ℎ𝑒 −1 be the current hold length and 𝐻 the minimum hold length. The route state is updated as 
+
+𝑟 𝑒 =
+
+(
+
+𝑟 𝑒 −1, ℎ𝑒 −1 < 𝐻, 
+
+Φ(𝑟 𝑒 −1, 𝑔 𝑒 ; 𝜂 ), otherwise , (8) where 
+
+Φ(𝑟 𝑒 −1, 𝑔 𝑒 ; 𝜂 ) =
+
+
+
+0, 𝑔 𝑒 ≤ 𝜂 𝑖𝑛 𝑛𝑓 ,
+
+1, 𝜂 𝑜𝑢𝑡 𝑛𝑓 ≤ 𝑔 𝑒 < 𝜂 𝑖𝑛 𝑑 ,
+
+2, 𝜂 𝑜𝑢𝑡 𝑑 ≤ 𝑔 𝑒 < 𝜂 𝑜𝑢𝑡 𝑓 ,
+
+3, 𝑔 𝑒 ≥ 𝜂 𝑖𝑛 𝑓 .
+
+(9) 
+
+Progressive weighting. Given the selected route 𝑟 𝑒 , the digit- and feature-level distillation weights are defined as 
+
+𝑤 𝑑 (𝑒 ) = 𝜎 
+
+ 𝑒 − 𝛽 𝑑 (𝑟 𝑒 )
+
+𝜏 𝑑 
+
+
+
+,𝑤 𝑓 (𝑒 ) = 𝜎 
+
+ 𝑒 − 𝛽 𝑓 (𝑟 𝑒 )
+
+𝜏 𝑓 
+
+
+
+𝛼 gap (𝑔 𝑒 ) I[𝑟 𝑒 ≠ 0].
+
+(10) where 𝛽 𝑑 (𝑟 𝑒 ) and 𝛽 𝑓 (𝑟 𝑒 ) are route-dependent onset epochs, and 
+
+𝜏 𝑑 , 𝜏 𝑓 control the transition smoothness. The gap-aware factor is 
+
+𝛼 gap (𝑔 𝑒 ) =
+
+
+
+0, 𝑔 𝑒 ≤ 𝑔 low ,𝑔 𝑒 − 𝑔 low 
+
+𝑔 high − 𝑔 low 
+
+, 𝑔 low < 𝑔 𝑒 < 𝑔 high ,
+
+1, 𝑔 𝑒 ≥ 𝑔 high .
+
+(11) 
+
+Distillation objective. Under the selected route, feature-level dis-tillation is defined by 
+
+ˆ𝑓 𝑇 𝑞 = 𝑔 𝜙 (ℎ𝑆 𝑞 ), Lfeat -kd = 1
+
+𝑄 
+
+> 𝑄
+
+∑︁ 
+
+> 𝑞 =1
+
+ˆ𝑓 𝑇 𝑞 − 𝑓 𝑇 𝑞  
+
+> 22
+
+, (12) Conference’17, July 2017, Washington, DC, USA Jiang et al. 
+
+where 𝑔 𝜙 is a learnable projection head, ℎ𝑆 𝑞 is the student embedding, 
+
+𝑓 𝑇 𝑞 is the teacher feature, and ˆ𝑓 𝑇 𝑞 is the projected student feature in the teacher space. Digit-evidence distillation is defined by 
+
+Ldigit -kd = 𝜏 2kd KL 
+
+
+
+softmax 
+
+ U
+
+𝜏 kd 
+
+
+
+softmax 
+
+ S
+
+𝜏 kd 
+
+ 
+
+, (13) where U and S are the teacher and student digit-level evidence vectors, respectively. The route-dependent distillation objective is 
+
+Lkd (𝑒 ) = 𝜆 𝑓 𝑤 𝑓 (𝑒 ) L feat -kd + 𝜆 𝑘 𝑤 𝑑 (𝑒 ) L digit -kd , (14) where 𝜆 𝑓 and 𝜆 𝑘 are static trade-off coefficients. 
+
+Supervision objective. The student is further supervised by ground-truth labels at both the question and digit levels: 
+
+Llie -ce = − 1
+
+𝑄 
+
+> 𝑄
+
+∑︁ 
+
+> 𝑞 =1
+
+h
+
+𝑦 𝑞 log 𝑝 𝑞 + ( 1 − 𝑦 𝑞 ) log (1 − 𝑝 𝑞 )
+
+i
+
+,
+
+Ldigit -ce = −
+
+> 10
+
+∑︁ 
+
+> 𝑑 =1
+
+I[𝑑 = 𝑑 ★] log exp (𝑆 𝑑 )
+
+Í10  
+
+> 𝑗 =1
+
+exp (𝑆 𝑗 ) ,
+
+(15) where 𝑦 𝑞 ∈ { 0, 1} is the question-level deception label, 𝑑 ★ is the ground-truth concealed digit, and I[·] is the indicator function. 
+
+## 4.5 Overall objective and optimization 
+
+The overall objective is 
+
+L = Llie -ce + 𝜆 𝑑 Ldigit -ce + 𝜆 𝑐 Lkd (𝑒 ), (16) where 𝜆 𝑑 , and 𝜆 𝑐 are trade-off coefficients. During training, the teacher is frozen, while the student network and the projection head 𝑔 𝜙 are optimized by backpropagation. 
+
+## 5 Experiments 
+
+We evaluate GPD on MuDD from three perspectives: main results, ablation studies, and visualization analysis. We first present the experimental setting and compare GPD with representative CMKD baselines. We then conduct a series of ablation studies to understand why GPD works, focusing on the two distillation objectives, pro-gressive weighting, dynamic routing, and their interaction. Finally, we visualize how GSR-guided distillation reshapes the student’s decision behavior. 
+
+## 5.1 Experimental Setting 
+
+Implementation details. All experiments are conducted on a sin-gle NVIDIA GeForce RTX 4090 GPU. We train GPD for 120 epochs using Adam with a batch size of 16, an initial learning rate of 1×10 −4,and a weight decay of 1 × 10 −4. The random seed is fixed to 42. For the student model, the hidden dimension and re-embedding dimension are set to 512 and 256, respectively, and the dropout rate is set to 0.3. The trade-off coefficients are set to 𝜆 𝑑 = 0.3, 𝜆 𝑐 = 1.0,
+
+𝜆 𝑘 = 0.7, and 𝜆 𝑓 = 0.2, and the distillation temperature is set to 
+
+𝜏 kd = 2.0. For gap-aware dynamic routing and progressive weight-ing, we set 𝜇 = 0.8 and 𝐻 = 3. The gap calibration parameters (𝑎, 𝑏 )
+
+are set to (1.0, 0.0) for the video branch and (0.8, −0.3) for the audio branch, while the gap-aware weighting thresholds (𝑔 low , 𝑔 high ) are set to (0.40 , 0.62 ) for video and (0.46 , 0.76 ) for audio. The remaining routing thresholds 𝜂 are provided in the Appendix. 
+
+Data preprocessing. For GSR, we first apply a low-pass filter with a cutoff frequency of 2 Hz and then downsample the signal from 256 Hz to 32 Hz. Since each question segment lasts about 14 seconds, each GSR segment contains 448 sampling points. For the visual modality, we follow GENLIE [ 48 ] and first detect and align face regions based on facial landmarks. The aligned video is then divided into temporal segments, from which 16 frames are sampled and fed into VideoMAEv2 to extract segment-level visual embeddings. For the audio modality, frame-level acoustic representations are extracted using WavLM [ 5 ], and local average pooling is applied according to the visual segment boundaries to obtain temporally aligned segment-level acoustic embeddings. 
+
+Evaluation protocol. We evaluate all methods under 5-fold cross-validation, and the detailed split information is provided in the Appendix. For binary deception detection, we report F1 score and AUC, with the deceptive class treated as the positive class. For concealed-digit identification, we report Top-1 and Top-2 accuracy. Since the numbers of samples differ slightly across folds, the final results are reported as sample-weighted averages over the five folds. 
+
+## 5.2 Main Results 
+
+Baseline Models. We compare GPD against nine representative state-of-the-art CMKD methods and the original non-distilled GEN-LIE baseline. All methods are evaluated using the same student backbone and 5-fold cross-validation protocol. GENLIE [ 48 ] serves as the non-distilled student backbone. The CMKD baselines include XKD [ 34 ], which performs self-supervised audio–visual distilla-tion; SemBridge [ 25 ], which uses contrastive cross-modal distil-lation; HKD-Emotion [ 38 ], a hierarchical distillation framework; DecomKD [ 26 ], a decomposed distillation framework; CorrKD [ 24 ], a correlation-decoupled distillation framework; CDGKD [ 44 ], a densely guided distillation framework; C2KD [ 17 ], which adopts bidirectional cross-modal distillation; MST-Distill [ 22 ], a multi-stage teacher distillation framework; and LogitStd [ 37 ], which im-proves distillation via logit standardization. The comparison results are reported in Table 2. As shown in Table 2, GPD achieves the best overall performance among all compared methods. The improvement is not limited to a single metric or a single modality; instead, GPD consistently performs strongly on both deception detection and concealed-digit identification across the video and audio settings. In particular, its gains are more pronounced on digit-level prediction, where it achieves the highest Top-1 and Top-2 accuracy. This suggests that the proposed digit-evidence transfer is especially effective in conveying the teacher’s concealed-item discrimination ability to the non-contact student. At the same time, GPD also maintains the strongest F1/AUC results for question-level deception detection, indicating that the transferred knowledge remains beneficial at the finer-grained binary decision level. Another notable observation is that several existing CMKD baselines fail to consistently outperform the plain GENLIE model, and some even exhibit negative transfer. This suggests that under the large gap between physiological GSR signals and non-contact modalities, conventional distillation strategies are often too rigid: they either transfer a fixed form of knowledge or enforce a fixed transfer order throughout training, making them less able to adapt MuDD: A Multimodal Deception Detection Dataset and GSR-Guided Progressive Distillation for Non-Contact Deception Detection Conference’17, July 2017, Washington, DC, USA 
+
+Table 2: Comparison with state-of-the-art CMKD methods on MuDD. Results are reported as mean ± std over five runs with different random seeds. The best results are shown in bold, and the second-best results are underlined. 
+
+Method Params (M) FLOPs/sample (M) Video modality Audio modality F1 AUC Top-1 Acc. Top-2 Acc. F1 AUC Top-1 Acc. Top-2 Acc. GENLIE 0.908 36.75 16.2 ±2.8 54.4 ±1.4 26.8 ±5.0 35.3 ±5.7 18.1 ±4.8 56.1 ±4.2 29.9 ±6.7 39.8 ±5.1 XKD 1.237 49.32 13.9 ±4.9 53.3 ±1.9 23.6 ±6.5 38.4 ±4.5 15.3 ±4.2 55.1 ±6.4 28.9 ±9.7 39.1 ±8.6 SemBridge 1.456 34.16 12.9 ±7.1 52.5 ±3.6 23.7 ±5.7 32.9 ±5.1 18.6 ±5.2 58.3 ±2.9 28.4 ±6.7 39.9 ±6.3 HKD-Emotion 1.075 34.16 8.1 ±6.9 52.3 ±1.8 24.4 ±7.3 33.7 ±5.1 7.6 ±7.8 58.0 ±2.0 29.9 ±9.0 36.1 ±11.5 DecomKD 1.535 61.78 5.8 ±5.7 52.8 ±2.5 24.5 ±6.0 32.1 ±8.8 14.5 ±7.6 58.5 ±3.8 30.0 ±7.2 39.3 ±8.1 CorrKD 1.075 42.40 11.0 ±5.1 52.6 ±2.0 22.3 ±2.3 33.7 ±4.7 18.3 ±3.3 58.8 ±2.9 27.6 ±5.6 38.4 ±6.7 CDGKD 1.209 48.22 13.7 ±5.9 53.5 ±2.0 24.5 ±5.8 37.6 ±6.8 15.1 ±8.2 56.7 ±2.4 27.6 ±6.6 39.1 ±7.7 C2KD 0.944 37.69 12.7 ±3.2 52.4 ±3.1 23.8 ±2.3 33.1 ±5.6 18.4 ±3.5 57.7 ±3.2 30.0 ±4.3 36.9 ±6.7 MST-Distill 1.049 34.16 8.5 ±4.9 51.1 ±3.1 23.1 ±2.3 34.6 ±3.2 17.5 ±4.9 57.6 ±4.2 28.5 ±4.4 37.6 ±7.6 LogitStd 0.921 36.32 5.5 ±6.0 52.6 ±3.1 24.6 ±4.4 30.8 ±6.3 18.5 ±5.2 57.3 ±2.9 28.4 ±6.7 39.9 ±6.3 
+
+GPD (Ours) 0.908 36.79 16.7 ±3.8 54.6 ±2.3 32.3 ±4.4 40.1 ±4.5 20.1 ±2.3 59.9 ±1.85 35.3 ±4.9 43.8 ±6.6 Table 3: Ablation study of different components in GPD on MuDD. Prog. wt. denotes progressive weighting.                           
+
+> Method Video modality Audio modality F1 AUC Top-1 Top-2 F1 AUC Top-1 Top-2 GENLIE 16.30 53.14 26.92 35.38 18.94 59.03 29.86 40.77 GPD 17.43 53.55 32.31 40.00 20.63 59.30 35.38 43.84
+> w/o
+
+Ldigit -kd 17.00 52.13 26.92 37.69 18.50 57.48 30.77 41.27 w/o Lfeat -kd 16.70 51.46 25.38 36.92 19.70 57.66 32.31 43.08 w/o prog. wt. 16.72 51.89 23.08 35.38 20.05 59.25 30.77 42.47 
+
+to the evolving teacher–student discrepancy. In contrast, GPD ex-plicitly addresses both what to transfer and when to transfer it. The feature-level and digit-level objectives provide complementary supervision at different levels of abstraction, while dynamic routing and progressive weighting allow the transfer path and supervision strength to adapt over training. 
+
+## 5.3 Component and Strategy Ablation 
+
+We first examine the necessity of the key components in GPD and compare different weighting and routing strategies. 
+
+Q1: Are the two distillation objectives and progressive weighting all necessary? We first examine the contribution of each core com-ponent in GPD. Starting from the original student baseline GENLIE, we compare the full model against three variants: w/o Ldigit -kd ,
+
+w/o Lfeat -kd , and w/o progressive weighting . As shown in Table 3, GPD achieves the best overall performance on both the video and Audioes. Removing Ldigit -kd or Lfeat -kd consistently degrades the results, indicating that the two distillation objectives provide com-plementary supervision. Removing progressive weighting also leads to inferior performance, confirming its importance for stable knowl-edge transfer across the large teacher–student modality gap. 
+
+Q2: Which progressive weighting strategy is most effective? We compare four progressive weighting strategies while keeping the architecture and distillation objectives unchanged: sigmoid, which increases the weights smoothly with a slow start and saturation; 
+
+Table 4: Comparison of different progressive weighting sched-ules on MuDD.                                          
+
+> Schedule Video modality Audio modality F1 AUC Top-1 Top-2 F1 AUC Top-1 Top-2 Sigmoid 17.43 53.55 32.31 40.00 20.63 59.30 35.38 43.84
+> Linear 17.27 52.67 30.77 41.54 18.97 57.07 33.08 38.46 Step 17.74 52.80 30.00 41.54 19.22 57.41 34.62 40.76 Cosine 17.53 52.70 30.00 39.23 19.06 58.20 33.08 40.00
+
+linear, which increases them at a constant rate; step, which acti-vates them abruptly at predefined stages; and cosine, which follows a smooth nonlinear schedule. As shown in Table 4, the sigmoid schedule achieves the best overall performance. We attribute this to its smooth transition, which is better suited to coordinating the two complementary distillation objectives. Compared with linear, step, and cosine schedules, sigmoid weighting provides a more stable balance between Lfeat -kd and Ldigit -kd throughout training. 
+
+Q3: Is dynamic routing better than fixed route configurations? We compare the full model with dynamic routing (Dyn.) against four fixed route configurations: no-feature (No-feat.), digit-first, joint, and feature-first (Feat.-first). Table 5 shows that dynamic routing achieves the best overall performance. We attribute this to the fact that the teacher–student gap evolves during training, making a single fixed route suboptimal across stages. When the gap is large, more conservative routes are preferable, whereas smaller gaps al-low stronger feature-level transfer. Dynamic routing adapts the transfer path to this changing optimization state, while fixed con-figurations impose the same distillation order throughout training. This interpretation is supported by the behavior of individual fixed routes: the joint route may introduce conflicting supervision when the teacher–student gap is still large, while feature-first can be too aggressive and digit-first too conservative for effective transfer throughout training. Although no-feature remains competitive on some video metrics, its lack of feature-level guidance limits overall performance, especially for audio. Conference’17, July 2017, Washington, DC, USA Jiang et al. 
+
+Table 5: Comparison of different distillation paths on MuDD.                                                  
+
+> Path Video modality Audio modality F1 AUC Top-1 Top-2 F1 AUC Top-1 Top-2 Dyn. 17.43 53.55 32.31 40.00 20.63 59.30 35.38 43.84
+> No-feat. 17.68 52.69 30.77 41.54 19.75 57.47 34.62 41.54 Feat.-first 17.31 52.81 31.31 39.23 19.42 58.14 33.08 42.31 Digit-first 17.47 52.46 31.54 40.77 19.14 56.73 33.08 39.23 Joint 17.46 52.66 30.77 39.31 17.92 58.13 32.31 42.31
+
+Table 6: Decoupled ablation of routing and weighting on MuDD. “Wt.” and “Pa.” denote weighting schedule and distil-lation path, respectively, while “On” and “Off” denote that dynamic routing is enabled and disabled, respectively. For each weighting schedule, the better result between On and Off is highlighted in bold.                                                                               
+
+> Wt. Pa. Video modality Audio modality F1 AUC Top-1 Top-2 F1 AUC Top-1 Top-2 Sig. On 17.43 53.55 32.31 40.00 20.63 59.30 35.38 43.84
+> Off 17.37 52.66 30.77 42.31 19.42 58.14 33.08 42.31 Lin. On 17.27 52.67 30.77 41.54 18.97 57.07 33.08 38.46 Off 17.26 52.52 31.54 40.77 17.77 56.68 31.54 41.54
+> Step On 17.74 52.80 30.00 41.54 19.22 57.41 34.62 40.76
+> Off 17.94 52.77 30.77 40.77 20.02 57.68 32.30 40.00 Cos. On 17.53 52.70 30.00 39.23 19.06 58.20 33.08 40.00 Off 17.21 52.59 30.77 40.00 18.71 58.02 32.31 40.77
+
+## 5.4 Interaction Between Routing and Weighting 
+
+We further investigate whether dynamic routing and progressive weighting work in a complementary manner. 
+
+Q4: Are dynamic routing and progressive weighting complemen-tary? To decouple the effects of routing and progressive weighting, we toggle the routing mechanism on and off under different weight-ing schedules. As shown in Table 6, dynamic routing is most effec-tive when combined with sigmoid weighting. We conjecture that this is because the two strategies operate at different but comple-mentary levels: routing determines which distillation path should be used at a given stage, whereas weighting controls how strongly 
+
+the selected path influences optimization. In this sense, routing acts as a structural adaptation strategy, while weighting serves as an optimization stabilizer. By contrast, under linear, step, and cosine schedules, the coordination between path selection and distillation strength appears weaker. Linear weighting may be too rigid to re-flect the non-uniform evolution of the teacher–student gap, step weighting can introduce abrupt supervision jumps that interfere with route switching, and cosine weighting, although smooth, does not align its emphasis with the stage at which route adaptation is most needed. As a result, the gain from routing becomes less stable under these schedules. Overall, these results suggest that effective transfer depends not only on choosing the right path, but also on matching that path with a weighting strategy that stabilizes the optimization process.  
+
+> (a) Video. (b) Audio.
+
+Figure 3: Prediction-transition statistics for the video and audio modalities. Samples are grouped by student prediction changes before and after distillation, and further split by whether the teacher prediction is correct or incorrect. 
+
+## 5.5 Effect of Distillation on Student Behavior 
+
+Finally, we analyze whether distillation genuinely reshapes the student’s decision behavior beyond aggregate performance. 
+
+Q5: Does distillation genuinely reshape the student’s decision be-havior? To better understand how distillation affects student be-havior beyond overall accuracy, we analyze both the video and audio modalities using prediction-transition statistics and Jensen– Shannon divergence (JSD)-based response curves. In Figs. 3a and 3b, prediction transitions are defined with respect to the student’s predictions before and after distillation, including four groups: 
+
+both-wrong , repaired , dropped , and both-correct . Here, repaired and 
+
+dropped denote samples corrected or degraded after distillation, respectively, and each group is further split by whether the teacher prediction is correct or incorrect. In Figs. 4a and 4b, we further com-pare representative response curves of the teacher and the student before and after distillation, where the 20 question-level responses in each trial are aggregated into 10 digit-level normalized points. As shown in Figs. 3a and 3b, the prediction-transition statistics consistently support the effectiveness of distillation. In both modal-ities, repaired samples outnumber dropped ones, and most repaired cases are teacher-consistent (Video: 11 /17 ; Audio: 12 /20 ), indicating that the gains mainly come from effective transfer of teacher knowl-edge rather than incidental prediction changes. At the same time, a substantial portion of dropped cases are also teacher-consistent in both modalities, suggesting that distillation can occasionally pull the student toward the teacher’s prediction even when this does not improve the ground-truth decision. This reflects the in-herent trade-off of distillation: while the teacher usually provides useful guidance, its bias or local errors may also be inherited by the student on some samples. For the audio modality, the dropped cases additionally contain a relatively larger proportion of teacher-wrong samples ( 8/13 ), suggesting that audio is more sensitive to local teacher noise. As further shown in Figs. 4a and 4b, the stu-dent after distillation aligns more closely with the teacher than the student before distillation, especially around salient peaks and in the overall response trend. Taken together, these observations indicate that distillation not only improves final predictions, but also systematically reshapes the student’s discriminative behavior toward the teacher at the sample level. MuDD: A Multimodal Deception Detection Dataset and GSR-Guided Progressive Distillation for Non-Contact Deception Detection Conference’17, July 2017, Washington, DC, USA 
+
+(a) Video. (b) Audio. 
+
+Figure 4: Representative JSD-based response curves for the video and audio modalities, comparing the teacher and the student before and after distillation. 
+
+## 6 Conclusion 
+
+This paper aims to investigate how stable deception-related knowl-edge in GSR signals can be exploited to improve non-contact decep-tion detection. Two key challenges arise in this problem. The first is the lack of suitable multimodal datasets, and the second is the limited adaptability of existing cross-modal distillation methods in the presence of large heterogeneity between physiological and non-contact modalities, which may cause negative transfer. To address the first challenge, we construct MuDD, a large-scale multimodal de-ception detection dataset under the GKT paradigm. To address the second, we propose GSR-guided Progressive Distillation (GPD), a cross-modal distillation framework that combines feature-level and digit-level transfer with progressive weighting and dynamic rout-ing. Experimental results show that GPD effectively improves both deception detection and concealed-number identification on video and audio modalities, offering a practical solution for physiology-guided non-contact deception analysis. A limitation of the current work is that it does not explicitly model the temporal alignment of deception cues across modalities. At present, the relationships between anomalous GSR responses and corresponding visual or acoustic abnormalities are captured only implicitly. Future work will explore explicit temporal alignment modeling across modali-ties to better characterize multimodal deception cues and further improve detection performance. 
+
+## Data Availability 
+
+The MuDD dataset is not publicly available due to privacy and eth-ical restrictions associated with human-subject multimodal record-ings, but may be made available to qualified researchers with insti-tutional affiliations upon reasonable request to the corresponding author, subject to applicable ethical approval and data use require-ments. 
+
+## References 
+
+[1] Gershon Ben-Shakhar and Eitan Elaad. 2003. The validity of psychophysiological detection of information with the Guilty Knowledge Test: A meta-analytic review. 
+
+Journal of Applied Psychology 88, 1 (2003), 131. [2] Charles F Bond Jr and Bella M DePaulo. 2006. Accuracy of deception judgments. 
+
+Personality and social psychology Review 10, 3 (2006), 214–234. [3] Cong Cai, Shan Liang, Xuefei Liu, Kang Zhu, Zhengqi Wen, Jianhua Tao, Heng Xie, Jizhou Cui, Yiming Ma, Zhenhua Cheng, et al . 2025. Mdpe: A multimodal deception dataset with personality and emotional characteristics. In Proceedings of the 33rd ACM International Conference on Multimedia . 12957–12964. [4] Cong Cai, Shan Liang, Xuefei Liu, Kang Zhu, Zhengqi Wen, Jianhua Tao, Heng Xie, Jizhou Cui, Yiming Ma, Zhenhua Cheng, Hanzhe Xu, Ruibo Fu, Bin Liu, and Yongwei Li. 2025. MDPE: A Multimodal Deception Dataset with Personality and Emotional Characteristics. In Proceedings of the 33rd ACM International Conference on Multimedia (Dublin, Ireland) (MM ’25) . Association for Computing Machinery, New York, NY, USA, 12957–12964. doi:10.1145/3746027.3758242 [5] Sanyuan Chen, Chengyi Wang, Zhengyang Chen, Yu Wu, Shujie Liu, Zhuo Chen, Jinyu Li, Naoyuki Kanda, Takuya Yoshioka, Xiong Xiao, et al . 2022. Wavlm: Large-scale self-supervised pre-training for full stack speech processing. IEEE Journal of Selected Topics in Signal Processing 16, 6 (2022), 1505–1518. [6] Bella M DePaulo, Deborah A Kashy, Susan E Kirkendol, Melissa M Wyer, and Jennifer A Epstein. 1996. Lying in everyday life. Journal of personality and social psychology 70, 5 (1996), 979. [7] Mingyu Ding, An Zhao, Zhiwu Lu, Tao Xiang, and Ji-Rong Wen. 2019. Face-focused cross-stream network for deception detection in videos. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition . 7802–7811. [8] Laslo Dinges, Marc-André Fiedler, Ayoub Al-Hamadi, Thorsten Hempel, Ahmed Abdelrahman, Joachim Weimann, Dmitri Bershadskyy, and Johann Steiner. 2024. Exploring facial cues: automated deception detection using artificial intelligence. 
+
+Neural Computing and Applications 36, 24 (2024), 14857–14883. [9] Jianping Gou, Baosheng Yu, Stephen J Maybank, and Dacheng Tao. 2021. Knowl-edge distillation: A survey. International journal of computer vision 129, 6 (2021), 1789–1819. [10] Mike Gougler, Raymond Nelson, Mark Handler, Donald Krapohl, Pam Shaw, and Leonard Bierman. 2011. Report of the Ad Hoc Committee on Validated Techniques. Polygraph 40, 4 (2011), 203–305. [11] Xiaobao Guo, Nithish Muthuchamy Selvaraj, Zitong Yu, Adams Wai-Kin Kong, Bingquan Shen, and Alex Kot. 2023. Audio-visual deception detection: Do-los dataset and parameter-efficient crossmodal learning. In Proceedings of the IEEE/CVF International Conference on Computer Vision . 22135–22145. [12] Saurabh Gupta, Judy Hoffman, and Jitendra Malik. 2016. Cross modal distillation for supervision transfer. In Proceedings of the IEEE conference on computer vision and pattern recognition . 2827–2836. [13] Viresh Gupta, Mohit Agarwal, Manik Arora, Tanmoy Chakraborty, Richa Singh, and Mayank Vatsa. 2019. Bag-of-lies: A multimodal dataset for deception detec-tion. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition workshops . 0–0. [14] Geoffrey Hinton, Oriol Vinyals, and Jeff Dean. 2015. Distilling the knowledge in a neural network. arXiv preprint arXiv:1503.02531 (2015). [15] Julia Hirschberg, Stefan Benus, Jason M Brenier, Frank Enos, Sarah Fried-man, Sarah Gilman, Cynthia Girand, Martin Graciarena, Andreas Kathol, Laura Michaelis, et al . 2005. Distinguishing deceptive from non-deceptive speech. In 
+
+Proc. Interspeech 2005 . 1833–1836. [16] Fushuo Huo, Wenchao Xu, Jingcai Guo, Haozhao Wang, and Song Guo. 2024. C2kd: Bridging the modality gap for cross-modal knowledge distillation. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition .16006–16015. [17] Fushuo Huo, Wenchao Xu, Jingcai Guo, Haozhao Wang, and Song Guo. 2024. C2kd: Bridging the modality gap for cross-modal knowledge distillation. In 
+
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition .16006–16015. [18] Gargi Joshi, Vaibhav Tasgaonkar, Aditya Deshpande, Aditya Desai, Bhavya Shah, Akshay Kushawaha, Aadith Sukumar, Kermi Kotecha, Saumit Kunder, Yoginii Waykole, et al . 2025. Multimodal machine learning for deception detection using behavioral and physiological data. Scientific Reports 15, 1 (2025), 8943. [19] FK Lahri and AK Ganguly. 1978. An experimental study of the accuracy of polygraph technique in diagnosis of deception with volunteer and criminal subjects. Polygraph 7 (1978), 89–94. [20] Sarah I Levitan, Guzhen An, Mandi Wang, Gideon Mendels, Julia Hirschberg, Michelle Levine, and Andrew Rosenberg. 2015. Cross-cultural production and detection of deception from speech. In Proceedings of the 2015 ACM on workshop on multimodal deception detection . 1–8. [21] Sarah Ita Levitan, Angel Maredia, and Julia Hirschberg. 2018. Linguistic cues to deception and perceived deception in interview dialogues. In Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long Papers) . 1941–1950. [22] Hui Li, Pengfei Yang, Juanyang Chen, Le Dong, Yanxin Chen, and Quan Wang. 2025. Mst-distill: Mixture of specialized teachers for cross-modal knowledge distillation. In Proceedings of the 33rd ACM International Conference on Multimedia .1588–1597. [23] Mingcheng Li, Dingkang Yang, Xiao Zhao, Shuaibing Wang, Yan Wang, Kun Yang, Mingyang Sun, Dongliang Kou, Ziyun Qian, and Lihua Zhang. 2024. Correlation-decoupled knowledge distillation for multimodal sentiment analysis with incom-plete modalities. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition . 12458–12468. [24] Mingcheng Li, Dingkang Yang, Xiao Zhao, Shuaibing Wang, Yan Wang, Kun Yang, Mingyang Sun, Dongliang Kou, Ziyun Qian, and Lihua Zhang. 2024. Correlation-decoupled knowledge distillation for multimodal sentiment analysis with incom-plete modalities. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition . 12458–12468. [25] Hangyu Lin, Chen Liu, Chengming Xu, Zhengqi Gao, Yanwei Fu, and Yuan Yao. 2024. A generalization theory of cross-modality distillation with contrastive Conference’17, July 2017, Washington, DC, USA Jiang et al. 
+
+learning. arXiv preprint arXiv:2405.03355 (2024). [26] Yanfeng Liu and Lefei Zhang. 2025. Multimodal decomposed distillation with instance alignment and uncertainty compensation for thermal object detection. In 
+
+Proceedings of the 33rd ACM International Conference on Multimedia . 2294–2303. [27] E Paige Lloyd, Jason C Deska, Kurt Hugenberg, Allen R McConnell, Brandon T Humphrey, and Jonathan W Kunstman. 2019. Miami University deception detec-tion database. Behavior research methods 51, 1 (2019), 429–439. [28] Merylin Monaro, Pasquale Capuozzo, Federica Ragucci, Antonio Maffei, Antoni-etta Curci, Cristina Scarpazza, Alessandro Angrilli, and Giuseppe Sartori. 2020. Using blink rate to detect deception: A study to validate an automatic blink detector and a new dataset of videos from liars and truth-tellers. In International Conference on Human-Computer Interaction . Springer, 494–509. [29] Jan Ondras and Hatice Gunes. 2018. Detecting deception and suspicion in dyadic game interactions. In Proceedings of the 20th ACM international conference on multimodal interaction . 200–209. [30] Wonpyo Park, Dongju Kim, Yan Lu, and Minsu Cho. 2019. Relational knowledge distillation. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition . 3967–3976. [31] Baoyun Peng, Xiao Jin, Jiaheng Liu, Dongsheng Li, Yichao Wu, Yu Liu, Shunfeng Zhou, and Zhaoning Zhang. 2019. Correlation congruence for knowledge distil-lation. In Proceedings of the IEEE/CVF international conference on computer vision .5007–5016. [32] Verónica Pérez-Rosas, Mohamed Abouelenien, Rada Mihalcea, and Mihai Burzo. 2015. Deception detection using real-life trial data. In Proceedings of the 2015 ACM on international conference on multimodal interaction . 59–66. [33] Verónica Pérez-Rosas and Rada Mihalcea. 2014. Cross-cultural Deception De-tection. In Proceedings of the 52nd Annual Meeting of the Association for Compu-tational Linguistics (Volume 2: Short Papers) , Kristina Toutanova and Hua Wu (Eds.). Association for Computational Linguistics, Baltimore, Maryland, 440–445. doi:10.3115/v1/P14-2072 [34] Pritam Sarkar and Ali Etemad. 2024. Xkd: Cross-modal knowledge distillation with domain alignment for video representation learning. In Proceedings of the AAAI Conference on Artificial Intelligence , Vol. 38. 14875–14885. [35] Felix Soldner, Verónica Pérez-Rosas, and Rada Mihalcea. 2019. Box of Lies: Multi-modal Deception Detection in Dialogues. In Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers) , Jill Burstein, Christy Doran, and Thamar Solorio (Eds.). Association for Computational Lin-guistics, Minneapolis, Minnesota, 1768–1777. doi:10.18653/v1/N19-1175 [36] Felix Soldner, Verónica Pérez-Rosas, and Rada Mihalcea. 2019. Box of lies: Mul-timodal deception detection in dialogues. In Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers) . 1768–1777. [37] Shangquan Sun, Wenqi Ren, Jingzhi Li, Rui Wang, and Xiaochun Cao. 2024. Logit standardization in knowledge distillation. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition . 15731–15740. [38] Teng Sun, Yinwei Wei, Juntong Ni, Zixin Liu, Xuemeng Song, Yaowei Wang, and Liqiang Nie. 2024. Muti-modal emotion recognition via hierarchical knowledge distillation. IEEE Transactions on Multimedia 26 (2024), 9036–9046. [39] John Synnott, David Dietzel, and Maria Ioannou. 2015. A review of the polygraph: history, methodology and current status. Crime Psychology Review 1, 1 (2015), 59– 83. arXiv:https://doi.org/10.1080/23744006.2015.1060080 doi:10.1080/23744006. 2015.1060080 [40] Frederick Tung and Greg Mori. 2019. Similarity-preserving knowledge distillation. In Proceedings of the IEEE/CVF international conference on computer vision . 1365– 1374. [41] Martina Vicianova. 2015. Historical techniques of lie detection. Europe’s journal of psychology 11, 3 (2015), 522. [42] Hu Wang, Congbo Ma, Jianpeng Zhang, Yuan Zhang, Jodie Avery, Louise Hull, and Gustavo Carneiro. 2023. Learnable cross-modal knowledge distillation for multi-modal learning with missing modality. In International Conference on Medical Image Computing and Computer-Assisted Intervention . Springer, 216–226. [43] Lin Wang and Kuk-Jin Yoon. 2021. Knowledge distillation and student-teacher learning for visual intelligence: A review and new outlooks. IEEE transactions on pattern analysis and machine intelligence 44, 6 (2021), 3048–3068. [44] Shuang Wu, Heng Liang, Yong Zhang, Yanlin Chen, and Ziyu Jia. 2025. A cross-modal densely guided knowledge distillation based on modality rebalancing strategy for enhanced unimodal emotion recognition. In Proceedings of the Thirty-Fourth International Joint Conference on Artificial Intelligence, IJCAI 2025, Montreal, Canada, August 16–22, 2025 . 4236–4244. [45] Xiaolin Xu, Wenming Zheng, Hailun Lian, Sunan Li, Jiateng Liu, Anbang Liu, Cheng Lu, Yuan Zong, and Zongbao Liang. 2025. Multimodal lie detection dataset based on Chinese dialogue. Journal of Image and Graphics 30, 8 (2025), 2729–2742. doi:10.11834/jig.240571 [46] Zihui Xue, Zhengqi Gao, Sucheng Ren, and Hang Zhao. 2023. The Modality Fo-cusing Hypothesis: Towards Understanding Crossmodal Knowledge Distillation. In ICLR .[47] Su Zhang, Chuangao Tang, and Cuntai Guan. 2022. Visual-to-EEG cross-modal knowledge distillation for continuous emotion recognition. Pattern Recognition 
+
+130 (2022), 108833. doi:10.1016/j.patcog.2022.108833 [48] Zongshun Zhang, Yao Liu, Qiao Liu, Xuefeng Peng, Peiyuan Jiang, Jiaye Yang, Daibing Yao, and Wei Lin. 2026. GenLie: A Global-Enhanced Lie Detection Network under Sparsity and Semantic Interference. arXiv:2603.16935 [cs.CV] https://arxiv.org/abs/2603.16935 [49] Borui Zhao, Quan Cui, Renjie Song, Yiyu Qiu, and Jiajun Liang. 2022. Decoupled knowledge distillation. In Proceedings of the IEEE/CVF Conference on computer vision and pattern recognition . 11953–11962.
