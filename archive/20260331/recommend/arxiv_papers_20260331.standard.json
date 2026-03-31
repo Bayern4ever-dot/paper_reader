@@ -1,0 +1,631 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-03-31T20:03:18.433857+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 2,
+    "deep_divecandidates": 4,
+    "deep_cap": 7,
+    "deep_selected": 4,
+    "quick_candidates": 12,
+    "quick_skim_target": 12,
+    "quick_selected": 12
+  },
+  "deep_dive": [
+    {
+      "id": "2603.27916v1",
+      "title": "OPTICS: Order-Preserved Test-Inverse Confidence Set for Number of Change-Points",
+      "abstract": "Determining the number of change-points is a first-step and fundamental task in change-point detection problems, as it lays the groundwork for subsequent change-point position estimation. While the existing literature offers various methods for consistently estimating the number of change-points, these methods typically yield a single point estimate without any assurance that it recovers the true number of changes in a specific dataset. Moreover, achieving consistency often hinges on very stringent conditions that can be challenging to verify in practice. To address these issues, we introduce a unified test-inverse procedure to construct a confidence set for the number of change-points. The proposed confidence set provides a set of possible values within which the true number of change-points is guaranteed to lie with a specified level of confidence. We further proved that the confidence set is sufficiently narrow to be powerful and informative by deriving the order of its cardinality. Remarkably, this confidence set can be established under more relaxed conditions than those required by most point estimation techniques. We also advocate multiple-splitting procedures to enhance stability and extend the proposed method to heavy-tailed and dependent settings. As a byproduct, we may also leverage this constructed confidence set to assess the effectiveness of point-estimation algorithms. Through extensive simulation studies, we demonstrate the superior performance of our confidence set approach. Additionally, we apply this method to analyze a bladder tumor microarray dataset. Supplementary Material, including proofs of all theoretical results, computer code, the R package, and extended simulation studies, are available online.",
+      "authors": [
+        "Ao Sun",
+        "Jingyuan Liu"
+      ],
+      "primary_category": "stat.ME",
+      "categories": [
+        "stat.ME"
+      ],
+      "published": "2026-03-30T00:14:20+00:00",
+      "link": "https://arxiv.org/pdf/2603.27916v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "confidence set for number of change-points in detection problems",
+      "llm_evidence_cn": "检测问题中变点数量的置信集",
+      "llm_evidence": "检测问题中变点数量的置信集",
+      "canonical_evidence": "检测问题中变点数量的置信集",
+      "llm_tldr_en": "Introduces a unified test-inverse procedure to estimate the number of change-points in time series data.",
+      "llm_tldr_cn": "引入一种统一的测试逆过程，用于估计时间序列数据中的变点数量。",
+      "llm_tldr": "引入一种统一的测试逆过程，用于估计时间序列数据中的变点数量。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.27289v1",
+      "title": "Feeling the Facts: Real-time Wearable Fact-checkers Can Use Nudges to Reduce User Belief in False Information",
+      "abstract": "Misinformation can spread rapidly in everyday conversation, where pausing to verify is not always possible. We envision a wearable system that bridges the timing gap between hearing a claim and forming a judgment. It uses ambient listening to detect verifiable claims, performs rapid web verification, and provides a subtle haptic nudge with a glanceable overview. A controlled study (N=34) simulated this approach and tested against a no-support baseline. Results show that instant, body-integrated feedback significantly improved real-time truth discernment and increased verification activity compared to unsupported fact-checking. However, it also introduced over-reliance when the system made errors, i.e. failed to flag false claims or flagged true claims as false. We contribute empirical evidence of improved discernment alongside insights into trust, effort, and user-system tensions in verification wearables.",
+      "authors": [
+        "Chitralekha Gupta",
+        "Nadia Victoria Aritonang",
+        "Dixon Prem Daniel Rajendran",
+        "Valdemar Danry",
+        "Pattie Maes",
+        "Suranga Nanayakarra"
+      ],
+      "primary_category": "cs.HC",
+      "categories": [
+        "cs.HC"
+      ],
+      "published": "2026-03-28T14:40:29+00:00",
+      "link": "https://arxiv.org/pdf/2603.27289v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "real-time wearable fact-checkers for misinformation",
+      "llm_evidence_cn": "用于虚假信息的实时可穿戴事实核查器",
+      "llm_evidence": "用于虚假信息的实时可穿戴事实核查器",
+      "canonical_evidence": "用于虚假信息的实时可穿戴事实核查器",
+      "llm_tldr_en": "Explores a wearable system that uses ambient listening and haptic nudges to reduce belief in misinformation.",
+      "llm_tldr_cn": "探索一种利用环境监听和触觉提醒来减少用户对虚假信息信任的可穿戴系统。",
+      "llm_tldr": "探索一种利用环境监听和触觉提醒来减少用户对虚假信息信任的可穿戴系统。",
+      "llm_tags": [
+        "query:mmfnd"
+      ],
+      "matched_query_tag": "query:mmfnd",
+      "matched_query_text": "cross-modal misinformation detection techniques",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.27723v1",
+      "title": "TMTE: Effective Multimodal Graph Learning with Task-aware Modality and Topology Co-evolution",
+      "abstract": "Multimodal-attributed graphs (MAGs) are a fundamental data structure for multimodal graph learning (MGL), enabling both graph-centric and modality-centric tasks. However, our empirical analysis reveals inherent topology quality limitations in real-world MAGs, including noisy interactions, missing connections, and task-agnostic relational structures. A single graph derived from generic relationships is therefore unlikely to be universally optimal for diverse downstream tasks. To address this challenge, we propose Task-aware Modality and Topology co-Evolution (TMTE), a novel MGL framework that jointly and iteratively optimizes graph topology and multimodal representations toward the target task. TMTE is motivated by the bidirectional coupling between modality and topology: multimodal attributes induce relational structures, while graph topology shapes modality representations. Concretely, TMTE casts topology evolution as multi-perspective metric learning over modality embeddings with an anchor-based approximation, and formulates modality evolution as smoothness-regularized fusion with cross-modal alignment, yielding a closed-loop task-aware co-evolution process. Extensive experiments on 9 MAG datasets and 1 non-graph multimodal dataset across 6 graph-centric and modality-centric tasks show that TMTE consistently achieves state-of-the-art performance. Our code is available at https://anonymous.4open.science/r/TMTE-1873.",
+      "authors": [
+        "Yinlin Zhu",
+        "Xunkai Li",
+        "Di Wu",
+        "Wang Luo",
+        "Miao Hu",
+        "Di Wu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-03-29T14:54:59+00:00",
+      "link": "https://arxiv.org/pdf/2603.27723v1",
+      "tags": [
+        "keyword:MMFND"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal graph learning and representation",
+      "llm_evidence_cn": "多模态图学习与表示",
+      "llm_evidence": "多模态图学习与表示",
+      "canonical_evidence": "多模态图学习与表示",
+      "llm_tldr_en": "Optimizes multimodal representations and graph topology jointly for diverse downstream tasks.",
+      "llm_tldr_cn": "针对多种下游任务共同优化多模态表示和图拓扑结构。",
+      "llm_tldr": "针对多种下游任务共同优化多模态表示和图拓扑结构。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2603.28508v1",
+      "title": "Generalizable Detection of AI Generated Images with Large Models and Fuzzy Decision Tree",
+      "abstract": "The malicious use and widespread dissemination of AI-generated images pose a serious threat to the authenticity of digital content. Existing detection methods exploit low-level artifacts left by common manipulation steps within the generation pipeline, but they often lack generalization due to model-specific overfitting. Recently, researchers have resorted to Multimodal Large Language Models (MLLMs) for AIGC detection, leveraging their high-level semantic reasoning and broad generalization capabilities. While promising, MLLMs lack the fine-grained perceptual sensitivity to subtle generation artifacts, making them inadequate as standalone detectors. To address this issue, we propose a novel AI-generated image detection framework that synergistically integrates lightweight artifact-aware detectors with MLLMs via a fuzzy decision tree. The decision tree treats the outputs of basic detectors as fuzzy membership values, enabling adaptive fusion of complementary cues from semantic and perceptual perspectives. Extensive experiments demonstrate that the proposed method achieves state-of-the-art accuracy and strong generalization across diverse generative models.",
+      "authors": [
+        "Fei Wu",
+        "Guanghao Ding",
+        "Zijian Niu",
+        "Zhenrui Wang",
+        "Lei Yang",
+        "Zhuosheng Zhang",
+        "Shilin Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-30T14:43:14+00:00",
+      "link": "https://arxiv.org/pdf/2603.28508v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Detection of AI-generated images using MLLMs and fuzzy decision trees for authenticity.",
+      "llm_evidence_cn": "利用多模态大模型和模糊决策树检测AI生成的图像以验证真实性。",
+      "llm_evidence": "利用多模态大模型和模糊决策树检测AI生成的图像以验证真实性。",
+      "canonical_evidence": "利用多模态大模型和模糊决策树检测AI生成的图像以验证真实性。",
+      "llm_tldr_en": "Proposes a framework combining MLLMs and fuzzy decision trees to improve generalization in AI image detection.",
+      "llm_tldr_cn": "结合多模态大模型与模糊决策树，提升AI生成图像检测的泛化能力。",
+      "llm_tldr": "结合多模态大模型与模糊决策树，提升AI生成图像检测的泛化能力。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2603.22179v1",
+      "title": "MARCUS: An agentic, multimodal vision-language model for cardiac diagnosis and management",
+      "abstract": "Cardiovascular disease remains the leading cause of global mortality, with progress hindered by human interpretation of complex cardiac tests. Current AI vision-language models are limited to single-modality inputs and are non-interactive. We present MARCUS (Multimodal Autonomous Reasoning and Chat for Ultrasound and Signals), an agentic vision-language system for end-to-end interpretation of electrocardiograms (ECGs), echocardiograms, and cardiac magnetic resonance imaging (CMR) independently and as multimodal input. MARCUS employs a hierarchical agentic architecture comprising modality-specific vision-language expert models, each integrating domain-trained visual encoders with multi-stage language model optimization, coordinated by a multimodal orchestrator. Trained on 13.5 million images (0.25M ECGs, 1.3M echocardiogram images, 12M CMR images) and our novel expert-curated dataset spanning 1.6 million questions, MARCUS achieves state-of-the-art performance surpassing frontier models (GPT-5 Thinking, Gemini 2.5 Pro Deep Think). Across internal (Stanford) and external (UCSF) test cohorts, MARCUS achieves accuracies of 87-91% for ECG, 67-86% for echocardiography, and 85-88% for CMR, outperforming frontier models by 34-45% (P<0.001). On multimodal cases, MARCUS achieved 70% accuracy, nearly triple that of frontier models (22-28%), with 1.7-3.0x higher free-text quality scores. Our agentic architecture also confers resistance to mirage reasoning, whereby vision-language models derive reasoning from unintended textual signals or hallucinated visual content. MARCUS demonstrates that domain-specific visual encoders with an agentic orchestrator enable multimodal cardiac interpretation. We release our models, code, and benchmark open-source.",
+      "authors": [
+        "Jack W O'Sullivan",
+        "Mohammad Asadi",
+        "Lennart Elbe",
+        "Akshay Chaudhari",
+        "Tahoura Nedaee",
+        "Francois Haddad",
+        "Michael Salerno",
+        "Li Fe-Fei",
+        "Ehsan Adeli",
+        "Rima Arnaout",
+        "Euan A Ashley"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-03-23T16:42:11+00:00",
+      "link": "https://arxiv.org/pdf/2603.22179v1",
+      "tags": [
+        "keyword:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multimodal vision-language model for signals",
+      "llm_evidence_cn": "针对信号的多模态视觉语言模型",
+      "llm_evidence": "针对信号的多模态视觉语言模型",
+      "canonical_evidence": "针对信号的多模态视觉语言模型",
+      "llm_tldr_en": "An agentic multimodal system for interpreting cardiac signals like ECGs and echocardiograms.",
+      "llm_tldr_cn": "一种用于解释心电图和超声心动图等心脏信号的智能多模态系统。",
+      "llm_tldr": "一种用于解释心电图和超声心动图等心脏信号的智能多模态系统。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.23906v2",
+      "title": "GenMask: Adapting DiT for Segmentation via Direct Mask Generation",
+      "abstract": "Recent approaches for segmentation have leveraged pretrained generative models as feature extractors, treating segmentation as a downstream adaptation task via indirect feature retrieval. This implicit use suffers from a fundamental misalignment in representation. It also depends heavily on indirect feature extraction pipelines, which complicate the workflow and limit adaptation. In this paper, we argue that instead of indirect adaptation, segmentation tasks should be trained directly in a generative manner. We identify a key obstacle to this unified formulation: VAE latents of binary masks are sharply distributed, noise robust, and linearly separable, distinct from natural image latents. To bridge this gap, we introduce timesteps sampling strategy for binary masks that emphasizes extreme noise levels for segmentation and moderate noise for image generation, enabling harmonious joint training. We present GenMask, a DiT trains to generate black-and-white segmentation masks as well as colorful images in RGB space under the original generative objective. GenMask preserves the original DiT architecture while removing the need of feature extraction pipelines tailored for segmentation tasks. Empirically, GenMask attains state-of-the-art performance on referring and reasoning segmentation benchmarks and ablations quantify the contribution of each component.",
+      "authors": [
+        "Yuhuan Yang",
+        "Xianwei Zhuang",
+        "Yuxuan Cai",
+        "Chaofan Ma",
+        "Shuai Bai",
+        "Jiangchao Yao",
+        "Ya Zhang",
+        "Junyang Lin",
+        "Yanfeng Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-25T03:52:05+00:00",
+      "link": "https://arxiv.org/pdf/2603.23906v2",
+      "tags": [
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "generative manner for segmentation tasks",
+      "llm_evidence_cn": "生成式分割任务处理方式",
+      "llm_evidence": "生成式分割任务处理方式",
+      "canonical_evidence": "生成式分割任务处理方式",
+      "llm_tldr_en": "Proposes GenMask to adapt Diffusion Transformers for direct mask generation in segmentation tasks.",
+      "llm_tldr_cn": "提出 GenMask，使 Diffusion Transformers 能够直接生成掩码以进行分割任务。",
+      "llm_tldr": "提出 GenMask，使 Diffusion Transformers 能够直接生成掩码以进行分割任务。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.25108v1",
+      "title": "MSRL: Scaling Generative Multimodal Reward Modeling via Multi-Stage Reinforcement Learning",
+      "abstract": "Recent advances in multimodal reward modeling have been largely driven by a paradigm shift from discriminative to generative approaches. Building on this progress, recent studies have further employed reinforcement learning from verifiable rewards (RLVR) to enhance multimodal reward models (MRMs). Despite their success, RLVR-based training typically relies on labeled multimodal preference data, which are costly and labor-intensive to obtain, making it difficult to scale MRM training. To overcome this limitation, we propose a Multi-Stage Reinforcement Learning (MSRL) approach, which can achieve scalable RL for MRMs with limited multimodal data. MSRL replaces the conventional RLVR-based training paradigm by first learning a generalizable reward reasoning capability from large-scale textual preference data, and then progressively transferring this capability to multimodal tasks through caption-based and fully multimodal reinforcement-learning stages. Furthermore, we introduce a cross-modal knowledge distillation approach to improve preference generalization within MSRL. Extensive experiments demonstrate that MSRL effectively scales the RLVR-based training of generative MRMs and substantially improves their performance across both visual understanding and visual generation tasks (e.g., from 66.6% to 75.9% on VL-RewardBench and from 70.2% to 75.7% on GenAI-Bench), without requiring additional multimodal preference annotations. Our code is available at: https://github.com/wangclnlp/MSRL.",
+      "authors": [
+        "Chenglong Wang",
+        "Yifu Huo",
+        "Yang Gan",
+        "Qiaozhi He",
+        "Qi Meng",
+        "Bei Li",
+        "Yan Wang",
+        "Junfu Liu",
+        "Tianhua Zhou",
+        "Jingbo Zhu",
+        "Tong Xiao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-26T07:27:11+00:00",
+      "link": "https://arxiv.org/pdf/2603.25108v1",
+      "tags": [
+        "keyword:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multimodal reward modeling and reinforcement learning for cross-modal alignment",
+      "llm_evidence_cn": "多模态奖励建模与强化学习用于跨模态对齐",
+      "llm_evidence": "多模态奖励建模与强化学习用于跨模态对齐",
+      "canonical_evidence": "多模态奖励建模与强化学习用于跨模态对齐",
+      "llm_tldr_en": "Scales multimodal reward modeling using multi-stage reinforcement learning to improve cross-modal alignment.",
+      "llm_tldr_cn": "通过多阶段强化学习扩展多模态奖励建模，提升跨模态对齐效果。",
+      "llm_tldr": "通过多阶段强化学习扩展多模态奖励建模，提升跨模态对齐效果。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.27060v1",
+      "title": "VIRST: Video-Instructed Reasoning Assistant for SpatioTemporal Segmentation",
+      "abstract": "Referring Video Object Segmentation (RVOS) aims to segment target objects in videos based on natural language descriptions. However, fixed keyframe-based approaches that couple a vision language model with a separate propagation module often fail to capture rapidly changing spatiotemporal dynamics and to handle queries requiring multi-step reasoning, leading to sharp performance drops on motion-intensive and reasoning-oriented videos beyond static RVOS benchmarks. To address these limitations, we propose VIRST (Video-Instructed Reasoning Assistant for Spatio-Temporal Segmentation), an end-to-end framework that unifies global video reasoning and pixel-level mask prediction within a single model. VIRST bridges semantic and segmentation representations through the Spatio-Temporal Fusion (STF), which fuses segmentation-aware video features into the vision-language backbone, and employs the Temporal Dynamic Anchor Updater to maintain temporally adjacent anchor frames that provide stable temporal cues under large motion, occlusion, and reappearance. This unified design achieves state-of-the-art results across diverse RVOS benchmarks under realistic and challenging conditions, demonstrating strong generalization to both referring and reasoning oriented settings. The code and checkpoints are available at https://github.com/AIDASLab/VIRST.",
+      "authors": [
+        "Jihwan Hong",
+        "Jaeyoung Do"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-28T00:34:15+00:00",
+      "link": "https://arxiv.org/pdf/2603.27060v1",
+      "tags": [
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "spatiotemporal segmentation in videos",
+      "llm_evidence_cn": "视频中的时空分割",
+      "llm_evidence": "视频中的时空分割",
+      "canonical_evidence": "视频中的时空分割",
+      "llm_tldr_en": "Proposes an end-to-end framework for spatiotemporal video object segmentation using reasoning.",
+      "llm_tldr_cn": "提出了一种结合推理的端到端视频对象时空分割框架。",
+      "llm_tldr": "提出了一种结合推理的端到端视频对象时空分割框架。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.26762v1",
+      "title": "Density estimation of weak periodic signals in pre-earthquake seismic waves",
+      "abstract": "We introduce a method for identifying weak periodic components in pre-earthquake seismic waveforms by examining the scale-index response of a driven Duffing chaotic oscillator. This nonlinear setup helps detect and classify subtle deterministic features buried in low-amplitude, noisy seismic records. We apply this approach to seismic data collected before three moderate-to-strong earthquakes, and compare the results with a quiescent control period. The weak periodic signals detected with the approach exhibit clear, systematic shifts in frequency. Kernel density estimates highlight these changes in the dynamics of the Marmara fault segment south of Istanbul, the likely location of a future large Istanbul earthquake. The results indicate also that chaos-based detection methods can reveal possible precursory patterns that point to the potential of such approaches for real-time seismic monitoring and forecasting. More generally, this study adds to the growing interaction between nonlinear dynamics and geophysics by providing another perspective on the complex behaviour of active fault systems. The density-based analysis of weak periodic signals proposed here may also be useful in other fields that involve large, noisy datasets with chaotic characteristics, such as physiology or financial systems.",
+      "authors": [
+        "Nazmi Yılmaz"
+      ],
+      "primary_category": "physics.soc-ph",
+      "categories": [
+        "physics.soc-ph",
+        "nlin.CD"
+      ],
+      "published": "2026-03-23T19:14:32+00:00",
+      "link": "https://arxiv.org/pdf/2603.26762v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "identifying signals in seismic waveforms",
+      "llm_evidence_cn": "识别地震波形中的信号",
+      "llm_evidence": "识别地震波形中的信号",
+      "canonical_evidence": "识别地震波形中的信号",
+      "llm_tldr_en": "Detects weak periodic signals in seismic time series data for earthquake prediction.",
+      "llm_tldr_cn": "检测地震时间序列数据中的微弱周期信号，用于地震预测。",
+      "llm_tldr": "检测地震时间序列数据中的微弱周期信号，用于地震预测。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.27706v1",
+      "title": "MAR3: Multi-Agent Recognition, Reasoning, and Reflection for Reference Audio-Visual Segmentation",
+      "abstract": "Reference Audio-Visual Segmentation (Ref-AVS) aims to segment objects in audible videos based on multimodal cues in reference expressions. Previous methods overlook the explicit recognition of expression difficulty and dominant modality in multimodal cues, over-rely on the quality of the instruction-tuning dataset for object reasoning, and lack reflective validation of segmentation results, leading to erroneous mask predictions. To address these issues, in this paper, we propose a novel training-free Multi-Agent Recognition, Reasoning, and Reflection framework to achieve high-quality Reference Audio-Visual Segmentation, termed MAR3. Incorporating the sociological Delphi theory to achieve robust analysis, a Consensus Multimodal Recognition mechanism is proposed that enables LLM agents to explicitly recognize the difficulty of reference expressions and the dominant modality of multimodal cues. Based on our modality-dominant difficulty rule, we propose an adaptive Collaborative Object Reasoning strategy to reliably reason about the referred object. To further ensure precise mask prediction, we develop a Reflective Learning Segmentation mechanism, in which a check agent examines intermediate segmentation results and iteratively corrects the object text prompt of the segment agent. Experiments demonstrate that MAR3 achieves superior performance (69.2% in J&F) on the Ref-AVSBench dataset, outperforming SOTA by 3.4% absolutely.",
+      "authors": [
+        "Yuan Zhao",
+        "Zhenqi Jia",
+        "Yongqiang Zhang"
+      ],
+      "primary_category": "cs.MM",
+      "categories": [
+        "cs.MM"
+      ],
+      "published": "2026-03-29T14:09:50+00:00",
+      "link": "https://arxiv.org/pdf/2603.27706v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:MMFND",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "multimodal cues for audio-visual segmentation",
+      "llm_evidence_cn": "用于音视频分割的多模态线索",
+      "llm_evidence": "用于音视频分割的多模态线索",
+      "canonical_evidence": "用于音视频分割的多模态线索",
+      "llm_tldr_en": "Introduces a multi-agent framework for high-quality reference audio-visual segmentation.",
+      "llm_tldr_cn": "引入了一个多智能体框架，用于高质量的参考音视频分割。",
+      "llm_tldr": "引入了一个多智能体框架，用于高质量的参考音视频分割。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.27395v1",
+      "title": "Topological Detection of Hopf Bifurcations via Persistent Homology: A Functional Criterion from Time Series",
+      "abstract": "We propose a topological framework for the detection of Hopf bifurcations directly from time series, based on persistent homology applied to phase space reconstructions via Takens embedding within the framework of Topological Data Analysis. The central idea is that changes in the dynamical regime are reflected in the emergence or disappearance of a dominant one-dimensional homological features in the reconstructed attractor. To quantify this behavior, we introduce a simple and interpretable scalar topological functional defined as the maximum persistence of homology classes in dimension one. This functional is used to construct a computable criterion for identifying critical parameters in families of dynamical systems without requiring knowledge of the underlying equations. The proposed approach is validated on representative systems of increasing complexity, showing consistent detection of the bifurcation point. The results support the interpretation of dynamical transitions as topological phase transitions and demonstrate the potential of topological data analysis as a model-free tool for the quantitative analysis of nonlinear time series.",
+      "authors": [
+        "Jhonathan Barrios",
+        "Yásser Echávez",
+        "Carlos F. Álvarez"
+      ],
+      "primary_category": "math.DS",
+      "categories": [
+        "math.DS",
+        "math.AT",
+        "stat.ML"
+      ],
+      "published": "2026-03-28T20:25:38+00:00",
+      "link": "https://arxiv.org/pdf/2603.27395v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Detection of regime changes in time series",
+      "llm_evidence_cn": "检测时间序列中的状态变化",
+      "llm_evidence": "检测时间序列中的状态变化",
+      "canonical_evidence": "检测时间序列中的状态变化",
+      "llm_tldr_en": "Uses persistent homology to detect Hopf bifurcations and dynamical regime changes in time series data.",
+      "llm_tldr_cn": "利用持续同调技术检测时间序列中的 Hopf 分叉和动力学状态切换。",
+      "llm_tldr": "利用持续同调技术检测时间序列中的 Hopf 分叉和动力学状态切换。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.27741v1",
+      "title": "Segmenting Superbubbles in a Simulated Multiphase Interstellar Medium using Computer Vision",
+      "abstract": "We developed a computer vision-based methodology to achieve precise 3D segmentation and tracking of superbubbles within magnetohydrodynamic simulations of the supernova-driven interstellar medium. Leveraging advanced 3D transformer models, our approach effectively captures the complex morphology and dynamic evolution of these astrophysical structures. To demonstrate the technique, we specifically focused on a superbubble exhibiting interesting interactions with its surrounding medium, driven by a series of successive supernova explosions. Our model successfully generated detailed 3D segmentation masks, enabling us to visualize and analyze the bubble's structural evolution over time. The results reveal insights into the superbubble's growth patterns, energy retention, and interactions with surrounding interstellar matter. This interdisciplinary approach not only enhances our understanding of superbubble dynamics but also offers a robust framework for investigating other complex phenomena in the cosmos.",
+      "authors": [
+        "Jing-Wen Chen",
+        "Alex S. Hill",
+        "Anna Ordog",
+        "Rebecca A. Booth",
+        "Mohamed S. Shehata"
+      ],
+      "primary_category": "astro-ph.GA",
+      "categories": [
+        "astro-ph.GA",
+        "cs.CV"
+      ],
+      "published": "2026-03-29T15:44:20+00:00",
+      "link": "https://arxiv.org/pdf/2603.27741v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "3D segmentation and tracking of structures over time",
+      "llm_evidence_cn": "随时间变化的结构3D分割与追踪",
+      "llm_evidence": "随时间变化的结构3D分割与追踪",
+      "canonical_evidence": "随时间变化的结构3D分割与追踪",
+      "llm_tldr_en": "Uses computer vision and transformers for 3D segmentation and tracking of astrophysical superbubbles.",
+      "llm_tldr_cn": "利用计算机视觉和Transformer对天文超气泡进行3D分割与追踪。",
+      "llm_tldr": "利用计算机视觉和Transformer对天文超气泡进行3D分割与追踪。",
+      "llm_tags": [
+        "query:tsds:composite"
+      ],
+      "matched_query_tag": "query:tsds:composite",
+      "matched_query_text": "Papers central to 时序数据分割论文检索, especially work that connects or combines: c; s; r; State of the art time sereis segmentation.",
+      "matched_requirement_id": "req-composite-tsds",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.27693v1",
+      "title": "LVRPO: Language-Visual Alignment with GRPO for Multimodal Understanding and Generation",
+      "abstract": "Unified multimodal pretraining has emerged as a promising paradigm for jointly modeling language and vision within a single foundation model. However, existing approaches largely rely on implicit or indirect alignment signals and remain suboptimal for simultaneously supporting multimodal understanding and generation, particularly in settings that require fine-grained language-visual reasoning and controllable generation. In this work, we propose LVRPO, a language-visual reinforcement-based preference optimization framework that explicitly aligns language and visual representations using Group Relative Policy Optimization (GRPO). Instead of introducing additional alignment losses at the representation level, LVRPO directly optimizes multimodal model behaviors through preference-driven reinforcement signals, encouraging consistent and semantically grounded interactions between language and vision across both understanding and generation tasks. This formulation enables effective alignment without requiring auxiliary encoders or handcrafted cross-modal objectives, and naturally extends to diverse multimodal capabilities. Empirically, LVRPO consistently outperforms strong unified-pretraining baselines on a broad suite of benchmarks spanning multimodal understanding, generation, and reasoning.",
+      "authors": [
+        "Shentong Mo",
+        "Sukmin Yun"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG",
+        "cs.MA",
+        "cs.MM"
+      ],
+      "published": "2026-03-29T13:38:21+00:00",
+      "link": "https://arxiv.org/pdf/2603.27693v1",
+      "tags": [
+        "keyword:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "language-visual alignment for multimodal understanding",
+      "llm_evidence_cn": "用于多模态理解的语言-视觉对齐",
+      "llm_evidence": "用于多模态理解的语言-视觉对齐",
+      "canonical_evidence": "用于多模态理解的语言-视觉对齐",
+      "llm_tldr_en": "Aligns language and visual representations using Group Relative Policy Optimization for multimodal tasks.",
+      "llm_tldr_cn": "使用组相对策略优化显式对齐语言和视觉表示，增强多模态理解。",
+      "llm_tldr": "使用组相对策略优化显式对齐语言和视觉表示，增强多模态理解。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.27993v1",
+      "title": "Progressive Prompt-Guided Cross-Modal Reasoning for Referring Image Segmentation",
+      "abstract": "Referring image segmentation aims to localize and segment a target object in an image based on a free-form referring expression. The core challenge lies in effectively bridging linguistic descriptions with object-level visual representations, especially when referring expressions involve detailed attributes and complex inter-object relationships. Existing methods either rely on cross-modal alignment or employ Semantic Segmentation Prompts, but they often lack explicit reasoning mechanisms for grounding language descriptions to target regions in the image. To address these limitations, we propose PPCR, a Progressive Prompt-guided Cross-modal Reasoning framework for referring image segmentation. PPCR explicitly structures the reasoning process as a Semantic Understanding-Spatial Grounding-Instance Segmentation pipeline. Specifically, PPCR first employs multimodal large language models (MLLMs) to generate Semantic Segmentation Prompt that capture key semantic cues of the target object. Based on this semantic context, Spatial Segmentation Prompt are further generated to reason about object location and spatial extent, enabling a progressive transition from semantic understanding to spatial grounding. The Semantic and Spatial Segmentation prompts are then jointly integrated into the segmentation module to guide accurate target localization and segmentation. Extensive experiments on standard referring image segmentation benchmarks demonstrate that PPCR consistently outperforms existing methods. The code will be publicly released to facilitate reproducibility.",
+      "authors": [
+        "Jiachen Li",
+        "Hongyun Wang",
+        "Jinyu Xu",
+        "Wenbo Jiang",
+        "Yanchun Ma",
+        "Yongjian Liu",
+        "Qing Xie",
+        "Bolong Zheng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-30T03:33:10+00:00",
+      "link": "https://arxiv.org/pdf/2603.27993v1",
+      "tags": [
+        "keyword:MMFND",
+        "keyword:TSDS",
+        "query:TSDS"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Cross-modal reasoning for image segmentation",
+      "llm_evidence_cn": "用于图像分割的跨模态推理",
+      "llm_evidence": "用于图像分割的跨模态推理",
+      "canonical_evidence": "用于图像分割的跨模态推理",
+      "llm_tldr_en": "Proposes a progressive prompt-guided framework for bridging linguistic and visual representations.",
+      "llm_tldr_cn": "提出一种渐进式提示引导框架，用于增强语言描述与视觉表示之间的跨模态推理。",
+      "llm_tldr": "提出一种渐进式提示引导框架，用于增强语言描述与视觉表示之间的跨模态推理。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2603.27800v1",
+      "title": "Diversity Matters: Dataset Diversification and Dual-Branch Network for Generalized AI-Generated Image Detection",
+      "abstract": "The rapid proliferation of AI-generated images, powered by generative adversarial networks (GANs), diffusion models, and other synthesis techniques, has raised serious concerns about misinformation, copyright violations, and digital security. However, detecting such images in a generalized and robust manner remains a major challenge due to the vast diversity of generative models and data distributions. In this work, we present \\textbf{Diversity Matters}, a novel framework that emphasizes data diversity and feature domain complementarity for AI-generated image detection. The proposed method introduces a feature-domain similarity filtering mechanism that discards redundant or highly similar samples across both inter-class and intra-class distributions, ensuring a more diverse and representative training set. Furthermore, we propose a dual-branch network that combines CLIP features from the pixel domain and the frequency domain to jointly capture semantic and structural cues, leading to improved generalization against unseen generative models and adversarial conditions. Extensive experiments on benchmark datasets demonstrate that the proposed approach significantly improves cross-model and cross-dataset performance compared to existing methods. \\textbf{Diversity Matters} highlights the critical role of data and feature diversity in building reliable and robust detectors against the rapidly evolving landscape of synthetic content.",
+      "authors": [
+        "Nusrat Tasnim",
+        "Kutub Uddin",
+        "Khalid Malik"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-03-29T18:29:00+00:00",
+      "link": "https://arxiv.org/pdf/2603.27800v1",
+      "tags": [
+        "keyword:MMFND",
+        "query:MMFND"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "AI-generated image detection to combat misinformation",
+      "llm_evidence_cn": "用于打击虚假信息的AI生成图像检测",
+      "llm_evidence": "用于打击虚假信息的AI生成图像检测",
+      "canonical_evidence": "用于打击虚假信息的AI生成图像检测",
+      "llm_tldr_en": "Proposes a dual-branch network for robust AI-generated image detection to mitigate misinformation risks.",
+      "llm_tldr_cn": "提出一种双分支网络框架，通过增强数据多样性来提高AI生成图像检测的鲁棒性。",
+      "llm_tldr": "提出一种双分支网络框架，通过增强数据多样性来提高AI生成图像检测的鲁棒性。",
+      "llm_tags": [
+        "query:mmfnd:composite"
+      ],
+      "matched_query_tag": "query:mmfnd:composite",
+      "matched_query_text": "Papers central to 多模态虚假新闻检测论文检索, especially work that connects or combines: cross-modal misinformation detection techniques; f; m; state of the art multimodal fake news detection models.",
+      "matched_requirement_id": "req-composite-mmfnd",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2603.28563v1",
+      "title": "Learning Where to Look: UCB-Driven Controlled Sensing for Quickest Change Detection",
+      "abstract": "We study the multichannel quickest change detection problem with bandit feedback and controlled sensing, in which an agent sequentially selects one of the data streams to observe at each time-step and aims to detect an unknown change as quickly as possible while controlling false alarms. Assuming known pre- and post-change distributions and allowing an arbitrary subset of streams to be affected by the change, we propose two novel and computationally efficient detection procedures inspired by the Upper Confidence Bound (UCB) multi-armed bandit algorithm. Our methods adaptively concentrate sensing on the most informative streams while preserving false-alarm guarantees. We show that both procedures achieve first-order asymptotic optimality in detection delay under standard false-alarm constraints. We also extend the UCB-driven controlled sensing approach to the setting where the pre- and post-change distributions are unknown, except for a mean-shift in at least one of the channels at the change-point. This setting is particularly relevant to the problem of learning in piecewise stationary environments. Finally, extensive simulations on synthetic benchmarks show that our methods consistently outperform existing state-of-the-art approaches while offering substantial computational savings.",
+      "authors": [
+        "Yu-Han Huang",
+        "Argyrios Gerogiannis",
+        "Subhonmesh Bose",
+        "Venugopal V. Veeravalli"
+      ],
+      "primary_category": "cs.IT",
+      "categories": [
+        "cs.IT",
+        "eess.SY"
+      ],
+      "published": "2026-03-30T15:23:03+00:00",
+      "link": "https://arxiv.org/pdf/2603.28563v1",
+      "tags": [
+        "keyword:TSDS"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "quickest change detection in data streams",
+      "llm_evidence_cn": "数据流中的快速变化检测",
+      "llm_evidence": "数据流中的快速变化检测",
+      "canonical_evidence": "数据流中的快速变化检测",
+      "llm_tldr_en": "Develops UCB-driven procedures for optimal quickest change detection in multichannel data streams.",
+      "llm_tldr_cn": "开发了UCB驱动的程序，用于多通道数据流中的最优快速变化检测。",
+      "llm_tldr": "开发了UCB驱动的程序，用于多通道数据流中的最优快速变化检测。",
+      "llm_tags": [
+        "query:tsds"
+      ],
+      "matched_query_tag": "query:tsds",
+      "matched_query_text": "State of the art time sereis segmentation",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

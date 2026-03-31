@@ -1,0 +1,729 @@
+Title: Segmenting Superbubbles in a Simulated Multiphase Interstellar Medium using Computer Vision
+
+URL Source: https://arxiv.org/pdf/2603.27741v1
+
+Published Time: Tue, 31 Mar 2026 01:33:24 GMT
+
+Number of Pages: 20
+
+Markdown Content:
+> Draft version March 31, 2026
+> Typeset using L ATEX twocolumn style in AASTeX7
+
+Segmenting Superbubbles in a Simulated Multiphase Interstellar Medium using Computer Vision 
+
+Jing-Wen Chen ,1 Alex S. Hill ,1, 2 Anna Ordog ,1, 2, 3 Rebecca A. Booth ,4 and Mohamed S. Shehata 1
+
+> 1Department of Computer Science, Math, Physics & Statistics, University of British Columbia, Okanagan Campus 1177 Research Rd, Kelowna, BC V1V 1V7, Canada
+> 2Dominion Radio Astrophysical Observatory, Herzberg Research Centre for Astronomy and Astrophysics, National Research Council Canada, PO Box 248, Penticton, BC V2A 6J9, Canada
+> 3Department of Physics & Astronomy, University of Western Ontario, 1151 Richmond Street, London, ON, N6A 3K7, Canada
+> 4Department of Physics and Astronomy, University of Calgary, 2500 University Drive NW, Calgary, Alberta, T2N 1N4, Canada
+
+ABSTRACT We developed a computer vision-based methodology to achieve precise 3D segmentation and tracking of superbubbles within magnetohydrodynamic simulations of the supernova-driven interstellar medium. Leveraging advanced 3D transformer models, our approach effectively captures the complex morphol-ogy and dynamic evolution of these astrophysical structures. To demonstrate the technique, we specifi-cally focused on a superbubble exhibiting interesting interactions with its surrounding medium, driven by a series of successive supernova explosions. Our model successfully generated detailed 3D segmen-tation masks, enabling us to visualize and analyze the bubble’s structural evolution over time. The results reveal insights into the superbubble’s growth patterns, energy retention, and interactions with surrounding interstellar matter. This interdisciplinary approach not only enhances our understanding of superbubble dynamics but also offers a robust framework for investigating other complex phenomena in the cosmos. 
+
+Keywords: Interstellar medium (847) — Superbubbles (1656) — Galaxy evolution (594) — Astronomy data analysis (1858) — Astronomy image processing (2306) 
+
+1. INTRODUCTION A comprehensive understanding of superbubble struc-tures within the interstellar medium (ISM) is crucial for interpreting the Milky Way’s evolution (S. Bialy et al. 2021). Superbubbles are cavities created by clustered supernovae, filled with hot, ionized gas, and spanning hundreds of parsecs. They play a crucial role in galac-tic energetics, sweeping up surrounding ISM and creat-ing regions with ‘hot bubbles’. As they expand, super-bubbles can incorporate cold molecular clouds, which become either distinct or homogenized within diffuse winds (C. Heiles 1984; N. M. McClure-Griffiths et al. 2001; B. M. Forster et al. 2025). Their formation, ex-pansion, and merging significantly shape the large-scale structure of the Milky Way and influence star forma-tion by generating low-density (number density) cavi-ties and channels within the ISM (D. P. Cox & B. W. Smith 1974; C. F. McKee & J. P. Ostriker 1977; M. A. 
+
+> Email: joy0921@student.ubc.ca
+
+de Avillez & D. Breitschwerdt 2005; D. P. Cox 2005). However, their turbulent evolution complicates the anal-ysis of their morphology (J. R. Dawson et al. 2013; M. Tahani et al. 2022a,b). In a data-driven study of a specific superbubble struc-ture, T. J. O’Neill et al. (2024) created a detailed three-dimensional model of the Local Bubble, derived from a dust map by G. Edenhofer et al. (2024). This Local Bubble cavity, originally formed by supernovae around the Sun, displays an irregular morphology. The model highlights several well-known dust features and molec-ular clouds along its surface, suggesting connections to other ISM cavities. This high-resolution representation is crucial for understanding the evolution of nearby gas and stars, as well as for clarifying the links between the solar neighborhood and the Milky Way’s lower halo. Moreover, the study illuminates the history of super-nova eruptions that formed our Local Chimney, a tun-nel through which matter from the Local Bubble ascends into the upper Galactic halo, revealing the cosmic events that have shaped our existence. 
+
+> arXiv:2603.27741v1 [astro-ph.GA] 29 Mar 2026
+
+2Beyond the Local Bubble, the study of the multiphase ISM influenced by supernova explosions has a long his-tory. Foundational work (D. P. Cox & B. W. Smith 1974) suggested that one supernova every 50 years in the Milky Way is sufficient to create a network of low-density tunnels in the ISM, potentially accounting for the observed soft X-ray emission (D. McCammon et al. 1983; A. Moretti et al. 2003) and ultraviolet absorp-tion. Building on this assumption, C. F. McKee & J. P. Ostriker (1977) introduced a three-component model in which the ISM is largely composed of hot, low-density gas, with supernova remnants evolving under the influ-ence of cool cloud evaporation. Although these analytic models provide a useful framework, they do not fully account for the observed prevalence of atomic hydrogen gas emission. Numerical simulations have since allowed a more de-tailed exploration of these processes. Early 3D simu-lations (M. A. de Avillez & D. Breitschwerdt 2004; M. De Avillez & D. Breitschwerdt 2004; M. A. de Avillez & D. Breitschwerdt 2005) investigated supernova-driven circulation between the disk and the halo, revealing a critical duty cycle that acts as a pressure release valve for hot gas, and highlighting the complex interaction between different ISM phases. Advances in simulation techniques have further illuminated the roles of turbu-lence and magnetic fields. For example, magnetohydro-dynamic simulations of vertical stratification revealed that most of the ISM mass resides in thermally sta-ble regimes and that supernovae drive dynamic oscil-lations (M. A. de Avillez & D. Breitschwerdt 2005; J. Stil et al. 2009; A. S. Hill et al. 2012; F. Gent et al. 2013). More recent models, such as TIGRESS (C.-G. Kim et al. 2013, 2014; C.-G. Kim & E. C. Ostriker 2015a,b, 2018) and SILCC (P. Girichidis et al. 2016; T.-E. Rathjen et al. 2021), provide detailed insights into the turbulent, multiphase atomic ISM, including diagnos-tics of atomic hydrogen and temperature distributions. The FIRE project (P. F. Hopkins 2015; A. R. Wetzel et al. 2016; S. Garrison-Kimmel et al. 2017; P. F. Hop-kins et al. 2018a,b; C. Wheeler et al. 2019; P. F. Hopkins et al. 2023) explores cosmological simulations of galaxy formation that directly resolve the interstellar medium within individual galaxies, capturing their cosmological environment. FIRE highlights the importance of multi-ple feedback mechanisms in shaping galaxy characteris-tics, such as stellar masses and morphologies. These simulations numerically solve the differential equations that govern the physical processes in the ISM, such as energy injection from massive stars and supernovae, the gravitational influence of the galactic mass distribution, and cooling via spectral line emis-sion (M. R. Joung & M.-M. Mac Low 2006; A. S. Hill et al. 2012). Each supernova explosion, occurring at an observed rate of roughly one per 50 years across the Galaxy, releases about 10 44 J of energy, generating hot gas, driving gas circulation in a Galactic fountain (J. N. Bregman 1980; J. D. Soler et al. 2022; F. Barbani et al. 2023; H. Sugiyama et al. 2023), amplifying magnetic fields, and inducing turbulence. Together, these sim-ulation studies trace the evolution of the ISM, using both theoretical frameworks and sophisticated simula-tions that capture the intricate dynamics and structure of the galactic medium, underscoring the critical role of supernovae in shaping the multiphase ISM and sustain-ing the galactic ecosystem. These findings motivate a deeper investigation into the evolution of superbubbles across diverse galactic en-vironments and their interactions with the ISM. Re-cent methods for identifying and tracking superbubbles in simulations have advanced rapidly. B. Wallin et al. (2025) applied a global percentile threshold to segment 2D Hi column density maps into Hi -holes, while C. Li et al. (2024) used high-resolution simulation (F. Mari-nacci et al. 2019) to identify superbubbles via hot gas thresholding and mesh-connectivity grouping, and to track them through stellar-particle association. How-ever, these approaches rely on hand-tuned, rule-based heuristics (global thresholds and simple matching rules) that can fail when bubbles merge or fragment. More re-cently, J.-W. Chen et al. (2025) explored neural network-based segmentation models to study galactic structures, but their success has so far been limited to isolated su-pernova remnants rather than large, interacting super-bubble systems. In this work, we explore new methods to track the 3D morphology of simulated superbubbles as they evolve. By monitoring the expansion and contraction dynam-ics of individual superbubbles, we can understand their growth patterns, energy transfer mechanisms, and inter-actions with the surrounding medium. The simulation data (A. S. Hill et al. 2018) allow us to trace the life-cycle of a superbubble from its formation to successive stages of expansion and interaction, ultimately provid-ing a more comprehensive picture of the processes that shape the ISM and drive galactic evolution. Our com-puter vision-based tracking algorithm is introduced and explained in Section 2. The results of our superbubble case study, including its morphological evolution, are presented in Section 3. In Section 4, we analyze the bubble’s energy and velocity profiles, as well as its in-teractions with the surrounding ISM. Finally, we sum-marize our findings and conclusions in Section 5. 3log (𝑛 /cm !")        
+
+> 𝑧
+> 𝑥 𝑦
+> 𝑧
+> 𝑥 𝑦
+> 𝑧
+> 𝑥 𝑦
+> 𝑧
+> 𝑥 𝑦
+> Time 191 .8Myr
+> 213 .0Myr
+> Input Output
+
+Figure 1. Segmentation results demonstrating superbub-bles isolated from the input density ( n) cube using our pro-posed tracking framework. The upper row features a super-nova remnant case at t = 191 .8 Myr, while the lower row shows a superbubble identified at t = 213 .0 Myr in the same simulation. 2. 3D SEGMENTATION ALGORITHM FOR BUBBLE TRACKING In this section, we present a computer vision-based algorithm designed for the 3D segmentation and tempo-ral tracking of superbubbles within the simulated ISM. Our approach processes 3D simulation data cubes, cap-turing density variations, to produce detailed morpho-logical trajectories of individual superbubbles, as shown in Figure 1. Incorporating astrophysical principles into our deep learning model’s training process is crucial for setting the boundaries of interstellar bubbles formed by supernova explosions. To achieve physics guidance, we have developed a loss function LR, which leverages the thermal characteristics of the ISM to guide the model’s learning process. This guiding approach has the po-tential to uncover patterns within physical data that may have remained unnoticed by human analysis. The methodology is structured into three primary compo-nents: dataset preparation (Section 2.1), 3D morpholog-ical learning (Section 2.2), and bubble instance tracking (Section 2.3). The code is available at J. W. Chen & A. S. Hill (2025). 2.1. Input Dataset 
+
+We use a publicly available dataset originating from MHD simulations of a supernova-driven, turbulent ISM (described in detail by M. R. Joung & M.-M. Mac Low 2006; A. S. Hill et al. 2012; A. S. Hill et al. 2018) con-ducted using Flash (B. Fryxell et al. 2000). The simula-! (K)%!(km  s"#) ) (cm "$)              
+
+> !=−256 (pc )!=0(pc )!=+256 (pc )
+> -(pc )-(pc )-(pc )
+> . (pc ) . (pc ) . (pc )
+
+Figure 2. Density ( n), temperature ( T ), and vertical ve-locity ( vz ) from the original MHD simulation dataset A. S. Hill et al. (2012), captured at t = 191 .9 Myr. The leftmost column represents z = −256 pc, the second column z = 0 (the Galactic plane), and the rightmost column z = +256 pc. 
+
+tion produces a volumetric output of a 1 × 1 × 40 kpc 3
+
+box. It utilizes adaptive mesh refinement (AMR) to achieve a resolution of 3 .9 pc 5 within |z| < 500 pc, which gradually decreases to 31 .2 pc with increasing altitude. The field variables in these simulations include density, temperature, velocity, and magnetic field, examples of which are depicted in Figure 2. The simulations reach a dynamical equilibrium by approximately 200 Myr (M. De Avillez & D. Breitschwerdt 2004; A. S. Hill et al. 2012). For our analysis, we selected two distinct intervals from the available timesteps, first from 191 to 206 Myr, sampled every 0 .1 Myr, and from 251 to 361 Myr, sam-pled every 1 Myr, providing a dataset covering a total duration of 125 Myr. At each simulation timestep, we extract a central cubic region spanning 1000 parsecs per side, corresponding to 256 3 pixels, resulting in a total of 260 cubic datasets. From each simulation snapshot, voxel intensity data corresponding to local gas density, temperature, and vertical velocity ( vz ) were collected, thereby constructing a three-channel dataset suitable for multimodal learning. To generate ground truth data for model training, we apply a minimum temperature threshold of 10 5.5 Kto the simulation cubes. This is the inflection point    
+
+> 5The actual resolution is 1000pc /256 ( ≈3.9 pc) or 1000pc /512 (≈1.95 pc). In the following sections, we refer to these as 4 pc and 2 pc, respectively.
+
+4𝑦 𝑥 
+
+> 𝑧
+> 𝑦
+> 𝑥
+> 𝑧
+> 𝑦
+> 𝑥
+> 𝑧
+> 𝑦
+> 𝑥
+> 𝑧
+> 𝑦
+> 𝑧
+> 𝑦
+> 𝑧
+> 𝑦
+> 𝑧
+> 𝑧
+> 𝑦
+> 𝑥
+> log (𝑛 /cm !")
+
+Figure 3. Visualization presenting 3D density cubes of hot gas extracted from the magnetohydrodynamic simulation dataset (A. S. Hill et al. 2018). The cubes are thresholded at T > 10 5.5 K to highlight hot gas structures at t = 209 Myr. The rotation around the z-axis provides different perspectives, offering a clearer view of the spatial distribution and morphology of these high-temperature regions. 
+
+at which the derivative of the cooling function dΛ/dT 
+
+becomes negative in our piecewise power-law cooling curve (see Figure 1 of M. R. Joung & M.-M. Mac Low 2006), indicating the transition from thermally-unstable transition-temperature gas to thermally stable hot gas. 6
+
+This temperature thresholding yields binary 3D masks that highlight the locations and extent of superbubbles within the ISM, serving as reference labels for the learn-ing process. The threshold was chosen from the simula-tion cooling function (G. B. Field 1965; M. G. Wolfire et al. 1995, 2003): When oxygen cooling efficiency drops near 10 5.5 K, it produces a steep negative slope in the cooling curve that marks a transition to inefficient cool-ing. An illustrative example of these hot gas regions is depicted in Figure 3. Thresholding is effective when bubbles are well sepa-rated and have clearly distinguishable boundaries from neighboring structures, making it a suitable method to outline bubbles. However, it is not robust during merg-ers and splits and requires substantial manual inspection and correction. This motivates us to pursue a more gen-eralizable approach and to incorporate deep neural net-works to automate bubble tracking in complex scenarios involving mergers and splits.                    
+
+> 6We adopt temperature definition from A. S. Hill et al. (2018) based on the analytic cooling curve. “Cold” gas is defined as
+> T < 39 .8 K, “cool” as 39 .8 K < T < 10 4K, “warm” as 10 4
+> K< T < 2×10 4K, “transition-temperature” as 2 ×10 4K
+> < T < 10 5.5K, and “hot” as T > 10 5.5K.
+
+2.2. 3D Morphological Learning with Astro-UNETR 
+
+To segment superbubble structures, we developed the Astro-UNETR model, which integrates physics-informed guidance and learns from multimodal inputs. Our approach adapts the Swin-UNETR architecture (A. Hatamizadeh et al. 2021) for application to astrophysical datasets. By combining the strengths of Swin Trans-formers (Z. Liu et al. 2021) and U-Net architectures ( ¨O. C ¸ i¸ cek et al. 2016), Astro-UNETR effectively cap-tures both global context and fine-grained local features within volumetric data. Our primary goal is the ac-curate segmentation of all superbubbles present within the 3D simulation cubes, enabling consistent tracking of their evolution over consecutive timesteps. As shown in the model architecture illustration in Figure 4, the encoder component employs a hierarchi-cal Swin Transformer (Z. Liu et al. 2021), which pro-cesses the input 3D volume through non-overlapping 3D patches. These patches are embedded into a feature space and passed through multiple stages, each com-prising Swin Transformer blocks with shifted window mechanisms and patch merging layers. This encoder design facilitates the modeling of long-range dependen-cies and the extraction of multi-scale contextual infor-mation, enabling the identification of both the top cap and the bottom wall of a bubble as components of the same entity. The bottleneck layer further refines these features, serving as a bridge to the decoder. The decoder utilizes transposed convolutions for upsampling and in-5𝑧 
+
+> 𝑦 𝑥
+
+Semantic Segmentation  
+
+> 𝑥
+> 𝑧
+> 𝑦 𝑥
+> 𝑧
+> 𝑦
+> 𝑥
+> 𝑧
+> 𝑦
+
+Input: MHD Data 
+
+Density Temperature 
+
+Velocity                                    
+
+> STB
+> STB
+> STB
+> STB
+> Bottleneck  Feature
+> deconv RB  RB
+> deconv RB  RB
+> deconv RB  RB
+> deconv RB  RB
+> 𝐻
+> 16 ×𝑊
+> 16 ×𝐷
+> 16 ×384
+> 𝐻
+> 8×𝑊
+> 8×𝐷
+> 8×192
+> 𝐻
+> 4×𝑊
+> 4×𝐷
+> 4×96
+> 𝐻
+> 2×𝑊
+> 2×𝐷
+> 2×48
+> STB :swin transformer block deconv :deconvolution block RB : residual block
+> RB
+> Head
+> Encoder Decoder
+
+ℒℛ
+
+Figure 4. Model architecture of the proposed Astro-UNETR model. The 3D data cubes are input to the Astro-UNETR, which employs swin-transformer blocks Z. Liu et al. (2021) to learn the 3D semantic representation of superbubble morphology. High-level features are refined by a bottleneck layer and then upsampled to their original dimensions via deconvolution layers and ResNet blocks, producing a 3D semantic segmentation of all bubbles. 
+
+corporates skip connections from corresponding encoder stages, ensuring the preservation of spatial details. During the training stage, the Astro-UNETR model processes the central cubes from three modalities (den-sity, temperature, and vertical velocity) spanning two distinct periods: 191–206 Myr and 251–361 Myr. This training stage enables the model to effectively learn fea-ture representations across different modalities and un-derstand their cross-channel relationships. The training dataset is crucial for teaching the model to recognize su-perbubble characteristics. To further embed astrophys-ical intuition into the model, we introduce a metric LR,designed to guide the model towards physically plausible bubble boundaries. In the galactic mid-plane, the ISM predominantly (by volume) consists of warm neutral medium (WNM) and warm ionized medium (WIM), both characterized by temperatures ranging from approximately 6 , 000 to 10 , 000 K. When a supernova occurs, it injects sub-stantial energy into the surrounding medium, creating a shock front that sweeps up the ambient warm gas. This results in the formation of a hot, low-density superbub-ble shock heated to temperatures exceeding 10 5.5 K, sur-rounded by a denser shell composed of cooler, swept-up gas. We define a loss function LR which penalizes solutions in which most of the surface area of a segmented hot bubble is connected directly to other hot gas with no cool interface while still permitting some relatively-small hot-to-hot interfaces. To do so, we consider the cells in a 10 voxels thick ring (39 pc thickness) immediately outside the segmented bubble; Vh is the volume of those cells with T > 10 5.5 K. Vt is the total volume of the ring. We define the loss function as 
+
+LR = Vh
+
+Vt
+
+. (1) The loss function LR = 0 for a bubble with no hot-to-hot interfaces; this is the only kind of bubble that could be identified with simple thresholding. Minimizing this loss ratio during training enables the model to effectively differentiate the hot superbubble interior from the cooler surrounding ISM. Consequently, the segmentation of the bubble boundaries aligns with the established thermal structures observed in the ISM. The final output of our model is a semantic segmenta-tion map highlighting all superbubble structures within the input cubes. Model training uses a soft Dice loss function (F. Milletari et al. 2016) together with LR to teach the network what a superbubble looks like. The temperature-guided masks provide the supervisory sig-nal, and the model uses that guidance to produce mor-phological segmentation masks. Because we feed den-sity, temperature, and vz cubes simultaneously, the net-work can learn not only thermal structure but also veloc-ity features at hot-warm interfaces, which helps produce physically consistent boundaries. Extending supervision to density is possible but less straightforward. There is no single, environment-independent density threshold analogous to the temper-ature threshold (which is set by atomic cooling physics), so a fixed density cutoff often fails across different regions, especially far above the midplane where the 6pressure is lower. For this reason, we began with temperature-based masks, which are physically moti-vated, easier to train on, and provide a robust starting point. Training was run for 300 epochs on an RTX 4090 work-station GPU. Each epoch processes 266 instances at ≈ 1second per instance ( ≈ 4.4 minutes per epoch), so full training takes about 22 hours. We used a feature size of 48; this configuration yields reliable superbubble se-mantic segmentation. 2.3. Instance Tracking with SAM2 
+
+With all superbubbles semantically segmented, we can now select a target bubble and reconstruct its full evolu-tionary trajectory. The single-bubble lifetime tracking proceeds in two phases, as shown in Figure 5: (1) isolate the target instance and (2) track that instance over time. Instance segmentation is required because we focus on the evolution of individual superbubbles and therefore need per-instance detail. To isolate individual superbubbles, we use Segment Anything Model 2 (SAM2) (N. Ravi et al. 2024), a foundational model for image and video segmentation that builds on previous video segmentation work (H. K. Cheng et al. 2021; H. K. Cheng & A. G. Schwing 2022; M. Bekuzarov et al. 2023; H. K. Cheng et al. 2023). We apply SAM2 to 3D semantic segmentation cubes by treating each cube as an ordered sequence of 2D slices (by height) and processing those slices as video frames to generate 3D masks for the selected object. Next, we associate 3D superbubbles between timesteps using their morphology and spatial location to reconstruct and track their long-term evolution. To track superbubbles, we follow these steps. 
+
+• Step 0: Locate the trajectory starting point us-ing the supernova log (time and position), then create a human-supervised instance segmentation at the first timestep using a connected-component method to isolate the bubble. 
+
+• Step 1: Initialize SAM2 by encoding this initial bubble into the model’s memory encoder so the model has context for subsequent frames. The memory encoder compresses current predictions into compact memory representations, which are then stored in a memory bank organized into First-In-First-Out (FIFO) queues. This memory struc-ture preserves relevant past predictions and re-cent prompts, improving downstream tracking de-cisions, as well as accuracy and efficiency. 
+
+• Step 2: Input the full set of candidate masks for the cube in the next timestep. The memory at-tention module then searches for feature embed-dings in the current frame that match the previous frame prediction. Implemented with transformer blocks using self- and cross-attention, this module fuses new input prompts with historical embed-dings stored in a memory bank, updating the cur-rent frame features to ensure temporal coherence and adapt to dynamic changes. The mask decoder uses the refined embeddings to pro-duce segmentation masks for each frame. It resolves ambiguities by generating multiple candidate masks and selecting the one with the highest predicted Intersection over Union (IoU), ensuring precise capture of the target as its appearance or position changes. This yields the target bubble instance segmentation for every timestep. The model tracks an individual bubble’s evolution by using its previous location and morphology to associate the current frame with the best matching candidate from the preceding timestep. Iterating this process across all timesteps yields a complete single bubble track spanning its lifetime. This tracking method facilitates a detailed analysis of the evolution and dynamics of superbubbles within the interstellar medium. A key advantage of our model is handling temporary connections between bubbles during supernova-driven venting. It detects short-lived links and establishes meaningful boundaries that simple thresholding cannot. Consequently, a bubble is tracked as a single entity and correctly reverts to its original identity once it separates from a neighbor.  
+
+> 3.
+
+RESULTS The computer vision-based tracking algorithm en-abled us to analyze the structural and evolutionary char-acteristics of superbubbles in the interstellar medium. Among various candidates, we selected the superbub-ble designated as SB230 7 for an in-depth case study, as illustrated in Figure 6. This selection was guided by the need to examine a bubble of significant size and longevity, which facilitates detailed structural and dy-namic analyses without the rapid dispersion observed in smaller bubbles. The rationale for focusing on bubbles similar to SB230, rather than smaller or larger counterparts, stems from their distinct physical properties and dynamic be-  
+
+> 7Superbubble cases are named sequentially as they are created in the simulation. A. S. Hill et al. (2018) generates superbub-bles through continuous supernova energy injection at a fixed location, with injections uniformly distributed over 40 Myr. For example, the 230 th superbubble in the sequence is named SB230.
+
+7𝑧 
+
+> 𝑦 𝑥
+
+# Semantic Segmentation 
+
+# image 
+
+# encoder 
+
+# memory 
+
+# attention 
+
+# mask 
+
+# decoder 𝑧 
+
+# 𝑥 𝑦 
+
+# prompt 
+
+# encoder 
+
+# memory 
+
+# bank 
+
+# memory 
+
+# encoder 
+
+> points
+
+# Instance Segmentation Output     
+
+> 𝑥 𝑦
+> 𝑧
+> SN log
+> Figure 5. SAM2 model architecture illustration. To isolate a specific bubble, the semantic segmentation output from As-tro-UNETR is fed into SAM2 (N. Ravi et al. 2024), a video object segmentation model that identifies the bubble corresponding to the superbubble designated by the supernova (SN) log, which yields an isolated 3D instance segmentation of the target bubble. Subsequent data cubes of the same bubble are segmented over time using the stored model features.
+
+haviors. Smaller bubbles tend to dissipate quickly into the surrounding medium, limiting the scope for detailed analysis as their structures fade rapidly, often resem-bling typical supernova remnants. On the other hand, larger structures can span the vertical extent of the galactic disk, potentially connecting the upper and lower halves of the Galactic halo, as depicted in Figure 6 d.Such extensive structures often lose distinct boundaries and interact with nearby supernovae, then merge into surrounding gaseous environments, making them less suitable for isolated studies. During segmentation, no manual intervention was applied, yet the model effec-tively identified the key structures with only minor er-rors. Although this study focuses exclusively on the SB230 bubble, the model can be generalized to segment any bubble of interest. From Fig. 3 in A. S. Hill et al. (2018), we observe a clear qualitative transition occurring around a height of approximately 500 pc. The region below this height con-tains significant amounts of warm gas. Between roughly 500 and 1000 pc, the amount of warm gas diminishes, although the gas column density remains relatively sub-stantial. Beyond 1000 pc, the environment transitions into a regime characterized by a very low column den-sity. When considering the expansion of bubbles, heights above approximately 500 pc offer minimal warm gas to confine their growth. Thus, we define the region above 500 pc as the halo for the purpose of this analysis. We established the selection criteria for SB230 to en-sure a comprehensive study of superbubble dynamics under controlled conditions. First, the bubble needed to be sufficiently large, with a lifespan exceeding 25 Myr, to allow for the analysis of its long-term evolu-tion and interactions within the galactic environment. Second, its location had to be within the galactic mid-plane, where cooler gas structures are prevalent. This midplane region was preferred because gas at higher al-titudes tends to merge into large, indistinct cloud for-mations near the halo, reducing the clarity needed for precise morphological analysis. Lastly, the superbub-ble had to be influenced by continuous energy injections from several simulated supernovae, providing a dynamic environment to examine its expansion, shape evolution, and potential merging with other ISM structures. SB230 is our longest tracked case, spanning 26 Myr, before the merging boundary becomes too ambiguous to resolve, as shown in the vertical density slice at 234 Myr in Ap-pendix A (Figure 15). The same approach can be ap-plied systematically to evaluate superbubble longevity in similar models. 8𝑧    
+
+> 𝑥 𝑦
+> 𝑧
+> 𝑥 𝑦
+> 𝑧
+> 𝑥 𝑦
+> log (𝑛 /cm !")
+
+## (a) 
+
+> 𝑛  (cm !")
+
+## (c) 
+
+## (d) 
+
+## (b)       
+
+> 𝑦  (pc )
+> 𝑥 (pc )
+> Figure 6. A comparison between SB230 and the larger central structure observed in: (a) the 3D simulation cube, and (b) a 2D x-yplane density slice at z= 202 pc. (c) SB230 is seen in 3D as a distinct, well-defined superbubble, making it an ideal candidate for tracking its evolution. (d) The structure below SB230, though appearing bubble-like in 2D, is revealed in 3D to be part of an extensive interconnected system forming a tunnel-like structure linking the upper and lower Galactic halo. Such a feature does not meet the criteria for an isolated superbubble driven by localized supernova explosions. The central structure largely represents the diffuse, interconnected hot gas within the ISM, whereas the isolated bubble on the right more accurately corresponds to a discrete superbubble formed by localized supernova activity.
+
+Using our tailored computer vision segmentation al-gorithm, we generated 3D segmentation masks that fa-cilitated the isolation of SB230 from adjacent structures within the density data cube. The generated 3D masks allow us to visualize the structure of the superbubble in 3D, as shown in Figure 7. In this 3D representa-tion, the partially transparent colorscale represents den-sities of regions having higher temperature (hot gas with 
+
+T > 10 5.5K). The solid color regions highlight the SB230 superbubble, allowing for detailed observation of its physical boundaries and interaction with the sur-rounding interstellar medium. In the 2D image in Fig-ure 6 b, we show the boundary of the segmented bubble with orange dotted lines. In this timestep, the bound-ary of the bubble passes through a larger hot (purple) region because the SAM2 algorithm, using knowledge of the bubble from a previous timestep, identified this as a more appropriate boundary than incorporating the entire hot (purple) region, as would a simple segmenta-tion algorithm. We inspected movies of the evolution of the superbubble, and human judgment agrees with the SAM2 characterization and not with simple threshold-ing. Armed with the segmentation masks, we conduct a more refined analysis of the bubble’s properties. The simulation data cube for each cell includes parameters such as density ρ, velocity ⃗v, and temperature T . These attributes are used for calculating the bubble’s energy, defined as 
+
+E = K + U = 12 mv 2 + 32 nkT (2) with kinetic energy K, thermal energy U , mass m = ρV ,and square of speed v2 = v2 
+
+> x
+
++ v2 
+
+> y
+
++ v2 
+
+> z
+
+. Thermal energy uses the Boltzmann constant k, and number density nn = ρμm H
+
+, (3) where mH is the proton mass and μ = 1 .4 represents the mean particle weight. Figure 8 illustrates the evolution of energy and vol-ume of the bubble throughout the tracked timeframe, 9𝑧                  
+
+> 𝑥 𝑦
+> 215 Myr
+> 𝑧
+> 𝑥 𝑦
+> 235 Myr
+> 𝑧
+> 𝑥 𝑦
+> Time 209 Myr
+> 𝑧
+> 𝑥 𝑦
+> 210 Myr
+> 𝑧
+> 𝑥 𝑦
+> 211 Myr
+> 𝑧
+> 𝑥 𝑦
+> 213 Myr
+> 𝑧
+> 𝑥 𝑦
+> 225 Myr
+> 𝑧
+> 𝑥 𝑦
+> 230 Myr
+> log (𝑛 /cm !")
+
+Figure 7. 3D density plots visualizing the evolution of the tracked superbubble SB230 (opaque) from its initial explosion through 30 Myr of its lifetime. The first frame in this illustration corresponds to the same time slice ( t = 209 Myr) depicted from various viewing angles in Figure 3. The bubble transitions from an initial spherical shape to a more complex structure, developing multiple tunnels that facilitate matter outflow into neighboring regions and the upper halo. This evolution highlights the capability of our computer vision-based model in accurately tracking the full superbubble evolution trajectory. pc !
+
+> pc !
+
+Figure 8. Illustration of the evolution of volume and energy based on the segmented superbubble morphology. The vol-ume undergoes a rapid surge within the first 5 Myr, followed by periodic increases after supernova-like energy injections (red crosses), and decreases as matter flows into adjacent structures or escapes into the halo through formed tunnels. The energy remains consistently around 10 44 J throughout the bubble’s lifetime, indicating its ability to retain energy while maintaining a discrete structure. 
+
+highlighting dynamical changes. Initially, the bub-ble volume increased 10 times within the first Myr of expansion, reaching approximately 10 7 pc 3, and then plateaued. Subsequent increases in volume were triggered by consecutive new energy injections, while the volume decreased whenever matter flowed into the neighboring cloud or halo, shrinking the main body structure. Throughout the bubble’s lifespan, the en-ergy remained consistently around 10 44 J, demonstrat-ing its ability to retain energy while maintaining its dis-crete structure. Additionally, we present the masked 2D results at z = 167 pc for all timesteps within the tracked timeframe in Figure 9. Starting from t = 213 Myr, SB230 expands to the extent that it begins merg-ing with adjacent structures, complicating the task of drawing the bubble boundary in a 2D view. As described by M. R. Joung & M.-M. Mac Low (2006), the MHD simulations create OB associations 8
+
+which last for 40 Myr and have between 7 and 40 su-pernovae distributed evenly in time over that 40 Myr period. For our tracking, we choose a bubble associated with an OB association with close to 40 supernovae, meaning a supernova explodes every ≈Myr. A small number of additional supernovae from the field popu-lation also occur, by chance, within the bubble during the life of the OB association. In our tracked example (SB230), there are 26 supernovae over the 26 Myr pe-riod we followed (see Figure 8, red plus signs). When a supernova occurs near the bubble boundary, the re-sulting shock and stirred material are treated as part of  
+
+> 8We use “OB association” to refer to the set of supernovae which are set off at the same location over a 40 Myr time period and “bubble” or “superbubble” to refer to the volume of low gas density resulting from an OB association.
+
+10 that bubble. If the supernova occurs outside and pushes on the bubble wall, it is treated as a separate event that may cause a merger depending on geometry and timing. Because we perform instance-level tracking with mem-ory attention and a learned mask decoder, the algorithm can preserve distinct bubble identities even when one or more bubbles become temporarily connected. Tempo-rary mergers remain somewhat ambiguous by nature, but the model consistently identifies transient links and establishes meaningful boundaries in a way that thresh-olding cannot. We wish to explore the properties of the bubble through simple profiles which identify the location and behavior of the shock front, observable through changes in the velocity field. This boundary analysis involves cutting through the bubble to examine its internal dy-namics and vertical structure. We describe the inter-active slicing tool developed for this purpose in Ap-pendix A. Figure 10 presents a vertical cut of the SB230 structure. In particular, following a supernova-like en-ergy injection at t = 212 Myr, a strong outward shock-wave propagates through the bubble. By t = 213 Myr, this powerful upward flow reaches a neighboring struc-ture, forming a distinct chimney-like feature on the left side, eventually merging with it and channeling mat-ter into the upper halo through a connected tunnel. In contrast, the lower portion of the bubble, situated near the dense galactic midplane, experiences restricted ex-pansion. This constraint forces the bubble to seek an upward exit, shaping its overall morphology and inter-action with the surrounding interstellar medium. The velocity profile depicted in Figure 10 confirms this out-flow dynamic, with a strong upward flow of matter from SB230 towards adjacent structures, indicating the formation of a dynamic interaction zone or ‘chimney’ within the galactic medium. In Section 4.3, we will use the properties of the volume defined by the SAM2 algo-rithm for a similar but automated and more quantitative analysis.  
+
+> 4.
+
+DISCUSSION 4.1. Tracking in a Dynamical Environment 
+
+Our results demonstrate the capability to track a spe-cific superbubble from its formation to its eventual dis-sipation, showcasing the power and effectiveness of the proposed tracking technique. This method provides a valuable tool for studying astrophysical processes, offer-ing a more dynamic and accurate approach compared to traditional techniques. A straightforward way of characterizing superbubbles is nearest-neighbor tracking relying on a hard-coded density threshold to identify structures. However, given the constantly changing physical conditions within the ISM, a fixed-threshold approach fails to capture the complexity of superbubble evolution. Our model adapts to these density variations, leveraging knowledge of the full 3D structure to produce precise, time-evolving seg-mentation masks. Our algorithm exhibits a strong abil-ity to differentiate between discrete structures, dynam-ically learns bubble boundaries, accurately identifying and tracking individual superbubbles even as they in-teract with the surrounding interstellar medium. The robustness of this tracking approach is further validated as the tracked bubble retains its distinct morphology throughout its lifecycle, even when temporarily merging with larger structures before re-emerging as a separate entity. The 4 pc resolution of our simulation may impose a limitation if smaller-scale physics plays a significant role in the evolution of the bubble. To test the impact of spa-tial resolution, we produced a 2 pc version of the simula-tion and ran the SAM2 model for this over a shorter time interval, from 210 to 213 Myr. We show the resulting mask in Figure 11. The selected masks are qualitatively very similar to those from the 4 pc runs. For models with similar input physics, other studies using three dif-ferent codes have shown that 4 pc models are converged (M. A. de Avillez & D. Breitschwerdt 2004; A. S. Hill et al. 2012; S. Walch et al. 2015). Because our outputs from the 2 pc model are similar, we use the 4 pc models in our analysis, for which convergence has already been established. With an exact 3D outline of the bubble at each timestep, we further analyzed its energy and volume evo-lution throughout its lifetime. The results reveal a rapid volume expansion following a series of supernova-driven explosions, with subsequent fluctuations driven by in-teractions with surrounding structures. Meanwhile, the bubble’s total energy remains relatively stable as matter gradually escapes into the upper Galactic halo, as shown in Figure 7 at t = 230 Myr, dissipating energy in a regu-lated manner. These findings highlight the effectiveness of our method in capturing both the spatial and ener-getic evolution of superbubbles, providing insights into their role in shaping the interstellar medium. 4.2. Vertical Velocity Analyses 
+
+Upon examining the 3D visualization of the SB230 superbubble’s evolution, it becomes evident that the higher density at the galactic midplane restricts ex-pansion in the lower regions, resulting in the accumu-lation of matter forming a dense wall at the base, as shown in Figure 10 at t = 213 .0 Myr. Concurrently, the upper hemisphere exhibits outflow through lower-11 ! (cm !")! (cm !")! (cm !")! (cm !")! (cm !")! (cm !")! (cm !")       
+
+> &(pc )&(pc )&(pc )&(pc )
+> ( (pc ) ( (pc ) ( (pc ) ( (pc ) ( (pc ) ( (pc ) ( (pc )
+
+Figure 9. Density slice at z = 167 pc for SB230 (masked in orange) at each timestep. This plot illustrates the evolution of the target bubble, starting as a distinct structure, temporarily connecting with a nearby formation at t = 213 Myr, and later detaching again at t = 219 Myr. This progression highlights the challenges of accurately tracing bubble morphology when relying solely on 2D observations. 12 10 ! 10 "# 10 "$
+
+𝑛 cm !" 𝑣 # km s!$ 
+
+> 10 !0
+> -10 !
+
+𝑛 cm !"  
+
+> 10 !10 "#10 "$
+> 𝑧  (pc )𝑧  (pc )z (pc )𝑧  (pc )𝑧  (pc )𝑧  (pc )
+
+𝑥 (pc )𝑥 (pc )𝑥 (pc )  
+
+> 0200 -200 -400 400
+> 𝑦  (pc ) 𝑦  (pc ) 𝑦  (pc ) 𝑦  (pc ) 𝑦  (pc )
+> 0
+> 200
+> 400
+> -200
+> -400
+> 𝑦  (pc )
+> 0
+> 200
+> 400
+
+-200  
+
+> -400
+
+t = 21 1.0 Myr 
+
+t = 21 2.0 Myr 
+
+t = 21 3.0 Myr 
+
+t = 21 4.0 Myr 
+
+t = 21 5.0 Myr 
+
+t = 21 6.0 Myr 
+
+> 0
+> 200
+> 400
+> -200
+> -400
+> 0
+> 200
+> 400
+
+-200 
+
+> -400
+> 0
+> 200
+> 400
+> -200
+> -400
+> 0
+> 200
+> 400
+
+-200 
+
+> -400
+> 0
+> 200
+> 400
+> -200
+> -400
+> 0
+> 200
+> 400
+
+-200 
+
+> -400
+> 0
+> 200
+> 400
+> -200
+> -400
+> 0
+> 200
+> 400
+
+-200 
+
+> -400
+> 0
+> 200
+> 400
+> -200
+> -400
+> 0
+> 200
+> 400
+
+-200      
+
+> -400
+> 0200 -200 -400 400 0200 -200 -400 400
+
+Figure 10. Visualization of the vertical feature of density ( n) and vz for superbubble SB230. The left column shows a 2D density slice at z = 202 pc with a red line marking the chosen vertical cut to intersect the identified bubble. The middle column presents the cross-sectional density slices along that cut, which pass through SB230, and the right column shows the corresponding vertical vz slices that capture the bubble’s dynamical evolution. We compare these slices with direct views of the isolated bubble to validate the algorithm’s selections. Applying this automated procedure across many bubbles enables robust statistical extraction and demonstrates that detection-based analysis reproduces the physical behavior obtained by manual inspection, supporting its use for the full sample. 13 ! (cm !")       
+
+> & (pc )
+> ((pc )((pc )((pc )((pc )
+
+Figure 11. Density slice at z = 167 pc for SB230 (masked in orange), shown at 2 pc resolution for each timestep. The 211 − 213 Myr timesteps are also shown in the first row of Figure 9 at 4 pc resolution. This figure demonstrates the model’s robustness when applied directly to inputs of different resolutions. 
+
+density areas, leading to the development of a chimney-like structure. As depicted in Figure 7, the superbub-ble originates as a discrete entity (209 − 212 Myr), sub-sequently merging with adjacent structures (213 Myr). Notably, initial interactions involve minor merging, fol-lowed by a stronger integration approximately 15 Myr later (228 Myr). Despite these interactions, SB230 maintains its distinct identity within the interconnected ISM. 2D central plane analyses, as shown in Figure 10, further reveal that while the bubble appears to merge with neighboring formations, 3D perspectives clarify that this is primarily due to outflows through less dense regions, with the superbubble eventually detaching and preserving its individuality. The velocity profile, as illustrated in Figure 10, pro-vides a detailed visualization of the matter outflow from SB230 to neighboring structures. A strong upward ve-locity stream is observed, channeling material into ad-jacent regions at higher altitudes. 4.3. Bubbles in the interconnected ISM 
+
+How do the evolving superbubbles identified by our algorithm fit into the broader ISM? We wish to evalu-ate how isolated an identified bubble is from other hot gas. In cases in which the bubble has cool walls com-pletely surrounding it, a thresholding approach would have worked and our SAM2 model would have been un-necessary. However, our results clearly show that al-though large fractions of the bubble have interfaces with cool gas, at any given time there are portions of the edge of the bubble which interface directly with other hot gas. We call these regions “interconnected.” We quantify the fraction of the surface area of the bubble that is interconnected at any given time by defining an interconnectedness ratio. The interconnectedness ratio ( R) is the fraction of the volume in a shell just outside the bubble which is hot. We calculate this fraction in a shell 10 zones (39 pc) thick, immediately outside the bubble. The shell thick-0 2 4 6 8 10                    
+
+> log (⁄𝑇 K)
+> 𝑡 =218 .0Myr ,ℛ=0.233
+> 10 !"
+> 10 !#
+> 10 !$
+> 10 !%
+> 10 !&
+> 10 '
+> 10 &
+> 10 %
+> fraction  dex !"
+> 0246810
+> 𝑡 =209 .0Myr ,ℛ=0.019
+> 10 !"
+> 10 !#
+> 10 !$
+> 10 !%
+> 10 !&
+> 10 '
+> 10 &
+> 10 %
+> fraction  dex !"
+
+Figure 12. Histogram of cell volumes binned by temper-ature for the bubble shell (black step lines) and bubble in-terior (gray step lines), used to compare their temperature distributions. When the bubble is distinctly separated from its surroundings (209 Myr; top panel), the gas in the sur-rounding area remains in a multi-phase state, with a notable peak in warm gas. As the chimney forms and connects with nearby entities (bottom panel), the exterior ring begins to encompass portions of the hot-hot interface of the chimney. This results in a significant increase in the distribution of hot gas within the exterior of the bubble. Concurrently, the interior of the bubble predominantly consists of hot gas, re-flecting the intense thermal activities occurring within it. 14 ness of 39 pc is an empirical choice intended to capture the shock-accumulation and interface zone without ex-tending far into the ambient medium. Learned instance boundaries can include subtle contacts that threshold-ing misses. R therefore reveals interactions (vents, tem-porary links, partial mergers) that thresholding would miss. In the early stage, as shown in Figure 12 (top panel), the interconnectedness ratio is low, indicating that the bubble is predominantly surrounded by cool and warm gas. As the bubble expands and heats up, the pro-portion of cool gas decreases while the volume of hot gas increases, forming tunnel-like structures that resem-ble chimneys connecting with neighboring formations (Figure 12, bottom panel). Over time, however, this hot gas volume diminishes as matter is expelled into the upper halo. Subsequently, these chimney structures may cool or contract due to thermal pressure, reducing the extent of the hot-hot interface. In the final stage (t = 230 .0 Myr), depicted in Figure 13 and confirmed by a 3D visualization in Figure 7, the bubble develops a full-blown cap that fully opens the upper hemisphere. This stage also shows an increased volume of surround-ing hot gas, indicating a stronger interconnection with the nearby interstellar medium. The rise in the ratio ob-served in Figure 13 not only reflects the bubble expan-sion, but also aligns with changes in the density profiles presented in Figure 10, which supports the validity of our defined boundaries. To demonstrate the effectiveness of the interconnect-edness ratio in reflecting the true interconnectedness of a bubble, we analyze specific instances during its devel-opment. At t = 212 Myr, the bubble remains a distinct entity as illustrated in Figure 10, corresponding to a relatively low interconnectedness ratio of 0 .035. In the following Myr, the matter flow from the bubble increases and forms a connecting tunnel with a nearby structure, leading to an increase in the interconnectedness ratio to 0.175. By t = 215 Myr, a new supernova injection oc-curs, generating another shock wave that more sharply defines the bubble boundary. This sharp edge increases the distinction between the bubble and the surrounding medium, resulting in a decrease in the interconnected-ness ratio to 0 .059. These observations confirm that the interconnectedness ratio accurately tracks the dynamic changes in the spatial and structural relationships be-tween the bubble and its environment. Revisiting the question posed by D. P. Cox & B. W. Smith (1974), “What is the porosity of the ISM?” Poros-ity quantifies the fraction of the ISM’s volume occupied by hot, low-density gas created by supernovae. Our find-ings point out that, even within these simulations, su-Time (Myr)         
+
+> 210 215 220 230 235 225
+> Interconnectedness Ratio
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Figure 13. Illustration of the temperature composition within the bubble shell ring across various timesteps. Ini-tially, the bubble is surrounded by cool and warm gas. As it expands and heats up, cool gas diminishes while hot gas forms chimney-like structures that eventually wane as matter is expelled into the upper halo. In the final stage (Figure 7), the bubble develops a full cap with increased surrounding hot gas, highlighting enhanced connectivity with the inter-stellar medium.
+
+perbubbles maintain their distinct identities for signifi-cant periods. This persistence contributes to the poros-ity of the ISM. Our observations reveal that superbub-bles, formed from clustered supernova events, can ex-pand and merge, creating interconnected cavities that enhance the ISM’s porosity. Whereas porosity measures the total volume occupied by bubbles within the ISM, our interconnectedness ra-tio adds structural context by quantifying how long in-dividual bubbles maintain their integrity and how they physically link to neighbors. This metric complements porosity by revealing when and where bubbles exchange mass and energy through shared interfaces. By combin-ing porosity with interconnectedness, we gain a more nuanced understanding of superbubble lifetimes, their coherent morphology, and the pathways through which they regulate the overall energy balance of the ISM. 4.4. Future Work 
+
+In our future work, we aim to enhance the current study by addressing several key areas. Firstly, while our present dataset has provided valuable insights, we recog-nize the potential benefits of applying our segmentation techniques to more advanced datasets. This would allow for a more comprehensive analysis and validation of our methods. One promising direction is to integrate magnetic field modality to check if the bubble radius matches theo-retical predictions (J. L. West et al. 2007), which are based on the mechanical luminosity of stellar winds, 15 density, and ambient magnetic fields. We will explore how magnetic fields affect bubble dynamics, specifically investigating whether they cause elongation parallel to the field (K. M. Ferriere 1990; K. Tomisaka 1998; D. Breitschwerdt & M. A. de Avillez 2005), inhibit ex-pansion perpendicular to it, and contain overall bubble growth. Additionally, we aim to determine if enough energy can drive vertical expansion across several scale heights (K. Tomisaka 1998), even with a field aligned with the Galactic plane. Using more controlled simula-tion environments with the segmented bubble will allow for a focused examination of these dynamics. Additionally, projecting our 3D segmentation results onto 2D planes offers the opportunity to compare our findings with existing 2D observations of the local ISM. Such comparisons could help identify similar features and potentially bridge the gap between 2D observational data and 3D simulation insights, thereby enriching our understanding of ISM structures. Expanding the application of our tracking algorithm to other astrophysical phenomena is another path worth exploring. By analyzing different objects, we can learn more about their morphologies and evolutionary trajec-tories, which could provide broader insights into various astrophysical processes. In summary, by integrating more advanced datasets, exploring velocity-based segmentation, comparing 3D and 2D data, and extending our algorithm to other as-trophysical objects, we aim to advance our understand-ing of superbubble dynamics and related astrophysical phenomena.  
+
+> 5.
+
+CONCLUSION In this study, we introduced a new approach lever-aging advanced computer vision techniques to track and analyze the evolution of superbubbles within the ISM. Our proposed Astro-UNETR model combines a 3D transformer-based segmentation architecture guided by physics-informed thermal constraints, integrated with the SAM2 video object segmentation framework. This tracking pipeline effectively enables the identification and continuous temporal tracking of individual super-bubbles. The Astro-UNETR model has demonstrated remark-able effectiveness in capturing the intricate 3D mor-phologies of superbubbles, facilitating our understand-ing of their dynamic behaviors. By leveraging mul-timodal data, the model generates detailed segmenta-tion masks that precisely outline superbubble bound-aries, even during complex interactions with surround-ing structures. Integrating the SAM2 model has further enhanced our capability to monitor the temporal evolution of su-perbubble structures. This combined approach has al-lowed us to observe phenomena such as the formation of chimneys, which are channels through which hot gas escapes from the galactic midplane into the halo, and the merging and subsequent separation of superbubbles with neighboring formations. Our findings showcase the potential of combining state-of-the-art computer vision models with astrophys-ical simulations to gain deeper insights into the life-cycle of superbubbles. This methodology offers a dy-namic framework capable of adapting to the complex and evolving nature of the ISM. Looking ahead, the versatility of our approach opens possibilities for its application to other astrophysical phenomena. For instance, by employing models like As-troCLIP (L. Parker et al. 2024), which integrates mul-timodal astronomical data, we can enhance the robust-ness and generalizability of our analyses. Additionally, applying our segmentation techniques to velocity fields could provide further insight into shock fronts and other dynamic processes within the ISM. In conclusion, our integration of advanced computer vision models with astrophysical data represents an ad-vancement in the study of superbubbles. This interdis-ciplinary approach not only enriches our understanding of these fascinating structures but also sets the stage for future explorations into the complex dynamics of the interstellar medium. ACKNOWLEDGMENTS This work was conducted at the UBC Okanagan cam-pus, located on the traditional, ancestral, and unceded territory of the syilx people. We thank Tom L. Lan-decker, Jennifer L. West, and Jo-Anne C. Brown for their input and guidance on this project. J.C. was sup-ported by UBC Okanagan Graduate Research Scholar-ship #26367. We acknowledge the support of NSERC (funding reference number 569654) and UBC Advanced Research Computing for data archiving. 
+
+# Software: NumPy (C. R. Harris et al. 2020), yt (M. J. Turk et al. 2010), Matplotlib (J. D. Hunter 2007), SciPy (P. Virtanen et al. 2020), K3D (https://k3d.io/), scikit-image (S. Van der Walt et al. 2014), HDF5 (https: //www.hdfgroup.org/HDF5/), Pandas (W. McKinney et al. 2011), OpenCV (G. Bradski 2000), Torch (A. Paszke 2019), Monai (M. J. Cardoso et al. 2022), Hy-dra (O. Yadan 2019), SAM2 (N. Ravi et al. 2024) 16 APPENDIX 
+
+A. ANALYSIS OF VERTICAL VELOCITY IN THE SB230 CASE STUDY To study the interior of a designated superbubble region, we developed an interactive tool that allows users to make arbitrary vertical cuts on the x − y plane parallel to the z-axis. This feature enables users to slice through the target bubble and visualize the intersected x − z plane. The functionality of this tool is supported by the Astro-UNETR bubble segmentation, it assumes that users have already obtained the segmentation masks for the desired bubble. The process starts by displaying the x − y plane, centered at the bubble’s center z-coordinate. The bubble region is highlighted based on the segmented mask, assisting users in accurately selecting the cutoff. Users can then click two points on the plot to define the vertical cutoff line’s length and slope. The program interprets these inputs as a linear function and extracts all the pixels along this vertical plane. During this calculation, any non-integer y-values are rounded to the nearest y-value using a nearest neighbor approach. The resulting output is a vertical plane of density values, providing a cross-sectional view of the bubble’s interior. This same plane is then overlaid on the vz channel to extract the vertical vz profile. The trajectory of the SB230 evolution over an additional 20 Myr is presented in Figure 14 and 15. These plots illustrate how new supernova injections periodically provide the bubble with fresh shock waves, prompting it to expand and seek pathways to expel matter, thus connecting with nearby structures during the outflow process. Each new blast wave pushes the boundaries further. By around 228 Myr, the tunnel has expanded sufficiently to open up the entire northern cap of the bubble, establishing a connection with the upper halo. REFERENCES 
+
+Barbani, F., Pascale, R., Marinacci, F., et al. 2023, Monthly Notices of the Royal Astronomical Society, 524, 4091 Bekuzarov, M., Bermudez, A., Lee, J.-Y., & Li, H. 2023, in Proceedings of the IEEE/CVF International Conference on Computer Vision, 635–644 Bialy, S., Zucker, C., Goodman, A., et al. 2021, ApJL, 919, L5, doi: 10.3847/2041-8213/ac1f95 Bradski, G. 2000, Dr. Dobb’s Journal of Software Tools Bregman, J. N. 1980, Astrophysical Journal, Part 1, vol. 236, Mar. 1, 1980, p. 577-591., 236, 577 Breitschwerdt, D., & de Avillez, M. A. 2005, arXiv preprint astro-ph/0504247 Cardoso, M. J., Li, W., Brown, R., et al. 2022, arXiv preprint arXiv:2211.02701 Chen, J. W., & Hill, A. S. 2025, Astro-UNETR: Segmenting Superbubbles in a Simulated Multiphase Interstellar Medium using Computer Vision, 1.0 Zenodo, doi: 10.5281/zenodo.17468098 Chen, J.-W., Shehata, M. S., & Hill, A. S. 2025, in 2025 International Telecommunications Conference (ITC-Egypt), IEEE, 273–278 Cheng, H. K., Oh, S. W., Price, B., Lee, J.-Y., & Schwing, A. 2023, in arXiv Cheng, H. K., & Schwing, A. G. 2022, in European Conference on Computer Vision, Springer, 640–658 Cheng, H. K., Tai, Y.-W., & Tang, C.-K. 2021, in NeurIPS C¸ i¸ cek, ¨O., Abdulkadir, A., Lienkamp, S. S., Brox, T., & Ronneberger, O. 2016, in Medical Image Computing and Computer-Assisted Intervention–MICCAI 2016: 19th International Conference, Athens, Greece, October 17-21, 2016, Proceedings, Part II 19, Springer, 424–432 Cox, D. P. 2005, ARA&A, 43, 337, doi: 10.1146/annurev.astro.43.072103.150615 Cox, D. P., & Smith, B. W. 1974, ApJL, 189, L105, doi: 10.1086/181476 Dawson, J. R., McClure-Griffiths, N. M., Wong, T., et al. 2013, ApJ, 763, 56, doi: 10.1088/0004-637X/763/1/56 De Avillez, M., & Breitschwerdt, D. 2004, Magnetic Fields and Star Formation: Theory Versus Observations, 157 de Avillez, M. A., & Breitschwerdt, D. 2004, Astronomy & Astrophysics, 425, 899 de Avillez, M. A., & Breitschwerdt, D. 2005, A&A, 436, 585, doi: 10.1051/0004-6361:20042146 Edenhofer, G., Zucker, C., Frank, P., et al. 2024, Astronomy & Astrophysics, 685, A82 Ferriere, K. M. 1990, Explosion of a superbubble in a uniform magnetic field (University of Colorado at Boulder) Field, G. B. 1965, Astrophysical Journal, vol. 142, p. 531, 142, 531 Forster, B. M., Foster, T. J., Kothes, R., Hill, A. S., & Brown, J.-A. C. 2025, The Astrophysical Journal, 979, 177 17 10 ! 10 "# 10 "$
+
+! cm !" $# km s!$ 
+
+> 10 !0
+
+-10 !
+
+! cm !"  
+
+> 10 !10 "#10 "$
+> ' (pc )' (pc )z (pc )' (pc )' (pc )
+
+, (pc ), (pc ), (pc )            
+
+> - (pc ) - (pc ) - (pc ) - (pc ) - (pc )
+> t=21 1.0Myr
+> t=21 2.0Myr
+> t=21 3.0Myr
+> t=21 4.0Myr
+
+0 200 -200 -400 400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0 200 -200 -400 400 0 200 -200 -400 400 
+
+Figure 14. Visualization of vertical slices of SB230 superbubble at its mid-life stage, spanning from 216 to 224 Myr, following Figure 10. The plots show the formation of tunnels triggered by a supernova injection and their subsequent disintegration over the next few Myr. 18 10 ! 10 "# 10 "$
+
+! cm !" $# km s!$ 
+
+> 10 !0
+
+-10 !
+
+! cm !"  
+
+> 10 !10 "#10 "$
+> ' (pc )' (pc )z (pc )' (pc )' (pc )
+
+, (pc ), (pc ), (pc )            
+
+> - (pc ) - (pc ) - (pc ) - (pc ) - (pc )
+> t=21 1.0Myr
+> t=21 2.0Myr
+> t=21 3.0Myr
+> t=21 4.0Myr
+
+0 200 -200 -400 400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0
+
+200 
+
+400 
+
+-200 
+
+-400 
+
+0 200 -200 -400 400 0 200 -200 -400 400 
+
+Figure 15. Final stage in the life of the SB230 superbubble from 226 to 234 Myr, showing how the bubble’s tunnel progressively expands towards the upper halo and eventually opens up the northern cap. In the vz channel, significant upward matter flow is visible, supporting this expansion. This visualization provides deeper insight into the movement of matter within the bubble that influences its morphological changes. 19 
+
+Fryxell, B., Olson, K., Ricker, P., et al. 2000, Astrophysical Journal, Supplement, 131, 273, doi: http://dx.doi.org/10.1086/317361 Garrison-Kimmel, S., Wetzel, A., Bullock, J. S., et al. 2017, Monthly Notices of the Royal Astronomical Society, 471, 1709 Gent, F., Shukurov, A., Fletcher, A., Sarson, G., & Mantere, M. 2013, Monthly Notices of the Royal Astronomical Society, 432, 1396 Girichidis, P., Walch, S., Naab, T., et al. 2016, Monthly Notices of the Royal Astronomical Society, 456, 3432 Harris, C. R., Millman, K. J., Van Der Walt, S. J., et al. 2020, Nature, 585, 357 Hatamizadeh, A., Nath, V., Tang, Y., et al. 2021, in International MICCAI brainlesion workshop, Springer, 272–284 Heiles, C. 1984, Astrophysical Journal Supplement Series (ISSN 0067-0049), vol. 55, Aug. 1984, p. 585-595. NSF-supported research., 55, 585 Hill, A. S., Joung, M. R., Mac Low, M.-M., et al. 2012, ApJ, 750, 104, doi: 10.1088/0004-637X/750/2/104 Hill, A. S., Mac Low, M.-M., Gatto, A., & Ib´ a˜ nez-Mej´ ıa, J. C. 2018, The Astrophysical Journal, 862, 55 Hopkins, P. F. 2015, Monthly Notices of the Royal Astronomical Society, 450, 53 Hopkins, P. F., Wetzel, A., Kereˇ s, D., et al. 2018a, Monthly Notices of the Royal Astronomical Society, 480, 800 Hopkins, P. F., Wetzel, A., Kereˇ s, D., et al. 2018b, Monthly Notices of the Royal Astronomical Society, 477, 1578 Hopkins, P. F., Wetzel, A., Wheeler, C., et al. 2023, Monthly Notices of the Royal Astronomical Society, 519, 3154 Hunter, J. D. 2007, Computing in science & engineering, 9, 90 Joung, M. R., & Mac Low, M.-M. 2006, The Astrophysical Journal, 653, 1266 Kim, C.-G., & Ostriker, E. C. 2015a, The Astrophysical Journal, 815, 67 Kim, C.-G., & Ostriker, E. C. 2015b, The Astrophysical Journal, 802, 99 Kim, C.-G., & Ostriker, E. C. 2018, The Astrophysical Journal, 853, 173 Kim, C.-G., Ostriker, E. C., & Kim, W.-T. 2013, The Astrophysical Journal, 776, 1 Kim, C.-G., Ostriker, E. C., & Kim, W.-T. 2014, The Astrophysical Journal, 786, 64 Li, C., Li, H., Cui, W., et al. 2024, Monthly Notices of the Royal Astronomical Society, 529, 4073 Liu, Z., Lin, Y., Cao, Y., et al. 2021, in Proceedings of the IEEE/CVF international conference on computer vision, 10012–10022 Marinacci, F., Sales, L. V., Vogelsberger, M., Torrey, P., & Springel, V. 2019, Monthly Notices of the Royal Astronomical Society, 489, 4233 McCammon, D., Burrows, D., Sanders, W., & Kraushaar, W. 1983, Astrophysical Journal, Part 1 (ISSN 0004-637X), vol. 269, June 1, 1983, p. 107-135., 269, 107 McClure-Griffiths, N. M., Dickey, J. M., Gaensler, B. M., & Green, A. J. 2001, ApJ, 562, 424, doi: 10.1086/323859 McKee, C. F., & Ostriker, J. P. 1977, ApJ, 218, 148, doi: 10.1086/155667 McKinney, W., et al. 2011, Python for high performance and scientific computing, 14, 1 Milletari, F., Navab, N., & Ahmadi, S.-A. 2016, in 2016 fourth international conference on 3D vision (3DV), Ieee, 565–571 Moretti, A., Campana, S., Lazzati, D., & Tagliaferri, G. 2003, The Astrophysical Journal, 588, 696 O’Neill, T. J., Zucker, C., Goodman, A. A., & Edenhofer, G. 2024, The Astrophysical Journal, 973, 136 Parker, L., Lanusse, F., Golkar, S., et al. 2024, Monthly Notices of the Royal Astronomical Society, 531, 4990 Paszke, A. 2019, arXiv preprint arXiv:1912.01703 Rathjen, T.-E., Naab, T., Girichidis, P., et al. 2021, Monthly Notices of the Royal Astronomical Society, 504, 1039 Ravi, N., Gabeur, V., Hu, Y.-T., et al. 2024, arXiv preprint arXiv:2408.00714 Soler, J. D., Miville-Deschˆ enes, M.-A., Molinari, S., et al. 2022, Astronomy & Astrophysics, 662, A96 Stil, J., Wityk, N., Ouyed, R., & Taylor, A. 2009, The Astrophysical Journal, 701, 330 Sugiyama, H., Ueda, M., Fukushima, K., et al. 2023, Publications of the Astronomical Society of Japan, 75, 1324 Tahani, M., Glover, J., Lupypciw, W., et al. 2022a, Astronomy & Astrophysics, 660, L7 Tahani, M., Lupypciw, W., Glover, J., et al. 2022b, Astronomy & Astrophysics, 660, A97 Tomisaka, K. 1998, Monthly Notices of the Royal Astronomical Society, 298, 797 Turk, M. J., Smith, B. D., Oishi, J. S., et al. 2010, The Astrophysical Journal Supplement Series, 192, 9 Van der Walt, S., Sch¨ onberger, J. L., Nunez-Iglesias, J., et al. 2014, PeerJ, 2, e453 Virtanen, P., Gommers, R., Oliphant, T. E., et al. 2020, Nature methods, 17, 261 20 
+
+Walch, S., Girichidis, P., Naab, T., et al. 2015, Monthly Notices of the Royal Astronomical Society, 454, 238 Wallin, B., Wibking, B. D., & Voit, G. M. 2025, Monthly Notices of the Royal Astronomical Society, 538, 2427 West, J. L., English, J., Normandeau, M., & Landecker, T. 2007, The Astrophysical Journal, 656, 914 Wetzel, A. R., Hopkins, P. F., Kim, J.-h., et al. 2016, The Astrophysical Journal Letters, 827, L23 Wheeler, C., Hopkins, P. F., Pace, A. B., et al. 2019, Monthly Notices of the Royal Astronomical Society, 490, 4447 Wolfire, M. G., McKee, C. F., Hollenbach, D., & Tielens, A. 1995, Astrophysical Journal v. 453, p. 673, 453, 673 Wolfire, M. G., McKee, C. F., Hollenbach, D., & Tielens, A. 2003, The astrophysical journal, 587, 278 Yadan, O. 2019, Hydra - A framework for elegantly configuring complex applications,, Github https://github.com/facebookresearch/hydra
