@@ -6,70 +6,50 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-03-31
-- 运行时间：2026-03-31 20:04:57 UTC
+- 最新运行日期：2026-04-01
+- 运行时间：2026-04-01 20:04:34 UTC
 - 运行状态：成功
-- 本次总论文数：16
-- 精读区：4
-- 速读区：12
+- 本次总论文数：9
+- 精读区：1
+- 速读区：8
 
 ### 今日简报（AI）
-今日深度研读 16 篇前沿论文，重点攻克了高精度变点检测算法与可穿戴实时事实核查系统。
-推荐关注 9 分佳作 OPTICS 在变点置信集上的理论突破，以及通过实时“助推”技术有效干预虚假信息传播的实证研究。
-建议关注 AI 在心脏诊断与地震预警等垂直领域的落地进展，感受多模态模型对现实问题的精准拆解。
-- 详情：[/202603/31/README](/202603/31/README)
+- 今日共生成 9 篇推荐（精读 1 篇，速读 8 篇）
+- 精读：《CIPHER: Counterfeit Image Pattern High-level Examination via Representation》（9.0/10）
+- 速读：《Transcription and Recognition of Italian Parliamentary Speeches Using Vision-Language Models》（7.0/10）, 《Evaluating Chunking Strategies For Retrieval-Augmented Generation in Oil and Gas Enterprise Documents》（6.0/10）, 《Towards Comprehensive Real-Time Scene Understanding in Ophthalmic Surgery through Multimodal Image Fusion》（6.0/10）
+- 这些结果覆盖了当下较热的方向，建议先看精读区论文的关键问题与方法。
+- 详情：[/202604/01/README](/202604/01/README)
 
 ### 精读区论文标签
-1. [OPTICS: Order-Preserved Test-Inverse Confidence Set for Number of Change-Points](/202603/31/2603.27916v1-optics-order-preserved-test-inverse-confidence-set-for-number-of-change-points)  
-   标签：评分：9.0/10、query:tsds
-   evidence：检测问题中变点数量的置信集
-2. [Feeling the Facts: Real-time Wearable Fact-checkers Can Use Nudges to Reduce User Belief in False Information](/202603/31/2603.27289v1-feeling-the-facts-real-time-wearable-fact-checkers-can-use-nudges-to-reduce-user-belief-in-false-information)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：用于虚假信息的实时可穿戴事实核查器
-3. [TMTE: Effective Multimodal Graph Learning with Task-aware Modality and Topology Co-evolution](/202603/31/2603.27723v1-tmte-effective-multimodal-graph-learning-with-task-aware-modality-and-topology-co-evolution)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：多模态图学习与表示
-4. [Generalizable Detection of AI Generated Images with Large Models and Fuzzy Decision Tree](/202603/31/2603.28508v1-generalizable-detection-of-ai-generated-images-with-large-models-and-fuzzy-decision-tree)  
-   标签：评分：8.0/10、query:mmfnd
-   evidence：利用多模态大模型和模糊决策树检测AI生成的图像以验证真实性。
+1. [CIPHER: Counterfeit Image Pattern High-level Examination via Representation](/202604/01/2603.29356v1-cipher-counterfeit-image-pattern-high-level-examination-via-representation)  
+   标签：评分：9.0/10、query:mmfnd
+   evidence：深度伪造检测以减轻虚假信息风险
 
 ### 速读区论文标签
-1. [MARCUS: An agentic, multimodal vision-language model for cardiac diagnosis and management](/202603/31/2603.22179v1-marcus-an-agentic-multimodal-vision-language-model-for-cardiac-diagnosis-and-management)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：针对信号的多模态视觉语言模型
-2. [MSRL: Scaling Generative Multimodal Reward Modeling via Multi-Stage Reinforcement Learning](/202603/31/2603.25108v1-msrl-scaling-generative-multimodal-reward-modeling-via-multi-stage-reinforcement-learning)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：多模态奖励建模与强化学习用于跨模态对齐
-3. [Density estimation of weak periodic signals in pre-earthquake seismic waves](/202603/31/2603.26762v1-density-estimation-of-weak-periodic-signals-in-pre-earthquake-seismic-waves)  
+1. [Transcription and Recognition of Italian Parliamentary Speeches Using Vision-Language Models](/202604/01/2603.28103v1-transcription-and-recognition-of-italian-parliamentary-speeches-using-vision-language-models)  
    标签：评分：7.0/10、query:tsds
-   evidence：识别地震波形中的信号
-4. [Topological Detection of Hopf Bifurcations via Persistent Homology: A Functional Criterion from Time Series](/202603/31/2603.27395v1-topological-detection-of-hopf-bifurcations-via-persistent-homology-a-functional-criterion-from-time-series)  
-   标签：评分：7.0/10、query:tsds
-   evidence：检测时间序列中的状态变化
-5. [LVRPO: Language-Visual Alignment with GRPO for Multimodal Understanding and Generation](/202603/31/2603.27693v1-lvrpo-language-visual-alignment-with-grpo-for-multimodal-understanding-and-generation)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：用于多模态理解的语言-视觉对齐
-6. [Diversity Matters: Dataset Diversification and Dual-Branch Network for Generalized AI-Generated Image Detection](/202603/31/2603.27800v1-diversity-matters-dataset-diversification-and-dual-branch-network-for-generalized-ai-generated-image-detection)  
-   标签：评分：7.0/10、query:mmfnd
-   evidence：用于打击虚假信息的AI生成图像检测
-7. [Learning Where to Look: UCB-Driven Controlled Sensing for Quickest Change Detection](/202603/31/2603.28563v1-learning-where-to-look-ucb-driven-controlled-sensing-for-quickest-change-detection)  
-   标签：评分：7.0/10、query:tsds
-   evidence：数据流中的快速变化检测
-8. [GenMask: Adapting DiT for Segmentation via Direct Mask Generation](/202603/31/2603.23906v2-genmask-adapting-dit-for-segmentation-via-direct-mask-generation)  
+   evidence：时序演讲文档的语义分割
+2. [Evaluating Chunking Strategies For Retrieval-Augmented Generation in Oil and Gas Enterprise Documents](/202604/01/2603.24556v1-evaluating-chunking-strategies-for-retrieval-augmented-generation-in-oil-and-gas-enterprise-documents)  
    标签：评分：6.0/10、query:tsds
-   evidence：生成式分割任务处理方式
-9. [VIRST: Video-Instructed Reasoning Assistant for SpatioTemporal Segmentation](/202603/31/2603.27060v1-virst-video-instructed-reasoning-assistant-for-spatiotemporal-segmentation)  
+   evidence：基于断点的语义和结构感知文档分块
+3. [Towards Comprehensive Real-Time Scene Understanding in Ophthalmic Surgery through Multimodal Image Fusion](/202604/01/2603.25555v1-towards-comprehensive-real-time-scene-understanding-in-ophthalmic-surgery-through-multimodal-image-fusion)  
    标签：评分：6.0/10、query:tsds
-   evidence：视频中的时空分割
-10. [MAR3: Multi-Agent Recognition, Reasoning, and Reflection for Reference Audio-Visual Segmentation](/202603/31/2603.27706v1-mar3-multi-agent-recognition-reasoning-and-reflection-for-reference-audio-visual-segmentation)  
+   evidence：用于实时追踪的多模态时序特征融合
+4. [Adapting Segment Anything Model 3 for Concept-Driven Lesion Segmentation in Medical Images: An Experimental Study](/202604/01/2603.25945v1-adapting-segment-anything-model-3-for-concept-driven-lesion-segmentation-in-medical-images-an-experimental-study)  
    标签：评分：6.0/10、query:tsds
-   evidence：用于音视频分割的多模态线索
-11. [Segmenting Superbubbles in a Simulated Multiphase Interstellar Medium using Computer Vision](/202603/31/2603.27741v1-segmenting-superbubbles-in-a-simulated-multiphase-interstellar-medium-using-computer-vision)  
-   标签：评分：6.0/10、query:tsds
-   evidence：随时间变化的结构3D分割与追踪
-12. [Progressive Prompt-Guided Cross-Modal Reasoning for Referring Image Segmentation](/202603/31/2603.27993v1-progressive-prompt-guided-cross-modal-reasoning-for-referring-image-segmentation)  
+   evidence：跨模态概念驱动的病灶分割
+5. [Sparse-by-Design Cross-Modality Prediction: L0-Gated Representations for Reliable and Efficient Learning](/202604/01/2603.26801v1-sparse-by-design-cross-modality-prediction-l0-gated-representations-for-reliable-and-efficient-learning)  
    标签：评分：6.0/10、query:mmfnd
-   evidence：用于图像分割的跨模态推理
+   evidence：跨模态预测与可靠学习
+6. [Towards Domain-Generalized Open-Vocabulary Object Detection: A Progressive Domain-invariant Cross-modal Alignment Method](/202604/01/2603.27556v1-towards-domain-generalized-open-vocabulary-object-detection-a-progressive-domain-invariant-cross-modal-alignment-method)  
+   标签：评分：6.0/10、query:mmfnd
+   evidence：跨模态对齐与视觉-文本耦合
+7. [A Benchmarking Methodology to Assess Open-Source Video Large Language Models in Automatic Captioning of News Videos](/202604/01/2603.27662v1-a-benchmarking-methodology-to-assess-open-source-video-large-language-models-in-automatic-captioning-of-news-videos)  
+   标签：评分：6.0/10、query:mmfnd
+   evidence：针对新闻内容的多模态视频大语言模型
+8. [INSID3: Training-Free In-Context Segmentation with DINOv3](/202604/01/2603.28480v1-insid3-training-free-in-context-segmentation-with-dinov3)  
+   标签：评分：6.0/10、query:tsds
+   evidence：无需训练的任意概念上下文分割
 
 
 <div class="dpr-home-promo-card">
